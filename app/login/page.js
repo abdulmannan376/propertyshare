@@ -1,17 +1,80 @@
 "use client";
 import FloatingLabelInput from "@/components/FloatingInputButton";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Page = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState();
+  const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const router = useRouter();
 
   function handleShowPassword() {
     setShowPassword(!showPassword);
   }
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSubmission = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    try {
+      const data = {
+        username: username,
+        password: password,
+        rememberMe: rememberMe,
+      };
+
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_HOST}/user/user-login`,
+        {
+          method: "POST",
+          headers: {
+            "Content-type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
+
+      const response = await res.json();
+      setIsLoading(false);
+      if (response.success) {
+        toast.success(response.message, {
+          position: "bottom-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+
+        localStorage.setItem("token", response.token);
+        setTimeout(() => {
+          router.push("/");
+        }, 5100);
+      } else {
+        throw new Error(response.message);
+      }
+    } catch (error) {
+      setIsLoading(false);
+      toast.error(error.message, {
+        position: "bottom-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  };
   return (
     <>
       <ToastContainer
@@ -39,7 +102,7 @@ const Page = () => {
             className="w-auto h-16 object-contain object-center"
           />
         </div>
-        <form>
+        <form onSubmit={handleSubmission}>
           <FloatingLabelInput
             id={"username"}
             label={"Username"}
@@ -57,6 +120,34 @@ const Page = () => {
             type={showPassword ? "text" : "password"}
             handleShow={handleShowPassword}
           />
+          <div className="relative mt-6">
+            <input
+              type="checkbox"
+              id="rememberMe"
+              name="rememberMe"
+              value={rememberMe}
+              onChange={({ target }) => {
+                setRememberMe(target.checked);
+              }}
+              className="bg-transparent rounded border border-[#CACACA] text-xl outline-none text-[#676767] pt-4 pb-3 px-3 leading-8 transition-colors duration-200 ease-in-out"
+            />
+            <label
+              htmlFor="rememberMe"
+              className="leading-7 px-3 absolute -translate-y-1 text-white font-semibold underline duration-300"
+            >
+              Remember me.
+            </label>
+          </div>
+          <button
+            type="submit"
+            className="lg:w-[550px] md:w-[443px] bg-[#FFFDF4] bg-opacity-[78%] rounded border border-[#CACACA] mt-6 p-4 text-xl text-[#676767] "
+          >
+            {" "}
+            {!isLoading && `Login`}
+            {isLoading && (
+              <div className="border-t-2 border-b-2 border-blue-800 bg-transparent h-3 p-2 animate-spin shadow-lg w-fit mx-auto rounded-full"></div>
+            )}
+          </button>
         </form>
       </div>
     </>

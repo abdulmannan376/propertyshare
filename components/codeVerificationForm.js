@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 
-const CodeVerificationInput = (email) => {
+const CodeVerificationInput = (userEmail) => {
   const [inputs, setInputs] = useState(new Array(6).fill(""));
   const inputRefs = useRef(new Array(6).fill().map(() => React.createRef()));
   const [secondsLeft, setSecondsLeft] = useState(30);
@@ -34,6 +34,9 @@ const CodeVerificationInput = (email) => {
     if (event.key === "Backspace" && index > 0 && !inputs[index]) {
       inputRefs.current[index - 1].current.focus();
     }
+    if (event.key === "Enter") {
+      () => handleSubmission(event);
+    }
   };
 
   const handleSubmission = async (e) => {
@@ -43,7 +46,7 @@ const CodeVerificationInput = (email) => {
       inputs.map((input) => (codeString += input));
 
       const data = {
-        email: email.email,
+        email: userEmail.userEmail,
         code: codeString,
       };
 
@@ -75,7 +78,54 @@ const CodeVerificationInput = (email) => {
           router.push("/login");
         }, 5100);
       } else {
-        throw new Error(response.message)
+        throw new Error(response.message);
+      }
+    } catch (error) {
+      toast.error(error.message, {
+        position: "bottom-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  };
+
+  const handleGenNewVerificationCode = async (e) => {
+    e.preventDefault();
+    try {
+        console.log(userEmail)
+      const data = {
+        email: userEmail.userEmail,
+      };
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_HOST}/user/gen-new-verification-code`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-type": "application/json",
+          },
+          body: JSON.stringify(data)
+        }
+      );
+
+      const response = await res.json();
+      if (response.success) {
+        toast.success(response.message, {
+          position: "bottom-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      } else {
+        throw new Error(response.message);
       }
     } catch (error) {
       toast.error(error.message, {
@@ -130,6 +180,7 @@ const CodeVerificationInput = (email) => {
           <button
             disabled={secondsLeft > 0 ? true : false}
             type="button"
+            onClick={handleGenNewVerificationCode}
             className="disabled:hidden text-[#676767] underline px-2 font-semibold"
           >
             Send Again

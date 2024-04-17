@@ -9,7 +9,7 @@ import "react-toastify/dist/ReactToastify.css";
 const Page = () => {
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("balaj.ali707@gmail.com");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState();
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -30,9 +30,9 @@ const Page = () => {
     e.preventDefault();
     setIsLoading(true);
     try {
-        if(password !== confirmPassword) {
-            throw new Error("Passwords do not match.")
-        }
+      if (password !== confirmPassword) {
+        throw new Error("Passwords do not match.");
+      }
       const data = {
         name: name,
         username: username,
@@ -76,7 +76,7 @@ const Page = () => {
 
       // throw new Error("new error")
     } catch (error) {
-        setIsLoading(false)
+      setIsLoading(false);
       toast.error(error.message, {
         position: "bottom-center",
         autoClose: 5000,
@@ -198,7 +198,7 @@ const Page = () => {
               Enter the verification code that has been sent to your email:{" "}
               <strong>{email}</strong>
             </h1>
-            <CodeVerificationInput email={email}/>
+            <CodeVerificationInput userEmail={email} />
             {/* <form className="flex flex-row items-center justify-center">
                  <input type="text" name="vcDigit1" value={vcDigit1} /> 
             </form> */}
