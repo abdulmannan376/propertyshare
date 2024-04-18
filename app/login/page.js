@@ -1,6 +1,7 @@
 "use client";
 import FloatingLabelInput from "@/components/FloatingInputButton";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
@@ -99,10 +100,13 @@ const Page = () => {
             height={1000}
             src={"/logo.png"}
             alt="Logo"
-            className="w-auto h-16 object-contain object-center"
+            className="w-auto h-10 object-contain object-center"
           />
         </div>
-        <form onSubmit={handleSubmission}>
+        <form
+          onSubmit={handleSubmission}
+          className="w-full flex flex-col items-center justify-center"
+        >
           <FloatingLabelInput
             id={"username"}
             label={"Username"}
@@ -120,7 +124,7 @@ const Page = () => {
             type={showPassword ? "text" : "password"}
             handleShow={handleShowPassword}
           />
-          <div className="relative mt-6">
+          <div className="lg:w-[550px] md:w-[443px] relative mt-6">
             <input
               type="checkbox"
               id="rememberMe"
@@ -129,13 +133,13 @@ const Page = () => {
               onChange={({ target }) => {
                 setRememberMe(target.checked);
               }}
-              className="bg-transparent rounded border border-[#CACACA] text-xl outline-none text-[#676767] pt-4 pb-3 px-3 leading-8 transition-colors duration-200 ease-in-out"
+              className="inline-flex bg-transparent rounded border border-[#CACACA] text-xl outline-none text-[#676767] pt-1 pb-3 px-3 leading-8 transition-colors duration-200 ease-in-out"
             />
             <label
               htmlFor="rememberMe"
-              className="leading-7 px-3 absolute -translate-y-1 text-white font-semibold underline duration-300"
+              className="leading-7 px-3 absolute -translate-y-1 text-white font-semibold duration-300"
             >
-              Remember me.
+              Remember me
             </label>
           </div>
           <button
@@ -148,6 +152,20 @@ const Page = () => {
               <div className="border-t-2 border-b-2 border-blue-800 bg-transparent h-3 p-2 animate-spin shadow-lg w-fit mx-auto rounded-full"></div>
             )}
           </button>
+          <div className="w-full flex flex-row items-center justify-center mt-6">
+            <div className="w-full h-[1px]  bg-[#FFFDF4]"></div>
+            <h2 className="text-xl text-[#FFFDF4] px-3">OR</h2>
+            <div className="w-full h-[1px]  bg-[#FFFDF4]"></div>
+          </div>
+          <div className="lg:w-[550px] md:[443px] mt-6 flex flex-row items-center justify-center">
+            <h3 className="leading-7 px-3 absolute -translate-y-1 text-white font-semibold duration-300">
+              Do not have an account?{" "}
+              <Link href={"/signup"} className="underline">
+                {" "}
+                Sign Up
+              </Link>
+            </h3>
+          </div>
         </form>
       </div>
     </>

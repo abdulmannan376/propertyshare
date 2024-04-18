@@ -2,6 +2,7 @@
 import FloatingLabelInput from "@/components/FloatingInputButton";
 import CodeVerificationInput from "@/components/codeVerificationForm";
 import Image from "next/image";
+import Link from "next/link";
 import React, { useRef, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -113,11 +114,14 @@ const Page = () => {
             height={1000}
             src={"/logo.png"}
             alt="Logo"
-            className="w-auto h-16 object-contain object-center"
+            className="w-auto h-10 object-contain object-center"
           />
         </div>
         {phase === 1 && (
-          <form onSubmit={handleSubmission}>
+          <form
+            onSubmit={handleSubmission}
+            className="w-full flex flex-col items-center justify-center"
+          >
             <FloatingLabelInput
               id={"name"}
               label={"Name"}
@@ -160,7 +164,7 @@ const Page = () => {
               type={showConfirmPassword ? "text" : "password"}
               handleShow={handleShowConfirmPassword}
             />
-            <div className="relative mt-6">
+            <div className="lg:w-[550px] md:w-[443px] relative mt-6">
               <input
                 type="checkbox"
                 id="TermsAndCondition"
@@ -190,6 +194,20 @@ const Page = () => {
                 <div className="border-t-2 border-b-2 border-blue-800 bg-transparent h-3 p-2 animate-spin shadow-lg w-fit mx-auto rounded-full"></div>
               )}
             </button>
+            <div className="w-full flex flex-row items-center justify-center mt-6">
+              <div className="w-full h-[1px]  bg-[#FFFDF4]"></div>
+              <h2 className="text-xl text-[#FFFDF4] px-3">OR</h2>
+              <div className="w-full h-[1px]  bg-[#FFFDF4]"></div>
+            </div>
+            <div className="lg:w-[550px] md:[443px] mt-6 flex flex-row items-center justify-center">
+              <h3 className="leading-7 px-3 absolute -translate-y-1 text-white font-semibold duration-300">
+                Already have an account?{" "}
+                <Link href={"/login"} className="underline">
+                  {" "}
+                  Sign In
+                </Link>
+              </h3>
+            </div>
           </form>
         )}
         {phase === 2 && (
