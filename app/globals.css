@@ -8,3 +8,29 @@ html, body {
   max-width: 100%;
   overflow-x: hidden;
 }
+
+
+.swiper-container {
+  width: 100%;
+}
+.card-container {
+  display: flex;
+  justify-content: space-around;
+}
+.card {
+  width: 430px;
+  height: 180px;
+  background-color: #f0f0f0;
+  padding: 10px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border-radius: 8px;
+  margin: 10px;
+}
+.swiper-pagination-bullet-active {
+  background-color: #116A7B !important; /* Custom color for pagination dots */
+}
+
+.swiper-pagination-bullet {
+  margin-right: 6px;
+  cursor: pointer;
+}
