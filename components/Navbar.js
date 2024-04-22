@@ -28,13 +28,13 @@ const Navbar = () => {
           <Link href={"/"} className="mr-12 hover:text-gray-900">
             Rent
           </Link>
-          <Link href={"/"} className="mr-12 hover:text-gray-900">
+          <Link href={"/contactus"} className="mr-12 hover:text-gray-900">
             Contact
           </Link>
           <Link href={"/"} className="mr-12 hover:text-gray-900">
             About
           </Link>
-          <Link href={"/"} className="mr-12 hover:text-gray-900">
+          <Link href={"/privacy-policy"} className="mr-12 hover:text-gray-900">
             Privacy
           </Link>
         </nav>
