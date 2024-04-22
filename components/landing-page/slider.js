@@ -91,7 +91,7 @@ const SwiperComponent = () => {
           <SwiperSlide key={slide}>
             <div className="card-container">
               {[1, 2, 3, 4, 5].map((card, cardIndex) => (
-                <div className="bg-white border-2 border-[#D9D9D9] rounded-xl">
+                <div key={cardIndex} className="bg-white border-2 border-[#D9D9D9] rounded-xl">
                   <div className="p-2 relative">
                     <Image
                       width={1000}

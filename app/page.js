@@ -1,4 +1,6 @@
 import Carousel from "@/components/landing-page/carousel";
+import SectionAboutUs from "@/components/landing-page/section-aboutus";
+import SectionContact from "@/components/landing-page/section-contactus";
 import SectionFeaturedProperty from "@/components/landing-page/section-featured-property";
 import SectionMap from "@/components/landing-page/section-map";
 import Image from "next/image";
@@ -10,6 +12,8 @@ export default function Home() {
       <Carousel/>
       <SectionMap/>
       <SectionFeaturedProperty/>
+      <SectionAboutUs/>
+      <SectionContact/>
     </main>
   );
 }
