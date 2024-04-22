@@ -16,6 +16,7 @@ const SectionAboutUs = () => {
             height={2000}
             src={"/assets/landing-page/section-aboutus.png"}
             className="w-full h-auto object-cover object-center rounded-3xl overflow-hidden"
+            alt="about-us"
           />
         </div>
         <div className="w-1/2 px-20">
@@ -23,7 +24,7 @@ const SectionAboutUs = () => {
             Know the facts about a location
           </h2>
           <p className="text-[2rem] tracking-wide font-light text-white mt-5">
-            Lorem Ipsum has been the industry's standard dummy text ever since
+            Lorem Ipsum has been the industry&apos;s standard dummy text ever since
             the 1500s, when an unknown printer took a galley of type and
             scrambled it to make a type specimen book. It has survived not only
             five centuries, but also the leap into electronic typesetting,
@@ -36,7 +37,7 @@ const SectionAboutUs = () => {
             Know the facts about a location
           </h2>
           <p className="text-[2rem] tracking-wide font-light text-white mt-5">
-            Lorem Ipsum has been the industry's standard dummy text ever since
+            Lorem Ipsum has been the industry&apos;s standard dummy text ever since
             the 1500s, when an unknown printer took a galley of type and
             scrambled it to make a type specimen book. It has survived not only
             five centuries, but also the leap into electronic typesetting,
@@ -48,6 +49,7 @@ const SectionAboutUs = () => {
             height={2000}
             src={"/assets/landing-page/section-aboutus.png"}
             className="w-full h-auto object-cover object-center rounded-3xl overflow-hidden"
+            alt="about-us"
           />
         </div>
       </div>
@@ -58,6 +60,7 @@ const SectionAboutUs = () => {
             height={2000}
             src={"/assets/landing-page/section-aboutus.png"}
             className="w-full h-auto object-cover object-center rounded-3xl overflow-hidden"
+            alt="about-us"
           />
         </div>
         <div className="w-1/2 px-20">
@@ -65,7 +68,7 @@ const SectionAboutUs = () => {
             Know the facts about a location
           </h2>
           <p className="text-[2rem] tracking-wide font-light text-white mt-5">
-            Lorem Ipsum has been the industry's standard dummy text ever since
+            Lorem Ipsum has been the industry&apos;s standard dummy text ever since
             the 1500s, when an unknown printer took a galley of type and
             scrambled it to make a type specimen book. It has survived not only
             five centuries, but also the leap into electronic typesetting,

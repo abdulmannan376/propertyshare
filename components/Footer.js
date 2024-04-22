@@ -10,6 +10,7 @@ const Footer = () => {
           height={1000}
           src={"/logo-large.png"}
           className="w-[420px] h-[350px] object-contain object-center"
+          alt="Footer-logo"
         />
       </div>
       <div className="w-1/2">

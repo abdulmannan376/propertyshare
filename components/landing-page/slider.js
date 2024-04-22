@@ -98,6 +98,7 @@ const SwiperComponent = () => {
                       height={1000}
                       src={"/assets/landing-page/property-image.png"}
                       className="w-[16rem] h-auto object-cover object-center rounded-md overflow-hidden"
+                      alt={`${slide}${card}`}
                     />
                     <span
                       onClick={() =>
