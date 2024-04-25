@@ -56,6 +56,7 @@ const Page = () => {
         });
 
         localStorage.setItem("token", response.token);
+        localStorage.setItem("userDetails", JSON.stringify(response.body))
         setTimeout(() => {
           router.push("/");
         }, 5100);
