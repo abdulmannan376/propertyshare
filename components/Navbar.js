@@ -103,7 +103,7 @@ const Navbar = () => {
         pauseOnHover
         theme="light"
       />
-      <header className="absolute top-0 w-full text-gray-600 body-font">
+      <header className="absolute top-0 w-full text-gray-600 body-font z-[1000]">
         <div className="mx-16 flex flex-wrap p-5 flex-col md:flex-row items-center">
           <a className="flex flex-col title-font font-medium items-center justify-center text-gray-900 mb-4 md:mb-0">
             <Image

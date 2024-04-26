@@ -11,12 +11,12 @@ import {
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import SetViewToCurrentLocation from "../../components/map/setViewToCurrentLocation"; // Make sure the import path matches where you save this file
-// import PinIcon from "@/public/assets/pin.png";
-// Fixing icons issue with Webpack as per Leaflet's known issue
 import L from "leaflet";
 import SearchBar from "@/components/map/searchBar";
 import FilterComponent from "@/components/map/filterComponent";
 import Modal from "@/components/map/requestPropertyModal";
+// import PinIcon from "@/public/assets/pin.png";
+// Fixing icons issue with Webpack as per Leaflet's known issue
 // delete L.Icon.Default.prototype._getIconUrl;
 // Define your custom icon
 // const customIcon = new L.Icon({
