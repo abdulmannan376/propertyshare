@@ -86,7 +86,7 @@ const FilterComponent = ({ onFilterSelect }) => {
       //   }}
     >
       {filters.map((filter, index) => (
-        <div className="relative">
+        <div key={index} className="relative">
           <button
             className="flex flex-row items-center justify-around w-64 bg-white p-3 text-xl"
             onClick={(e) => {
@@ -129,6 +129,7 @@ const FilterComponent = ({ onFilterSelect }) => {
                 {filter.data.map((listItem, i) => (
                   <button
                     type="button"
+                    key={i}
                     className="w-full flex flex-row items-center p-2 border-b border-black border-opacity-20 justify-between"
                   >
                     <li key={i} className="text-base text-[#676767]">
@@ -152,6 +153,7 @@ const FilterComponent = ({ onFilterSelect }) => {
                 {filter.data.map((listItem, i) => (
                   <button
                     type="button"
+                    key={i}
                     className="w-full flex flex-row items-center p-2 border-b border-black border-opacity-20 justify-between"
                   >
                     <li key={i} className="text-base text-[#676767]">
