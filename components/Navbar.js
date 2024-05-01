@@ -15,7 +15,7 @@ import { useRouter } from "next/navigation";
 const Navbar = () => {
   const pathname = usePathname();
   const dispatch = useDispatch();
-  const router = useRouter()
+  const router = useRouter();
 
   const [loggedIn, setLoggedIn] = useState(false);
   const [showDropDowns, setShowDropDowns] = useState({
@@ -52,7 +52,7 @@ const Navbar = () => {
 
       const response = await res.json();
       if (response.success) {
-        console.log("reponse: ", response)
+        console.log("reponse: ", response);
         toast.success(response.message, {
           position: "bottom-center",
           autoClose: 5000,
@@ -65,7 +65,7 @@ const Navbar = () => {
         });
         localStorage.removeItem("token");
         localStorage.removeItem("userDetails");
-        router.push("/")
+        router.push("/");
       }
     } catch (error) {
       toast.error(error.message, {
@@ -167,8 +167,14 @@ const Navbar = () => {
                 {showDropDowns["user"] && (
                   <ul className="absolute w-48 -right-0 bg-white border border-[#116A7B] mt-0 rounded-xl">
                     <li className="border-b border-[#116A7B] py-3 px-5">
-                      <button
-                        type="button"
+                      <Link
+                        href={`/user/${
+                          JSON.parse(localStorage.getItem("userDetails"))
+                            .username
+                        }`}
+                        onClick={() =>
+                          handleShowDropdown("user", !showDropDowns["user"])
+                        }
                         className="w-full flex flex-row items-center space-x-3 text-[#116A7B] mt-1"
                       >
                         <Image
@@ -178,11 +184,14 @@ const Navbar = () => {
                           className="w-8 h-8 object-scale-down object-center rounded-full"
                         />
                         <p className="text-lg">Profile</p>
-                      </button>
+                      </Link>
                     </li>
                     <li className="border-b border-[#116A7B] py-3 px-5">
                       <button
                         type="button"
+                        onClick={() =>
+                          handleShowDropdown("user", !showDropDowns["user"])
+                        }
                         className="w-full flex flex-row items-center space-x-3 text-[#116A7B] mt-1"
                       >
                         <CiSettings className="text-3xl" />
@@ -192,7 +201,10 @@ const Navbar = () => {
                     <li className=" border-[#116A7B] py-3 px-5">
                       <button
                         type="button"
-                        onClick={(e) => handleLogout(e)}
+                        onClick={(e) => {
+                          handleShowDropdown("user", !showDropDowns["user"]);
+                          handleLogout(e);
+                        }}
                         className="w-full flex flex-row items-center space-x-3 text-[#116A7B] mt-1"
                       >
                         <IoMdLogOut className="text-3xl" />

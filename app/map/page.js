@@ -7,10 +7,9 @@ import {
   Marker,
   Popup,
   useMapEvents,
-  useMap,
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import SetViewToCurrentLocation from "../../components/map/setViewToCurrentLocation"; // Make sure the import path matches where you save this file
+import SetViewToCurrentLocation from "../../components/map/setViewToCurrentLocation";
 import L from "leaflet";
 import SearchBar from "@/components/map/searchBar";
 import FilterComponent from "@/components/map/filterComponent";
@@ -30,7 +29,7 @@ const Page = () => {
   const [position, setPosition] = useState(null);
   const [markers, setMarkers] = useState([]);
   const [customIcon, setCustomIcon] = useState(null);
-  const [customFilterIcon, setCustomFilterIcon] = useState(null)
+  const [customFilterIcon, setCustomFilterIcon] = useState(null);
 
   const [modalOpen, setModalOpen] = useState(false);
   const [modalCoordinates, setModalCoordinates] = useState({
@@ -41,39 +40,43 @@ const Page = () => {
   const [myMarkers, setMyMarkers] = useState([]);
 
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        setPosition([position.coords.latitude, position.coords.longitude]);
-      },
-      (error) => {
-        console.error("Error obtaining location", error);
-      }
-    );
-    
-    setCustomIcon(
-      new L.Icon({
-        iconUrl: "/assets/pin.png", // Ensure this is the correct path from your public directory
-        iconSize: [45, 45],
-        iconAnchor: [17, 35],
-        popupAnchor: [0, -35],
-      })
-    );
+    if (typeof window !== "undefined") {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setPosition([position.coords.latitude, position.coords.longitude]);
+        },
+        (error) => {
+          console.error("Error obtaining location", error);
+        }
+      );
+
+      setCustomIcon(
+        new L.Icon({
+          iconUrl: "/assets/pin.png", // Ensure this is the correct path from your public directory
+          iconSize: [45, 45],
+          iconAnchor: [17, 35],
+          popupAnchor: [0, -35],
+        })
+      );
+    }
   }, []);
 
   const MapEvents = () => {
-    useMapEvents({
-      click(e) {
-        const elClass = e.originalEvent.target.className;
-        if (
-          elClass ===
-          "leaflet-container leaflet-touch leaflet-fade-anim leaflet-grab leaflet-touch-drag leaflet-touch-zoom"
-        ) {
-          setModalCoordinates({ lat: e.latlng.lat, long: e.latlng.lng });
-          setModalOpen(true);
-        }
-      },
-    });
-    return null;
+    if (typeof window !== "undefined") {
+      useMapEvents({
+        click(e) {
+          const elClass = e.originalEvent.target.className;
+          if (
+            elClass ===
+            "leaflet-container leaflet-touch leaflet-fade-anim leaflet-grab leaflet-touch-drag leaflet-touch-zoom"
+          ) {
+            setModalCoordinates({ lat: e.latlng.lat, long: e.latlng.lng });
+            setModalOpen(true);
+          }
+        },
+      });
+      return null;
+    }
   };
 
   const handleFilterSelect = (coordinates, iconURL) => {
@@ -85,7 +88,7 @@ const Page = () => {
         iconAnchor: [17, 35],
         popupAnchor: [0, -35],
       })
-    )
+    );
   };
 
   const handleModalSave = async (data) => {
@@ -118,55 +121,57 @@ const Page = () => {
   };
 
   return (
-    <MapContainer
-      center={position || [51.505, -0.09]}
-      zoom={15}
-      style={{ height: "100vh", width: "100%" }}
-    >
-      <TileLayer
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-      />
-      <SearchBar />
-      {position && customIcon && (
-        <>
-          <Marker position={position} icon={customIcon}>
-            <Popup>You are here!</Popup>
+    typeof window !== "undefined" && (
+      <MapContainer
+        center={position || [51.505, -0.09]}
+        zoom={15}
+        style={{ height: "100vh", width: "100%" }}
+      >
+        <TileLayer
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        />
+        <SearchBar />
+        {position && customIcon && (
+          <>
+            <Marker position={position} icon={customIcon}>
+              <Popup>You are here!</Popup>
+            </Marker>
+          </>
+        )}
+        {markers.map((data, index) => (
+          <Marker
+            key={index}
+            position={[data.coordinates.lat, data.coordinates.long]}
+            icon={customFilterIcon}
+          >
+            <Popup>
+              Marker at {data.coordinates.lat}, {data.coordinates.long}
+            </Popup>
           </Marker>
-        </>
-      )}
-      {markers.map((data, index) => (
-        <Marker
-          key={index}
-          position={[data.coordinates.lat, data.coordinates.long]}
-          icon={customFilterIcon}
-        >
-          <Popup>
-            Marker at {data.coordinates.lat}, {data.coordinates.long}
-          </Popup>
-        </Marker>
-      ))}
-      {myMarkers.map((coordinates, index) => (
-        <Marker
-          key={index}
-          position={[coordinates.lat, coordinates.long]}
-          icon={customIcon}
-        >
-          <Popup>
-            Marker at {coordinates.lat}, {coordinates.long}
-          </Popup>
-        </Marker>
-      ))}
-      <SetViewToCurrentLocation position={position} />
-      <FilterComponent onFilterSelect={handleFilterSelect} />
-      <MapEvents />
-      <Modal
-        isOpen={modalOpen}
-        onClose={() => setModalOpen(false)}
-        onSave={handleModalSave}
-        coordinates={modalCoordinates}
-      />
-    </MapContainer>
+        ))}
+        {myMarkers.map((coordinates, index) => (
+          <Marker
+            key={index}
+            position={[coordinates.lat, coordinates.long]}
+            icon={customIcon}
+          >
+            <Popup>
+              Marker at {coordinates.lat}, {coordinates.long}
+            </Popup>
+          </Marker>
+        ))}
+        <SetViewToCurrentLocation position={position} />
+        <FilterComponent onFilterSelect={handleFilterSelect} />
+        <MapEvents />
+        <Modal
+          isOpen={modalOpen}
+          onClose={() => setModalOpen(false)}
+          onSave={handleModalSave}
+          coordinates={modalCoordinates}
+        />
+      </MapContainer>
+    )
   );
 };
 

@@ -16,7 +16,6 @@ import "leaflet/dist/leaflet.css";
 import SetViewToCurrentLocation from "../../components/map/setViewToCurrentLocation"; // Make sure the import path matches where you save this file
 import L from "leaflet";
 import SearchBar from "./searchBar";
-import FilterComponent from "@/components/map/filterComponent";
 import Modal from "@/components/map/requestPropertyModal";
 import FlyToCoordinate from "./flyToCoordinate";
 
@@ -70,41 +69,47 @@ const SectionMap = () => {
       iconURL: "/person-pin.png",
     },
   ]);
+  console.log("window: ", typeof window);
 
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        setPosition([position.coords.latitude, position.coords.longitude]);
-      },
-      (error) => {
-        console.error("Error obtaining location", error);
-      }
-    );
+    // console.log("window: ", window);
+    if (typeof window !== "undefined") {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setPosition([position.coords.latitude, position.coords.longitude]);
+        },
+        (error) => {
+          console.error("Error obtaining location", error);
+        }
+      );
 
-    setCustomIcon(
-      new L.Icon({
-        iconUrl: "/assets/pin.png", // Ensure this is the correct path from your public directory
-        iconSize: [45, 45],
-        iconAnchor: [17, 35],
-        popupAnchor: [0, -35],
-      })
-    );
+      setCustomIcon(
+        new L.Icon({
+          iconUrl: "/assets/pin.png", // Ensure this is the correct path from your public directory
+          iconSize: [45, 45],
+          iconAnchor: [17, 35],
+          popupAnchor: [0, -35],
+        })
+      );
+    }
   }, []);
 
   const MapEvents = () => {
-    useMapEvents({
-      click(e) {
-        const elClass = e.originalEvent.target.className;
-        if (
-          elClass ===
-          "leaflet-container leaflet-touch leaflet-fade-anim leaflet-grab leaflet-touch-drag leaflet-touch-zoom"
-        ) {
-          setModalCoordinates({ lat: e.latlng.lat, long: e.latlng.lng });
-          setModalOpen(true);
-        }
-      },
-    });
-    return null;
+    if (typeof window !== "undefined") {
+      useMapEvents({
+        click(e) {
+          const elClass = e.originalEvent.target.className;
+          if (
+            elClass ===
+            "leaflet-container leaflet-touch leaflet-fade-anim leaflet-grab leaflet-touch-drag leaflet-touch-zoom"
+          ) {
+            setModalCoordinates({ lat: e.latlng.lat, long: e.latlng.lng });
+            setModalOpen(true);
+          }
+        },
+      });
+      return null;
+    }
   };
 
   const handleFilterClick = async (index, id, value, key) => {
@@ -234,63 +239,65 @@ const SectionMap = () => {
         />
       </div>
       <div className="mt-6 mx-14">
-        <MapContainer
-          center={position || [51.505, -0.09]}
-          zoom={15}
-          style={{ height: "60vh", width: "100%" }}
-        >
-          {/* <SearchBar /> */}
-          <TileLayer
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          />
-          <FlyToCoordinate coordinate={searchedCoordinate} />
-          {searchedCoordinate.length > 0 && (
-            <>
-              <Marker position={searchedCoordinate} icon={customIcon}>
-                <Popup>{searchedName}</Popup>
+        {typeof window !== "undefined" && (
+          <MapContainer
+            center={position || [51.505, -0.09]}
+            zoom={15}
+            style={{ height: "60vh", width: "100%" }}
+          >
+            {/* <SearchBar /> */}
+            <TileLayer
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            />
+            <FlyToCoordinate coordinate={searchedCoordinate} />
+            {searchedCoordinate.length > 0 && (
+              <>
+                <Marker position={searchedCoordinate} icon={customIcon}>
+                  <Popup>{searchedName}</Popup>
+                </Marker>
+              </>
+            )}
+            {position && customIcon && (
+              <>
+                <Marker position={position} icon={customIcon}>
+                  <Popup>You are here!</Popup>
+                </Marker>
+              </>
+            )}
+            {markers.map((data, index) => (
+              <Marker
+                key={index}
+                position={[data.coordinates.lat, data.coordinates.long]}
+                icon={customFilterIcon}
+              >
+                <Popup>
+                  Marker at {data.coordinates.lat}, {data.coordinates.long}
+                </Popup>
               </Marker>
-            </>
-          )}
-          {position && customIcon && (
-            <>
-              <Marker position={position} icon={customIcon}>
-                <Popup>You are here!</Popup>
+            ))}
+            {myMarkers.map((coordinates, index) => (
+              <Marker
+                key={index}
+                position={[coordinates.lat, coordinates.long]}
+                icon={customIcon}
+              >
+                <Popup>
+                  Marker at {coordinates.lat}, {coordinates.long}
+                </Popup>
               </Marker>
-            </>
-          )}
-          {markers.map((data, index) => (
-            <Marker
-              key={index}
-              position={[data.coordinates.lat, data.coordinates.long]}
-              icon={customFilterIcon}
-            >
-              <Popup>
-                Marker at {data.coordinates.lat}, {data.coordinates.long}
-              </Popup>
-            </Marker>
-          ))}
-          {myMarkers.map((coordinates, index) => (
-            <Marker
-              key={index}
-              position={[coordinates.lat, coordinates.long]}
-              icon={customIcon}
-            >
-              <Popup>
-                Marker at {coordinates.lat}, {coordinates.long}
-              </Popup>
-            </Marker>
-          ))}
-          <SetViewToCurrentLocation position={position} />
-          {/* <FilterComponent onFilterSelect={handleFilterSelect} /> */}
-          <MapEvents />
-          <Modal
-            isOpen={modalOpen}
-            onClose={() => setModalOpen(false)}
-            onSave={handleModalSave}
-            coordinates={modalCoordinates}
-          />
-        </MapContainer>
+            ))}
+            <SetViewToCurrentLocation position={position} />
+            {/* <FilterComponent onFilterSelect={handleFilterSelect} /> */}
+            <MapEvents />
+            <Modal
+              isOpen={modalOpen}
+              onClose={() => setModalOpen(false)}
+              onSave={handleModalSave}
+              coordinates={modalCoordinates}
+            />
+          </MapContainer>
+        )}
       </div>
 
       <div className="w-fit flex flex-row items-center border-2 border-[#676767] divide-x-2 divide-[#676767] justify-center bg-white my-16 mx-auto duration-700 transition">
