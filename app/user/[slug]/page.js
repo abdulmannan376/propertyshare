@@ -45,7 +45,7 @@ const Page = () => {
     },
     { name: "Reservations", roles: ["shareholder", "user"] },
     { name: "Bills and Payment", roles: ["admin", "shareholder", "user"] },
-    { name: "Add Property", roles: ["admin", "shareholder", "user"] },
+    { name: "Property Management", roles: ["admin", "shareholder", "user"] },
     { name: "Blocked Users", roles: ["shareholder", "user"] },
   ];
 
@@ -54,18 +54,7 @@ const Page = () => {
 
   const handleDashPanel = (e) => {
     e.preventDefault();
-    const panelClassList = panelRef.current.classList;
-    if (panelClassList.contains("-translate-x-[0%]")) {
-      setTimeout(() => {
-        setPanelIsOpen(false);
-      }, 500);
-      panelClassList.remove("-translate-x-[0%]");
-      panelClassList.add("-translate-x-[95%]");
-    } else {
-      setPanelIsOpen(true);
-      panelClassList.remove("-translate-x-[95%]");
-      panelClassList.add("-translate-x-[0%]");
-    }
+    setPanelIsOpen((prevOpen) => !prevOpen);
   };
 
   return (
@@ -74,7 +63,9 @@ const Page = () => {
       <div className="w-full flex flex-row items-start">
         <div
           ref={panelRef}
-          className="w-1/5 z-20 transition-transform -translate-x-[0%] bg-[#015A6B] duration-500"
+          className={`${
+            panelIsOpen ? "-translate-x-[0%]" : "-translate-x-[100%]"
+          } absolute w-1/5 h-[44rem] z-20 transition-transform bg-[#015A6B] duration-500`}
         >
           <div
             onClick={(event) => handleUpdateActiveTab(event, "Profile")}
@@ -108,7 +99,7 @@ const Page = () => {
                   e.stopPropagation();
                   handleDashPanel(e);
                 }}
-                className="absolute -right-5 bg-[#116A7B] text-white ml-auto text-4xl p-2 rounded-full cursor-pointer ease-in-out"
+                className="absolute -right-10 bg-[#116A7B] text-white ml-auto text-4xl p-2 rounded-full cursor-pointer ease-in-out"
               />
             )}
           </div>
@@ -137,8 +128,9 @@ const Page = () => {
             )}
           </ul>
         </div>
-        <div className="w-4/5">
-          {activeTab === "Add Property" && <AddProperty />}
+        <div className={`w-${panelIsOpen ? "1/5" : "0"} h-[44rem] duration-700 ease-in-out`}></div>
+        <div className={`w-${panelIsOpen ? "4/5" : "full"} px-14`}>
+          {activeTab === "Property Management" && <AddProperty />}
         </div>
       </div>
     </div>
