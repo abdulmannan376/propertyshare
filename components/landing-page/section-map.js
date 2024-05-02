@@ -18,6 +18,7 @@ import L from "leaflet";
 import SearchBar from "./searchBar";
 import Modal from "@/components/map/requestPropertyModal";
 import FlyToCoordinate from "./flyToCoordinate";
+import NoSsr from "../noSSR";
 
 const SectionMap = () => {
   const [position, setPosition] = useState(null);
@@ -95,21 +96,19 @@ const SectionMap = () => {
   }, []);
 
   const MapEvents = () => {
-    if (typeof window !== "undefined") {
-      useMapEvents({
-        click(e) {
-          const elClass = e.originalEvent.target.className;
-          if (
-            elClass ===
-            "leaflet-container leaflet-touch leaflet-fade-anim leaflet-grab leaflet-touch-drag leaflet-touch-zoom"
-          ) {
-            setModalCoordinates({ lat: e.latlng.lat, long: e.latlng.lng });
-            setModalOpen(true);
-          }
-        },
-      });
-      return null;
-    }
+    useMapEvents({
+      click(e) {
+        const elClass = e.originalEvent.target.className;
+        if (
+          elClass ===
+          "leaflet-container leaflet-touch leaflet-fade-anim leaflet-grab leaflet-touch-drag leaflet-touch-zoom"
+        ) {
+          setModalCoordinates({ lat: e.latlng.lat, long: e.latlng.lng });
+          setModalOpen(true);
+        }
+      },
+    });
+    return null;
   };
 
   const handleFilterClick = async (index, id, value, key) => {
@@ -216,12 +215,14 @@ const SectionMap = () => {
     "bg-red-400",
   ];
   return (
-    <div className="bg-white">
-      <div className="mx-14 mt-14">
-        <h1 className="text-4xl text-center uppercase font-semibold text-[#116A7B] ">
-          request property <i className="text-[#CDC2AE]"> anywhere</i> you wish
-        </h1>
-        {/* <form className="flex flex-row bg-[#D9D9D9] bg-opacity-[76%] border border-[#F5F5F5] mt-6 rounded-md pl-2">
+    <NoSsr>
+      <div className="bg-white">
+        <div className="mx-14 mt-14">
+          <h1 className="text-4xl text-center uppercase font-semibold text-[#116A7B] ">
+            request property <i className="text-[#CDC2AE]"> anywhere</i> you
+            wish
+          </h1>
+          {/* <form className="flex flex-row bg-[#D9D9D9] bg-opacity-[76%] border border-[#F5F5F5] mt-6 rounded-md pl-2">
           <input
             type="text"
             name="searchbar"
@@ -233,13 +234,12 @@ const SectionMap = () => {
             <IoIosSearch className="bg-[#CDC2AE] p-2 text-6xl text-[#FFFDF4] border-r border-[#F5F5F5] rounded-r-md rounded-br-md" />
           </button>
         </form> */}
-        <SearchBar
-          handleSearchedCoordinate={setSearchedCoordinate}
-          nameResult={setSearchedName}
-        />
-      </div>
-      <div className="mt-6 mx-14">
-        {typeof window !== "undefined" && (
+          <SearchBar
+            handleSearchedCoordinate={setSearchedCoordinate}
+            nameResult={setSearchedName}
+          />
+        </div>
+        <div className="mt-6 mx-14">
           <MapContainer
             center={position || [51.505, -0.09]}
             zoom={15}
@@ -297,87 +297,92 @@ const SectionMap = () => {
               coordinates={modalCoordinates}
             />
           </MapContainer>
-        )}
-      </div>
+        </div>
 
-      <div className="w-fit flex flex-row items-center border-2 border-[#676767] divide-x-2 divide-[#676767] justify-center bg-white my-16 mx-auto duration-700 transition">
-        {filters.map((filter, index) => (
-          <div key={index} className="relative">
-            <button
-              type="button"
-              onClick={(e) => {
-                if (filter.data.length > 0) {
-                  if (index === 0) {
-                    handleDropdownActivity(
-                      "propertyTypeActive",
-                      !dropdownsStatus["propertyTypeActive"],
-                      e
-                    );
+        <div className="w-fit flex flex-row items-center border-2 border-[#676767] divide-x-2 divide-[#676767] justify-center bg-white my-16 mx-auto duration-700 transition">
+          {filters.map((filter, index) => (
+            <div key={index} className="relative">
+              <button
+                type="button"
+                onClick={(e) => {
+                  if (filter.data.length > 0) {
+                    if (index === 0) {
+                      handleDropdownActivity(
+                        "propertyTypeActive",
+                        !dropdownsStatus["propertyTypeActive"],
+                        e
+                      );
+                    } else {
+                      handleDropdownActivity(
+                        "availableSharesActive",
+                        !dropdownsStatus["availableSharesActive"],
+                        e
+                      );
+                    }
                   } else {
-                    handleDropdownActivity(
-                      "availableSharesActive",
-                      !dropdownsStatus["availableSharesActive"],
-                      e
+                    handleFilterClick(
+                      index,
+                      filter.name,
+                      !filter.active,
+                      "null"
                     );
                   }
-                } else {
-                  handleFilterClick(index, filter.name, !filter.active, "null");
-                }
-              }}
-              className="w-72 bg-transparent p-3 text-xl font-semibold flex items-center justify-between"
-            >
-              <h1>
-                {filter.name}{" "}
-                {filter.data.length > 0 && (
-                  <FaAngleDown className="inline-flex" />
+                }}
+                className="w-72 bg-transparent p-3 text-xl font-semibold flex items-center justify-between"
+              >
+                <h1>
+                  {filter.name}{" "}
+                  {filter.data.length > 0 && (
+                    <FaAngleDown className="inline-flex" />
+                  )}
+                </h1>
+                {filter.active && (
+                  <div
+                    className={`text-xs text-white rounded-full py-[3px] px-[8px] ml-5 bg-blue-500`}
+                  >
+                    1
+                  </div>
                 )}
-              </h1>
-              {filter.active && (
-                <div
-                  className={`text-xs text-white rounded-full py-[3px] px-[8px] ml-5 bg-blue-500`}
-                >
-                  1
-                </div>
-              )}
-            </button>
-            {index === 1 && dropdownsStatus["availableSharesActive"] && (
-              <div className="absolute w-72 bg-white ">
-                <ul className="px-5 space-y-1 max-h-40 overflow-y-auto">
-                  {filter.data.map((listItem, i) => (
-                    <li
-                      key={i}
-                      className="flex flex-row items-center justify-between p-2 border-b border-black border-opacity-20 text-base text-[#676767]"
-                    >
-                      {listItem.name}{" "}
-                      {/* <div
+              </button>
+              {index === 1 && dropdownsStatus["availableSharesActive"] && (
+                <div className="absolute w-72 bg-white ">
+                  <ul className="px-5 space-y-1 max-h-40 overflow-y-auto">
+                    {filter.data.map((listItem, i) => (
+                      <li
+                        key={i}
+                        className="flex flex-row items-center justify-between p-2 border-b border-black border-opacity-20 text-base text-[#676767]"
+                      >
+                        {listItem.name}{" "}
+                        {/* <div
                         className={`w-3 h-3 rounded-full ml-5 ${availableShareTypeColorList[i]}`}
                       /> */}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-            {index === 0 && dropdownsStatus["propertyTypeActive"] && (
-              <div className="absolute w-72 bg-white z-[5000]">
-                <ul className="px-5 space-y-1 max-h-60 overflow-y-auto">
-                  {filter.data.map((listItem, i) => (
-                    <li
-                      key={i}
-                      className="flex flex-row items-center justify-between p-2 border-b border-black border-opacity-20 text-base text-[#676767]"
-                    >
-                      {listItem.name}{" "}
-                      <div
-                        className={`w-3 h-3 rounded-full ml-5 ${availableShareTypeColorList[i]}`}
-                      />
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-          </div>
-        ))}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {index === 0 && dropdownsStatus["propertyTypeActive"] && (
+                <div className="absolute w-72 bg-white z-[5000]">
+                  <ul className="px-5 space-y-1 max-h-60 overflow-y-auto">
+                    {filter.data.map((listItem, i) => (
+                      <li
+                        key={i}
+                        className="flex flex-row items-center justify-between p-2 border-b border-black border-opacity-20 text-base text-[#676767]"
+                      >
+                        {listItem.name}{" "}
+                        <div
+                          className={`w-3 h-3 rounded-full ml-5 ${availableShareTypeColorList[i]}`}
+                        />
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
+    </NoSsr>
   );
 };
 

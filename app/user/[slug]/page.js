@@ -19,7 +19,7 @@ const Page = () => {
     );
     setName(JSON.parse(localStorage.getItem("userDetails")).name);
     setUsername(JSON.parse(localStorage.getItem("userDetails")).username);
-  }, []);
+  });
 
   const activeTab = useSelector(
     (state) => state.userDashboardSliceReducer.activeTab
