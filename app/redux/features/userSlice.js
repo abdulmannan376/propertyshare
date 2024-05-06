@@ -1,24 +1,26 @@
-"use client"
+"use client";
 
-import { createSlice } from "@reduxjs/toolkit"
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    userRole: "",
-    userName: "",
-    userEmail: ""
-}
+  userRole: "",
+  userName: "",
+  userEmail: "",
+};
 
 export const adminSlice = createSlice({
-    name: "user details",
-    initialState,
-    reducers: {
-        updateUserDetails: (state, action) => {
-            state.userRole = action.payload.role 
-            state.userName = action.payload.name
-            state.userEmail = action.payload.email 
-        }
-    }
-})
+  name: "user details",
+  initialState,
+  reducers: {
+    updateUserDetails: (state, action) => {
+      if (action.payload) {
+        state.userRole = action.payload.role;
+        state.userName = action.payload.name;
+        state.userEmail = action.payload.email;
+      }
+    },
+  },
+});
 
-export const {updateUserDetails} = adminSlice.actions
-export default adminSlice.reducer
+export const { updateUserDetails } = adminSlice.actions;
+export default adminSlice.reducer;

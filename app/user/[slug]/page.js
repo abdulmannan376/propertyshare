@@ -7,7 +7,7 @@ import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
-import AddProperty from "@/components/user/addProperty";
+import PropertyManagement from "@/components/user/addProperty";
 
 const Page = () => {
   const dispatch = useDispatch();
@@ -19,7 +19,35 @@ const Page = () => {
     );
     setName(JSON.parse(localStorage.getItem("userDetails")).name);
     setUsername(JSON.parse(localStorage.getItem("userDetails")).username);
+    fetchSettings()
   });
+
+  const fetchSettings = async () => {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_HOST}/user/get-default-settings/${
+          JSON.parse(localStorage.getItem("userDetails")).username
+        }`
+      );
+      const response = await res.json();
+      if (!response.success) {
+        throw new Error(response.message);
+      }
+      const body = response.body;
+      localStorage.setItem(
+        "userSettings",
+        JSON.stringify({
+          currency: body.currencyChoosen,
+          lang: body.languageChoosen,
+          profileUpdated: body.profileUpdated,
+          paymentMethodAdded: body.paymentMethodAdded,
+          areaUnit: body.areaUnit,
+        })
+      );
+    } catch (error) {
+      console.error("Error: ", error);
+    }
+  };
 
   const activeTab = useSelector(
     (state) => state.userDashboardSliceReducer.activeTab
@@ -34,6 +62,7 @@ const Page = () => {
   };
 
   const options = [
+    { name: "Statistics", roles: ["admin"] },
     { name: "Shares in Properties", roles: ["shareholder"] },
     { name: "Offers", roles: ["shareholder", "user"] },
     { name: "Wishlist", roles: ["shareholder", "user"] },
@@ -47,6 +76,9 @@ const Page = () => {
     { name: "Bills and Payment", roles: ["admin", "shareholder", "user"] },
     { name: "Property Management", roles: ["admin", "shareholder", "user"] },
     { name: "Blocked Users", roles: ["shareholder", "user"] },
+    { name: "Buyback Requests", roles: ["admin"] },
+    { name: "Share Transfer", roles: ["admin"] },
+    { name: "Restricted Users", roles: ["admin"] },
   ];
 
   const panelRef = useRef();
@@ -78,6 +110,7 @@ const Page = () => {
               height={1000}
               src={"/dummy-image.png"}
               className="w-12 h-12 object-contain object-center "
+              alt="user profile pic"
             />
             <h1 className="text-white leading-5 pl-4">
               {" "}
@@ -128,9 +161,17 @@ const Page = () => {
             )}
           </ul>
         </div>
-        <div className={`w-${panelIsOpen ? "1/5" : "0"} h-[44rem] duration-700 ease-in-out`}></div>
-        <div className={`w-${panelIsOpen ? "4/5" : "full"} px-14`}>
-          {activeTab === "Property Management" && <AddProperty />}
+        <div
+          className={`w-${
+            panelIsOpen ? "1/5" : "0"
+          } h-[44rem] duration-700 ease-in-out`}
+        ></div>
+        <div
+          className={`${
+            panelIsOpen ? "w-4/5" : "w-full"
+          } duration-700 ease-in-out`}
+        >
+          {activeTab === "Property Management" && <PropertyManagement />}
         </div>
       </div>
     </div>

@@ -9,7 +9,7 @@ import { CiSettings } from "react-icons/ci";
 import { IoMdLogOut } from "react-icons/io";
 import { FaBell } from "react-icons/fa";
 import { ToastContainer, toast } from "react-toastify";
-// import "react-toastify/dist/ReactToastify.css";
+import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from "next/navigation";
 
 const Navbar = () => {
@@ -65,7 +65,9 @@ const Navbar = () => {
         });
         localStorage.removeItem("token");
         localStorage.removeItem("userDetails");
-        router.push("/");
+        setTimeout(() => {
+          router.push("/");
+        }, 5200);
       }
     } catch (error) {
       toast.error(error.message, {

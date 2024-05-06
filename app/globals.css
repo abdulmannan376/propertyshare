@@ -4,7 +4,8 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap');
 
-html, body {
+html,
+body {
   max-width: 100%;
   overflow-x: hidden;
 }
@@ -13,24 +14,46 @@ html, body {
 .swiper-container {
   width: 100%;
 }
+
 .card-container {
   display: flex;
   justify-content: space-around;
 }
+
 .card {
   width: 430px;
   height: 180px;
   background-color: #f0f0f0;
   padding: 10px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
   margin: 10px;
 }
+
 .swiper-pagination-bullet-active {
-  background-color: #116A7B !important; /* Custom color for pagination dots */
+  background-color: #116A7B !important;
+  /* Custom color for pagination dots */
 }
 
 .swiper-pagination-bullet {
   margin-right: 6px;
+  cursor: pointer;
+}
+
+input[type='range'].slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: #116A7B;
+  cursor: pointer;
+}
+
+input[type='range'].slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: #116A7B;
   cursor: pointer;
 }

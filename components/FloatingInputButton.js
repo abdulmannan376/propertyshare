@@ -48,7 +48,7 @@ const FloatingLabelInput = ({
       )}
       <label
         htmlFor={id}
-        className={`absolute top-0 left-0  duration-300 origin-0 ${
+        className={`absolute top-0 left-0 duration-300 origin-0 ${
           isFocused || value
             ? "text-xs -translate-y-4 py-5 px-3 text-blue-500"
             : "text-gray-500 p-4"

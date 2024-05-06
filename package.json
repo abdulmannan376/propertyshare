@@ -11,6 +11,7 @@
   "dependencies": {
     "@react-leaflet/core": "^2.1.0",
     "@reduxjs/toolkit": "^2.2.3",
+    "countrycitystatejson": "^21.3.2702",
     "leaflet": "^1.9.4",
     "next": "14.2.1",
     "react": "^18",
