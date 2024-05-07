@@ -1,11 +1,15 @@
 import dynamic from "next/dynamic";
+import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
-const MapArea = dynamic(() => import("./mapArea"), {ssr: false});
+import { toast } from "react-toastify";
+const MapArea = dynamic(() => import("./mapArea"), { ssr: false });
 const compCities = require("countrycitystatejson");
 
 const PropertyManagement = () => {
   const [isAddPropertyClicked, setIsAddPropertyClicked] = useState(false);
+
+  const [myProperties, setMyProperties] = useState([]);
 
   const [title, setTitle] = useState("");
   const [overview, setOverview] = useState("");
@@ -48,6 +52,34 @@ const PropertyManagement = () => {
       />
     );
   };
+
+  const fetchMyProperties = async () => {
+    try {
+      const userDetails = JSON.parse(localStorage.getItem("userDetails"));
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_HOST}/property/get-properties-by-username/${userDetails.username}`
+      );
+      const response = await res.json();
+      if (response.success) {
+        setMyProperties(response.body);
+      }
+    } catch (error) {
+      toast.error(error.message, {
+        position: "bottom-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  };
+
+  useEffect(() => {
+    fetchMyProperties();
+  }, []);
 
   const propertyTypes = [
     "Select",
@@ -126,11 +158,91 @@ const PropertyManagement = () => {
   };
 
   const handleLocation = (value) => {
-    setCoordinates(value)
-  }
+    setCoordinates(value);
+  };
 
   const changeFormPhase = (value) => {
     setFormPhase(value);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      let listingStatus;
+      if (formPhase < 3) {
+        listingStatus = "draft";
+      } else if (formPhase === 3) {
+        listingStatus = "completed";
+      }
+
+      const userDetails = JSON.parse(localStorage.getItem("userDetails"));
+
+      const data = {
+        title: title,
+        coordinates: coordinates,
+        overview: overview,
+        numOfShares: numOfShares,
+        totalPrice: totalPrize,
+        areaSize: areaSize,
+        startDate: startDate,
+        propertyType: selectedPropertyType,
+        numOfBeds: selectedNumOfBeds,
+        numOfBaths: selectedNumOfBaths,
+        houseNumber: houseNumber,
+        streetNumber: streetNumber,
+        zipCode: zipCode,
+        country: selectedCountry.name,
+        city: selectedCity,
+        fullAddress: fullAddress,
+        username: userDetails.username,
+        userRole: userDetails.role,
+        userName: userDetails.name,
+        email: userDetails.email,
+        listingStatus: listingStatus,
+        token: localStorage.getItem("token"),
+      };
+
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_HOST}/property/add-new-property`,
+        {
+          method: "POST",
+          headers: {
+            "Content-type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
+
+      const response = await res.json();
+
+      if (response.success) {
+        toast.success(response.message, {
+          position: "bottom-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+
+        changeFormPhase(formPhase + 1);
+      } else {
+        throw new Error(response.message);
+      }
+    } catch (error) {
+      toast.error(error.message, {
+        position: "bottom-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
   };
 
   return (
@@ -567,6 +679,7 @@ const PropertyManagement = () => {
               <MapArea
                 searchedCoordinate={searchedCoordinate}
                 handleCoordinates={handleLocation}
+                marker={coordinates}
               />
               <div className="mb-6 ml-6 flex flex-col">
                 <label htmlFor="fullAddress" className="text-[#676767]">
@@ -603,7 +716,10 @@ const PropertyManagement = () => {
             {formPhase < 3 && (
               <button
                 type="button"
-                onClick={() => changeFormPhase(formPhase + 1)}
+                onClick={(e) => {
+                  handleSubmit(e);
+                  // changeFormPhase(formPhase + 1)
+                }}
                 className="bg-[#116A7B] text-white text-2xl font-medium px-7 py-3 rounded-full"
               >
                 Save & Next
@@ -629,7 +745,48 @@ const PropertyManagement = () => {
           </div>
         </form>
       ) : (
-        <div></div>
+        <div className="py-10">
+          {myProperties.map((property, index) => (
+            <div className="w-full flex flex-row flex-wrap border border-[#D9D9D9] px-14">
+              <Image
+                width={1000}
+                height={1000}
+                src={"/assets/user/property-management/no-image.jpg"}
+                className="w-52 h-52 object-cover object-center"
+              />
+              <div className="ml-10 space-y-5 my-5">
+                <div className="flex flex-row text-2xl text-[#09363F]">
+                  <h1 className="w-80 text-2xl font-medium">Property Title: </h1>
+                  <p className="ml-44">{property.title}</p>
+                </div>
+                <div className="flex flex-row text-2xl text-[#09363F]">
+                  <h1 className="w-80 text-2xl font-medium">Property Status: </h1>
+                  <p
+                    className={`ml-44 ${
+                      property.listingStatus === "live"
+                        ? "text-[#36FE62]"
+                        : property.listingStatus === "pending approval"
+                        ? "text-[#FF9900]"
+                        : property.listingStatus === "draft"
+                        ? "text-gray-700"
+                        : "text-[#FF0000]"
+                    }`}
+                  >
+                    {property.listingStatus}
+                  </p>
+                </div>
+                <div className="flex flex-row text-2xl text-[#09363F]">
+                  <h1 className="w-80 text-2xl font-medium">Total Shares: </h1>
+                  <p className="ml-44">{property.totalStakes}</p>
+                </div>
+                <div className="flex flex-row text-2xl text-[#09363F]">
+                  <h1 className="w-80 text-2xl font-medium">Available Shares: </h1>
+                  <p className="ml-44">{property.totalStakes - property.stakesOccupied}</p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       )}
     </div>
   );

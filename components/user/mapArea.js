@@ -16,6 +16,7 @@ import SetViewToCurrentLocation from "../map/setViewToCurrentLocation";
 const MapArea = ({searchedCoordinate, handleCoordinates}) => {
   const [position, setPosition] = useState(null);
   const [customIcon, setCustomIcon] = useState(null);
+  const [marker, setMarker] = useState(null)
 
   useEffect(() => {
     // console.log("window: ", window);
@@ -49,6 +50,7 @@ const MapArea = ({searchedCoordinate, handleCoordinates}) => {
           "leaflet-container leaflet-touch leaflet-fade-anim leaflet-grab leaflet-touch-drag leaflet-touch-zoom"
         ) {
           handleCoordinates({ lat: e.latlng.lat, long: e.latlng.lng });
+          setMarker([ `${e.latlng.lat}`, `${e.latlng.lng}` ])
         }
       },
     });
@@ -84,6 +86,13 @@ const MapArea = ({searchedCoordinate, handleCoordinates}) => {
             <>
               <Marker position={position} icon={customIcon}>
                 <Popup>You are here!</Popup>
+              </Marker>
+            </>
+          )}
+          {marker && customIcon && (
+            <>
+              <Marker position={marker} icon={customIcon}>
+                <Popup>Your Property Pin</Popup>
               </Marker>
             </>
           )}

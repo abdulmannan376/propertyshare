@@ -8,6 +8,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import PropertyManagement from "@/components/user/addProperty";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Page = () => {
   const dispatch = useDispatch();
@@ -19,7 +21,7 @@ const Page = () => {
     );
     setName(JSON.parse(localStorage.getItem("userDetails")).name);
     setUsername(JSON.parse(localStorage.getItem("userDetails")).username);
-    fetchSettings()
+    fetchSettings();
   });
 
   const fetchSettings = async () => {
@@ -91,6 +93,18 @@ const Page = () => {
 
   return (
     <div>
+      <ToastContainer
+        position="bottom-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
       <div className="w-full h-20 bg-[#116A7B]"></div>
       <div className="w-full flex flex-row items-start">
         <div
