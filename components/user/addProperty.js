@@ -10,6 +10,9 @@ const PropertyManagement = () => {
   const [isAddPropertyClicked, setIsAddPropertyClicked] = useState(false);
 
   const [myProperties, setMyProperties] = useState([]);
+  const [propertyByIndex, setPropertyByIndex] = useState(null);
+
+  const [listingStatus, setListingStatus] = useState("new");
 
   const [title, setTitle] = useState("");
   const [overview, setOverview] = useState("");
@@ -19,8 +22,7 @@ const PropertyManagement = () => {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [selectedPropertyType, setSelectedPropertyType] = useState("");
-  const [selectedNumOfBeds, setSelectedNumOfBeds] = useState("");
-  const [selectedNumOfBaths, setSelectedNumOfBaths] = useState("");
+
   const [houseNumber, setHouseNumber] = useState("");
   const [streetNumber, setStreetNumber] = useState("");
   const [zipCode, setZipCode] = useState("");
@@ -33,6 +35,16 @@ const PropertyManagement = () => {
   const [coordinates, setCoordinates] = useState(null);
 
   const [formPhase, setFormPhase] = useState(1);
+
+  const [yearBuilt, setYearBuilt] = useState("");
+  const [floorCount, setFloorCount] = useState("");
+  const [elevators, setElevators] = useState("");
+  const [parkingSpace, setParkingSpace] = useState("");
+  const [selectedNumOfBeds, setSelectedNumOfBeds] = useState("");
+  const [selectedNumOfBaths, setSelectedNumOfBaths] = useState("");
+  const [servantQuater, setServantQuater] = useState("");
+  const [kitchens, setKitchens] = useState("");
+  const [distanceFromAirport, setDistanceFromAirport] = useState("");
 
   const allCountries = compCities.getCountries();
 
@@ -81,6 +93,82 @@ const PropertyManagement = () => {
     fetchMyProperties();
   }, []);
 
+  const handleClickToAdd = (e, status, index) => {
+    e.preventDefault();
+    if (status !== "new") {
+      const property = myProperties[index];
+      if (property.listingStatus === "draft") {
+        setListingStatus("draft");
+        setTitle(property.title);
+        setOverview(property.detail);
+        setNumberOfShares(property.totalStakes);
+        setAreaSize(property.area);
+        setTotalPrize(property.valueOfProperty);
+        setSelectedPropertyType(property.propertyType);
+        setSelectedNumOfBeds(property.beds);
+        setSelectedNumOfBaths(property.baths);
+        setHouseNumber(property.addressOfProperty.houseNumber);
+        setStreetNumber(property.addressOfProperty.streetNumber);
+        const country = compCities.getCountryByShort(
+          property.addressOfProperty.country
+        );
+        country.shortName = property.addressOfProperty.country;
+        setSelectedCountry(country);
+        setSelectedState(property.addressOfProperty.state);
+        setSelectedCity(property.addressOfProperty.city);
+        setZipCode(property.addressOfProperty.zipCode);
+        setFullAddress(property.addressOfProperty.addressInString);
+        setCoordinates({
+          lat: property.coordinates.latitude,
+          long: property.coordinates.longitude,
+        });
+        setStartDate(property.startDurationFrom.split("T")[0]);
+        setIsAddPropertyClicked(true);
+        setPropertyByIndex(index);
+      }
+    } else {
+      setListingStatus("new");
+      setTitle("");
+      setOverview("");
+      setNumberOfShares(1);
+      setAreaSize(0);
+      setTotalPrize(0);
+      setSelectedPropertyType("");
+      setSelectedNumOfBeds("");
+      setSelectedNumOfBaths("");
+      setHouseNumber("");
+      setStreetNumber("");
+      setSelectedCountry("");
+      setSelectedState("");
+      setSelectedCity("");
+      setZipCode("");
+      setFullAddress("");
+      setCoordinates({});
+      setStartDate(null);
+
+      setIsAddPropertyClicked(true);
+      setFormPhase(1);
+
+      setYearBuilt("");
+      setFloorCount("");
+      setParkingSpace("");
+      setElevators("");
+      setSelectedNumOfBeds("");
+      setSelectedNumOfBaths("");
+      setServantQuater("");
+      setKitchens("");
+      setDistanceFromAirport("");
+      setSelectedTags([
+        { name: "mainFeatures", tagsByName: [], tags: [] },
+        { name: "roomsDetail", tagsByName: [], tags: [] },
+        { name: "businessAndComm", tagsByName: [], tags: [] },
+        { name: "community", tagsByName: [], tags: [] },
+        { name: "healthAndRecreational", tagsByName: [], tags: [] },
+        { name: "nearbyFacilitiesAndLocations", tagsByName: [], tags: [] },
+      ]);
+    }
+  };
+
   const propertyTypes = [
     "Select",
     "Mansion",
@@ -96,6 +184,7 @@ const PropertyManagement = () => {
   ];
 
   const numOfBedsAndBaths = [
+    "Select",
     "1",
     "2",
     "3",
@@ -119,16 +208,26 @@ const PropertyManagement = () => {
 
   useEffect(() => {
     console.log("in useEffect");
-    if (selectedCountry) {
+    if (listingStatus !== "draft") {
+      if (selectedCountry) {
+        setAllStates(compCities.getStatesByShort(selectedCountry.shortName));
+        setSelectedState("");
+        setSelectedCity("");
+      }
+    } else {
       setAllStates(compCities.getStatesByShort(selectedCountry.shortName));
-      setSelectedState("");
-      setSelectedCity("");
     }
   }, [selectedCountry]);
 
   useEffect(() => {
-    setSelectedCity("");
-    if (selectedState) {
+    if (listingStatus !== "draft") {
+      setSelectedCity("");
+      if (selectedState) {
+        setAllCities(
+          compCities.getCities(selectedCountry.shortName, selectedState)
+        );
+      }
+    } else {
       setAllCities(
         compCities.getCities(selectedCountry.shortName, selectedState)
       );
@@ -168,13 +267,6 @@ const PropertyManagement = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      let listingStatus;
-      if (formPhase < 3) {
-        listingStatus = "draft";
-      } else if (formPhase === 3) {
-        listingStatus = "completed";
-      }
-
       const userDetails = JSON.parse(localStorage.getItem("userDetails"));
 
       const data = {
@@ -186,50 +278,118 @@ const PropertyManagement = () => {
         areaSize: areaSize,
         startDate: startDate,
         propertyType: selectedPropertyType,
-        numOfBeds: selectedNumOfBeds,
+        selectedNumOfBeds: selectedNumOfBeds,
         numOfBaths: selectedNumOfBaths,
         houseNumber: houseNumber,
         streetNumber: streetNumber,
         zipCode: zipCode,
-        country: selectedCountry.name,
+        country: selectedCountry.shortName,
+        state: selectedState,
         city: selectedCity,
         fullAddress: fullAddress,
         username: userDetails.username,
         userRole: userDetails.role,
         userName: userDetails.name,
         email: userDetails.email,
-        listingStatus: listingStatus,
+        listingStatus: formPhase < 3 ? "draft" : "completed",
         token: localStorage.getItem("token"),
       };
 
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_SERVER_HOST}/property/add-new-property`,
-        {
-          method: "POST",
-          headers: {
-            "Content-type": "application/json",
-          },
-          body: JSON.stringify(data),
+      if (listingStatus === "new") {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_SERVER_HOST}/property/add-new-property`,
+          {
+            method: "POST",
+            headers: {
+              "Content-type": "application/json",
+            },
+            body: JSON.stringify(data),
+          }
+        );
+
+        const response = await res.json();
+
+        if (response.success) {
+          toast.success(response.message, {
+            position: "bottom-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+
+          changeFormPhase(formPhase + 1);
+        } else {
+          throw new Error(response.message);
         }
-      );
+      } else if (listingStatus === "draft") {
+        const amenities = {
+          mainFeatures: {
+            inputs: {
+              yearBuilt: yearBuilt,
+              floorCount: floorCount,
+              parkingSpace: parkingSpace,
+              elevators: elevators,
+            },
+            tags: selectedTags[0].tags,
+          },
+          roomsDetails: {
+            inputs: {
+              beds: selectedNumOfBeds,
+              baths: selectedNumOfBeds,
+              servantQuater: servantQuater,
+              kitchen: kitchens,
+            },
+            tags: selectedTags[1].tags,
+          },
+          business: {
+            tags: selectedTags[2].tags,
+          },
+          community: {
+            tags: selectedTags[3].tags,
+          },
+          healthAndRecreational: {
+            tags: selectedTags[4].tags,
+          },
+          nearbyFacilitiesAndLocations: {
+            inputs: {
+              distanceFromAirport: distanceFromAirport,
+            },
+            tags: selectedTags[5].tags,
+          },
+        };
 
-      const response = await res.json();
-
-      if (response.success) {
-        toast.success(response.message, {
-          position: "bottom-center",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-
-        changeFormPhase(formPhase + 1);
-      } else {
-        throw new Error(response.message);
+        data.amenities = amenities;
+        data.formPhase = formPhase;
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_SERVER_HOST}/property/update-property/${myProperties[propertyByIndex].propertyID}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-type": "application/json",
+            },
+            body: JSON.stringify(data),
+          }
+        );
+        const response = await res.json();
+        if (response.success) {
+          changeFormPhase(formPhase + 1);
+          toast.success(response.message, {
+            position: "bottom-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+        } else {
+          throw new Error(response.message);
+        }
       }
     } catch (error) {
       toast.error(error.message, {
@@ -245,17 +405,162 @@ const PropertyManagement = () => {
     }
   };
 
+  const [selectedTags, setSelectedTags] = useState([
+    { name: "mainFeatures", tagsByName: [], tags: [] },
+    { name: "roomsDetail", tagsByName: [], tags: [] },
+    { name: "businessAndComm", tagsByName: [], tags: [] },
+    { name: "community", tagsByName: [], tags: [] },
+    { name: "healthAndRecreational", tagsByName: [], tags: [] },
+    { name: "nearbyFacilitiesAndLocations", tagsByName: [], tags: [] },
+  ]);
+
+  const mainFeaturesList = [
+    "Select",
+    "Central AC",
+    "Electricity Backup",
+    "Lobby",
+    "Central Heating",
+    "Waste Disposal",
+    "Service Elevator",
+    "Other",
+  ];
+
+  const roomsDetailList = [
+    "Select",
+    "Drawing Room",
+    "Study Room",
+    "Gym",
+    "Lounge",
+    "Powder Room",
+    "Steam Room",
+    "Other",
+  ];
+
+  const businessAndCommList = [
+    "Select",
+    "Internet",
+    "Conference Room",
+    "Cable TV",
+    "Satellite TV",
+    "Intercom",
+    "Media Room",
+    "ATM Machine",
+    "Other",
+  ];
+
+  const communityList = [
+    "Select",
+    "Community Lawn",
+    "First Aid",
+    "Medical Centre",
+    "Barbeque Area",
+    "Camp Fire Area",
+    "Swimming Pool",
+    "Day Care Centre",
+    "Mosque",
+    "Prayer Area",
+    "Community Gym",
+    "Kids Play Area",
+    "Community Centre",
+    "Other",
+  ];
+
+  const healthAndRecreationalList = ["Select", "Sauna", "Jacuzzi", "Other"];
+
+  const nearbyFacilitiesAndLocationsList = [
+    "Select",
+    "Schools",
+    "Restaurants",
+    "Hospitals",
+    "Shopping Malls",
+    "Public Transport",
+    "Other",
+  ];
+
+  const handleAddTags = (index, value) => {
+    console.log("Called handleAddTags with index:", index, "and value:", value);
+
+    // Function to convert string to camelCase
+    const toCamelCase = (str) => {
+      return str.replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, (match, index) => {
+        if (+match === 0) return ""; // or if (/\s+/.test(match)) for white space
+        return index === 0 ? match.toLowerCase() : match.toUpperCase();
+      });
+    };
+
+    const camelCaseValue = toCamelCase(value); // Convert value to camelCase
+
+    setSelectedTags((prevData) => {
+      // Check if the camelCase value already exists in the tagsByName array at the given index
+      if (!prevData[index].tagsByName.includes(value)) {
+        console.log("Adding new camelCase tag:", camelCaseValue);
+        // Create a new array with all the previous data
+        const newData = prevData.map((item, idx) => {
+          if (idx === index) {
+            // Only update the item at the specific index
+            return {
+              ...item,
+              tagsByName: [...item.tagsByName, value],
+              tags: [...item.tags, camelCaseValue], // Assuming tags should also store the camelCase value
+            };
+          }
+          return item;
+        });
+        return newData;
+      }
+      return prevData; // Return the previous data unchanged if the tag is a duplicate
+    });
+  };
+
+  const handleDelete = (event, index, tagToDelete) => {
+    event.preventDefault();
+
+    // Function to convert string to camelCase
+    const toCamelCase = (str) => {
+      return str.replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, (match, index) => {
+        if (+match === 0) return ""; // or if (/\s+/.test(match)) for white space
+        return index === 0 ? match.toLowerCase() : match.toUpperCase();
+      });
+    };
+
+    const camelCaseValue = toCamelCase(tagToDelete); // Convert value to camelCase
+
+    setSelectedTags((prevData) => {
+      // Map over the existing data to produce a new array
+      const newData = prevData.map((item, idx) => {
+        // Only update the item at the specified index
+        if (idx === index) {
+          return {
+            ...item,
+            tagsByName: item.tagsByName.filter((tag) => tag !== tagToDelete),
+            tags: item.tags.filter((tag) => tag !== camelCaseValue), // Remove the tag from the tagsByName array
+          };
+        }
+        return item; // Return other items unchanged
+      });
+      return newData;
+    });
+  };
+
   return (
     <div className="bg-white w-full my-6 h-[40rem] max-h-[44rem] overflow-y-auto">
       {isAddPropertyClicked ? (
         <div className="w-full flex flex-row items-center pb-8 px-14">
           <h1 className="text-2xl font-medium">Add Property</h1>
+          <button
+            onClick={() => setIsAddPropertyClicked(false)}
+            type="button"
+            className="bg-[#116A7B] text-white text-lg ml-auto mx-1 px-5 py-1 rounded-full"
+          >
+            Back
+            {/* <FaPlus className="inline-flex text-sm ml-2 mb-1" /> */}
+          </button>
         </div>
       ) : (
         <div className="w-full flex flex-row items-center border-b border-b-[#D9D9D9] pb-7 px-14">
           <h1 className="text-2xl font-medium">My Properties</h1>
           <button
-            onClick={() => setIsAddPropertyClicked(true)}
+            onClick={(e) => handleClickToAdd(e, "new")}
             type="button"
             className="bg-[#116A7B] text-white text-lg ml-auto mx-1 px-5 py-1 rounded-full"
           >
@@ -399,72 +704,6 @@ const PropertyManagement = () => {
                   type="text"
                   name="propertyType"
                   value={selectedPropertyType}
-                  required={true}
-                  readOnly={true}
-                  className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
-                />
-              </div>
-              <div className="mb-6 ml-6 flex flex-col">
-                <div>
-                  <label htmlFor="numOfBeds" className="text-[#676767]">
-                    Beds
-                  </label>
-                  <select
-                    name="nationality"
-                    value={selectedNumOfBeds}
-                    onChange={({ target }) => {
-                      if (target.value == "Select") {
-                        setSelectedNumOfBeds("");
-                      } else {
-                        setSelectedNumOfBeds(target.value);
-                      }
-                    }}
-                    className="inline-flex mx-10 border border-[#116A7B30] rounded-full px-3 focus:border-[#116A7B] outline-none"
-                  >
-                    {numOfBedsAndBaths.map((count, index) => (
-                      <option key={index} value={count}>
-                        {count}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <input
-                  type="text"
-                  name="numOfBeds"
-                  value={selectedNumOfBeds}
-                  required={true}
-                  readOnly={true}
-                  className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
-                />
-              </div>
-              <div className="mb-6 ml-6 flex flex-col">
-                <div>
-                  <label htmlFor="numOfBaths" className="text-[#676767]">
-                    Baths
-                  </label>
-                  <select
-                    name="numOfBaths"
-                    value={selectedNumOfBaths}
-                    onChange={({ target }) => {
-                      if (target.value == "Select") {
-                        setSelectedNumOfBaths("");
-                      } else {
-                        setSelectedNumOfBaths(target.value);
-                      }
-                    }}
-                    className="inline-flex mx-10 border border-[#116A7B30] rounded-full px-3 focus:border-[#116A7B] outline-none"
-                  >
-                    {numOfBedsAndBaths.map((count, index) => (
-                      <option key={index} value={count}>
-                        {count}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <input
-                  type="text"
-                  name="numOfBaths"
-                  value={selectedNumOfBaths}
                   required={true}
                   readOnly={true}
                   className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
@@ -712,6 +951,460 @@ const PropertyManagement = () => {
               </div>
             </>
           )}
+          {formPhase === 2 && (
+            <>
+              <div className="w-full flex flex-row items-center pb-8">
+                <h1 className="text-2xl font-medium">Main Features</h1>
+              </div>
+              <div className="mb-6 ml-6 flex flex-col">
+                <label htmlFor="yearBuilt" className="text-[#676767]">
+                  Year Built
+                </label>
+                <input
+                  type="number"
+                  name="yearBuilt"
+                  value={yearBuilt}
+                  required={true}
+                  onChange={({ target }) => setYearBuilt(target.value)}
+                  className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                />
+              </div>
+              <div className="mb-6 ml-6 flex flex-col">
+                <label htmlFor="floorCount" className="text-[#676767]">
+                  Floor Count
+                </label>
+                <input
+                  type="number"
+                  name="floorCount"
+                  value={floorCount}
+                  required={true}
+                  onChange={({ target }) => setFloorCount(target.value)}
+                  className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                />
+              </div>
+              <div className="mb-6 ml-6 flex flex-col">
+                <label htmlFor="parkingSpace" className="text-[#676767]">
+                  Parking Space
+                </label>
+                <input
+                  type="number"
+                  name="parkingSpace"
+                  value={parkingSpace}
+                  required={true}
+                  onChange={({ target }) => setParkingSpace(target.value)}
+                  className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                />
+              </div>
+              <div className="mb-6 ml-6 flex flex-col">
+                <label htmlFor="elevators" className="text-[#676767]">
+                  Elevators
+                </label>
+                <input
+                  type="number"
+                  name="elevators"
+                  value={elevators}
+                  required={true}
+                  onChange={({ target }) => setElevators(target.value)}
+                  className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                />
+              </div>
+              <div className="mb-6 ml-6 flex flex-col">
+                <div>
+                  <label htmlFor="otherFeatures" className="text-[#676767]">
+                    Other Features
+                  </label>
+                  <select
+                    name="otherFeatures"
+                    // value={selectedPropertyType}
+                    onChange={({ target }) => {
+                      if (target.value !== "Select") {
+                        handleAddTags(0, target.value);
+                      }
+                    }}
+                    className="inline-flex mx-10 border border-[#116A7B30] rounded-full px-3 focus:border-[#116A7B] outline-none"
+                  >
+                    {mainFeaturesList.map((type, index) => (
+                      <option key={index} value={type}>
+                        {type}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="w-[620px] min-h-[46px] flex flex-wrap items-center border border-[#116A7B30] focus-within:border-[#116A7B] rounded-full px-5 py-2 mt-3 outline-none">
+                  {selectedTags[0].tagsByName.map((tag, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center gap-2 bg-[#E1ECF4] text-[#0a66c2] rounded-full px-3 py-1 text-sm font-medium mr-2 mb-1"
+                    >
+                      {tag}
+                      <button
+                        onClick={(e) => handleDelete(e, 0, tag)}
+                        className="text-[#666] hover:text-[#333]"
+                      >
+                        &times;
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="mb-6 ml-6 flex flex-col">
+                <input
+                  type="button"
+                  name="noName"
+                  className="w-[620px] bg-transparent outline-none px-5 py-2 mt-3 rounded-full"
+                />
+              </div>
+              <div className="w-full flex flex-row items-center pb-8">
+                <h1 className="text-2xl font-medium">Rooms Detail</h1>
+              </div>
+              <div className="mb-6 ml-6 flex flex-col">
+                <div>
+                  <label htmlFor="selectedNumOfBeds" className="text-[#676767]">
+                    Beds
+                  </label>
+                  <select
+                    name="nationality"
+                    value={selectedNumOfBeds}
+                    onChange={({ target }) => {
+                      if (target.value == "Select") {
+                        setSelectedNumOfBeds("");
+                      } else {
+                        setSelectedNumOfBeds(target.value);
+                      }
+                    }}
+                    className="inline-flex mx-10 border border-[#116A7B30] rounded-full px-3 focus:border-[#116A7B] outline-none"
+                  >
+                    {numOfBedsAndBaths.map((count, index) => (
+                      <option key={index} value={count}>
+                        {count}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <input
+                  type="text"
+                  name="selectedNumOfBeds"
+                  value={selectedNumOfBeds}
+                  required={true}
+                  readOnly={true}
+                  className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                />
+              </div>
+              <div className="mb-6 ml-6 flex flex-col">
+                <div>
+                  <label htmlFor="numOfBaths" className="text-[#676767]">
+                    Baths
+                  </label>
+                  <select
+                    name="numOfBaths"
+                    value={selectedNumOfBaths}
+                    onChange={({ target }) => {
+                      if (target.value == "Select") {
+                        setSelectedNumOfBaths("");
+                      } else {
+                        setSelectedNumOfBaths(target.value);
+                      }
+                    }}
+                    className="inline-flex mx-10 border border-[#116A7B30] rounded-full px-3 focus:border-[#116A7B] outline-none"
+                  >
+                    {numOfBedsAndBaths.map((count, index) => (
+                      <option key={index} value={count}>
+                        {count}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <input
+                  type="text"
+                  name="numOfBaths"
+                  value={selectedNumOfBaths}
+                  required={true}
+                  readOnly={true}
+                  className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                />
+              </div>
+              <div className="mb-6 ml-6 flex flex-col">
+                <label htmlFor="servantQuater" className="text-[#676767]">
+                  Servant Quater
+                </label>
+                <input
+                  type="number"
+                  name="servantQuater"
+                  value={servantQuater}
+                  required={true}
+                  onChange={({ target }) => setServantQuater(target.value)}
+                  className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                />
+              </div>
+              <div className="mb-6 ml-6 flex flex-col">
+                <label htmlFor="kitchens" className="text-[#676767]">
+                  Kitchens
+                </label>
+                <input
+                  type="number"
+                  name="kitchens"
+                  value={kitchens}
+                  required={true}
+                  onChange={({ target }) => setKitchens(target.value)}
+                  className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                />
+              </div>
+              <div className="mb-6 ml-6 flex flex-col">
+                <div>
+                  <label htmlFor="otherFeatures" className="text-[#676767]">
+                    Other Features
+                  </label>
+                  <select
+                    name="otherFeatures"
+                    // value={selectedPropertyType}
+                    onChange={({ target }) => {
+                      if (target.value !== "Select") {
+                        handleAddTags(1, target.value);
+                      }
+                    }}
+                    className="inline-flex mx-10 border border-[#116A7B30] rounded-full px-3 focus:border-[#116A7B] outline-none"
+                  >
+                    {roomsDetailList.map((type, index) => (
+                      <option key={index} value={type}>
+                        {type}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="w-[620px] min-h-[46px] flex flex-wrap items-center border border-[#116A7B30] focus-within:border-[#116A7B] rounded-full px-5 py-2 mt-3 outline-none">
+                  {selectedTags[1].tagsByName.map((tag, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center gap-2 bg-[#E1ECF4] text-[#0a66c2] rounded-full px-3 py-1 text-sm font-medium mr-2 mb-1"
+                    >
+                      {tag}
+                      <button
+                        onClick={(e) => handleDelete(e, 1, tag)}
+                        className="text-[#666] hover:text-[#333]"
+                      >
+                        &times;
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="mb-6 ml-6 flex flex-col">
+                <input
+                  type="button"
+                  name="noName"
+                  className="w-[620px] bg-transparent outline-none px-5 py-2 mt-3 rounded-full"
+                />
+              </div>
+              <div className="w-full flex flex-row items-center pb-8">
+                <h1 className="text-2xl font-medium">
+                  Business and Communication
+                </h1>
+              </div>
+              <div className="mb-6 ml-6 flex flex-col">
+                <div>
+                  <label htmlFor="features" className="text-[#676767]">
+                    Features
+                  </label>
+                  <select
+                    name="features"
+                    // value={selectedPropertyType}
+                    onChange={({ target }) => {
+                      if (target.value !== "Select") {
+                        handleAddTags(2, target.value);
+                      }
+                    }}
+                    className="inline-flex mx-10 border border-[#116A7B30] rounded-full px-3 focus:border-[#116A7B] outline-none"
+                  >
+                    {businessAndCommList.map((type, index) => (
+                      <option key={index} value={type}>
+                        {type}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="w-[620px] min-h-[46px] flex flex-wrap items-center border border-[#116A7B30] focus-within:border-[#116A7B] rounded-full px-5 py-2 mt-3 outline-none">
+                  {selectedTags[2].tagsByName.map((tag, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center gap-2 bg-[#E1ECF4] text-[#0a66c2] rounded-full px-3 py-1 text-sm font-medium mr-2 mb-1"
+                    >
+                      {tag}
+                      <button
+                        onClick={(e) => handleDelete(e, 2, tag)}
+                        className="text-[#666] hover:text-[#333]"
+                      >
+                        &times;
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="mb-6 ml-6 flex flex-col">
+                <input
+                  type="button"
+                  name="noName"
+                  className="w-[620px] bg-transparent outline-none px-5 py-2 mt-3 rounded-full"
+                />
+              </div>
+              <div className="w-full flex flex-row items-center pb-8">
+                <h1 className="text-2xl font-medium">Community</h1>
+              </div>
+              <div className="mb-6 ml-6 flex flex-col">
+                <div>
+                  <label htmlFor="features" className="text-[#676767]">
+                    Features
+                  </label>
+                  <select
+                    name="features"
+                    // value={selectedPropertyType}
+                    onChange={({ target }) => {
+                      if (target.value !== "Select") {
+                        handleAddTags(3, target.value);
+                      }
+                    }}
+                    className="inline-flex mx-10 border border-[#116A7B30] rounded-full px-3 focus:border-[#116A7B] outline-none"
+                  >
+                    {communityList.map((type, index) => (
+                      <option key={index} value={type}>
+                        {type}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="w-[620px] min-h-[46px] flex flex-wrap items-center border border-[#116A7B30] focus-within:border-[#116A7B] rounded-full px-5 py-2 mt-3 outline-none">
+                  {selectedTags[3].tagsByName.map((tag, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center gap-2 bg-[#E1ECF4] text-[#0a66c2] rounded-full px-3 py-1 text-sm font-medium mr-2 mb-1"
+                    >
+                      {tag}
+                      <button
+                        onClick={(e) => handleDelete(e, 3, tag)}
+                        className="text-[#666] hover:text-[#333]"
+                      >
+                        &times;
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="mb-6 ml-6 flex flex-col">
+                <input
+                  type="button"
+                  name="noName"
+                  className="w-[620px] bg-transparent outline-none px-5 py-2 mt-3 rounded-full"
+                />
+              </div>
+              <div className="w-full flex flex-row items-center pb-8">
+                <h1 className="text-2xl font-medium">Healt and Recreational</h1>
+              </div>
+              <div className="mb-6 ml-6 flex flex-col">
+                <div>
+                  <label htmlFor="features" className="text-[#676767]">
+                    Features
+                  </label>
+                  <select
+                    name="features"
+                    // value={selectedPropertyType}
+                    onChange={({ target }) => {
+                      if (target.value !== "Select") {
+                        handleAddTags(4, target.value);
+                      }
+                    }}
+                    className="inline-flex mx-10 border border-[#116A7B30] rounded-full px-3 focus:border-[#116A7B] outline-none"
+                  >
+                    {healthAndRecreationalList.map((type, index) => (
+                      <option key={index} value={type}>
+                        {type}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="w-[620px] min-h-[46px] flex flex-wrap items-center border border-[#116A7B30] focus-within:border-[#116A7B] rounded-full px-5 py-2 mt-3 outline-none">
+                  {selectedTags[4].tagsByName.map((tag, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center gap-2 bg-[#E1ECF4] text-[#0a66c2] rounded-full px-3 py-1 text-sm font-medium mr-2 mb-1"
+                    >
+                      {tag}
+                      <button
+                        onClick={(e) => handleDelete(e, 4, tag)}
+                        className="text-[#666] hover:text-[#333]"
+                      >
+                        &times;
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="mb-6 ml-6 flex flex-col">
+                <input
+                  type="button"
+                  name="noName"
+                  className="w-[620px] bg-transparent outline-none px-5 py-2 mt-3 rounded-full"
+                />
+              </div>
+              <div className="w-full flex flex-row items-center pb-8">
+                <h1 className="text-2xl font-medium">
+                  Nearby Facilities and Locations
+                </h1>
+              </div>
+              <div className="mb-6 ml-6 flex flex-col">
+                <label htmlFor="distanceFromAirport" className="text-[#676767]">
+                  Distance From Airport {"(km)"}
+                </label>
+                <input
+                  type="number"
+                  name="distanceFromAirport"
+                  value={distanceFromAirport}
+                  required={true}
+                  onChange={({ target }) =>
+                    setDistanceFromAirport(target.value)
+                  }
+                  className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                />
+              </div>
+              <div className="mb-6 ml-6 flex flex-col">
+                <div>
+                  <label htmlFor="features" className="text-[#676767]">
+                    Other Features
+                  </label>
+                  <select
+                    name="features"
+                    // value={selectedPropertyType}
+                    onChange={({ target }) => {
+                      if (target.value !== "Select") {
+                        handleAddTags(5, target.value);
+                      }
+                    }}
+                    className="inline-flex mx-10 border border-[#116A7B30] rounded-full px-3 focus:border-[#116A7B] outline-none"
+                  >
+                    {nearbyFacilitiesAndLocationsList.map((type, index) => (
+                      <option key={index} value={type}>
+                        {type}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="w-[620px] min-h-[46px] flex flex-wrap items-center border border-[#116A7B30] focus-within:border-[#116A7B] rounded-full px-5 py-2 mt-3 outline-none">
+                  {selectedTags[5].tagsByName.map((tag, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center gap-2 bg-[#E1ECF4] text-[#0a66c2] rounded-full px-3 py-1 text-sm font-medium mr-2 mb-1"
+                    >
+                      {tag}
+                      <button
+                        onClick={(e) => handleDelete(e, 5, tag)}
+                        className="text-[#666] hover:text-[#333]"
+                      >
+                        &times;
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
           <div className="mb-6 ml-6 flex flex-row space-x-3">
             {formPhase < 3 && (
               <button
@@ -747,7 +1440,11 @@ const PropertyManagement = () => {
       ) : (
         <div className="py-10">
           {myProperties.map((property, index) => (
-            <div className="w-full flex flex-row flex-wrap border border-[#D9D9D9] px-14">
+            <div
+              key={index}
+              onClick={(e) => handleClickToAdd(e, "draft", index)}
+              className="w-full flex flex-row flex-wrap border border-[#D9D9D9] px-14 cursor-pointer"
+            >
               <Image
                 width={1000}
                 height={1000}
@@ -756,11 +1453,15 @@ const PropertyManagement = () => {
               />
               <div className="ml-10 space-y-5 my-5">
                 <div className="flex flex-row text-2xl text-[#09363F]">
-                  <h1 className="w-80 text-2xl font-medium">Property Title: </h1>
+                  <h1 className="w-80 text-2xl font-medium">
+                    Property Title:{" "}
+                  </h1>
                   <p className="ml-44">{property.title}</p>
                 </div>
                 <div className="flex flex-row text-2xl text-[#09363F]">
-                  <h1 className="w-80 text-2xl font-medium">Property Status: </h1>
+                  <h1 className="w-80 text-2xl font-medium">
+                    Property Status:{" "}
+                  </h1>
                   <p
                     className={`ml-44 ${
                       property.listingStatus === "live"
@@ -780,8 +1481,12 @@ const PropertyManagement = () => {
                   <p className="ml-44">{property.totalStakes}</p>
                 </div>
                 <div className="flex flex-row text-2xl text-[#09363F]">
-                  <h1 className="w-80 text-2xl font-medium">Available Shares: </h1>
-                  <p className="ml-44">{property.totalStakes - property.stakesOccupied}</p>
+                  <h1 className="w-80 text-2xl font-medium">
+                    Available Shares:{" "}
+                  </h1>
+                  <p className="ml-44">
+                    {property.totalStakes - property.stakesOccupied}
+                  </p>
                 </div>
               </div>
             </div>
