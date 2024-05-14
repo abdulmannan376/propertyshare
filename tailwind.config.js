@@ -14,8 +14,15 @@ module.exports = {
       },
     },
     fontFamily: {
-      'raleway': [ "Raleway", "sans-serif"]
-    }
+      raleway: ["Raleway", "sans-serif"],
+    },
+    screens: {
+      xl: "1760px",
+      lg: "1360px",
+      md: "1024px",
+      sm: "520px",
+    },
   },
+
   plugins: [],
 };

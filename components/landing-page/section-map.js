@@ -218,7 +218,7 @@ const SectionMap = () => {
     <NoSsr>
       <div className="bg-white">
         <div className="mx-14 mt-14">
-          <h1 className="text-4xl text-center uppercase font-semibold text-[#116A7B] ">
+          <h1 className="xl:text-[40px] text-4xl text-center uppercase font-semibold text-[#116A7B] ">
             request property <i className="text-[#CDC2AE]"> anywhere</i> you
             wish
           </h1>

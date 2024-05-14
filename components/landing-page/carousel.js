@@ -60,7 +60,7 @@ const Carousel = () => {
   };
   return (
     <div
-      className="w-full h-screen flex flex-row items-center justify-start bg-cover bg-center px-16"
+      className="w-full h-screen flex flex-row items-center justify-start bg-cover bg-center xl:px-24 px-16"
       style={{ backgroundImage: "url('/assets/landing-page/carousel-bg.png')" }}
     >
       <div className="w-1/2 h-full flex flex-col items-start justify-center py-10">

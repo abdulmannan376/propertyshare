@@ -34,7 +34,7 @@ const PropertyManagement = () => {
   const [allCities, setAllCities] = useState([]);
   const [coordinates, setCoordinates] = useState(null);
 
-  const [formPhase, setFormPhase] = useState(1);
+  const [formPhase, setFormPhase] = useState(3);
 
   const [yearBuilt, setYearBuilt] = useState("");
   const [floorCount, setFloorCount] = useState("");
@@ -45,6 +45,8 @@ const PropertyManagement = () => {
   const [servantQuater, setServantQuater] = useState("");
   const [kitchens, setKitchens] = useState("");
   const [distanceFromAirport, setDistanceFromAirport] = useState("");
+
+  const [files, setFiles] = useState([]);
 
   const allCountries = compCities.getCountries();
 
@@ -91,7 +93,7 @@ const PropertyManagement = () => {
 
   useEffect(() => {
     fetchMyProperties();
-  }, []);
+  }, [isAddPropertyClicked]);
 
   const handleClickToAdd = (e, status, index) => {
     e.preventDefault();
@@ -147,7 +149,7 @@ const PropertyManagement = () => {
       setStartDate(null);
 
       setIsAddPropertyClicked(true);
-      setFormPhase(1);
+      setFormPhase(3);
 
       setYearBuilt("");
       setFloorCount("");
@@ -264,8 +266,11 @@ const PropertyManagement = () => {
     setFormPhase(value);
   };
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
     try {
       const userDetails = JSON.parse(localStorage.getItem("userDetails"));
 
@@ -291,7 +296,7 @@ const PropertyManagement = () => {
         userRole: userDetails.role,
         userName: userDetails.name,
         email: userDetails.email,
-        listingStatus: formPhase < 3 ? "draft" : "completed",
+        listingStatus: formPhase === 3 ? "completed" : listingStatus,
         token: localStorage.getItem("token"),
       };
 
@@ -308,7 +313,7 @@ const PropertyManagement = () => {
         );
 
         const response = await res.json();
-
+        setIsLoading(false);
         if (response.success) {
           toast.success(response.message, {
             position: "bottom-center",
@@ -320,78 +325,133 @@ const PropertyManagement = () => {
             progress: undefined,
             theme: "light",
           });
-
+          setListingStatus("draft");
           changeFormPhase(formPhase + 1);
+          setMyProperties((prevData) => {
+            let newData;
+
+            if (myProperties.length > 0) {
+              newData = [...prevData];
+            } else {
+              newData = [];
+            }
+            newData.push(response.body);
+            return newData;
+          });
+          setPropertyByIndex(myProperties - 1);
         } else {
           throw new Error(response.message);
         }
       } else if (listingStatus === "draft") {
-        const amenities = {
-          mainFeatures: {
-            inputs: {
-              yearBuilt: yearBuilt,
-              floorCount: floorCount,
-              parkingSpace: parkingSpace,
-              elevators: elevators,
+        if (formPhase === 2) {
+          const amenities = {
+            mainFeatures: {
+              inputs: {
+                yearBuilt: yearBuilt,
+                floorCount: floorCount,
+                parkingSpace: parkingSpace,
+                elevators: elevators,
+              },
+              tags: selectedTags[0].tags,
             },
-            tags: selectedTags[0].tags,
-          },
-          roomsDetails: {
-            inputs: {
-              beds: selectedNumOfBeds,
-              baths: selectedNumOfBeds,
-              servantQuater: servantQuater,
-              kitchen: kitchens,
+            roomsDetails: {
+              inputs: {
+                beds: selectedNumOfBeds,
+                baths: selectedNumOfBeds,
+                servantQuater: servantQuater,
+                kitchen: kitchens,
+              },
+              tags: selectedTags[1].tags,
             },
-            tags: selectedTags[1].tags,
-          },
-          business: {
-            tags: selectedTags[2].tags,
-          },
-          community: {
-            tags: selectedTags[3].tags,
-          },
-          healthAndRecreational: {
-            tags: selectedTags[4].tags,
-          },
-          nearbyFacilitiesAndLocations: {
-            inputs: {
-              distanceFromAirport: distanceFromAirport,
+            business: {
+              tags: selectedTags[2].tags,
             },
-            tags: selectedTags[5].tags,
-          },
-        };
+            community: {
+              tags: selectedTags[3].tags,
+            },
+            healthAndRecreational: {
+              tags: selectedTags[4].tags,
+            },
+            nearbyFacilitiesAndLocations: {
+              inputs: {
+                distanceFromAirport: distanceFromAirport,
+              },
+              tags: selectedTags[5].tags,
+            },
+          };
 
-        data.amenities = amenities;
-        data.formPhase = formPhase;
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_SERVER_HOST}/property/update-property/${myProperties[propertyByIndex].propertyID}`,
-          {
-            method: "PUT",
-            headers: {
-              "Content-type": "application/json",
-            },
-            body: JSON.stringify(data),
+          data.amenities = amenities;
+          data.formPhase = formPhase;
+          const res = await fetch(
+            `${process.env.NEXT_PUBLIC_SERVER_HOST}/property/update-property/${myProperties[propertyByIndex].propertyID}`,
+            {
+              method: "PUT",
+              headers: {
+                "Content-type": "application/json",
+              },
+              body: JSON.stringify(data),
+            }
+          );
+          const response = await res.json();
+          setIsLoading(false);
+          if (response.success) {
+            changeFormPhase(formPhase + 1);
+            toast.success(response.message, {
+              position: "bottom-center",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+            });
+          } else {
+            throw new Error(response.message);
           }
-        );
-        const response = await res.json();
-        if (response.success) {
-          changeFormPhase(formPhase + 1);
-          toast.success(response.message, {
-            position: "bottom-center",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-          });
         } else {
-          throw new Error(response.message);
+          const formData = new FormData();
+          formData.append(
+            "propertyID",
+            myProperties[propertyByIndex].propertyID
+          );
+          formData.append("userName", userDetails.name);
+          formData.append("email", userDetails.email);
+          formData.append("userRole", userDetails.role);
+
+          for (const file of files) {
+            formData.append("imageFiles", file);
+          }
+
+          const res = await fetch(
+            `${process.env.NEXT_PUBLIC_SERVER_HOST}/property/upload-property-images`,
+            {
+              method: "POST",
+              body: formData,
+            }
+          );
+
+          const response = await res.json();
+          if (response.success) {
+            toast.success(response.message, {
+              position: "bottom-center",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+            });
+            setIsLoading(false);
+            setIsAddPropertyClicked(false);
+          } else {
+            throw new Error(response.message);
+          }
         }
       }
     } catch (error) {
+      setIsLoading(false);
       toast.error(error.message, {
         position: "bottom-center",
         autoClose: 5000,
@@ -1296,7 +1356,9 @@ const PropertyManagement = () => {
                 />
               </div>
               <div className="w-full flex flex-row items-center pb-8">
-                <h1 className="text-2xl font-medium">Healt and Recreational</h1>
+                <h1 className="text-2xl font-medium">
+                  Health and Recreational
+                </h1>
               </div>
               <div className="mb-6 ml-6 flex flex-col">
                 <div>
@@ -1405,6 +1467,33 @@ const PropertyManagement = () => {
               </div>
             </>
           )}
+          {formPhase === 3 && (
+            <>
+              <div className="w-full flex flex-row items-center pb-8">
+                <h1 className="text-2xl font-medium">Upload Images</h1>
+              </div>
+              <div className="mb-6 ml-6 flex flex-col">
+                <label htmlFor="yearBuilt" className="text-[#676767]">
+                  Max 10, {`supported formats: .png`}
+                </label>
+                <input
+                  type="file"
+                  multiple
+                  accept="image/png"
+                  required={true}
+                  onChange={({ target }) => setFiles(target.files)}
+                  className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                />
+              </div>
+              <div className="mb-6 ml-6 flex flex-col">
+                <input
+                  type="button"
+                  name="noName"
+                  className="w-[620px] bg-transparent outline-none px-5 py-2 mt-3 rounded-full"
+                />
+              </div>
+            </>
+          )}
           <div className="mb-6 ml-6 flex flex-row space-x-3">
             {formPhase < 3 && (
               <button
@@ -1413,17 +1502,26 @@ const PropertyManagement = () => {
                   handleSubmit(e);
                   // changeFormPhase(formPhase + 1)
                 }}
-                className="bg-[#116A7B] text-white text-2xl font-medium px-7 py-3 rounded-full"
+                className="w-52 bg-[#116A7B] text-white text-2xl font-medium px-7 py-3 rounded-full"
               >
-                Save & Next
+                {" "}
+                {!isLoading && `Save & Next`}
+                {isLoading && (
+                  <div className="border-t-2 border-b-2 border-white bg-transparent h-3 p-2 animate-spin shadow-lg w-fit mx-auto rounded-full"></div>
+                )}
               </button>
             )}
             {formPhase === 3 && (
               <button
                 type="button"
-                className="bg-[#116A7B] text-white text-2xl font-medium px-7 py-3 rounded-full"
+                onClick={(e) => handleSubmit(e)}
+                className="w-52 bg-[#116A7B] text-white text-2xl font-medium px-7 py-3 rounded-full"
               >
-                Submit
+                {" "}
+                {!isLoading && `Submit`}
+                {isLoading && (
+                  <div className="border-t-2 border-b-2 border-white bg-transparent h-3 p-2 animate-spin shadow-lg w-fit mx-auto rounded-full"></div>
+                )}
               </button>
             )}
             {formPhase > 1 && (
@@ -1443,14 +1541,23 @@ const PropertyManagement = () => {
             <div
               key={index}
               onClick={(e) => handleClickToAdd(e, "draft", index)}
-              className="w-full flex flex-row flex-wrap border border-[#D9D9D9] px-14 cursor-pointer"
+              className="w-full flex flex-row flex-wrap border border-[#D9D9D9] px-14 mb-5 cursor-pointer"
             >
-              <Image
-                width={1000}
-                height={1000}
-                src={"/assets/user/property-management/no-image.jpg"}
-                className="w-52 h-52 object-cover object-center"
-              />
+              {property.imageCount === 0 ? (
+                <Image
+                  width={1000}
+                  height={1000}
+                  src={"/assets/user/property-management/no-image.jpg"}
+                  className="w-64 h-60 object-cover object-center"
+                />
+              ) : (
+                <Image
+                  width={1000}
+                  height={1000}
+                  src={`${process.env.NEXT_PUBLIC_SERVER_HOST}/${property.imageDirURL}/image-1.png`}
+                  className="w-64 h-60 object-cover object-center"
+                />
+              )}
               <div className="ml-10 space-y-5 my-5">
                 <div className="flex flex-row text-2xl text-[#09363F]">
                   <h1 className="w-80 text-2xl font-medium">

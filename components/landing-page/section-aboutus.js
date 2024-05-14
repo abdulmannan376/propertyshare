@@ -5,7 +5,7 @@ const SectionAboutUs = () => {
   return (
     <div className="bg-[#116A7B]">
       <div className="px-14 pt-14">
-        <h1 className="text-4xl text-center uppercase font-semibold text-white">
+        <h1 className="xl:text-[40px] text-4xl text-center uppercase font-semibold text-white">
           Discover how we can help
         </h1>
       </div>
@@ -20,10 +20,10 @@ const SectionAboutUs = () => {
           />
         </div>
         <div className="w-1/2 px-20">
-          <h2 className="text-[2.7rem] tracking-widest text-white font-raleway">
+          <h2 className="text-4xl tracking-widest text-white font-raleway">
             Know the facts about a location
           </h2>
-          <p className="text-[2rem] tracking-wide font-light text-white mt-5">
+          <p className="text-2xl tracking-wide font-light text-white mt-5">
             Lorem Ipsum has been the industry&apos;s standard dummy text ever since
             the 1500s, when an unknown printer took a galley of type and
             scrambled it to make a type specimen book. It has survived not only
@@ -33,10 +33,10 @@ const SectionAboutUs = () => {
       </div>
       <div className="w-full flex flex-row items-start justify-between px-14 pt-16">
         <div className="w-1/2 px-20">
-          <h2 className="text-[2.7rem] tracking-widest text-white font-raleway">
+          <h2 className="text-4xl tracking-widest text-white font-raleway">
             Know the facts about a location
           </h2>
-          <p className="text-[2rem] tracking-wide font-light text-white mt-5">
+          <p className="text-2xl tracking-wide font-light text-white mt-5">
             Lorem Ipsum has been the industry&apos;s standard dummy text ever since
             the 1500s, when an unknown printer took a galley of type and
             scrambled it to make a type specimen book. It has survived not only
@@ -64,10 +64,10 @@ const SectionAboutUs = () => {
           />
         </div>
         <div className="w-1/2 px-20">
-          <h2 className="text-[2.7rem] tracking-widest text-white font-raleway">
+          <h2 className="text-4xl tracking-widest text-white font-raleway">
             Know the facts about a location
           </h2>
-          <p className="text-[2rem] tracking-wide font-light text-white mt-5">
+          <p className="text-2xl tracking-wide font-light text-white mt-5">
             Lorem Ipsum has been the industry&apos;s standard dummy text ever since
             the 1500s, when an unknown printer took a galley of type and
             scrambled it to make a type specimen book. It has survived not only

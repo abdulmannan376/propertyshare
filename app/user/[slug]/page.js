@@ -10,6 +10,7 @@ import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import PropertyManagement from "@/components/user/addProperty";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import UserManagement from "@/components/user/userManagement";
 
 const Page = () => {
   const dispatch = useDispatch();
@@ -186,6 +187,7 @@ const Page = () => {
           } duration-700 ease-in-out`}
         >
           {activeTab === "Property Management" && <PropertyManagement />}
+          {activeTab === "Profile" && <UserManagement />}
         </div>
       </div>
     </div>

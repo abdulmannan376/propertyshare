@@ -7,7 +7,7 @@ const SectionContact = () => {
   const [message, setMessage] = useState("");
   return (
     <div
-      className="w-full h-screen flex flex-row items-center justify-center bg-cover bg-center px-16"
+      className="w-full h-full flex flex-row items-center justify-center bg-cover bg-center p-16"
       style={{
         backgroundImage: "url('/assets/landing-page/section-contactus.png')",
       }}
