@@ -6,6 +6,8 @@ const initialState = {
   userRole: "",
   userName: "",
   userEmail: "",
+  settingActiveTab: "Profile Setting",
+  profileSettingActiveTab: "Primary Details",
 };
 
 export const adminSlice = createSlice({
@@ -19,8 +21,19 @@ export const adminSlice = createSlice({
         state.userEmail = action.payload.email;
       }
     },
+    handleUserSettingNavigation: (state, action) => {
+      if (state.settingActiveTab !== action.payload) {
+        state.settingActiveTab = action.payload;
+      }
+    },
+    handleUserProfileSettingNavigation: (state, action) => {
+      if (state.profileSettingActiveTab !== action.payload) {
+        state.profileSettingActiveTab = action.payload;
+      }
+    }
   },
 });
 
-export const { updateUserDetails } = adminSlice.actions;
+export const { updateUserDetails, handleUserSettingNavigation, handleUserProfileSettingNavigation } =
+  adminSlice.actions;
 export default adminSlice.reducer;

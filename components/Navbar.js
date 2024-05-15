@@ -204,8 +204,8 @@ const Navbar = () => {
                       </Link>
                     </li>
                     <li className="border-b border-[#116A7B] py-3 px-5">
-                      <button
-                        type="button"
+                      <Link
+                        href={"/user/profile-setting"}
                         onClick={() =>
                           handleShowDropdown("user", !showDropDowns["user"])
                         }
@@ -213,7 +213,7 @@ const Navbar = () => {
                       >
                         <CiSettings className="text-3xl" />
                         <p className="text-lg">Settings</p>
-                      </button>
+                      </Link>
                     </li>
                     <li className=" border-[#116A7B] py-3 px-5">
                       <button

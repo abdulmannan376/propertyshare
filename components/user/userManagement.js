@@ -75,7 +75,7 @@ const UserManagement = () => {
             </button>
           </div>
           <div className="my-5 px-14">
-            {myDetails?.userProfile?.profilePicURl.length > 0 ? (
+            {myDetails?.userProfile?.profilePicURl?.length > 0 ? (
               ""
             ) : (
               <Image
