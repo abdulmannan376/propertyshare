@@ -1,13 +1,23 @@
+import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { TiTick } from "react-icons/ti";
+import { MdClose } from "react-icons/md";
 
 const UserManagement = () => {
   const [myDetails, setMyDetails] = useState({});
+  const [pageLoading, setPageLoading] = useState(true);
 
-  const [fullName, setFullName] = useState("")
-  const [username, setUsername] = useState("")
-  const [email, setEmail] = useState("")
-  
+  useEffect(() => {
+    // Set a minimum display time for the loader of 2 seconds
+    const timeoutId = setTimeout(() => {
+      setPageLoading(false);
+    }, 1000);
+
+    return () => {
+      clearTimeout(timeoutId); // Clear the timeout if the component unmounts
+    };
+  }, [myDetails]);
 
   const fetchMyData = async () => {
     try {
@@ -48,21 +58,131 @@ const UserManagement = () => {
   }, []);
 
   return (
-    <div className="bg-white w-full my-6 h-[40rem] max-h-[44rem] overflow-y-auto">
-      <div className="w-full flex flex-row items-center border-b border-b-[#D9D9D9] pt-1 pb-7 px-14">
-        <h1 className="text-2xl font-medium">
-          {myDetails?.role?.toUpperCase()}
-        </h1>
-        <button
-          // onClick={(e) => handleClickToAdd(e, "new")}
-          type="button"
-          className="bg-[#116A7B] text-white text-lg ml-auto mx-1 px-5 py-1 rounded-full"
-        >
-          Edit Profile
-          {/* <FaPlus className="inline-flex text-sm ml-2 mb-1" /> */}
-        </button>
-      </div>
-    </div>
+    <>
+      {!pageLoading ? (
+        <div className="bg-white w-full my-6 h-[40rem] max-h-[44rem] overflow-y-auto">
+          <div className="w-full flex flex-row items-center border-b border-b-[#D9D9D9] pt-1 pb-7 px-14">
+            <h1 className="text-2xl font-medium">
+              {myDetails?.role?.toUpperCase()}
+            </h1>
+            <button
+              // onClick={(e) => handleClickToAdd(e, "new")}
+              type="button"
+              className="bg-[#116A7B] text-white text-lg ml-auto mx-1 px-5 py-1 rounded-full"
+            >
+              Edit Profile
+              {/* <FaPlus className="inline-flex text-sm ml-2 mb-1" /> */}
+            </button>
+          </div>
+          <div className="my-5 px-14">
+            {myDetails?.userProfile?.profilePicURl.length > 0 ? (
+              ""
+            ) : (
+              <Image
+                width={1000}
+                height={1000}
+                src={"/assets/user/profile/no-image.png"}
+                className="w-40 h-40 object-contain"
+              />
+            )}
+          </div>
+          <div className="w-full flex flex-col flex-wrap px-14 my-10 space-y-4">
+            <div className="flex flex-row text-2xl">
+              <h1 className="w-80 font-bold text-[#666666]">Fullname </h1>
+              <textarea
+                rows="1"
+                value={myDetails?.name}
+                className=""
+                style={{ resize: "none" }}
+              ></textarea>
+            </div>
+            <div className="flex flex-row text-2xl">
+              <h1 className="w-80 font-bold text-[#666666]">Username </h1>
+              <textarea
+                rows="1"
+                value={myDetails?.username}
+                className=""
+                style={{ resize: "none" }}
+              ></textarea>
+            </div>
+            <div className="flex flex-row text-2xl">
+              <h1 className="w-80 font-bold text-[#666666]">Email Address </h1>
+              <textarea
+                rows="1"
+                value={myDetails?.email}
+                className=""
+                style={{ resize: "none" }}
+              ></textarea>
+              {myDetails?.emailVerified ? (
+                <div className="bg-transparent text-green-600 p-1 ">
+                  <TiTick />
+                </div>
+              ) : (
+                <div className="bg-transparent text-red-600 p-1 ">
+                  <MdClose />
+                </div>
+              )}
+            </div>
+            <div className="flex flex-row text-2xl">
+              <h1 className="w-80 font-bold text-[#666666]">NIC Number </h1>
+              <textarea
+                rows="1"
+                value={
+                  myDetails?.userProfile?.nicNumber.length > 0
+                    ? myDetails?.userProfile?.nicNumber
+                    : "--"
+                }
+                className=""
+                style={{ resize: "none" }}
+              ></textarea>
+            </div>
+            <div className="flex flex-row text-2xl">
+              <h1 className="w-80 font-bold text-[#666666]">Date of Birth </h1>
+              <textarea
+                rows="1"
+                value={
+                  myDetails?.userProfile?.dob.length > 0
+                    ? myDetails?.userProfile?.dob
+                    : "--"
+                }
+                className=""
+                style={{ resize: "none" }}
+              ></textarea>
+            </div>
+            <div className="flex flex-row text-2xl">
+              <h1 className="w-80 font-bold text-[#666666]">Nationality </h1>
+              <textarea
+                rows="1"
+                value={
+                  myDetails?.userProfile?.nationality.length > 0
+                    ? myDetails?.userProfile?.nationality
+                    : "--"
+                }
+                className=""
+                style={{ resize: "none" }}
+              ></textarea>
+            </div>
+            <div className="flex flex-row text-2xl">
+              <h1 className="w-80 font-bold text-[#666666]">Gender </h1>
+              <textarea
+                rows="1"
+                value={
+                  myDetails?.userProfile?.gender
+                    ? myDetails?.userProfile?.gender
+                    : "--"
+                }
+                className=""
+                style={{ resize: "none" }}
+              ></textarea>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className="bg-white w-full my-6 h-[40rem] max-h-[44rem] overflow-y-auto flex flex-row items-center justify-center">
+          <div className="border-t-4 border-b-4 border-[#116A7B] bg-transparent h-20 p-2 m-3 animate-spin duration-[2200] shadow-lg w-20 mx-auto rounded-full"></div>
+        </div>
+      )}
+    </>
   );
 };
 

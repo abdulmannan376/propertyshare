@@ -17,6 +17,11 @@ const Navbar = () => {
   const dispatch = useDispatch();
   const router = useRouter();
 
+  const textColor = useSelector((state) => state.navbarSliceReducer.textColor);
+  const hoverTextColor = useSelector(
+    (state) => state.navbarSliceReducer.hoverTextColor
+  );
+
   const [loggedIn, setLoggedIn] = useState(false);
   const [showDropDowns, setShowDropDowns] = useState({
     user: false,
@@ -105,7 +110,9 @@ const Navbar = () => {
         pauseOnHover
         theme="light"
       />
-      <header className="absolute top-0 w-full text-gray-600 body-font z-[1000]">
+      <header
+        className={`absolute top-0 w-full ${textColor} body-font z-[1000]`}
+      >
         <div className="xl:mx-24 mx-16 flex flex-wrap p-5 flex-col md:flex-row items-center">
           <a className="flex flex-col title-font font-medium items-center justify-center text-gray-900 mb-4 md:mb-0">
             <Image
@@ -117,27 +124,30 @@ const Navbar = () => {
             />
           </a>
           <nav className="md:ml-12 md:mr-auto flex flex-wrap items-center text-base justify-center">
-            <Link href={"/"} className="mr-12 hover:text-gray-900">
+            <Link href={"/"} className={`mr-12 hover:${hoverTextColor}`}>
               Home
             </Link>
-            <Link href={"/map"} className="mr-12 hover:text-gray-900">
+            <Link href={"/map"} className={`mr-12 hover:${hoverTextColor}`}>
               Map
             </Link>
-            <Link href={"/"} className="mr-12 hover:text-gray-900">
+            <Link href={"/"} className={`mr-12 hover:${hoverTextColor}`}>
               Buy Shares
             </Link>
-            {/* <Link href={"/"} className="mr-12 hover:text-gray-900">
+            {/* <Link href={"/"} className={`mr-12 hover:${hoverTextColor}`}>
             Rent
           </Link> */}
-            <Link href={"/contactus"} className="mr-12 hover:text-gray-900">
+            <Link
+              href={"/contactus"}
+              className={`mr-12 hover:${hoverTextColor}`}
+            >
               Contact
             </Link>
-            <Link href={"/"} className="mr-12 hover:text-gray-900">
+            <Link href={"/"} className={`mr-12 hover:${hoverTextColor}`}>
               About
             </Link>
             <Link
               href={"/privacy-policy"}
-              className="mr-12 hover:text-gray-900"
+              className={`mr-12 hover:${hoverTextColor}`}
             >
               Privacy
             </Link>
@@ -185,7 +195,12 @@ const Navbar = () => {
                           src={"/dummy-image.png"}
                           className="w-8 h-8 object-scale-down object-center rounded-full"
                         />
-                        <p className="text-lg">Profile</p>
+                        <p className="text-lg">
+                          {
+                            JSON.parse(localStorage.getItem("userDetails"))
+                              .username
+                          }
+                        </p>
                       </Link>
                     </li>
                     <li className="border-b border-[#116A7B] py-3 px-5">

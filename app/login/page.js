@@ -3,9 +3,11 @@ import FloatingLabelInput from "@/components/FloatingInputButton";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { updateNavbarTextColor } from "../redux/features/navbarSlice";
 
 const Page = () => {
   const [username, setUsername] = useState("");
@@ -13,6 +15,17 @@ const Page = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(
+      updateNavbarTextColor({
+        textColor: "text-white",
+        hoverTextColor: "text-white",
+      })
+    );
+  }, []);
 
   function handleShowPassword() {
     setShowPassword(!showPassword);
@@ -56,7 +69,7 @@ const Page = () => {
         });
 
         localStorage.setItem("token", response.token);
-        localStorage.setItem("userDetails", JSON.stringify(response.body))
+        localStorage.setItem("userDetails", JSON.stringify(response.body));
         setTimeout(() => {
           router.push("/");
         }, 5100);

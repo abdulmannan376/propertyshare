@@ -1,10 +1,23 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IoIosSearch, IoMdClose } from "react-icons/io";
 import { IoFilterOutline } from "react-icons/io5";
 import { FaAngleDown } from "react-icons/fa";
+import { useDispatch } from "react-redux";
+import { updateNavbarTextColor } from "@/app/redux/features/navbarSlice";
 
 const Carousel = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(
+      updateNavbarTextColor({
+        textColor: "text-gray-600",
+        hoverTextColor: "text-gray-900",
+      })
+    );
+  }, []);
+
   const [searchBar, setSearchBar] = useState();
   const [showFilterBox, setShowFilterBox] = useState(false);
   const [dropdownsStatus, setDropdownsStatus] = useState({
