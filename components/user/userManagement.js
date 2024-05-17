@@ -12,7 +12,7 @@ const UserManagement = () => {
     // Set a minimum display time for the loader of 2 seconds
     const timeoutId = setTimeout(() => {
       setPageLoading(false);
-    }, 1000);
+    }, 500);
 
     return () => {
       clearTimeout(timeoutId); // Clear the timeout if the component unmounts

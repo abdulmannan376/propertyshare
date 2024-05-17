@@ -30,12 +30,43 @@ const Navbar = () => {
 
   const userEmail = useSelector((state) => state.adminSliceReducer.userEmail);
 
+  const [notificationsCount, setNotificationsCount] = useState(0);
+
+  const fetchNotifications = async () => {
+    try {
+      const res = await fetch(
+        `${
+          process.env.NEXT_PUBLIC_SERVER_HOST
+        }/notification/get-website-notifications/${
+          JSON.parse(localStorage.getItem("userDetails")).username
+        }`,
+        {
+          method: "GET",
+          headers: {
+            "Content-type": "application/json",
+          },
+        }
+      );
+
+      const response = await res.json();
+
+      if (response.success) {
+        setNotificationsCount(response.body.notificationsCount);
+      } else {
+        throw new Error(response.message);
+      }
+    } catch (error) {
+      console.error("Error: ", error.message);
+    }
+  };
+
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token?.length > 0) {
       const userDetails = JSON.parse(localStorage.getItem("userDetails"));
       dispatch(updateUserDetails(userDetails));
       setLoggedIn(true);
+      fetchNotifications();
     } else {
       setLoggedIn(false);
     }
@@ -156,9 +187,11 @@ const Navbar = () => {
             <div className="flex flex-row items-start">
               <div className="relative mr-5 mt-1">
                 <FaBell className="text-3xl text-white" />
-                <span className="absolute w-5 h-5 -inset-y-2 right-0 px-0 bg-red-400 text-white text-sm text-center font-semibold focus:outline-none cursor-pointer rounded-full">
-                  5
-                </span>
+                {notificationsCount > 0 && (
+                  <span className="absolute w-5 h-5 -inset-y-2 right-0 px-0 bg-red-400 text-white text-sm text-center font-semibold focus:outline-none cursor-pointer rounded-full">
+                    {notificationsCount}
+                  </span>
+                )}
               </div>
               <div className="relative">
                 <button
