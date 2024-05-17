@@ -4,6 +4,7 @@ import {
   handleUserProfileSettingNavigation,
   handleUserSettingNavigation,
 } from "@/app/redux/features/userSlice";
+import AccountSetting from "@/components/user/setting-components/accountSetting";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -63,73 +64,76 @@ const Page = () => {
         </button>
         {/* </Link> */}
       </div>
-      <div className="flex flex-row flex-wrap space-x-5 xl:mx-24 mx-16 my-16 text-xl">
-        <button
-          type="button"
-          onClick={() =>
-            dispatch(handleUserProfileSettingNavigation("Primary Details"))
-          }
-          className={`${
-            profileSettingActiveTab === "Primary Details"
-              ? "opacity-100"
-              : "opacity-70"
-          } text-[#09363F] font-semibold`}
-        >
-          Primary Details
-        </button>
-        <button
-          type="button"
-          onClick={() =>
-            dispatch(handleUserProfileSettingNavigation("Contact Details"))
-          }
-          className={`${
-            profileSettingActiveTab === "Contact Details"
-              ? "opacity-100"
-              : "opacity-70"
-          } text-[#09363F] font-semibold`}
-        >
-          Contact Details
-        </button>
-        <button
-          type="button"
-          onClick={() =>
-            dispatch(handleUserProfileSettingNavigation("Next of Kin"))
-          }
-          className={`${
-            profileSettingActiveTab === "Next of Kin"
-              ? "opacity-100"
-              : "opacity-70"
-          } text-[#09363F] font-semibold`}
-        >
-          Next of Kin
-        </button>
-        <button
-          type="button"
-          onClick={() =>
-            dispatch(handleUserProfileSettingNavigation("Payment Details"))
-          }
-          className={`${
-            profileSettingActiveTab === "Payment Details"
-              ? "opacity-100"
-              : "opacity-70"
-          } text-[#09363F] font-semibold`}
-        >
-          Payment Details
-        </button>
-        <button
-          type="button"
-          onClick={() =>
-            dispatch(handleUserProfileSettingNavigation("Withdrawal Details"))
-          }
-          className={`${
-            profileSettingActiveTab === "Withdrawal Details"
-              ? "opacity-100"
-              : "opacity-70"
-          } text-[#09363F] font-semibold`}
-        >
-          Withdrawal Details
-        </button>
-      </div>
+      {settingActiveTab === "Profile Setting" && (
+        <div className="flex flex-row flex-wrap space-x-5 xl:mx-24 mx-16 my-16 text-xl">
+          <button
+            type="button"
+            onClick={() =>
+              dispatch(handleUserProfileSettingNavigation("Primary Details"))
+            }
+            className={`${
+              profileSettingActiveTab === "Primary Details"
+                ? "opacity-100"
+                : "opacity-70"
+            } text-[#09363F] font-semibold`}
+          >
+            Primary Details
+          </button>
+          <button
+            type="button"
+            onClick={() =>
+              dispatch(handleUserProfileSettingNavigation("Contact Details"))
+            }
+            className={`${
+              profileSettingActiveTab === "Contact Details"
+                ? "opacity-100"
+                : "opacity-70"
+            } text-[#09363F] font-semibold`}
+          >
+            Contact Details
+          </button>
+          <button
+            type="button"
+            onClick={() =>
+              dispatch(handleUserProfileSettingNavigation("Next of Kin"))
+            }
+            className={`${
+              profileSettingActiveTab === "Next of Kin"
+                ? "opacity-100"
+                : "opacity-70"
+            } text-[#09363F] font-semibold`}
+          >
+            Next of Kin
+          </button>
+          <button
+            type="button"
+            onClick={() =>
+              dispatch(handleUserProfileSettingNavigation("Payment Details"))
+            }
+            className={`${
+              profileSettingActiveTab === "Payment Details"
+                ? "opacity-100"
+                : "opacity-70"
+            } text-[#09363F] font-semibold`}
+          >
+            Payment Details
+          </button>
+          <button
+            type="button"
+            onClick={() =>
+              dispatch(handleUserProfileSettingNavigation("Withdrawal Details"))
+            }
+            className={`${
+              profileSettingActiveTab === "Withdrawal Details"
+                ? "opacity-100"
+                : "opacity-70"
+            } text-[#09363F] font-semibold`}
+          >
+            Withdrawal Details
+          </button>
+        </div>
+      )}
+      {settingActiveTab === "Account Setting" && <AccountSetting />}
     </div>
   );
 };
