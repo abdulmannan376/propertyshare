@@ -176,7 +176,7 @@ const SectionMap = () => {
     availableSharesActive: false,
   });
 
-  const priceMin = "";
+  const priceMin = "";  
   const priceMax = "";
 
   const handleDropdownActivity = (field, value, e) => {
