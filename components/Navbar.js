@@ -161,7 +161,7 @@ const Navbar = () => {
             <Link href={"/map"} className={`mr-12 hover:${hoverTextColor}`}>
               Map
             </Link>
-            <Link href={"/"} className={`mr-12 hover:${hoverTextColor}`}>
+            <Link href={"/buy-shares"} className={`mr-12 hover:${hoverTextColor}`}>
               Buy Shares
             </Link>
             {/* <Link href={"/"} className={`mr-12 hover:${hoverTextColor}`}>
