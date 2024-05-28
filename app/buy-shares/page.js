@@ -10,6 +10,7 @@ import Image from "next/image";
 import { VscEye } from "react-icons/vsc";
 import { FiMapPin } from "react-icons/fi";
 import compCities from "countrycitystatejson";
+import Link from "next/link";
 
 const Page = () => {
   const dispatch = useDispatch();
@@ -249,7 +250,8 @@ const Page = () => {
           {!isFeaturedPropertyLoading ? (
             <div className="xl:mx-24 mx-16 flex flex-row flex-wrap space-x-20">
               {featuredProperties.map((card, cardIndex) => (
-                <div
+                <Link
+                  href={`/buy-shares/property?id=${card.propertyID}&slug=${card.slug}`}
                   key={cardIndex}
                   className="w-[20rem] bg-white border-2 border-[#D9D9D9] rounded-xl"
                 >
@@ -321,7 +323,7 @@ const Page = () => {
                       }
                     </h4>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           ) : (
@@ -339,7 +341,8 @@ const Page = () => {
           {!isMostViewedLoading ? (
             <div className="xl:mx-24 mx-16 flex flex-row flex-wrap space-x-20">
               {mostViewedProperties.map((card, cardIndex) => (
-                <div
+                <Link
+                  href={`/buy-shares/property?id=${card.propertyID}&slug=${card.slug}`}
                   key={cardIndex}
                   className="w-[20rem] bg-white border-2 border-[#D9D9D9] rounded-xl"
                 >
@@ -411,7 +414,7 @@ const Page = () => {
                       }
                     </h4>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           ) : (
@@ -429,7 +432,8 @@ const Page = () => {
           {!isRecentlyAddedLoading ? (
             <div className="xl:mx-24 mx-16 flex flex-row flex-wrap space-x-20">
               {recentlyAddedProperties.map((card, cardIndex) => (
-                <div
+                <Link
+                  href={`/buy-shares/property?id=${card.propertyID}&slug=${card.slug}`}
                   key={cardIndex}
                   className="w-[20rem] bg-white border-2 border-[#D9D9D9] rounded-xl"
                 >
@@ -501,7 +505,7 @@ const Page = () => {
                       }
                     </h4>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           ) : (
@@ -512,11 +516,15 @@ const Page = () => {
         </div>
       )}
 
-      {featuredProperties.length === 0 && mostViewedProperties.length === 0 && recentlyAddedProperties.length === 0 &&
-        <div className="my-20">
-          <h1 className="xl:text-[4rem] text-4xl text-center text-[#116A7B] font-semibold">No properties yet.</h1>
-        </div>
-      }
+      {featuredProperties.length === 0 &&
+        mostViewedProperties.length === 0 &&
+        recentlyAddedProperties.length === 0 && (
+          <div className="my-20">
+            <h1 className="xl:text-[4rem] text-4xl text-center text-[#116A7B] font-semibold">
+              No properties yet.
+            </h1>
+          </div>
+        )}
     </>
   );
 };
