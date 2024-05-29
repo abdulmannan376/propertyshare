@@ -121,8 +121,8 @@ const PropertyManagement = () => {
         setZipCode(property.addressOfProperty.zipCode);
         setFullAddress(property.addressOfProperty.addressInString);
         setCoordinates({
-          lat: property.coordinates.latitude,
-          long: property.coordinates.longitude,
+          lat: property.location.coordinates[1],
+          long: property.location.coordinates[0],
         });
         setStartDate(property.startDurationFrom.split("T")[0]);
         setIsAddPropertyClicked(true);

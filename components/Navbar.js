@@ -91,7 +91,7 @@ const Navbar = () => {
         console.log("reponse: ", response);
         toast.success(response.message, {
           position: "bottom-center",
-          autoClose: 5000,
+          autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
@@ -103,7 +103,7 @@ const Navbar = () => {
         localStorage.removeItem("userDetails");
         setTimeout(() => {
           router.push("/");
-        }, 5200);
+        }, 200);
       }
     } catch (error) {
       toast.error(error.message, {
@@ -131,7 +131,7 @@ const Navbar = () => {
     <>
       <ToastContainer
         position="bottom-center"
-        autoClose={5000}
+        autoClose={2000}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick
