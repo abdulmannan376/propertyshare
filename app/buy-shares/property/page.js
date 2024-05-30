@@ -33,13 +33,13 @@ const Page = () => {
     (state) => state.propertyPageSliceReducer.navBtnActive
   );
 
-  const searchParams = useSearchParams();
   const [propertyID, setPropertyID] = useState("");
   const [property, setProperty] = useState({});
   const [propertyFetched, setPropertyFetched] = useState(false);
   const [idProvided, setIdProvided] = useState(true);
 
   useEffect(() => {
+    const searchParams = useSearchParams();
     if (searchParams.get("id")) {
       setPropertyID(searchParams.get("id"));
     } else {
