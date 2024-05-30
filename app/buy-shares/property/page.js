@@ -38,13 +38,16 @@ const Page = () => {
   const [propertyFetched, setPropertyFetched] = useState(false);
   const [idProvided, setIdProvided] = useState(true);
 
-  useEffect(() => {
+  function validateQuery() {
     const searchParams = useSearchParams();
     if (searchParams.get("id")) {
       setPropertyID(searchParams.get("id"));
     } else {
       setIdProvided(false);
     }
+  }
+  useEffect(() => {
+    validateQuery();
   }, []);
 
   const fetchData = async () => {
