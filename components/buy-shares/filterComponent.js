@@ -192,7 +192,7 @@ const FilterComponent = ({ filters, setFilters }) => {
                       e
                     )
                   }
-                  className="w-96 bg-transparent p-3 text-xl text-[#676767] flex items-center justify-between"
+                  className="xl:w-96 w-72 bg-transparent p-3 text-xl text-[#676767] flex items-center justify-between"
                 >
                   Property Type <FaAngleDown />
                 </button>
