@@ -34,7 +34,7 @@ const PropertyManagement = () => {
   const [allCities, setAllCities] = useState([]);
   const [coordinates, setCoordinates] = useState(null);
 
-  const [formPhase, setFormPhase] = useState(3);
+  const [formPhase, setFormPhase] = useState(1);
 
   const [yearBuilt, setYearBuilt] = useState("");
   const [floorCount, setFloorCount] = useState("");
@@ -149,7 +149,7 @@ const PropertyManagement = () => {
       setStartDate(null);
 
       setIsAddPropertyClicked(true);
-      setFormPhase(3);
+      setFormPhase(1);
 
       setYearBuilt("");
       setFloorCount("");

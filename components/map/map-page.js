@@ -126,6 +126,7 @@ const MapPage = () => {
   return (
     <NoSsr>
       <MapContainer
+      // zoomControl
         center={position || [51.505, -0.09]}
         zoom={15}
         style={{ height: "100vh", width: "100%" }}
