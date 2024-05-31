@@ -17,14 +17,6 @@ import { PiElevatorDuotone } from "react-icons/pi";
 import { MdOutlineMeetingRoom } from "react-icons/md";
 import compCities from "countrycitystatejson";
 
-function useValidateQuery() {
-  const searchParams= useSearchParams();
-  if (searchParams.get("id")) {
-    return searchParams.get("id");
-  } else {
-    return false;
-  }
-}
 
 const Page = () => {
   const dispatch = useDispatch();
@@ -41,6 +33,15 @@ const Page = () => {
   const activeNavBtn = useSelector(
     (state) => state.propertyPageSliceReducer.navBtnActive
   );
+
+  function useValidateQuery() {
+    const searchParams= useSearchParams();
+    if (searchParams.get("id")) {
+      return searchParams.get("id");
+    } else {
+      return false;
+    }
+  }
 
   const [propertyID, setPropertyID] = useState(useValidateQuery());
   const [property, setProperty] = useState({});

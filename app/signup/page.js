@@ -125,7 +125,7 @@ const Page = () => {
           <Image
             width={1000}
             height={1000}
-            src={"/logo.png"}
+            src={"/logo-bbh.png"}
             alt="Logo"
             className="w-auto h-10 object-contain object-center"
           />
