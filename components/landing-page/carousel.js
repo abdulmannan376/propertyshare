@@ -4,7 +4,10 @@ import { IoIosSearch, IoMdClose } from "react-icons/io";
 import { IoFilterOutline } from "react-icons/io5";
 import { FaAngleDown } from "react-icons/fa";
 import { useDispatch } from "react-redux";
-import { updateNavbarTextColor } from "@/app/redux/features/navbarSlice";
+import {
+  updateNavbarLogo,
+  updateNavbarTextColor,
+} from "@/app/redux/features/navbarSlice";
 
 const Carousel = () => {
   const dispatch = useDispatch();
@@ -16,6 +19,8 @@ const Carousel = () => {
         hoverTextColor: "text-gray-900",
       })
     );
+
+    dispatch(updateNavbarLogo("/logo-bbh-without-bg.png"));
   }, []);
 
   const [searchBar, setSearchBar] = useState();
@@ -269,20 +274,18 @@ const Carousel = () => {
           </div>
         )}
         <div className="flex flex-row space-x-5">
-          
-        
-        <button
-          type="button"
-          className="bg-[#CDC2AE] bg-opacity-40 border border-[#F5F5F5] uppercase px-5 text-[#FFFDF4] py-1 rounded-full mt-6"
-        >
-          Buy
-        </button>
-        <button
-          type="button"
-          className="bg-[#D9D9D9] bg-opacity-40 border border-[#F5F5F5] uppercase px-5 text-[#FFFDF4] py-1 rounded-full mt-6"
-        >
-          Rent
-        </button>
+          <button
+            type="button"
+            className="bg-[#CDC2AE] bg-opacity-40 border border-[#F5F5F5] uppercase px-5 text-[#FFFDF4] py-1 rounded-full mt-6"
+          >
+            Buy
+          </button>
+          <button
+            type="button"
+            className="bg-[#D9D9D9] bg-opacity-40 border border-[#F5F5F5] uppercase px-5 text-[#FFFDF4] py-1 rounded-full mt-6"
+          >
+            Rent
+          </button>
         </div>
       </div>
     </div>

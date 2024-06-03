@@ -1,7 +1,10 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { updateNavbarTextColor } from "../redux/features/navbarSlice";
+import {
+  updateNavbarLogo,
+  updateNavbarTextColor,
+} from "../redux/features/navbarSlice";
 import SearchBar from "@/components/buy-shares/searchBar";
 import FilterComponent from "@/components/buy-shares/filterComponent";
 import { ToastContainer, toast } from "react-toastify";
@@ -11,6 +14,7 @@ import { VscEye } from "react-icons/vsc";
 import { FiMapPin } from "react-icons/fi";
 import compCities from "countrycitystatejson";
 import Link from "next/link";
+import { handleAllDropdownsActivity } from "../redux/features/buyShareSlice";
 
 const Page = () => {
   const dispatch = useDispatch();
@@ -22,6 +26,7 @@ const Page = () => {
         hoverTextColor: "text-white",
       })
     );
+    dispatch(updateNavbarLogo("/logo-bbh.png"));
   }, []);
 
   const coordinates = useSelector(
@@ -209,7 +214,7 @@ const Page = () => {
   }, []);
 
   return (
-    <>
+    <div onClick={() => dispatch(handleAllDropdownsActivity(false))}>
       <ToastContainer
         position="bottom-center"
         autoClose={5000}
@@ -525,7 +530,7 @@ const Page = () => {
             </h1>
           </div>
         )}
-    </>
+    </div>
   );
 };
 

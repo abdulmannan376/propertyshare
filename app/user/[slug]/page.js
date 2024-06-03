@@ -11,7 +11,7 @@ import PropertyManagement from "@/components/user/addProperty";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import UserManagement from "@/components/user/userManagement";
-import { updateNavbarTextColor } from "@/app/redux/features/navbarSlice";
+import { updateNavbarLogo, updateNavbarTextColor } from "@/app/redux/features/navbarSlice";
 
 const Page = () => {
   const dispatch = useDispatch();
@@ -28,6 +28,7 @@ const Page = () => {
         hoverTextColor: "text-white",
       })
     );
+    dispatch(updateNavbarLogo("/logo-bbh.png"));
     setName(JSON.parse(localStorage.getItem("userDetails")).name);
     setUsername(JSON.parse(localStorage.getItem("userDetails")).username);
     fetchSettings();

@@ -387,7 +387,7 @@ const PropertyManagement = () => {
             newData.push(response.body);
             return newData;
           });
-          setPropertyByIndex(myProperties - 1);
+          setPropertyByIndex(myProperties.length - 1);
         } else {
           throw new Error(response.message);
         }
@@ -727,7 +727,7 @@ const PropertyManagement = () => {
         <div className="w-full flex flex-row items-center pb-8 px-14">
           <h1 className="text-2xl font-medium">Add Property</h1>
           <button
-            onClick={() => setIsAddPropertyClicked(false)}
+            onClick={() => {setIsAddPropertyClicked(false); setFormPhase(1)}}
             type="button"
             className="bg-[#116A7B] text-white text-lg ml-auto mx-1 px-5 py-1 rounded-full"
           >

@@ -8,6 +8,7 @@ const initialState = {
   priceRange: ["0", "ANY"],
   areaRange: ["0", "ANY"],
   numberOfBeds: [],
+  isAllDropdownsClosed: true
 };
 
 export const buyShareSlice = createSlice({
@@ -51,6 +52,9 @@ export const buyShareSlice = createSlice({
         state.areaRange[1] = action.payload.value;
       }
     },
+    handleAllDropdownsActivity: (state, action) => {
+      state.isAllDropdownsClosed = action.payload
+    }
   },
 });
 
@@ -60,5 +64,6 @@ export const {
   updateCoordinates,
   updatePriceRange,
   updateAreaRange,
+  handleAllDropdownsActivity,
 } = buyShareSlice.actions;
 export default buyShareSlice.reducer;

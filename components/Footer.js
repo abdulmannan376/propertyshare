@@ -8,7 +8,7 @@ const Footer = () => {
         <Image
           width={1000}
           height={1000}
-          src={"/logo-large.png"}
+          src={"/logo-bbh.png"}
           className="w-[420px] h-[350px] object-contain object-center"
           alt="Footer-logo"
         />

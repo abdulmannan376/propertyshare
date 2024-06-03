@@ -21,6 +21,7 @@ const Navbar = () => {
   const hoverTextColor = useSelector(
     (state) => state.navbarSliceReducer.hoverTextColor
   );
+  const logoURL = useSelector((state) => state.navbarSliceReducer.logoURL);
 
   const [loggedIn, setLoggedIn] = useState(false);
   const [showDropDowns, setShowDropDowns] = useState({
@@ -99,11 +100,11 @@ const Navbar = () => {
           progress: undefined,
           theme: "light",
         });
-        setLoggedIn(false)
+        setLoggedIn(false);
         localStorage.removeItem("token");
         localStorage.removeItem("userDetails");
         setTimeout(() => {
-          router.refresh()
+          router.refresh();
           router.push("/");
         }, 2000);
       }
@@ -151,7 +152,7 @@ const Navbar = () => {
             <Image
               width={1000}
               height={1000}
-              src={"/logo-bbh.png"}
+              src={logoURL}
               alt="Logo"
               className="w-auto h-10 object-contain object-center"
             />
@@ -163,7 +164,10 @@ const Navbar = () => {
             <Link href={"/map"} className={`mr-12 hover:${hoverTextColor}`}>
               Map
             </Link>
-            <Link href={"/buy-shares"} className={`mr-12 hover:${hoverTextColor}`}>
+            <Link
+              href={"/buy-shares"}
+              className={`mr-12 hover:${hoverTextColor}`}
+            >
               Buy Shares
             </Link>
             <Link href={"/"} className={`mr-12 hover:${hoverTextColor}`}>

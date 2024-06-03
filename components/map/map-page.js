@@ -15,6 +15,8 @@ import SearchBar from "@/components/map/searchBar";
 import FilterComponent from "@/components/map/filterComponent";
 import Modal from "@/components/map/requestPropertyModal";
 import NoSsr from "@/components/noSSR";
+import { useDispatch } from "react-redux";
+import { updateNavbarLogo } from "@/app/redux/features/navbarSlice";
 // import PinIcon from "@/public/assets/pin.png";
 // Fixing icons issue with Webpack as per Leaflet's known issue
 // delete L.Icon.Default.prototype._getIconUrl;
@@ -27,6 +29,12 @@ import NoSsr from "@/components/noSSR";
 //   });
 
 const MapPage = () => {
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(updateNavbarLogo("/logo-bbh.png"));
+  }, []);
   const [position, setPosition] = useState(null);
   const [markers, setMarkers] = useState([]);
   const [customIcon, setCustomIcon] = useState(null);

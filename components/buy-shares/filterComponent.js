@@ -1,12 +1,13 @@
 import {
+  handleAllDropdownsActivity,
   updateAreaRange,
   updateNumberOfBeds,
   updatePriceRange,
   updatePropertyType,
 } from "@/app/redux/features/buyShareSlice";
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { FaAngleDown } from "react-icons/fa";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const FilterComponent = ({ filters, setFilters }) => {
   const dispatch = useDispatch();
@@ -129,12 +130,12 @@ const FilterComponent = ({ filters, setFilters }) => {
     setDropdownsStatus((prevDetails) => {
       const newDetails = { ...prevDetails };
       Object.keys(newDetails).map((data) => {
-        if(data === field) {
-          newDetails[data] = value
+        if (data === field) {
+          newDetails[data] = value;
         } else {
-          newDetails[data] = false
+          newDetails[data] = false;
         }
-      })
+      });
       return newDetails;
     });
   };
@@ -182,6 +183,27 @@ const FilterComponent = ({ filters, setFilters }) => {
     try {
     } catch (error) {}
   };
+
+  const isAllDropdownsClosed = useSelector(
+    (state) => state.buyShareSliceReducer.isAllDropdownsClosed
+  );
+
+  useEffect(() => {
+    if (!isAllDropdownsClosed) {
+      setDropdownsStatus((prevDetails) => {
+        const newDetails = { ...prevDetails };
+
+        Object.keys(newDetails).map((fieldName) => {
+          newDetails[fieldName] = false;
+        });
+
+        return newDetails;
+      });
+
+      dispatch(handleAllDropdownsActivity(true));
+    }
+  }, [isAllDropdownsClosed]);
+
   return (
     <>
       <div className="w-full flex flex-row items-center border-2 border-[#676767] divide-x-2 divide-[#676767] justify-center bg-white my-5 space-x-10 mx-auto duration-700 transition">
@@ -191,19 +213,20 @@ const FilterComponent = ({ filters, setFilters }) => {
               <div className="relative">
                 <button
                   type="button"
-                  onClick={(e) =>
+                  onClick={(e) => {
+                    e.stopPropagation();
                     handleDropdownActivity(
                       filter.id,
                       !dropdownsStatus[filter.id],
                       e
-                    )
-                  }
-                  className="xl:w-96 lg:w-72 bg-transparent p-3 text-xl text-[#676767] flex items-center justify-between"
+                    );
+                  }}
+                  className="xl:w-96 lg:w-64 bg-transparent p-3 text-xl text-[#676767] flex items-center justify-between"
                 >
                   Property Type <FaAngleDown />
                 </button>
                 {dropdownsStatus[filter.id] && (
-                  <div className="absolute w-full bg-white z-10">
+                  <div className="absolute w-full bg-white z-[1000]">
                     <ul className="px-5 space-y-1 max-h-60 overflow-y-auto">
                       {filter.data.map((listItem, i) => (
                         <li
@@ -228,19 +251,20 @@ const FilterComponent = ({ filters, setFilters }) => {
               <div className="relative">
                 <button
                   type="button"
-                  onClick={(e) =>
+                  onClick={(e) => {
+                    e.stopPropagation();
                     handleDropdownActivity(
                       filter.id,
                       !dropdownsStatus[filter.id],
                       e
-                    )
-                  }
-                  className="xl:w-96 lg:w-72 bg-transparent p-3 text-xl text-[#676767] flex items-center justify-between"
+                    );
+                  }}
+                  className="xl:w-96 lg:w-64 bg-transparent p-3 text-xl text-[#676767] flex items-center justify-between"
                 >
                   Price <FaAngleDown />
                 </button>
                 {dropdownsStatus[filter.id] && (
-                  <div className="absolute w-full bg-white flex flex-row items-center justify-between">
+                  <div className="absolute w-full bg-white flex flex-row z-[1000] items-center justify-between">
                     <ul className="w-1/2 px-3 space-y-1 max-h-60 overflow-y-auto">
                       <input
                         type="text"
@@ -297,19 +321,20 @@ const FilterComponent = ({ filters, setFilters }) => {
               <div className="relative">
                 <button
                   type="button"
-                  onClick={(e) =>
+                  onClick={(e) => {
+                    e.stopPropagation();
                     handleDropdownActivity(
                       filter.id,
                       !dropdownsStatus[filter.id],
                       e
-                    )
-                  }
-                  className="xl:w-96 lg:w-72 bg-transparent p-3 text-xl text-[#676767] flex items-center justify-between"
+                    );
+                  }}
+                  className="xl:w-96 lg:w-64 bg-transparent p-3 text-xl text-[#676767] flex items-center justify-between"
                 >
                   Area <FaAngleDown />
                 </button>
                 {dropdownsStatus[filter.id] && (
-                  <div className="absolute w-full bg-white flex flex-row items-center justify-between">
+                  <div className="absolute w-full bg-white flex flex-row z-[1000] items-center justify-between">
                     <ul className="w-1/2 px-3 space-y-1 max-h-60 overflow-y-auto overflow-x-hidden">
                       <input
                         type="text"
@@ -370,19 +395,20 @@ const FilterComponent = ({ filters, setFilters }) => {
               <div className="relative">
                 <button
                   type="button"
-                  onClick={(e) =>
+                  onClick={(e) => {
+                    e.stopPropagation();
                     handleDropdownActivity(
                       filter.id,
                       !dropdownsStatus[filter.id],
                       e
-                    )
-                  }
-                  className="xl:w-96 lg:w-72 bg-transparent p-3 text-xl text-[#676767] flex items-center justify-between"
+                    );
+                  }}
+                  className="xl:w-96 lg:w-64 bg-transparent p-3 text-xl text-[#676767] flex items-center justify-between"
                 >
                   Beds <FaAngleDown />
                 </button>
                 {dropdownsStatus[filter.id] && (
-                  <div className="absolute w-full bg-white ">
+                  <div className="absolute w-full bg-white z-[1000]">
                     <ul className="px-5 space-y-1 max-h-60 overflow-y-auto">
                       {filter.data.map((listItem, i) => (
                         <li
