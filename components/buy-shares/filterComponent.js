@@ -128,7 +128,13 @@ const FilterComponent = ({ filters, setFilters }) => {
     console.log("in handle dropdown activity");
     setDropdownsStatus((prevDetails) => {
       const newDetails = { ...prevDetails };
-      newDetails[field] = value;
+      Object.keys(newDetails).map((data) => {
+        if(data === field) {
+          newDetails[data] = value
+        } else {
+          newDetails[data] = false
+        }
+      })
       return newDetails;
     });
   };
@@ -192,7 +198,7 @@ const FilterComponent = ({ filters, setFilters }) => {
                       e
                     )
                   }
-                  className="xl:w-96 w-72 bg-transparent p-3 text-xl text-[#676767] flex items-center justify-between"
+                  className="xl:w-96 lg:w-72 bg-transparent p-3 text-xl text-[#676767] flex items-center justify-between"
                 >
                   Property Type <FaAngleDown />
                 </button>
@@ -229,7 +235,7 @@ const FilterComponent = ({ filters, setFilters }) => {
                       e
                     )
                   }
-                  className="w-96 bg-transparent p-3 text-xl text-[#676767] flex items-center justify-between"
+                  className="xl:w-96 lg:w-72 bg-transparent p-3 text-xl text-[#676767] flex items-center justify-between"
                 >
                   Price <FaAngleDown />
                 </button>
@@ -298,7 +304,7 @@ const FilterComponent = ({ filters, setFilters }) => {
                       e
                     )
                   }
-                  className="w-96 bg-transparent p-3 text-xl text-[#676767] flex items-center justify-between"
+                  className="xl:w-96 lg:w-72 bg-transparent p-3 text-xl text-[#676767] flex items-center justify-between"
                 >
                   Area <FaAngleDown />
                 </button>
@@ -371,7 +377,7 @@ const FilterComponent = ({ filters, setFilters }) => {
                       e
                     )
                   }
-                  className="w-96 bg-transparent p-3 text-xl text-[#676767] flex items-center justify-between"
+                  className="xl:w-96 lg:w-72 bg-transparent p-3 text-xl text-[#676767] flex items-center justify-between"
                 >
                   Beds <FaAngleDown />
                 </button>

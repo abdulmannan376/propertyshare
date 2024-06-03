@@ -264,7 +264,7 @@ const Page = () => {
                           ? `${process.env.NEXT_PUBLIC_SERVER_HOST}/uploads/${card.propertyID}/image-1.png`
                           : "/assets/user/property-management/no-image.jpg"
                       }
-                      className="w-[20rem] h-auto object-cover object-center rounded-md overflow-hidden"
+                      className={`w-[20rem] h-[19rem] object-cover object-center rounded-md overflow-hidden`}
                       // alt={`${}`}
                     />
                     <span
@@ -352,10 +352,10 @@ const Page = () => {
                       height={1000}
                       src={
                         card.imageCount > 0
-                          ? `${process.env.NEXT_PUBLIC_SERVER_HOST}/uploads/${card.propertyID}/image-0.png`
+                          ? `${process.env.NEXT_PUBLIC_SERVER_HOST}/uploads/${card.propertyID}/image-1.png`
                           : "/assets/user/property-management/no-image.jpg"
                       }
-                      className="w-[20rem] h-auto object-cover object-center rounded-md overflow-hidden"
+                      className={`w-[20rem] h-[19rem] object-cover object-center rounded-md overflow-hidden`}
                       // alt={`${}`}
                     />
                     <span
@@ -443,10 +443,10 @@ const Page = () => {
                       height={1000}
                       src={
                         card.imageCount > 0
-                          ? `${process.env.NEXT_PUBLIC_SERVER_HOST}/uploads/${card.propertyID}/image-0.png`
+                          ? `${process.env.NEXT_PUBLIC_SERVER_HOST}/uploads/${card.propertyID}/image-1.png`
                           : "/assets/user/property-management/no-image.jpg"
                       }
-                      className="w-[20rem] h-auto object-cover object-center rounded-md overflow-hidden"
+                      className={`w-[20rem] h-[19rem] object-cover object-center rounded-md overflow-hidden`}
                       // alt={`${}`}
                     />
                     <span
