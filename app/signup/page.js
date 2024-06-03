@@ -127,7 +127,7 @@ const Page = () => {
             height={1000}
             src={"/logo-bbh.png"}
             alt="Logo"
-            className="w-auto h-10 object-contain object-center"
+            className="w-auto h-24 object-contain object-center"
           />
         </div>
         {phase === 1 && (

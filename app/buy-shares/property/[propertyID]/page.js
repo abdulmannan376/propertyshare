@@ -3,7 +3,7 @@ import { updateNavbarTextColor } from "@/app/redux/features/navbarSlice";
 import { updateActiveNavBtn } from "@/app/redux/features/propertyPageSlice";
 import Image from "next/image";
 import { useParams, useSearchParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
 import { IoIosPricetag, IoIosBed } from "react-icons/io";
@@ -16,7 +16,7 @@ import { TbParkingCircle, TbBath } from "react-icons/tb";
 import { PiElevatorDuotone } from "react-icons/pi";
 import { MdOutlineMeetingRoom } from "react-icons/md";
 import compCities from "countrycitystatejson";
-
+import GetPropertyID from "@/components/buy-shares/getPropertyID";
 
 const Page = () => {
   const dispatch = useDispatch();
@@ -34,16 +34,19 @@ const Page = () => {
     (state) => state.propertyPageSliceReducer.navBtnActive
   );
 
-  function useValidateQuery() {
-    const searchParams= useSearchParams();
-    if (searchParams.get("id")) {
-      return searchParams.get("id");
-    } else {
-      return false;
-    }
-  }
+  // function useValidateQuery() {
+  //   const searchParams = useSearchParams();
+  //   if (searchParams.get("id")) {
+  //     return searchParams.get("id");
+  //   } else {
+  //     return false;
+  //   }
+  // }
 
-  const [propertyID, setPropertyID] = useState(useValidateQuery());
+  const params = useParams();
+  console.log("params: ", params)
+
+  const [propertyID, setPropertyID] = useState(params.propertyID || null);
   const [property, setProperty] = useState({});
   const [propertyFetched, setPropertyFetched] = useState(false);
   const [idProvided, setIdProvided] = useState(true);
@@ -172,6 +175,16 @@ const Page = () => {
             </div>
             {activeNavBtn === "Property Details" && (
               <>
+                {/* <div className="my-16">
+                  <h1 className="text-4xl text-[#116A7B] font-semibold">
+                    {property.title}
+                  </h1>
+                  <p className="text-2xl text-[#116A7B]">
+                    <Suspense fallback={<GetPropertyIDFallback />}>
+                      <GetPropertyID setPropertyID={setPropertyID} />
+                    </Suspense>
+                  </p>
+                </div> */}
                 <div className="my-16">
                   <h1 className="text-4xl text-[#116A7B] font-semibold">
                     Overview

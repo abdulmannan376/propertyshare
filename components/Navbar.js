@@ -99,11 +99,13 @@ const Navbar = () => {
           progress: undefined,
           theme: "light",
         });
+        setLoggedIn(false)
         localStorage.removeItem("token");
         localStorage.removeItem("userDetails");
         setTimeout(() => {
+          router.refresh()
           router.push("/");
-        }, 200);
+        }, 2000);
       }
     } catch (error) {
       toast.error(error.message, {
@@ -164,6 +166,9 @@ const Navbar = () => {
             <Link href={"/buy-shares"} className={`mr-12 hover:${hoverTextColor}`}>
               Buy Shares
             </Link>
+            <Link href={"/"} className={`mr-12 hover:${hoverTextColor}`}>
+              Rent Shares
+            </Link>
             {/* <Link href={"/"} className={`mr-12 hover:${hoverTextColor}`}>
             Rent
           </Link> */}
@@ -207,7 +212,7 @@ const Navbar = () => {
                     height={500}
                     src={"/dummy-image.png"}
                     alt={
-                      JSON.parse(localStorage.getItem("userDetails")).username
+                      JSON.parse(localStorage.getItem("userDetails"))?.username
                     }
                     className="w-9 h-9 object-scale-down object-center rounded-full"
                   />{" "}

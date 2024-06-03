@@ -251,7 +251,7 @@ const Page = () => {
             <div className="xl:mx-24 mx-16 flex flex-row flex-wrap space-x-20">
               {featuredProperties.map((card, cardIndex) => (
                 <Link
-                  href={`/buy-shares/property?id=${card.propertyID}&slug=${card.slug}`}
+                  href={`/buy-shares/property/${card.propertyID}`}
                   key={cardIndex}
                   className="w-[20rem] bg-white border-2 border-[#D9D9D9] rounded-xl"
                 >

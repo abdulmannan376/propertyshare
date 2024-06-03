@@ -127,6 +127,55 @@ const PropertyManagement = () => {
         setStartDate(property.startDurationFrom.split("T")[0]);
         setIsAddPropertyClicked(true);
         setPropertyByIndex(index);
+        console.log("length: ", Object.keys(property.amenitiesID)?.length);
+        if (Object.keys(property.amenitiesID)?.length > 2) {
+          const amenities = property.amenitiesID;
+          setYearBuilt(amenities.mainFeatures?.inputs?.yearBuilt || "");
+          setFloorCount(amenities.mainFeatures?.inputs?.floorCount || "");
+          setParkingSpace(amenities.mainFeatures?.inputs?.parkingSpace || "");
+          setElevators(amenities.mainFeatures?.inputs?.elevators || "");
+          if (amenities.mainFeatures?.tags?.length > 0) {
+            amenities.mainFeatures?.tags?.map((tag) => {
+              handleAddTagsByCamelCase(0, tag);
+            });
+          }
+
+          setSelectedNumOfBeds(amenities.roomsDetails?.inputs?.beds || "");
+          setSelectedNumOfBaths(amenities.roomsDetails?.inputs?.baths || "");
+          setServantQuater(amenities.roomsDetails?.inputs?.servantQuater || "");
+          setKitchens(amenities.roomsDetails?.inputs?.kitchen || "");
+          if (amenities.roomsDetails?.tags?.length > 0) {
+            amenities.roomsDetails?.tags?.map((tag) => {
+              handleAddTagsByCamelCase(1, tag);
+            });
+          }
+
+          if (amenities.business?.tags?.length > 0) {
+            amenities.business?.tags?.map((tag) => {
+              handleAddTagsByCamelCase(2, tag);
+            });
+          }
+          if (amenities.community?.tags?.length > 0) {
+            amenities.community?.tags?.map((tag) => {
+              handleAddTagsByCamelCase(3, tag);
+            });
+          }
+
+          if (amenities.healthAndRecreational?.tags?.length > 0) {
+            amenities.healthAndRecreational?.tags?.map((tag) => {
+              handleAddTagsByCamelCase(4, tag);
+            });
+          }
+          setDistanceFromAirport(
+            amenities.nearbyFacilitiesAndLocations?.inputs
+              .distanceFromAirport || ""
+          );
+          if (amenities.nearbyFacilitiesAndLocations?.tags?.length > 0) {
+            amenities.nearbyFacilitiesAndLocations?.tags?.map((tag) => {
+              handleAddTagsByCamelCase(5, tag);
+            });
+          }
+        }
       }
     } else {
       setListingStatus("new");
@@ -343,7 +392,39 @@ const PropertyManagement = () => {
           throw new Error(response.message);
         }
       } else if (listingStatus === "draft") {
-        if (formPhase === 2) {
+        if (formPhase === 1) {
+          data.formPhase = formPhase;
+
+          const res = await fetch(
+            `${process.env.NEXT_PUBLIC_SERVER_HOST}/property/update-property/${myProperties[propertyByIndex].propertyID}`,
+            {
+              method: "PUT",
+              headers: {
+                "Content-type": "application/json",
+              },
+              body: JSON.stringify(data),
+            }
+          );
+
+          const response = await res.json();
+
+          setIsLoading(false);
+          if (response.success) {
+            changeFormPhase(formPhase + 1);
+            toast.success(response.message, {
+              position: "bottom-center",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+            });
+          } else {
+            throw new Error(response.message);
+          }
+        } else if (formPhase === 2) {
           const amenities = {
             mainFeatures: {
               inputs: {
@@ -562,6 +643,44 @@ const PropertyManagement = () => {
               ...item,
               tagsByName: [...item.tagsByName, value],
               tags: [...item.tags, camelCaseValue], // Assuming tags should also store the camelCase value
+            };
+          }
+          return item;
+        });
+        return newData;
+      }
+      return prevData; // Return the previous data unchanged if the tag is a duplicate
+    });
+  };
+
+  const handleAddTagsByCamelCase = (index, value) => {
+    console.log("Called handleAddTags with index:", index, "and value:", value);
+
+    // Function to convert camelCase string to human-readable format
+    const toHumanReadable = (str) => {
+      // Insert a space before each uppercase letter and convert the entire string to lowercase
+      const spaced = str.replace(/([A-Z])/g, " $1").toLowerCase();
+
+      // Trim any leading space and capitalize the first letter of each word
+      return spaced.replace(/(?:^\w|[A-Z]|\b\w)/g, (match, index) =>
+        match.toUpperCase()
+      );
+    };
+
+    // Example usage:
+    const humanReadableString = toHumanReadable(value);
+
+    setSelectedTags((prevData) => {
+      // Check if the camelCase value already exists in the tagsByName array at the given index
+      if (!prevData[index].tagsByName.includes(value)) {
+        // Create a new array with all the previous data
+        const newData = prevData.map((item, idx) => {
+          if (idx === index) {
+            // Only update the item at the specific index
+            return {
+              ...item,
+              tagsByName: [...item.tagsByName, humanReadableString],
+              tags: [...item.tags, value], // Assuming tags should also store the camelCase value
             };
           }
           return item;
@@ -1554,7 +1673,7 @@ const PropertyManagement = () => {
                 <Image
                   width={1000}
                   height={1000}
-                  src={`${process.env.NEXT_PUBLIC_SERVER_HOST}/${property.imageDirURL}/image-1.png`}
+                  src={`${process.env.NEXT_PUBLIC_SERVER_HOST}/uploads/${property.imageDirURL}/image-1.png`}
                   className="w-64 h-60 object-cover object-center"
                 />
               )}
