@@ -18,6 +18,14 @@ import { MdOutlineMeetingRoom } from "react-icons/md";
 import compCities from "countrycitystatejson";
 import GetPropertyID from "@/components/buy-shares/getPropertyID";
 
+// Import Swiper React components and Swiper styles
+import { Swiper, SwiperSlide } from "swiper/react";
+import SwiperCore from "swiper";
+import { Pagination } from "swiper/modules";
+
+import "swiper/css";
+import "swiper/css/pagination";
+
 const Page = () => {
   const dispatch = useDispatch();
 
@@ -44,7 +52,7 @@ const Page = () => {
   // }
 
   const params = useParams();
-  console.log("params: ", params)
+  console.log("params: ", params);
 
   const [propertyID, setPropertyID] = useState(params.propertyID || null);
   const [property, setProperty] = useState({});
@@ -110,7 +118,44 @@ const Page = () => {
         <div className="xl:mx-24 mx-16 ">
           <div>
             {property.imageCount > 0 ? (
-              <div className="h-[44rem]"></div>
+              <div className="swiper-container">
+                {/* Swiper component */}
+                <Swiper
+                  modules={[Pagination]}
+                  slidesPerView={1}
+                  pagination={{
+                    clickable: true,
+                    el: "#swiper-pagination",
+                    type: "bullets",
+                    bulletActiveClass: "swiper-pagination-bullet-active",
+                    bulletClass: "swiper-pagination-bullet",
+                  }}
+                  style={{ width: "100%", height: "70%" }}
+                  className="mb-5"
+                >
+                  {Array.from({ length: property.imageCount }, (_, index) => (
+                    <SwiperSlide key={index}>
+                      <div >
+                        <Image
+                          width={2000}
+                          height={2000}
+                          src={`${process.env.NEXT_PUBLIC_SERVER_HOST}/${
+                            property.imageDirURL
+                          }/image-${index + 1}.png`}
+                          className="w-full h-[44rem] object-cover object-center"
+                          alt={`Image ${index + 1}`}
+                        />
+                      </div>
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+
+                {/* Custom pagination */}
+                <div
+                  id="swiper-pagination"
+                  className="flex flex-row justify-center "
+                ></div>
+              </div>
             ) : (
               <div className="h-[44rem]">
                 <Image
@@ -175,16 +220,12 @@ const Page = () => {
             </div>
             {activeNavBtn === "Property Details" && (
               <>
-                {/* <div className="my-16">
+                <div className="my-16">
                   <h1 className="text-4xl text-[#116A7B] font-semibold">
-                    {property.title}
+                    Title
                   </h1>
-                  <p className="text-2xl text-[#116A7B]">
-                    <Suspense fallback={<GetPropertyIDFallback />}>
-                      <GetPropertyID setPropertyID={setPropertyID} />
-                    </Suspense>
-                  </p>
-                </div> */}
+                  <p className="text-2xl text-[#116A7B]">{property.title}</p>
+                </div>
                 <div className="my-16">
                   <h1 className="text-4xl text-[#116A7B] font-semibold">
                     Overview

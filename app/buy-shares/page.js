@@ -151,7 +151,7 @@ const Page = () => {
       const res = await fetch(
         `${
           process.env.NEXT_PUBLIC_SERVER_HOST
-        }/property/get-most-viewed-property/${JSON.stringify({
+        }/property/get-recently-added-property/${JSON.stringify({
           coordinates: coordinates,
           propertyType: propertyType,
           beds: numberOfBeds,
