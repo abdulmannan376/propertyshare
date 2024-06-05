@@ -213,6 +213,61 @@ const Page = () => {
     handleFetchRecentlyAddedProperty();
   }, []);
 
+  const TruncatingH1 = ({ text }) => {
+    const h1Ref = useRef(null);
+    const [displayText, setDisplayText] = useState(text);
+
+    useEffect(() => {
+      const checkAndTruncateText = () => {
+        const current = h1Ref.current;
+        if (!current) return;
+
+        // Reset the display text to the original text first
+        setDisplayText(text);
+
+        // Using a timeout to allow the browser to render and calculate sizes
+        setTimeout(() => {
+          const lineHeight = parseInt(
+            window.getComputedStyle(current).lineHeight
+          );
+          const height = current.clientHeight;
+
+          if (height > lineHeight) {
+            // Content is more than one line
+            let truncatedText = text;
+            while (
+              current.clientHeight > lineHeight &&
+              truncatedText.length > 0
+            ) {
+              truncatedText = truncatedText.slice(0, -1);
+              current.innerText = truncatedText + "...";
+            }
+          }
+        }, 0);
+      };
+
+      checkAndTruncateText();
+
+      // Optional: Re-run when the text changes
+      // window.addEventListener('resize', checkAndTruncateText); // To handle resizing for responsive designs
+
+      // Cleanup the effect
+      return () => {
+        // window.removeEventListener('resize', checkAndTruncateText);
+      };
+    }, [text]); // Dependency array ensures effect runs only if text changes
+
+    return (
+      <h1
+        ref={h1Ref}
+        style={{ lineHeight: "1.5em", overflow: "hidden" }}
+        className="text-xl text-[#116A7B]"
+      >
+        {displayText}
+      </h1>
+    );
+  };
+
   return (
     <div onClick={() => dispatch(handleAllDropdownsActivity(false))}>
       <ToastContainer
@@ -253,12 +308,12 @@ const Page = () => {
             Featured Properties
           </h1>
           {!isFeaturedPropertyLoading ? (
-            <div className="xl:mx-24 mx-16 flex flex-row flex-wrap space-x-20">
+            <div className="xl:mx-24 mx-16 flex flex-row flex-wrap">
               {featuredProperties.map((card, cardIndex) => (
                 <Link
                   href={`/buy-shares/property/${card.propertyID}`}
                   key={cardIndex}
-                  className="w-[20rem] bg-white border-2 border-[#D9D9D9] rounded-xl"
+                  className="w-[20rem] bg-white border-2 border-[#D9D9D9] rounded-xl mr-20 mt-20"
                 >
                   <div className="p-2 relative">
                     <Image
@@ -295,9 +350,10 @@ const Page = () => {
                     </span>
                   </div>
                   <div className="p-2 space-y-1">
-                    <h1 className="text-xl text-[#116A7B]">
+                    <TruncatingH1 text={card.title} />
+                    <h3 className="text-[#116A7B] font-semibold">
                       {card.propertyType}
-                    </h1>
+                    </h3>
                     <h2 className="text-sm text-[#116A7B]">
                       <strong>
                         {card?.amenities?.roomDetails?.inputs?.beds
@@ -344,12 +400,12 @@ const Page = () => {
             Most Viewed Properties
           </h1>
           {!isMostViewedLoading ? (
-            <div className="xl:mx-24 mx-16 flex flex-row flex-wrap space-x-20">
+            <div className="xl:mx-24 mx-16 flex flex-row flex-wrap">
               {mostViewedProperties.map((card, cardIndex) => (
                 <Link
                   href={`/buy-shares/property/${card.propertyID}`}
                   key={cardIndex}
-                  className="w-[20rem] bg-white border-2 border-[#D9D9D9] rounded-xl"
+                  className="w-[20rem] bg-white border-2 border-[#D9D9D9] rounded-xl mr-20 mt-20"
                 >
                   <div className="p-2 relative">
                     <Image
@@ -386,9 +442,10 @@ const Page = () => {
                     </span>
                   </div>
                   <div className="p-2 space-y-1">
-                    <h1 className="text-xl text-[#116A7B]">
+                    <TruncatingH1 text={card.title} />
+                    <h3 className="text-[#116A7B] font-semibold">
                       {card.propertyType}
-                    </h1>
+                    </h3>
                     <h2 className="text-sm text-[#116A7B]">
                       <strong>
                         {card?.amenities?.roomDetails?.inputs?.beds
@@ -435,12 +492,12 @@ const Page = () => {
             Recently Added Properties
           </h1>
           {!isRecentlyAddedLoading ? (
-            <div className="xl:mx-24 mx-16 flex flex-row flex-wrap space-x-20">
+            <div className="xl:mx-24 mx-16 flex flex-row flex-wrap">
               {recentlyAddedProperties.map((card, cardIndex) => (
                 <Link
                   href={`/buy-shares/property/${card.propertyID}`}
                   key={cardIndex}
-                  className="w-[20rem] bg-white border-2 border-[#D9D9D9] rounded-xl"
+                  className="w-[20rem] bg-white border-2 border-[#D9D9D9] rounded-xl mr-20 mt-20"
                 >
                   <div className="p-2 relative">
                     <Image
@@ -477,9 +534,10 @@ const Page = () => {
                     </span>
                   </div>
                   <div className="p-2 space-y-1">
-                    <h1 className="text-xl text-[#116A7B]">
+                    <TruncatingH1 text={card.title} />
+                    <h3 className="text-[#116A7B] font-semibold">
                       {card.propertyType}
-                    </h1>
+                    </h3>
                     <h2 className="text-sm text-[#116A7B]">
                       <strong>
                         {card?.amenities?.roomDetails?.inputs?.beds

@@ -99,82 +99,81 @@ const PropertyManagement = () => {
     e.preventDefault();
     if (status !== "new") {
       const property = myProperties[index];
-      if (property.listingStatus === "draft") {
-        setListingStatus("draft");
-        setTitle(property.title);
-        setOverview(property.detail);
-        setNumberOfShares(property.totalStakes);
-        setAreaSize(property.area);
-        setTotalPrize(property.valueOfProperty);
-        setSelectedPropertyType(property.propertyType);
-        setSelectedNumOfBeds(property.beds);
-        setSelectedNumOfBaths(property.baths);
-        setHouseNumber(property.addressOfProperty.houseNumber);
-        setStreetNumber(property.addressOfProperty.streetNumber);
-        const country = compCities.getCountryByShort(
-          property.addressOfProperty.country
+
+      setListingStatus(status);
+      setTitle(property.title);
+      setOverview(property.detail);
+      setNumberOfShares(property.totalStakes);
+      setAreaSize(property.area);
+      setTotalPrize(property.valueOfProperty);
+      setSelectedPropertyType(property.propertyType);
+      setSelectedNumOfBeds(property.beds);
+      setSelectedNumOfBaths(property.baths);
+      setHouseNumber(property.addressOfProperty.houseNumber);
+      setStreetNumber(property.addressOfProperty.streetNumber);
+      const country = compCities.getCountryByShort(
+        property.addressOfProperty.country
+      );
+      country.shortName = property.addressOfProperty.country;
+      setSelectedCountry(country);
+      setSelectedState(property.addressOfProperty.state);
+      setSelectedCity(property.addressOfProperty.city);
+      setZipCode(property.addressOfProperty.zipCode);
+      setFullAddress(property.addressOfProperty.addressInString);
+      setCoordinates({
+        lat: property.location.coordinates[1],
+        long: property.location.coordinates[0],
+      });
+      setStartDate(property.startDurationFrom.split("T")[0]);
+      setIsAddPropertyClicked(true);
+      setPropertyByIndex(index);
+      console.log("length: ", Object.keys(property.amenitiesID)?.length);
+      if (Object.keys(property.amenitiesID)?.length > 2) {
+        const amenities = property.amenitiesID;
+        setYearBuilt(amenities.mainFeatures?.inputs?.yearBuilt || "");
+        setFloorCount(amenities.mainFeatures?.inputs?.floorCount || "");
+        setParkingSpace(amenities.mainFeatures?.inputs?.parkingSpace || "");
+        setElevators(amenities.mainFeatures?.inputs?.elevators || "");
+        if (amenities.mainFeatures?.tags?.length > 0) {
+          amenities.mainFeatures?.tags?.map((tag) => {
+            handleAddTagsByCamelCase(0, tag);
+          });
+        }
+
+        setSelectedNumOfBeds(amenities.roomsDetails?.inputs?.beds || "");
+        setSelectedNumOfBaths(amenities.roomsDetails?.inputs?.baths || "");
+        setServantQuater(amenities.roomsDetails?.inputs?.servantQuater || "");
+        setKitchens(amenities.roomsDetails?.inputs?.kitchen || "");
+        if (amenities.roomsDetails?.tags?.length > 0) {
+          amenities.roomsDetails?.tags?.map((tag) => {
+            handleAddTagsByCamelCase(1, tag);
+          });
+        }
+
+        if (amenities.business?.tags?.length > 0) {
+          amenities.business?.tags?.map((tag) => {
+            handleAddTagsByCamelCase(2, tag);
+          });
+        }
+        if (amenities.community?.tags?.length > 0) {
+          amenities.community?.tags?.map((tag) => {
+            handleAddTagsByCamelCase(3, tag);
+          });
+        }
+
+        if (amenities.healthAndRecreational?.tags?.length > 0) {
+          amenities.healthAndRecreational?.tags?.map((tag) => {
+            handleAddTagsByCamelCase(4, tag);
+          });
+        }
+        setDistanceFromAirport(
+          amenities.nearbyFacilitiesAndLocations?.inputs.distanceFromAirport ||
+            ""
         );
-        country.shortName = property.addressOfProperty.country;
-        setSelectedCountry(country);
-        setSelectedState(property.addressOfProperty.state);
-        setSelectedCity(property.addressOfProperty.city);
-        setZipCode(property.addressOfProperty.zipCode);
-        setFullAddress(property.addressOfProperty.addressInString);
-        setCoordinates({
-          lat: property.location.coordinates[1],
-          long: property.location.coordinates[0],
-        });
-        setStartDate(property.startDurationFrom.split("T")[0]);
-        setIsAddPropertyClicked(true);
-        setPropertyByIndex(index);
-        console.log("length: ", Object.keys(property.amenitiesID)?.length);
-        if (Object.keys(property.amenitiesID)?.length > 2) {
-          const amenities = property.amenitiesID;
-          setYearBuilt(amenities.mainFeatures?.inputs?.yearBuilt || "");
-          setFloorCount(amenities.mainFeatures?.inputs?.floorCount || "");
-          setParkingSpace(amenities.mainFeatures?.inputs?.parkingSpace || "");
-          setElevators(amenities.mainFeatures?.inputs?.elevators || "");
-          if (amenities.mainFeatures?.tags?.length > 0) {
-            amenities.mainFeatures?.tags?.map((tag) => {
-              handleAddTagsByCamelCase(0, tag);
-            });
-          }
-
-          setSelectedNumOfBeds(amenities.roomsDetails?.inputs?.beds || "");
-          setSelectedNumOfBaths(amenities.roomsDetails?.inputs?.baths || "");
-          setServantQuater(amenities.roomsDetails?.inputs?.servantQuater || "");
-          setKitchens(amenities.roomsDetails?.inputs?.kitchen || "");
-          if (amenities.roomsDetails?.tags?.length > 0) {
-            amenities.roomsDetails?.tags?.map((tag) => {
-              handleAddTagsByCamelCase(1, tag);
-            });
-          }
-
-          if (amenities.business?.tags?.length > 0) {
-            amenities.business?.tags?.map((tag) => {
-              handleAddTagsByCamelCase(2, tag);
-            });
-          }
-          if (amenities.community?.tags?.length > 0) {
-            amenities.community?.tags?.map((tag) => {
-              handleAddTagsByCamelCase(3, tag);
-            });
-          }
-
-          if (amenities.healthAndRecreational?.tags?.length > 0) {
-            amenities.healthAndRecreational?.tags?.map((tag) => {
-              handleAddTagsByCamelCase(4, tag);
-            });
-          }
-          setDistanceFromAirport(
-            amenities.nearbyFacilitiesAndLocations?.inputs
-              .distanceFromAirport || ""
-          );
-          if (amenities.nearbyFacilitiesAndLocations?.tags?.length > 0) {
-            amenities.nearbyFacilitiesAndLocations?.tags?.map((tag) => {
-              handleAddTagsByCamelCase(5, tag);
-            });
-          }
+        if (amenities.nearbyFacilitiesAndLocations?.tags?.length > 0) {
+          amenities.nearbyFacilitiesAndLocations?.tags?.map((tag) => {
+            handleAddTagsByCamelCase(5, tag);
+          });
         }
       }
     } else {
@@ -727,7 +726,10 @@ const PropertyManagement = () => {
         <div className="w-full flex flex-row items-center pb-8 px-14">
           <h1 className="text-2xl font-medium">Add Property</h1>
           <button
-            onClick={() => {setIsAddPropertyClicked(false); setFormPhase(1)}}
+            onClick={() => {
+              setIsAddPropertyClicked(false);
+              setFormPhase(1);
+            }}
             type="button"
             className="bg-[#116A7B] text-white text-lg ml-auto mx-1 px-5 py-1 rounded-full"
           >
@@ -1108,7 +1110,15 @@ const PropertyManagement = () => {
                   name="fullAddress"
                   value={coordinates?.lat}
                   required={true}
-                  readOnly={true}
+                  onChange={(event) => {
+                    setCoordinates((prevData) => {
+                      if (prevData) {
+                        const newData = { ...prevData };
+                        newData.lat = event.target.value;
+                        return newData;
+                      }
+                    });
+                  }}
                   placeholder="Click on the map..."
                   className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                 />
@@ -1123,7 +1133,15 @@ const PropertyManagement = () => {
                   name="fullAddress"
                   value={coordinates?.long}
                   required={true}
-                  readOnly={true}
+                  onChange={(event) => {
+                    setCoordinates((prevData) => {
+                      if (prevData) {
+                        const newData = { ...prevData };
+                        newData.long = event.target.value;
+                        return newData;
+                      }
+                    });
+                  }}
                   placeholder="Click on the map..."
                   className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                 />

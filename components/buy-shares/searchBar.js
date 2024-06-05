@@ -2,8 +2,12 @@ import React, { useEffect, useState } from "react";
 import { IoIosSearch } from "react-icons/io";
 import { useMap } from "react-leaflet";
 import FilterComponent from "./filterComponent";
-import { useDispatch } from "react-redux";
-import { updateCoordinates } from "@/app/redux/features/buyShareSlice";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  updateAreaRange,
+  updateCoordinates,
+  updatePriceRange,
+} from "@/app/redux/features/buyShareSlice";
 
 const SearchBar = ({ setIsFilterUpdated }) => {
   const [query, setQuery] = useState("");
@@ -28,6 +32,10 @@ const SearchBar = ({ setIsFilterUpdated }) => {
     dispatch(updateCoordinates({ coordinates: [lon, lat] }));
     setResults([]);
   };
+
+  const coordinates = useSelector(
+    (state) => state.buyShareSliceReducer.coordinates
+  );
 
   const [filters, setFilters] = useState([
     {
@@ -106,6 +114,44 @@ const SearchBar = ({ setIsFilterUpdated }) => {
     },
   ]);
 
+  const [area, setArea] = useState({ min: "", max: "" });
+
+  const handleAreaRange = (field, value) => {
+    if (
+      field === "max" &&
+      area.max !== "ANY" &&
+      parseInt(area.min) >= parseInt(value)
+    ) {
+      return;
+    }
+    dispatch(updateAreaRange({ task: field, value: value }));
+    setArea((prevDetails) => {
+      const newDetails = { ...prevDetails };
+      newDetails[field] = value;
+      return newDetails;
+    });
+  };
+
+  const [price, setPrice] = useState({ min: "", max: "" });
+
+  const handlePriceRange = (field, value) => {
+    if (
+      field === "max" &&
+      price.max !== "ANY" &&
+      parseInt(price.min) >= parseInt(value)
+    ) {
+      return;
+    }
+
+    dispatch(updatePriceRange({ task: field, value: value }));
+
+    setPrice((prevDetails) => {
+      const newDetails = { ...prevDetails };
+      newDetails[field] = value;
+      return newDetails;
+    });
+  };
+
   const [filtersApplied, setFiltersApplied] = useState({
     propertyTypeCategory: 0,
     bedsCategory: 0,
@@ -120,7 +166,7 @@ const SearchBar = ({ setIsFilterUpdated }) => {
     } else {
       setPageMounted(true);
     }
-  }, [filters]);
+  }, [filters, price, area, coordinates]);
 
   return (
     <>
@@ -163,7 +209,14 @@ const SearchBar = ({ setIsFilterUpdated }) => {
         </div>
       </div>
       <div>
-        <FilterComponent filters={filters} setFilters={setFilters} />
+        <FilterComponent
+          filters={filters}
+          setFilters={setFilters}
+          area={area}
+          handleAreaRange={handleAreaRange}
+          price={price}
+          handlePriceRange={handlePriceRange}
+        />
       </div>
     </>
   );

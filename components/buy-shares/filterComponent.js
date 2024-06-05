@@ -9,7 +9,14 @@ import React, { Fragment, useEffect, useState } from "react";
 import { FaAngleDown } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 
-const FilterComponent = ({ filters, setFilters }) => {
+const FilterComponent = ({
+  filters,
+  setFilters,
+  area,
+  handleAreaRange,
+  price,
+  handlePriceRange,
+}) => {
   const dispatch = useDispatch();
 
   const [dropdownsStatus, setDropdownsStatus] = useState({
@@ -84,44 +91,6 @@ const FilterComponent = ({ filters, setFilters }) => {
         });
       }
     }
-  };
-
-  const [area, setArea] = useState({ min: "", max: "" });
-
-  const handleAreaRange = (field, value) => {
-    if (
-      field === "max" &&
-      area.max !== "ANY" &&
-      parseInt(area.min) >= parseInt(value)
-    ) {
-      return;
-    }
-    dispatch(updateAreaRange({ task: field, value: value }));
-    setArea((prevDetails) => {
-      const newDetails = { ...prevDetails };
-      newDetails[field] = value;
-      return newDetails;
-    });
-  };
-
-  const [price, setPrice] = useState({ min: "", max: "" });
-
-  const handlePriceRange = (field, value) => {
-    if (
-      field === "max" &&
-      price.max !== "ANY" &&
-      parseInt(price.min) >= parseInt(value)
-    ) {
-      return;
-    }
-
-    dispatch(updatePriceRange({ task: field, value: value }));
-
-    setPrice((prevDetails) => {
-      const newDetails = { ...prevDetails };
-      newDetails[field] = value;
-      return newDetails;
-    });
   };
 
   const handleDropdownActivity = (field, value, e) => {
@@ -231,9 +200,10 @@ const FilterComponent = ({ filters, setFilters }) => {
                       {filter.data.map((listItem, i) => (
                         <li
                           key={i}
-                          onClick={() =>
-                            handleFilterSelect(index, i, !listItem.selected)
-                          }
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleFilterSelect(index, i, !listItem.selected);
+                          }}
                           className="flex flex-row items-center justify-between p-2 border-b border-black border-opacity-20 text-base text-[#676767] cursor-pointer"
                         >
                           <h1>{listItem.name}</h1>{" "}
@@ -271,15 +241,19 @@ const FilterComponent = ({ filters, setFilters }) => {
                         name="priceMin"
                         value={price.min}
                         placeholder="MIN:"
-                        onChange={({ target }) =>
-                          handlePriceRange("min", target.value)
-                        }
+                        onChange={(e) => {
+                          e.stopPropagation();
+                          handlePriceRange("min", e.target.value);
+                        }}
                         className="w-full border border-[#D9D9D9] placeholder:font-semibold text-[#676767] px-2 rounded-md outline-none"
                       />
                       {filter.dataMIN.map((listItem, i) => (
                         <li
                           key={i}
-                          onClick={() => handlePriceRange("min", listItem.name)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handlePriceRange("min", listItem.name);
+                          }}
                           className="flex flex-row items-center justify-between p-2 border-b border-black border-opacity-20 text-base text-[#676767] cursor-pointer"
                         >
                           <h1>{listItem.name}</h1>{" "}
@@ -295,15 +269,19 @@ const FilterComponent = ({ filters, setFilters }) => {
                         name="priceMax"
                         value={price.max}
                         placeholder="MAX:"
-                        onChange={({ target }) =>
-                          handlePriceRange("max", target.value)
-                        }
+                        onChange={(e) => {
+                          e.stopPropagation();
+                          handlePriceRange("max", e.target.value);
+                        }}
                         className="w-full border border-[#D9D9D9] placeholder:font-semibold text-[#676767] px-2 rounded-md outline-none"
                       />
                       {filter.dataMAX.map((listItem, i) => (
                         <li
                           key={i}
-                          onClick={() => handlePriceRange("max", listItem.name)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handlePriceRange("max", listItem.name);
+                          }}
                           className="flex flex-row items-center justify-between p-2 border-b border-black border-opacity-20 text-base text-[#676767] cursor-pointer"
                         >
                           <h1>{listItem.name}</h1>{" "}
@@ -341,15 +319,17 @@ const FilterComponent = ({ filters, setFilters }) => {
                         name="priceMin"
                         value={area.min}
                         placeholder="MIN:"
-                        onChange={({ target }) =>
-                          handleAreaRange("min", target.value)
-                        }
+                        onChange={(e) => {
+                          e.stopPropagation();
+                          handleAreaRange("min", e.target.value);
+                        }}
                         className="w-full border border-[#D9D9D9] placeholder:font-semibold text-[#676767] px-2 rounded-md outline-none"
                       />
                       {filter.dataMIN.map((listItem, i) => (
                         <li
                           key={i}
                           onClick={(event) => {
+                            event.stopPropagation();
                             handleAreaRange("min", listItem.name);
                           }}
                           className="flex flex-row items-center justify-between p-2 border-b border-black border-opacity-20 text-base text-[#676767] cursor-pointer"
@@ -366,9 +346,10 @@ const FilterComponent = ({ filters, setFilters }) => {
                         type="text"
                         name="priceMax"
                         value={area.max}
-                        onChange={({ target }) =>
-                          handleAreaRange("max", target.value)
-                        }
+                        onChange={(e) => {
+                          e.stopPropagation();
+                          handleAreaRange("max", e.target.value);
+                        }}
                         placeholder="MAX:"
                         className="w-full border border-[#D9D9D9] placeholder:font-semibold text-[#676767] px-2 rounded-md outline-none"
                       />
@@ -376,6 +357,7 @@ const FilterComponent = ({ filters, setFilters }) => {
                         <li
                           key={i}
                           onClick={(event) => {
+                            event.stopPropagation();
                             handleAreaRange("max", listItem.name);
                           }}
                           className="flex flex-row items-center justify-between p-2 border-b border-black border-opacity-20 text-base text-[#676767] cursor-pointer"
@@ -413,9 +395,10 @@ const FilterComponent = ({ filters, setFilters }) => {
                       {filter.data.map((listItem, i) => (
                         <li
                           key={i}
-                          onClick={() =>
-                            handleFilterSelect(index, i, !listItem.selected)
-                          }
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleFilterSelect(index, i, !listItem.selected);
+                          }}
                           className="flex flex-row items-center justify-between p-2 border-b border-black border-opacity-20 text-base text-[#676767] cursor-pointer"
                         >
                           <h1>{listItem.name}</h1>{" "}
