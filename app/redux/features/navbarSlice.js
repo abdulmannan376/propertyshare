@@ -6,7 +6,8 @@ const initialState = {
   textColor: "text-gray-600",
   hoverTextColor: "text-gray-900",
   buttonTextColor: "text-white",
-  logoURL: "/logo-bbh.png"
+  logoURL: "/logo-bbh.png",
+  notificationIconColor: "text-white",
 };
 
 export const navbarSlice = createSlice({
@@ -18,10 +19,13 @@ export const navbarSlice = createSlice({
       state.hoverTextColor = action.payload.hoverTextColor;
     },
     updateNavbarLogo: (state, action) => {
-      state.logoURL = action.payload
-    }
+      state.logoURL = action.payload;
+    },
+    updateNotificationIconColor: (state, action) => {
+      state.notificationIconColor = action.payload;
+    },
   },
 });
 
-export const { updateNavbarTextColor, updateNavbarLogo } = navbarSlice.actions;
+export const { updateNavbarTextColor, updateNavbarLogo, updateNotificationIconColor } = navbarSlice.actions;
 export default navbarSlice.reducer;

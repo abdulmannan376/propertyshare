@@ -8,6 +8,7 @@ import {
   updateNavbarLogo,
   updateNavbarTextColor,
 } from "@/app/redux/features/navbarSlice";
+import Link from "next/link";
 
 const Carousel = () => {
   const dispatch = useDispatch();
@@ -274,18 +275,23 @@ const Carousel = () => {
           </div>
         )}
         <div className="flex flex-row space-x-5">
-          <button
-            type="button"
-            className="bg-[#CDC2AE] bg-opacity-40 border border-[#F5F5F5] uppercase px-5 text-[#FFFDF4] py-1 rounded-full mt-6"
-          >
-            Buy
-          </button>
+          <Link href={"/buy-shares"}>
+            <button
+              type="button"
+              className="bg-[#CDC2AE] bg-opacity-40 border border-[#F5F5F5] uppercase px-5 text-[#FFFDF4] py-1 rounded-full mt-6"
+            >
+              Buy
+            </button>
+          </Link>
+          <Link href={"/under-development"}>
+
           <button
             type="button"
             className="bg-[#D9D9D9] bg-opacity-40 border border-[#F5F5F5] uppercase px-5 text-[#FFFDF4] py-1 rounded-full mt-6"
-          >
+            >
             Rent
           </button>
+            </Link>
         </div>
       </div>
     </div>

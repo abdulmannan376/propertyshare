@@ -22,6 +22,9 @@ const Navbar = () => {
     (state) => state.navbarSliceReducer.hoverTextColor
   );
   const logoURL = useSelector((state) => state.navbarSliceReducer.logoURL);
+  const notificationIconColor = useSelector(
+    (state) => state.navbarSliceReducer.notificationIconColor
+  );
 
   const [loggedIn, setLoggedIn] = useState(false);
   const [showDropDowns, setShowDropDowns] = useState({
@@ -148,7 +151,10 @@ const Navbar = () => {
         className={`absolute top-0 w-full ${textColor} body-font z-[1000]`}
       >
         <div className="xl:mx-24 mx-16 flex flex-wrap p-5 flex-col md:flex-row items-center">
-          <a className="flex flex-col title-font font-medium items-center justify-center text-gray-900 mb-4 md:mb-0">
+          <Link
+            href={"/"}
+            className="flex flex-col title-font font-medium items-center justify-center text-gray-900 mb-4 md:mb-0"
+          >
             <Image
               width={1000}
               height={1000}
@@ -156,7 +162,7 @@ const Navbar = () => {
               alt="Logo"
               className="w-auto h-10 object-contain object-center"
             />
-          </a>
+          </Link>
           <nav className="md:ml-12 md:mr-auto flex flex-wrap items-center text-base justify-center">
             <Link href={"/"} className={`mr-12 hover:${hoverTextColor}`}>
               Home
@@ -170,7 +176,10 @@ const Navbar = () => {
             >
               Buy Shares
             </Link>
-            <Link href={"/"} className={`mr-12 hover:${hoverTextColor}`}>
+            <Link
+              href={"/under-development"}
+              className={`mr-12 hover:${hoverTextColor}`}
+            >
               Rent Shares
             </Link>
             {/* <Link href={"/"} className={`mr-12 hover:${hoverTextColor}`}>
@@ -182,7 +191,10 @@ const Navbar = () => {
             >
               Contact
             </Link>
-            <Link href={"/"} className={`mr-12 hover:${hoverTextColor}`}>
+            <Link
+              href={"/under-development"}
+              className={`mr-12 hover:${hoverTextColor}`}
+            >
               About
             </Link>
             <Link
@@ -195,7 +207,7 @@ const Navbar = () => {
           {loggedIn ? (
             <div className="flex flex-row items-start">
               <div className="relative mr-5 mt-1">
-                <FaBell className="text-3xl text-white" />
+                <FaBell className={`text-3xl ${notificationIconColor}`} />
                 {notificationsCount > 0 && (
                   <span className="absolute w-5 h-5 -inset-y-2 right-0 px-0 bg-red-400 text-white text-sm text-center font-semibold focus:outline-none cursor-pointer rounded-full">
                     {notificationsCount}

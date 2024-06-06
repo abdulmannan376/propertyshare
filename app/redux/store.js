@@ -6,6 +6,7 @@ import userDashboardSliceReducer from "./features/dashboardSlice";
 import navbarSliceReducer from "./features/navbarSlice";
 import buyShareSliceReducer from "./features/buyShareSlice";
 import propertyPageSliceReducer from "./features/propertyPageSlice";
+import mapPageSliceReducer from "./features/mapPageSlice";
 
 export const store = configureStore({
   reducer: {
@@ -13,6 +14,7 @@ export const store = configureStore({
     userDashboardSliceReducer,
     navbarSliceReducer,
     buyShareSliceReducer,
-    propertyPageSliceReducer
+    propertyPageSliceReducer,
+    mapPageSliceReducer,
   },
 });

@@ -120,7 +120,7 @@ const SectionMap = () => {
     });
     if (value) {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_SERVER_HOST}/property/fetch-coordinates-of-property/${id}/${key}`
+        `${process.env.NEXT_PUBLIC_SERVER_HOST}/property/fetch-coordinates-of-property`
       );
       const response = await res.json();
 
@@ -176,7 +176,7 @@ const SectionMap = () => {
     availableSharesActive: false,
   });
 
-  const priceMin = "";  
+  const priceMin = "";
   const priceMax = "";
 
   const handleDropdownActivity = (field, value, e) => {
@@ -216,7 +216,13 @@ const SectionMap = () => {
   ];
   return (
     <NoSsr>
-      <div className="bg-white">
+      <div
+        onClick={(e) => {
+          handleDropdownActivity("availableSharesActive", false, e);
+          handleDropdownActivity("propertyTypeActive", false, e);
+        }}
+        className="bg-white"
+      >
         <div className="mx-14 mt-14">
           <h1 className="xl:text-[40px] text-4xl text-center uppercase font-semibold text-[#116A7B] ">
             request property <i className="text-[#CDC2AE]"> anywhere</i> you
@@ -305,6 +311,7 @@ const SectionMap = () => {
               <button
                 type="button"
                 onClick={(e) => {
+                  e.stopPropagation();
                   if (filter.data.length > 0) {
                     if (index === 0) {
                       handleDropdownActivity(
@@ -312,12 +319,14 @@ const SectionMap = () => {
                         !dropdownsStatus["propertyTypeActive"],
                         e
                       );
+                      handleDropdownActivity("availableSharesActive", false, e);
                     } else {
                       handleDropdownActivity(
                         "availableSharesActive",
                         !dropdownsStatus["availableSharesActive"],
                         e
                       );
+                      handleDropdownActivity("propertyTypeActive", false, e);
                     }
                   } else {
                     handleFilterClick(
@@ -326,6 +335,8 @@ const SectionMap = () => {
                       !filter.active,
                       "null"
                     );
+                    handleDropdownActivity("availableSharesActive", false, e);
+                    handleDropdownActivity("propertyTypeActive", false, e);
                   }
                 }}
                 className="w-72 bg-transparent p-3 text-xl font-semibold flex items-center justify-between"

@@ -29,7 +29,6 @@ import { updateNavbarLogo } from "@/app/redux/features/navbarSlice";
 //   });
 
 const MapPage = () => {
-
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -37,6 +36,8 @@ const MapPage = () => {
   }, []);
   const [position, setPosition] = useState(null);
   const [markers, setMarkers] = useState([]);
+  const [propertyTypeMarkers, setPropertyTypeMarkers] = useState([]);
+  const [availableShareMarkers, setAvailableShareMarkers] = useState([]);
   const [customIcon, setCustomIcon] = useState(null);
   const [customFilterIcon, setCustomFilterIcon] = useState(null);
 
@@ -49,8 +50,8 @@ const MapPage = () => {
   const [myMarkers, setMyMarkers] = useState([]);
 
   useEffect(() => {
-    console.log("title: ", process?.title)
-    if (process?.title === 'browser') {
+    console.log("title: ", process?.title);
+    if (process?.title === "browser") {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           setPosition([position.coords.latitude, position.coords.longitude]);
@@ -89,8 +90,38 @@ const MapPage = () => {
 
   const handleFilterSelect = (coordinates, iconURL) => {
     setMarkers(coordinates);
-    console.log("title: ", process?.title)
-    if (process?.title === 'browser') {
+    console.log("title: ", process?.title);
+    if (process?.title === "browser") {
+      setCustomFilterIcon(
+        new L.Icon({
+          iconUrl: `/assets${iconURL}`, // Ensure this is the correct path from your public directory
+          iconSize: [45, 45],
+          iconAnchor: [17, 35],
+          popupAnchor: [0, -35],
+        })
+      );
+    }
+  };
+
+  const handlePropertyTypeFilterSelect = (coordinates, iconURL) => {
+    setPropertyTypeMarkers(coordinates);
+    console.log("title: ", process?.title);
+    if (process?.title === "browser") {
+      setCustomFilterIcon(
+        new L.Icon({
+          iconUrl: `/assets${iconURL}`, // Ensure this is the correct path from your public directory
+          iconSize: [45, 45],
+          iconAnchor: [17, 35],
+          popupAnchor: [0, -35],
+        })
+      );
+    }
+  };
+
+  const handleAvailableSharesFilterSelect = (coordinates, iconURL) => {
+    setAvailableShareMarkers(coordinates);
+    console.log("title: ", process?.title);
+    if (process?.title === "browser") {
       setCustomFilterIcon(
         new L.Icon({
           iconUrl: `/assets${iconURL}`, // Ensure this is the correct path from your public directory
@@ -134,7 +165,7 @@ const MapPage = () => {
   return (
     <NoSsr>
       <MapContainer
-      // zoomControl
+        // zoomControl
         center={position || [51.505, -0.09]}
         zoom={15}
         style={{ height: "100vh", width: "100%" }}
@@ -162,6 +193,20 @@ const MapPage = () => {
             </Popup>
           </Marker>
         ))}
+        {propertyTypeMarkers.map((data, index) => (
+          <Marker key={index} position={[data[1], data[0]]} icon={customIcon}>
+            <Popup>
+              Marker at {data[1]}, {data[0]}
+            </Popup>
+          </Marker>
+        ))}
+        {availableShareMarkers.map((data, index) => (
+          <Marker key={index} position={[data[1], data[0]]} icon={customIcon}>
+            <Popup>
+              Marker at {data[1]}, {data[0]}
+            </Popup>
+          </Marker>
+        ))}
         {myMarkers.map((coordinates, index) => (
           <Marker
             key={index}
@@ -174,7 +219,11 @@ const MapPage = () => {
           </Marker>
         ))}
         <SetViewToCurrentLocation position={position} />
-        <FilterComponent onFilterSelect={handleFilterSelect} />
+        <FilterComponent
+          onFilterSelect={handleFilterSelect}
+          onPropertyFilterSelect={handlePropertyTypeFilterSelect}
+          onAvailableShareFilterSelect={handleAvailableSharesFilterSelect}
+        />
         <MapEvents />
         <Modal
           isOpen={modalOpen}

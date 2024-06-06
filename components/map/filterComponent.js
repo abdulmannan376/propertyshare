@@ -1,7 +1,16 @@
-import React, { useState } from "react";
+import {
+  updateAvailableShares,
+  updatePropertyType,
+} from "@/app/redux/features/mapPageSlice";
+import React, { useEffect, useRef, useState } from "react";
 import { FaAngleDown } from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
 
-const FilterComponent = ({ onFilterSelect }) => {
+const FilterComponent = ({
+  onFilterSelect,
+  onPropertyFilterSelect,
+  onAvailableShareFilterSelect,
+}) => {
   const [filters, setFilters] = useState([
     {
       name: "Available shares",
@@ -28,8 +37,13 @@ const FilterComponent = ({ onFilterSelect }) => {
       ],
       active: false,
     },
-    { name: "All requests", data: [], active: false, iconURL: "/person-pin.png" },
   ]);
+
+  const [allRequestes, setAllRequestes] = useState({
+    name: "All requests",
+    active: false,
+    iconURL: "/person-pin.png",
+  });
 
   const [dropdownsStatus, setDropdownsStatus] = useState({
     propertyTypeDropdownActive: false,
@@ -48,25 +62,135 @@ const FilterComponent = ({ onFilterSelect }) => {
       return newDetails;
     });
   };
+  const dispatch = useDispatch();
+  const handleFilterClick = (index, dataIndex, value) => {
+    // console.log(index, id, value, key);
 
-  const handleFilterClick = async (index, id, value, key) => {
-    console.log(index, id, value, key);
+    if (index === 0) {
+      if (value) {
+        dispatch(
+          updateAvailableShares({
+            task: "add",
+            value: filters[index].data[dataIndex].name,
+          })
+        );
+      } else {
+        dispatch(
+          updateAvailableShares({
+            task: "remove",
+            value: filters[index].data[dataIndex].name,
+          })
+        );
+      }
+    } else {
+      if (value) {
+        dispatch(
+          updatePropertyType({
+            task: "add",
+            value: filters[index].data[dataIndex].name,
+          })
+        );
+      } else {
+        dispatch(
+          updatePropertyType({
+            task: "remove",
+            value: filters[index].data[dataIndex].name,
+          })
+        );
+      }
+    }
     setFilters((prevDetails) => {
       const newDetails = [...prevDetails];
-      newDetails[index].active = value;
+      newDetails[index].data[dataIndex].selected = value;
+      return newDetails;
+    });
+  };
+
+  const handleAllRequestesClick = async (value) => {
+    setAllRequestes((prevDetails) => {
+      const newDetails = { ...prevDetails };
+      newDetails.active = value;
       return newDetails;
     });
     if (value) {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_SERVER_HOST}/property/fetch-coordinates-of-property/${id}/${key}`
+        `${process.env.NEXT_PUBLIC_SERVER_HOST}/property/fetch-coordinates-of-property`
       );
       const response = await res.json();
 
-      onFilterSelect(response.data, filters[index].iconURL);
+      onFilterSelect(response.data, allRequestes.iconURL);
     } else {
       onFilterSelect([]);
     }
   };
+
+  const propertyType = useSelector(
+    (state) => state.mapPageSliceReducer.propertyType
+  );
+  const availableShares = useSelector(
+    (state) => state.mapPageSliceReducer.availableShares
+  );
+
+  const handleFilterSubmit = async () => {
+    if (propertyType.length > 0) {
+      const res = await fetch(
+        `${
+          process.env.NEXT_PUBLIC_SERVER_HOST
+        }/property/get-property-by-type/${JSON.stringify({
+          propertyType: propertyType,
+        })}`
+      );
+
+      const response = await res.json();
+      console.log("response: ", response);
+      onPropertyFilterSelect(response.body);
+    } else {
+      onPropertyFilterSelect([]);
+    }
+
+    if (availableShares.length > 0) {
+      const res = await fetch(
+        `${
+          process.env.NEXT_PUBLIC_SERVER_HOST
+        }/property/get-property-by-type/${JSON.stringify({
+          availableShares: availableShares,
+        })}`
+      );
+
+      const response = await res.json();
+
+      onAvailableShareFilterSelect(response.body);
+    } else {
+      onAvailableShareFilterSelect([]);
+    }
+  };
+
+  const [isFilterUpdated, setIsFilterUpdated] = useState(false);
+  const [pageMounted, setPageMounted] = useState(false);
+
+  useEffect(() => {
+    if (pageMounted) {
+      setIsFilterUpdated(true);
+    } else {
+      setPageMounted(true);
+    }
+  }, [filters]);
+
+  const applyBtnRef = useRef();
+  useEffect(() => {
+    console.log("in page useEffect");
+    if (!isFilterUpdated) {
+      applyBtnRef.current.classList.remove("translate-x-10");
+      applyBtnRef.current.classList.remove("z-0");
+      applyBtnRef.current.classList.add("-translate-x-60");
+      applyBtnRef.current.classList.add("-z-50");
+    } else {
+      applyBtnRef.current.classList.remove("-translate-x-60");
+      applyBtnRef.current.classList.remove("-z-50");
+      applyBtnRef.current.classList.add("translate-x-10");
+      applyBtnRef.current.classList.add("z-0");
+    }
+  }, [isFilterUpdated]);
 
   return (
     <div
@@ -90,22 +214,24 @@ const FilterComponent = ({ onFilterSelect }) => {
           <button
             className="flex flex-row items-center justify-around w-64 bg-white p-3 text-xl"
             onClick={(e) => {
-              if (filter.data.length > 0) {
-                if (index === 0) {
-                  handleDropdownActivity(
-                    "propertyTypeDropdownActive",
-                    !dropdownsStatus["propertyTypeDropdownActive"],
-                    e
-                  );
-                } else {
-                  handleDropdownActivity(
-                    "availableSharesDropdownActive",
-                    !dropdownsStatus["availableSharesDropdownActive"],
-                    e
-                  );
-                }
+              if (index === 0) {
+                handleDropdownActivity(
+                  "propertyTypeDropdownActive",
+                  !dropdownsStatus["propertyTypeDropdownActive"],
+                  e
+                );
+                handleDropdownActivity(
+                  "availableSharesDropdownActive",
+                  false,
+                  e
+                );
               } else {
-                handleFilterClick(index, filter.name, !filter.active, "null");
+                handleDropdownActivity(
+                  "availableSharesDropdownActive",
+                  !dropdownsStatus["availableSharesDropdownActive"],
+                  e
+                );
+                handleDropdownActivity("propertyTypeDropdownActive", false, e);
               }
             }}
           >
@@ -130,6 +256,9 @@ const FilterComponent = ({ onFilterSelect }) => {
                   <button
                     type="button"
                     key={i}
+                    onClick={() =>
+                      handleFilterClick(index, i, !listItem.selected)
+                    }
                     className="w-full flex flex-row items-center p-2 border-b border-black border-opacity-20 justify-between"
                   >
                     <li key={i} className="text-base text-[#676767]">
@@ -154,6 +283,9 @@ const FilterComponent = ({ onFilterSelect }) => {
                   <button
                     type="button"
                     key={i}
+                    onClick={() =>
+                      handleFilterClick(index, i, !listItem.selected)
+                    }
                     className="w-full flex flex-row items-center p-2 border-b border-black border-opacity-20 justify-between"
                   >
                     <li key={i} className="text-base text-[#676767]">
@@ -173,6 +305,40 @@ const FilterComponent = ({ onFilterSelect }) => {
           )}
         </div>
       ))}
+      <div className="relative">
+        <button
+          className="flex flex-row items-center justify-around w-64 bg-white p-3 text-xl"
+          onClick={(e) => {
+            handleAllRequestesClick(!allRequestes.active);
+            handleDropdownActivity("availableSharesDropdownActive", false, e);
+            handleDropdownActivity("propertyTypeDropdownActive", false, e);
+          }}
+        >
+          <h1>{allRequestes.name} </h1>
+          {allRequestes.active && (
+            <div
+              className={`text-xs text-white rounded-full py-[3px] px-[8px] ml-5 bg-blue-500`}
+            >
+              &nbsp;
+            </div>
+          )}
+        </button>
+      </div>
+      <div className="relative mb-8">
+        <button
+          type="button"
+          ref={applyBtnRef}
+          onClick={(e) => {
+            setIsFilterUpdated(false);
+            handleFilterSubmit();
+            handleDropdownActivity("availableSharesDropdownActive", false, e);
+            handleDropdownActivity("propertyTypeDropdownActive", false, e);
+          }}
+          className="absolute bg-[#116A7B] w-40 text-white transition-transform -translate-x-60 -z-50 px-3 py-2 rounded-lg "
+        >
+          Apply Changes
+        </button>
+      </div>
     </div>
   );
 };
