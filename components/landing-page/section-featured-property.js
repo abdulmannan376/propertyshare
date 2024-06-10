@@ -135,9 +135,9 @@ const SectionFeaturedProperty = () => {
       </div> */}
       {featuredProperties.length > 0 && (
         <div className="my-10 ">
-          <h1 className="xl:text-[40px] text-4xl mb-5 text-center text-[#116A7B] font-semibold ">
+          {/* <h1 className="xl:text-[40px] text-4xl mb-5 text-center text-[#116A7B] font-semibold ">
             Featured Properties
-          </h1>
+          </h1> */}
           {!isFeaturedPropertyLoading ? (
             <div className="xl:mx-24 mx-16 flex flex-row flex-wrap">
               {featuredProperties.map((card, cardIndex) => (
