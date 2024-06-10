@@ -9,6 +9,7 @@ import {
   updateNavbarTextColor,
 } from "@/app/redux/features/navbarSlice";
 import Link from "next/link";
+import Image from "next/image";
 
 const Carousel = () => {
   const dispatch = useDispatch();
@@ -21,7 +22,7 @@ const Carousel = () => {
       })
     );
 
-    dispatch(updateNavbarLogo("/logo-bbh-without-bg.png"));
+    dispatch(updateNavbarLogo("/logo-bbh-icon.svg"));
   }, []);
 
   const [searchBar, setSearchBar] = useState();
@@ -80,8 +81,11 @@ const Carousel = () => {
   return (
     <div
       className="w-full h-screen flex flex-row items-center justify-start bg-cover bg-center xl:px-24 px-16"
-      style={{ backgroundImage: "url('/assets/landing-page/carousel-bg.png')" }}
+      style={{ backgroundImage: "url('/assets/landing-page/carousel-bg.svg')" }}
     >
+      <div className="mr-10">
+        <Image width={2000} height={2000} src={"/logo-bbh-without-bg.png"} className="w-[245px] h-[210px] object-contain"/>
+      </div>
       <div className="w-1/2 h-full flex flex-col items-start justify-center py-10">
         <h1 className="text-3xl font-raleway text-[#FFFDF4] tracking-wide font-thin">
           Find your dream vacation home

@@ -75,10 +75,13 @@ const MapPage = () => {
   const MapEvents = () => {
     useMapEvents({
       click(e) {
+        console.log("Clicked class: ", e.originalEvent.target.className);
+        console.log("Event: ", e);
+
         const elClass = e.originalEvent.target.className;
         if (
-          elClass ===
-          "leaflet-container leaflet-touch leaflet-fade-anim leaflet-grab leaflet-touch-drag leaflet-touch-zoom"
+          elClass.includes("leaflet-container") &&
+          elClass.includes("leaflet-touch")
         ) {
           setModalCoordinates({ lat: e.latlng.lat, long: e.latlng.lng });
           setModalOpen(true);

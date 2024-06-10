@@ -8,6 +8,7 @@ const initialState = {
   userEmail: "",
   settingActiveTab: "Profile Setting",
   profileSettingActiveTab: "Primary Details",
+  currentLocation: [],
 };
 
 export const adminSlice = createSlice({
@@ -30,10 +31,17 @@ export const adminSlice = createSlice({
       if (state.profileSettingActiveTab !== action.payload) {
         state.profileSettingActiveTab = action.payload;
       }
-    }
+    },
+    updateCurrentLocation: (state, action) => {
+      state.currentLocation = action.payload;
+    },
   },
 });
 
-export const { updateUserDetails, handleUserSettingNavigation, handleUserProfileSettingNavigation } =
-  adminSlice.actions;
+export const {
+  updateUserDetails,
+  handleUserSettingNavigation,
+  handleUserProfileSettingNavigation,
+  updateCurrentLocation,
+} = adminSlice.actions;
 export default adminSlice.reducer;

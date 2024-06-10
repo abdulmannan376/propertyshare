@@ -98,10 +98,13 @@ const SectionMap = () => {
   const MapEvents = () => {
     useMapEvents({
       click(e) {
+        console.log("Clicked class: ", e.originalEvent.target.className);
+        console.log("Event: ", e);
+
         const elClass = e.originalEvent.target.className;
         if (
-          elClass ===
-          "leaflet-container leaflet-touch leaflet-fade-anim leaflet-grab leaflet-touch-drag leaflet-touch-zoom"
+          elClass.includes("leaflet-container") &&
+          elClass.includes("leaflet-touch")
         ) {
           setModalCoordinates({ lat: e.latlng.lat, long: e.latlng.lng });
           setModalOpen(true);
@@ -361,7 +364,8 @@ const SectionMap = () => {
                     {filter.data.map((listItem, i) => (
                       <li
                         key={i}
-                        className="flex flex-row items-center justify-between p-2 border-b border-black border-opacity-20 text-base text-[#676767]"
+                        onClick={(e) => e.stopPropagation()}
+                        className="flex flex-row items-center justify-between p-2 border-b border-black border-opacity-20 text-base text-[#676767] cursor-pointer"
                       >
                         {listItem.name}{" "}
                         {/* <div
@@ -378,7 +382,8 @@ const SectionMap = () => {
                     {filter.data.map((listItem, i) => (
                       <li
                         key={i}
-                        className="flex flex-row items-center justify-between p-2 border-b border-black border-opacity-20 text-base text-[#676767]"
+                        onClick={(e) => e.stopPropagation()}
+                        className="flex flex-row items-center justify-between p-2 border-b border-black border-opacity-20 text-base text-[#676767] cursor-pointer"
                       >
                         {listItem.name}{" "}
                         <div
