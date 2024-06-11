@@ -7,6 +7,7 @@ import {
 } from "@/app/redux/features/buyShareSlice";
 import React, { Fragment, useEffect, useState } from "react";
 import { FaAngleDown } from "react-icons/fa";
+import { IoMdClose } from "react-icons/io";
 import { useDispatch, useSelector } from "react-redux";
 
 const FilterComponent = ({
@@ -18,6 +19,19 @@ const FilterComponent = ({
   handlePriceRange,
 }) => {
   const dispatch = useDispatch();
+
+  const numberOfBeds = useSelector(
+    (state) => state.buyShareSliceReducer.numberOfBeds
+  );
+  const propertyType = useSelector(
+    (state) => state.buyShareSliceReducer.propertyType
+  );
+  const areaRange = useSelector(
+    (state) => state.buyShareSliceReducer.areaRange
+  );
+  const priceRange = useSelector(
+    (state) => state.buyShareSliceReducer.priceRange
+  );
 
   const [dropdownsStatus, setDropdownsStatus] = useState({
     propertyTypeActive: false,
@@ -192,7 +206,21 @@ const FilterComponent = ({
                   }}
                   className="xl:w-96 lg:w-64 bg-transparent p-3 text-xl text-[#676767] flex items-center justify-between"
                 >
-                  Property Type <FaAngleDown />
+                  Property Type{" "}
+                  <div className="flex flex-row items-center space-x-5">
+                    {propertyType.length > 0 && (
+                      <span
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          dispatch(updatePropertyType({ task: "reset" }));
+                        }}
+                        className="rounded-full text-[#116A7B] text-sm p-1"
+                      >
+                        RESET
+                      </span>
+                    )}
+                    <FaAngleDown />
+                  </div>
                 </button>
                 {dropdownsStatus[filter.id] && (
                   <div className="absolute w-full bg-white z-[1000]">
@@ -202,12 +230,26 @@ const FilterComponent = ({
                           key={i}
                           onClick={(e) => {
                             e.stopPropagation();
-                            handleFilterSelect(index, i, !listItem.selected);
+                            if (!propertyType.includes(listItem.name)) {
+                              dispatch(
+                                updatePropertyType({
+                                  task: "add",
+                                  propertyType: listItem.name,
+                                })
+                              );
+                            } else {
+                              dispatch(
+                                updatePropertyType({
+                                  task: "remove",
+                                  propertyType: listItem.name,
+                                })
+                              );
+                            }
                           }}
                           className="flex flex-row items-center justify-between p-2 border-b border-black border-opacity-20 text-base text-[#676767] cursor-pointer"
                         >
                           <h1>{listItem.name}</h1>{" "}
-                          {listItem.selected && (
+                          {propertyType.includes(listItem.name) && (
                             <span className="h-3 w-3 rounded-full bg-blue-500"></span>
                           )}
                         </li>
@@ -231,7 +273,21 @@ const FilterComponent = ({
                   }}
                   className="xl:w-96 lg:w-64 bg-transparent p-3 text-xl text-[#676767] flex items-center justify-between"
                 >
-                  Price <FaAngleDown />
+                  Price{" "}
+                  <div className="flex flex-row items-center space-x-5">
+                    {priceRange.length > 0 && (
+                      <span
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          dispatch(updatePriceRange({ task: "reset" }));
+                        }}
+                        className="rounded-full text-[#116A7B] text-sm p-1"
+                      >
+                        RESET
+                      </span>
+                    )}
+                    <FaAngleDown />
+                  </div>
                 </button>
                 {dropdownsStatus[filter.id] && (
                   <div className="absolute w-full bg-white flex flex-row z-[1000] items-center justify-between">
@@ -239,11 +295,16 @@ const FilterComponent = ({
                       <input
                         type="text"
                         name="priceMin"
-                        value={price.min}
+                        value={priceRange[0]}
                         placeholder="MIN:"
+                        onClick={(e) => e.stopPropagation()}
                         onChange={(e) => {
-                          e.stopPropagation();
-                          handlePriceRange("min", e.target.value);
+                          dispatch(
+                            updatePriceRange({
+                              task: "min",
+                              value: e.target.value,
+                            })
+                          );
                         }}
                         className="w-full border border-[#D9D9D9] placeholder:font-semibold text-[#676767] px-2 rounded-md outline-none"
                       />
@@ -252,7 +313,12 @@ const FilterComponent = ({
                           key={i}
                           onClick={(e) => {
                             e.stopPropagation();
-                            handlePriceRange("min", listItem.name);
+                            dispatch(
+                              updatePriceRange({
+                                task: "min",
+                                value: listItem.name,
+                              })
+                            );
                           }}
                           className="flex flex-row items-center justify-between p-2 border-b border-black border-opacity-20 text-base text-[#676767] cursor-pointer"
                         >
@@ -267,11 +333,17 @@ const FilterComponent = ({
                       <input
                         type="text"
                         name="priceMax"
-                        value={price.max}
+                        value={priceRange[1]}
                         placeholder="MAX:"
+                        onClick={(e) => e.stopPropagation()}
                         onChange={(e) => {
                           e.stopPropagation();
-                          handlePriceRange("max", e.target.value);
+                          dispatch(
+                            updatePriceRange({
+                              task: "max",
+                              value: e.target.value,
+                            })
+                          );
                         }}
                         className="w-full border border-[#D9D9D9] placeholder:font-semibold text-[#676767] px-2 rounded-md outline-none"
                       />
@@ -280,7 +352,12 @@ const FilterComponent = ({
                           key={i}
                           onClick={(e) => {
                             e.stopPropagation();
-                            handlePriceRange("max", listItem.name);
+                            dispatch(
+                              updatePriceRange({
+                                task: "max",
+                                value: listItem.name,
+                              })
+                            );
                           }}
                           className="flex flex-row items-center justify-between p-2 border-b border-black border-opacity-20 text-base text-[#676767] cursor-pointer"
                         >
@@ -309,7 +386,21 @@ const FilterComponent = ({
                   }}
                   className="xl:w-96 lg:w-64 bg-transparent p-3 text-xl text-[#676767] flex items-center justify-between"
                 >
-                  Area <FaAngleDown />
+                  Area{" "}
+                  <div className="flex flex-row items-center space-x-5">
+                    {areaRange.length > 0 && (
+                      <span
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          dispatch(updateAreaRange({ task: "reset" }));
+                        }}
+                        className="rounded-full text-[#116A7B] text-sm p-1"
+                      >
+                        RESET
+                      </span>
+                    )}
+                    <FaAngleDown />
+                  </div>
                 </button>
                 {dropdownsStatus[filter.id] && (
                   <div className="absolute w-full bg-white flex flex-row z-[1000] items-center justify-between">
@@ -317,11 +408,17 @@ const FilterComponent = ({
                       <input
                         type="text"
                         name="priceMin"
-                        value={area.min}
+                        value={areaRange[0]}
                         placeholder="MIN:"
+                        onClick={(e) => e.stopPropagation()}
                         onChange={(e) => {
                           e.stopPropagation();
-                          handleAreaRange("min", e.target.value);
+                          dispatch(
+                            updateAreaRange({
+                              task: "min",
+                              value: e.target.value,
+                            })
+                          );
                         }}
                         className="w-full border border-[#D9D9D9] placeholder:font-semibold text-[#676767] px-2 rounded-md outline-none"
                       />
@@ -330,7 +427,12 @@ const FilterComponent = ({
                           key={i}
                           onClick={(event) => {
                             event.stopPropagation();
-                            handleAreaRange("min", listItem.name);
+                            dispatch(
+                              updateAreaRange({
+                                task: "min",
+                                value: listItem.name,
+                              })
+                            );
                           }}
                           className="flex flex-row items-center justify-between p-2 border-b border-black border-opacity-20 text-base text-[#676767] cursor-pointer"
                         >
@@ -345,10 +447,16 @@ const FilterComponent = ({
                       <input
                         type="text"
                         name="priceMax"
-                        value={area.max}
+                        value={areaRange[1]}
+                        onClick={(e) => e.stopPropagation()}
                         onChange={(e) => {
                           e.stopPropagation();
-                          handleAreaRange("max", e.target.value);
+                          dispatch(
+                            updateAreaRange({
+                              task: "max",
+                              value: e.target.value,
+                            })
+                          );
                         }}
                         placeholder="MAX:"
                         className="w-full border border-[#D9D9D9] placeholder:font-semibold text-[#676767] px-2 rounded-md outline-none"
@@ -358,14 +466,19 @@ const FilterComponent = ({
                           key={i}
                           onClick={(event) => {
                             event.stopPropagation();
-                            handleAreaRange("max", listItem.name);
+                            dispatch(
+                              updateAreaRange({
+                                task: "max",
+                                value: listItem.name,
+                              })
+                            );
                           }}
                           className="flex flex-row items-center justify-between p-2 border-b border-black border-opacity-20 text-base text-[#676767] cursor-pointer"
                         >
                           <h1>{listItem.name}</h1>{" "}
-                          {listItem.selected && (
+                          {/* {listItem.selected && (
                             <span className="h-3 w-3 rounded-full bg-blue-500"></span>
-                          )}
+                          )} */}
                         </li>
                       ))}
                     </ul>
@@ -387,7 +500,21 @@ const FilterComponent = ({
                   }}
                   className="xl:w-96 lg:w-64 bg-transparent p-3 text-xl text-[#676767] flex items-center justify-between"
                 >
-                  Beds <FaAngleDown />
+                  Beds{" "}
+                  <div className="flex flex-row items-center space-x-5">
+                    {numberOfBeds.length > 0 && (
+                      <span
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          dispatch(updateNumberOfBeds({ task: "reset" }));
+                        }}
+                        className="rounded-full text-[#116A7B] text-sm p-1"
+                      >
+                        RESET
+                      </span>
+                    )}
+                    <FaAngleDown />
+                  </div>
                 </button>
                 {dropdownsStatus[filter.id] && (
                   <div className="absolute w-full bg-white z-[1000]">
@@ -397,12 +524,26 @@ const FilterComponent = ({
                           key={i}
                           onClick={(e) => {
                             e.stopPropagation();
-                            handleFilterSelect(index, i, !listItem.selected);
+                            if (!numberOfBeds.includes(listItem.name)) {
+                              dispatch(
+                                updateNumberOfBeds({
+                                  task: "add",
+                                  beds: listItem.name,
+                                })
+                              );
+                            } else {
+                              dispatch(
+                                updateNumberOfBeds({
+                                  task: "remove",
+                                  beds: listItem.name,
+                                })
+                              );
+                            }
                           }}
                           className="flex flex-row items-center justify-between p-2 border-b border-black border-opacity-20 text-base text-[#676767] cursor-pointer"
                         >
                           <h1>{listItem.name}</h1>{" "}
-                          {listItem.selected && (
+                          {numberOfBeds.includes(listItem.name) && (
                             <span className="h-3 w-3 rounded-full bg-blue-500"></span>
                           )}
                         </li>

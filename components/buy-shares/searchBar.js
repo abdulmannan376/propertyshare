@@ -37,6 +37,19 @@ const SearchBar = ({ setIsFilterUpdated }) => {
     (state) => state.buyShareSliceReducer.coordinates
   );
 
+  const numberOfBeds = useSelector(
+    (state) => state.buyShareSliceReducer.numberOfBeds
+  );
+  const propertyType = useSelector(
+    (state) => state.buyShareSliceReducer.propertyType
+  );
+  const areaRange = useSelector(
+    (state) => state.buyShareSliceReducer.areaRange
+  );
+  const priceRange = useSelector(
+    (state) => state.buyShareSliceReducer.priceRange
+  );
+
   const [filters, setFilters] = useState([
     {
       name: "Property Type",
@@ -166,7 +179,7 @@ const SearchBar = ({ setIsFilterUpdated }) => {
     } else {
       setPageMounted(true);
     }
-  }, [filters, price, area, coordinates]);
+  }, [coordinates, propertyType, numberOfBeds, areaRange, priceRange]);
 
   return (
     <>
