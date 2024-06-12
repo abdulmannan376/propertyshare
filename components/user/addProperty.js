@@ -810,9 +810,7 @@ const PropertyManagement = () => {
               <div className="mb-6 ml-6 flex flex-col">
                 <label htmlFor="totalPrize" className="text-[#676767]">
                   Total Price{" "}
-                  {`(${
-                    JSON.parse(localStorage.getItem("userSettings")).currency
-                  })`}
+                  {`($)`}
                 </label>
                 <input
                   type="number"
