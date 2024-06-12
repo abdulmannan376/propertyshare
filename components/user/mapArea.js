@@ -13,10 +13,10 @@ import "leaflet/dist/leaflet.css";
 import NoSsr from "../noSSR";
 import SetViewToCurrentLocation from "../map/setViewToCurrentLocation";
 
-const MapArea = ({searchedCoordinate, handleCoordinates}) => {
+const MapArea = ({ searchedCoordinate, handleCoordinates }) => {
   const [position, setPosition] = useState(null);
   const [customIcon, setCustomIcon] = useState(null);
-  const [marker, setMarker] = useState(null)
+  const [marker, setMarker] = useState(null);
 
   useEffect(() => {
     // console.log("window: ", window);
@@ -46,11 +46,11 @@ const MapArea = ({searchedCoordinate, handleCoordinates}) => {
       click(e) {
         const elClass = e.originalEvent.target.className;
         if (
-          elClass ===
-          "leaflet-container leaflet-touch leaflet-fade-anim leaflet-grab leaflet-touch-drag leaflet-touch-zoom"
+          elClass.includes("leaflet-container") &&
+          elClass.includes("leaflet-touch")
         ) {
           handleCoordinates({ lat: e.latlng.lat, long: e.latlng.lng });
-          setMarker([ `${e.latlng.lat}`, `${e.latlng.lng}` ])
+          setMarker([`${e.latlng.lat}`, `${e.latlng.lng}`]);
         }
       },
     });
@@ -58,7 +58,7 @@ const MapArea = ({searchedCoordinate, handleCoordinates}) => {
   };
   const FlyToSearchPin = () => {
     const map = useMap();
-    if (searchedCoordinate.length>0) {
+    if (searchedCoordinate.length > 0) {
       map.flyTo(searchedCoordinate, 15); // Adjust zoom level as necessary
     }
   };
