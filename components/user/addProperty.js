@@ -390,7 +390,7 @@ const PropertyManagement = () => {
         } else {
           throw new Error(response.message);
         }
-      } else if (listingStatus === "draft") {
+      } else if (listingStatus === "draft" || "live") {
         if (formPhase === 1) {
           data.formPhase = formPhase;
 
@@ -1675,7 +1675,7 @@ const PropertyManagement = () => {
           {myProperties.map((property, index) => (
             <div
               key={index}
-              onClick={(e) => handleClickToAdd(e, "draft", index)}
+              onClick={(e) => handleClickToAdd(e, property.listingStatus, index)}
               className="w-full flex flex-row flex-wrap border border-[#D9D9D9] px-14 mb-5 cursor-pointer"
             >
               {property.imageCount === 0 ? (
