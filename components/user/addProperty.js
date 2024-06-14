@@ -809,8 +809,7 @@ const PropertyManagement = () => {
               </div>
               <div className="mb-6 ml-6 flex flex-col">
                 <label htmlFor="totalPrize" className="text-[#676767]">
-                  Total Price{" "}
-                  {`($)`}
+                  Total Price {`($)`}
                 </label>
                 <input
                   type="number"
@@ -1675,7 +1674,9 @@ const PropertyManagement = () => {
           {myProperties.map((property, index) => (
             <div
               key={index}
-              onClick={(e) => handleClickToAdd(e, property.listingStatus, index)}
+              onClick={(e) =>
+                handleClickToAdd(e, property.listingStatus, index)
+              }
               className="w-full flex flex-row flex-wrap border border-[#D9D9D9] px-14 mb-5 cursor-pointer"
             >
               {property.imageCount === 0 ? (

@@ -13,8 +13,8 @@ const Page = () => {
   useEffect(() => {
     dispatch(
       updateNavbarTextColor({
-        textColor: "text-[#116A7B]",
-        hoverTextColor: "text-[#116A7B]",
+        textColor: "text-white",
+        hoverTextColor: "text-white",
       })
     );
     dispatch(updateNavbarLogo("/logo-bbh.png"));

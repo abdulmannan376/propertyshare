@@ -376,7 +376,7 @@ const Page = () => {
                     </h3>
                     <h4 className="text-xl flex items-start text-[#116A7B]">
                       <FiMapPin className="inline-flex mt-1 mr-1" />{" "}
-                      {card.addressOfProperty.state},{" "}
+                      {card.addressOfProperty.city},{" "}
                       {
                         compCities.getCountryByShort(
                           card.addressOfProperty.country
@@ -468,7 +468,7 @@ const Page = () => {
                     </h3>
                     <h4 className="text-xl flex items-start text-[#116A7B]">
                       <FiMapPin className="inline-flex mt-1 mr-1" />{" "}
-                      {card.addressOfProperty.state},{" "}
+                      {card.addressOfProperty.city},{" "}
                       {
                         compCities.getCountryByShort(
                           card.addressOfProperty.country
@@ -560,7 +560,7 @@ const Page = () => {
                     </h3>
                     <h4 className="text-xl flex items-start text-[#116A7B]">
                       <FiMapPin className="inline-flex mt-1 mr-1" />{" "}
-                      {card.addressOfProperty.state},{" "}
+                      {card.addressOfProperty.city},{" "}
                       {
                         compCities.getCountryByShort(
                           card.addressOfProperty.country

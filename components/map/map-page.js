@@ -17,6 +17,8 @@ import Modal from "@/components/map/requestPropertyModal";
 import NoSsr from "@/components/noSSR";
 import { useDispatch } from "react-redux";
 import { updateNavbarLogo } from "@/app/redux/features/navbarSlice";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 // import PinIcon from "@/public/assets/pin.png";
 // Fixing icons issue with Webpack as per Leaflet's known issue
 // delete L.Icon.Default.prototype._getIconUrl;
@@ -39,6 +41,8 @@ const MapPage = () => {
   const [propertyTypeMarkers, setPropertyTypeMarkers] = useState([]);
   const [availableShareMarkers, setAvailableShareMarkers] = useState([]);
   const [customIcon, setCustomIcon] = useState(null);
+  const [customPropertyTypeIcon, setCustomPropertyTypeIcon] = useState(null);
+  const [customAvailableSharesIcon, setAvailableSharesIcon] = useState(null);
   const [customFilterIcon, setCustomFilterIcon] = useState(null);
 
   const [modalOpen, setModalOpen] = useState(false);
@@ -110,9 +114,9 @@ const MapPage = () => {
     setPropertyTypeMarkers(coordinates);
     console.log("title: ", process?.title);
     if (process?.title === "browser") {
-      setCustomFilterIcon(
+      setCustomPropertyTypeIcon(
         new L.Icon({
-          iconUrl: `/assets${iconURL}`, // Ensure this is the correct path from your public directory
+          iconUrl: `/assets/property-icon.svg`, // Ensure this is the correct path from your public directory
           iconSize: [45, 45],
           iconAnchor: [17, 35],
           popupAnchor: [0, -35],
@@ -125,9 +129,9 @@ const MapPage = () => {
     setAvailableShareMarkers(coordinates);
     console.log("title: ", process?.title);
     if (process?.title === "browser") {
-      setCustomFilterIcon(
+      setAvailableSharesIcon(
         new L.Icon({
-          iconUrl: `/assets${iconURL}`, // Ensure this is the correct path from your public directory
+          iconUrl: `/assets/property-icon.svg`, // Ensure this is the correct path from your public directory
           iconSize: [45, 45],
           iconAnchor: [17, 35],
           popupAnchor: [0, -35],
@@ -165,13 +169,21 @@ const MapPage = () => {
     // Handle response
   };
 
+  const router = useRouter(); // Hook for programmatic navigation
+
+  // Function to handle marker click
+  const handleMarkerClick = (propertyID) => {
+    router.push(`/buy-shares/property/${propertyID}`);
+  };
+
   return (
     <NoSsr>
+      <div className="w-full h-20 bg-[#116A7B]"></div>
       <MapContainer
         // zoomControl
         center={position || [51.505, -0.09]}
         zoom={15}
-        style={{ height: "100vh", width: "100%" }}
+        style={{ height: "90vh", width: "100%" }}
       >
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -197,18 +209,20 @@ const MapPage = () => {
           </Marker>
         ))}
         {propertyTypeMarkers.map((data, index) => (
-          <Marker key={index} position={[data[1], data[0]]} icon={customIcon}>
-            <Popup>
-              Marker at {data[1]}, {data[0]}
-            </Popup>
-          </Marker>
+          <Marker
+            key={index}
+            position={[data.coordinates[1], data.coordinates[0]]}
+            icon={customPropertyTypeIcon}
+            eventHandlers={{ click: () => handleMarkerClick(data.propertyID) }}
+          ></Marker>
         ))}
         {availableShareMarkers.map((data, index) => (
-          <Marker key={index} position={[data[1], data[0]]} icon={customIcon}>
-            <Popup>
-              Marker at {data[1]}, {data[0]}
-            </Popup>
-          </Marker>
+          <Marker
+            key={index}
+            position={[data.coordinates[1], data.coordinates[0]]}
+            icon={customAvailableSharesIcon}
+            eventHandlers={{ click: () => handleMarkerClick(data.propertyID) }}
+          ></Marker>
         ))}
         {myMarkers.map((coordinates, index) => (
           <Marker

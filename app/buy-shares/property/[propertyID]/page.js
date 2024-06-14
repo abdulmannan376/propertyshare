@@ -25,6 +25,7 @@ import { Pagination } from "swiper/modules";
 
 import "swiper/css";
 import "swiper/css/pagination";
+import BuyShare from "@/components/modals/buyShare";
 
 const Page = () => {
   const dispatch = useDispatch();
@@ -42,6 +43,11 @@ const Page = () => {
     (state) => state.propertyPageSliceReducer.navBtnActive
   );
 
+  const [isModalOpen, setModalOpen] = useState(false);
+
+  const handleOpenModal = () => setModalOpen(true);
+  const handleCloseModal = () => setModalOpen(false);
+  
   // function useValidateQuery() {
   //   const searchParams = useSearchParams();
   //   if (searchParams.get("id")) {
@@ -293,46 +299,45 @@ const Page = () => {
                     Main Features
                   </h1>
                   <div className="flex flex-row flex-wrap gap-x-14 gap-y-7 mt-5">
-                    {property?.amenitiesID.mainFeatures.inputs.yearBuilt && (
+                    {property?.amenitiesID?.mainFeatures?.inputs?.yearBuilt && (
                       <div className="border border-[#116A7B] text-2xl  text-[#00262D] p-2 rounded-lg">
                         <IoCalendar className="text-xl mb-1 inline-flex mx-2" />
                         <strong>Year Built:</strong>{" "}
                         <strong className="text-[#6E6E6E]">
-                          {property?.amenitiesID.mainFeatures.inputs.yearBuilt}
+                          {property?.amenitiesID?.mainFeatures?.inputs?.yearBuilt}
                         </strong>
                       </div>
                     )}
-                    {property?.amenitiesID.mainFeatures.inputs.floorCount && (
+                    {property?.amenitiesID?.mainFeatures?.inputs?.floorCount && (
                       <div className="border border-[#116A7B] text-2xl  text-[#00262D] p-2 rounded-lg">
                         <FaStairs className="text-xl mb-1 inline-flex mx-2" />
                         <strong>Floor Count:</strong>{" "}
                         <strong className="text-[#6E6E6E]">
-                          {property?.amenitiesID.mainFeatures.inputs.floorCount}
+                          {property?.amenitiesID?.mainFeatures?.inputs?.floorCount}
                         </strong>
                       </div>
                     )}
-                    {property?.amenitiesID.mainFeatures.inputs.parkingSpace && (
+                    {property?.amenitiesID?.mainFeatures?.inputs?.parkingSpace && (
                       <div className="border border-[#116A7B] text-2xl  text-[#00262D] p-2 rounded-lg">
                         <TbParkingCircle className="inline-flex mx-2 mb-1" />
                         <strong>Parking Space:</strong>{" "}
                         <strong className="text-[#6E6E6E]">
                           {
-                            property?.amenitiesID.mainFeatures.inputs
-                              .parkingSpace
+                            property?.amenitiesID?.mainFeatures?.inputs?.parkingSpace
                           }
                         </strong>
                       </div>
                     )}
-                    {property?.amenitiesID.mainFeatures.inputs.elevators && (
+                    {property?.amenitiesID?.mainFeatures?.inputs?.elevators && (
                       <div className="border border-[#116A7B] text-2xl  text-[#00262D] p-2 rounded-lg">
                         <PiElevatorDuotone className="inline-flex mx-2 mb-1" />
                         <strong>Elevators:</strong>{" "}
                         <strong className="text-[#6E6E6E]">
-                          {property?.amenitiesID.mainFeatures.inputs.elevators}
+                          {property?.amenitiesID?.mainFeatures?.inputs?.elevators}
                         </strong>
                       </div>
                     )}
-                    {property?.amenitiesID.mainFeatures.tags.map(
+                    {property?.amenitiesID?.mainFeatures?.tags.map(
                       (tag, index) => {
                         const words = tag.replace(/([A-Z])/g, " $1").trim(); // Add space before each capital letter
                         const tagInString =
@@ -355,46 +360,46 @@ const Page = () => {
                     Room Details
                   </h1>
                   <div className="flex flex-row flex-wrap gap-x-14 gap-y-7 mt-5">
-                    {property?.amenitiesID.roomDetails.inputs.beds && (
+                    {property?.amenitiesID?.roomDetails?.inputs.beds && (
                       <div className="border border-[#116A7B] text-2xl  text-[#00262D] p-2 rounded-lg">
                         <IoIosBed className="text-xl mb-1 inline-flex mx-2" />
                         <strong>Beds:</strong>{" "}
                         <strong className="text-[#6E6E6E]">
-                          {property?.amenitiesID.roomDetails.inputs.beds}
+                          {property?.amenitiesID?.roomDetails?.inputs.beds}
                         </strong>
                       </div>
                     )}
-                    {property?.amenitiesID.roomDetails.inputs.baths && (
+                    {property?.amenitiesID?.roomDetails?.inputs.baths && (
                       <div className="border border-[#116A7B] text-2xl  text-[#00262D] p-2 rounded-lg">
                         <TbBath className="text-xl mb-1 inline-flex mx-2" />
                         <strong>Baths:</strong>{" "}
                         <strong className="text-[#6E6E6E]">
-                          {property?.amenitiesID.roomDetails.inputs.baths}
+                          {property?.amenitiesID?.roomDetails?.inputs.baths}
                         </strong>
                       </div>
                     )}
-                    {property?.amenitiesID.roomDetails.inputs.servantQuater && (
+                    {property?.amenitiesID?.roomDetails?.inputs.servantQuater && (
                       <div className="border border-[#116A7B] text-2xl  text-[#00262D] p-2 rounded-lg">
                         <MdOutlineMeetingRoom className="inline-flex mx-2 mb-1" />
                         <strong>Servant Quater:</strong>{" "}
                         <strong className="text-[#6E6E6E]">
                           {
-                            property?.amenitiesID.roomDetails.inputs
+                            property?.amenitiesID?.roomDetails?.inputs
                               .servantQuater
                           }
                         </strong>
                       </div>
                     )}
-                    {property?.amenitiesID.roomDetails.inputs.kitchen && (
+                    {property?.amenitiesID?.roomDetails?.inputs.kitchen && (
                       <div className="border border-[#116A7B] text-2xl  text-[#00262D] p-2 rounded-lg">
                         <MdOutlineMeetingRoom className="inline-flex mx-2 mb-1" />
                         <strong>Kitchen:</strong>{" "}
                         <strong className="text-[#6E6E6E]">
-                          {property?.amenitiesID.roomDetails.inputs.kitchen}
+                          {property?.amenitiesID?.roomDetails?.inputs.kitchen}
                         </strong>
                       </div>
                     )}
-                    {property?.amenitiesID.roomDetails.tags.map(
+                    {property?.amenitiesID?.roomDetails?.tags.map(
                       (tag, index) => {
                         const words = tag.replace(/([A-Z])/g, " $1").trim(); // Add space before each capital letter
                         const tagInString =
@@ -417,7 +422,7 @@ const Page = () => {
                     Business and Communication
                   </h1>
                   <div className="flex flex-row flex-wrap gap-x-14 gap-y-7 mt-5">
-                    {property?.amenitiesID.business.tags.map((tag, index) => {
+                    {property?.amenitiesID?.business?.tags.map((tag, index) => {
                       const words = tag.replace(/([A-Z])/g, " $1").trim(); // Add space before each capital letter
                       const tagInString =
                         words.charAt(0).toUpperCase() + words.slice(1);
@@ -438,7 +443,7 @@ const Page = () => {
                     Community Features
                   </h1>
                   <div className="flex flex-row flex-wrap gap-x-14 gap-y-7 mt-5">
-                    {property?.amenitiesID.community.tags.map((tag, index) => {
+                    {property?.amenitiesID?.community?.tags.map((tag, index) => {
                       const words = tag.replace(/([A-Z])/g, " $1").trim(); // Add space before each capital letter
                       const tagInString =
                         words.charAt(0).toUpperCase() + words.slice(1);
@@ -459,7 +464,7 @@ const Page = () => {
                     Healthcare and Recreational
                   </h1>
                   <div className="flex flex-row flex-wrap gap-x-14 gap-y-7 mt-5">
-                    {property?.amenitiesID.healthAndRecreational.tags.map(
+                    {property?.amenitiesID?.healthAndRecreational?.tags.map(
                       (tag, index) => {
                         const words = tag.replace(/([A-Z])/g, " $1").trim(); // Add space before each capital letter
                         const tagInString =
@@ -482,21 +487,20 @@ const Page = () => {
                     Nearby Facilities and Locations
                   </h1>
                   <div className="flex flex-row flex-wrap gap-x-14 gap-y-7 mt-5">
-                    {property?.amenitiesID.nearbyFacilitiesAndLocations.inputs
+                    {property?.amenitiesID?.nearbyFacilitiesAndLocations?.inputs
                       .distanceFromAirport && (
                       <div className="border border-[#116A7B] text-2xl  text-[#00262D] p-2 rounded-lg">
                         <FaPlane className="inline-flex mx-2 mb-1" />
                         <strong>Distance From Airport:</strong>{" "}
                         <strong className="text-[#6E6E6E]">
                           {
-                            property?.amenitiesID.nearbyFacilitiesAndLocations
-                              .inputs.distanceFromAirport
+                            property?.amenitiesID?.nearbyFacilitiesAndLocations?.inputs.distanceFromAirport
                           }
                           km
                         </strong>
                       </div>
                     )}
-                    {property?.amenitiesID.nearbyFacilitiesAndLocations.tags.map(
+                    {property?.amenitiesID?.nearbyFacilitiesAndLocations?.tags.map(
                       (tag, index) => {
                         const words = tag.replace(/([A-Z])/g, " $1").trim(); // Add space before each capital letter
                         const tagInString =
@@ -517,12 +521,14 @@ const Page = () => {
                 <div className="my-16">
                   <button
                     type="button"
+                    onClick={handleOpenModal}
                     className="bg-[#116A7B] text-2xl text-white font-semibold px-5 py-3 rounded-xl"
                   >
                     Buy Share: $
                     {property.valueOfProperty / property.totalStakes}
                   </button>
                 </div>
+                <BuyShare isOpen={isModalOpen} onClose={handleCloseModal} />
               </>
             )}
           </div>

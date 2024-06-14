@@ -152,7 +152,7 @@ const FilterComponent = ({
       const res = await fetch(
         `${
           process.env.NEXT_PUBLIC_SERVER_HOST
-        }/property/get-property-by-type/${JSON.stringify({
+        }/property/get-property-by-available-shares/${JSON.stringify({
           availableShares: availableShares,
         })}`
       );

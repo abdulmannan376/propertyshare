@@ -29,7 +29,7 @@ const Carousel = () => {
       })
     );
 
-    dispatch(updateNavbarLogo("/logo-bbh-icon.svg"));
+    dispatch(updateNavbarLogo("/icon-bbh.png"));
   }, []);
 
   const [query, setQuery] = useState("");
