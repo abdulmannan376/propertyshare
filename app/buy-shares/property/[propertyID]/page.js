@@ -26,6 +26,7 @@ import { Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
 import BuyShare from "@/components/modals/buyShare";
+import BuyShareModal from "@/components/modals/buyShare";
 
 const Page = () => {
   const dispatch = useDispatch();
@@ -47,7 +48,7 @@ const Page = () => {
 
   const handleOpenModal = () => setModalOpen(true);
   const handleCloseModal = () => setModalOpen(false);
-  
+
   // function useValidateQuery() {
   //   const searchParams = useSearchParams();
   //   if (searchParams.get("id")) {
@@ -141,7 +142,7 @@ const Page = () => {
                 >
                   {Array.from({ length: property.imageCount }, (_, index) => (
                     <SwiperSlide key={index}>
-                      <div >
+                      <div>
                         <Image
                           width={2000}
                           height={2000}
@@ -247,7 +248,7 @@ const Page = () => {
                       <IoIosPricetag className="inline-flex mx-2" />
                       <strong>Share Price:</strong>{" "}
                       <strong className="text-[#6E6E6E]">
-                        ${property.valueOfProperty / property.totalStakes}
+                        ${Math.round(property.valueOfProperty / property.totalStakes)}
                       </strong>
                       <text className="text-[#6E6E6E]">/share</text>
                     </div>
@@ -304,26 +305,35 @@ const Page = () => {
                         <IoCalendar className="text-xl mb-1 inline-flex mx-2" />
                         <strong>Year Built:</strong>{" "}
                         <strong className="text-[#6E6E6E]">
-                          {property?.amenitiesID?.mainFeatures?.inputs?.yearBuilt}
+                          {
+                            property?.amenitiesID?.mainFeatures?.inputs
+                              ?.yearBuilt
+                          }
                         </strong>
                       </div>
                     )}
-                    {property?.amenitiesID?.mainFeatures?.inputs?.floorCount && (
+                    {property?.amenitiesID?.mainFeatures?.inputs
+                      ?.floorCount && (
                       <div className="border border-[#116A7B] text-2xl  text-[#00262D] p-2 rounded-lg">
                         <FaStairs className="text-xl mb-1 inline-flex mx-2" />
                         <strong>Floor Count:</strong>{" "}
                         <strong className="text-[#6E6E6E]">
-                          {property?.amenitiesID?.mainFeatures?.inputs?.floorCount}
+                          {
+                            property?.amenitiesID?.mainFeatures?.inputs
+                              ?.floorCount
+                          }
                         </strong>
                       </div>
                     )}
-                    {property?.amenitiesID?.mainFeatures?.inputs?.parkingSpace && (
+                    {property?.amenitiesID?.mainFeatures?.inputs
+                      ?.parkingSpace && (
                       <div className="border border-[#116A7B] text-2xl  text-[#00262D] p-2 rounded-lg">
                         <TbParkingCircle className="inline-flex mx-2 mb-1" />
                         <strong>Parking Space:</strong>{" "}
                         <strong className="text-[#6E6E6E]">
                           {
-                            property?.amenitiesID?.mainFeatures?.inputs?.parkingSpace
+                            property?.amenitiesID?.mainFeatures?.inputs
+                              ?.parkingSpace
                           }
                         </strong>
                       </div>
@@ -333,7 +343,10 @@ const Page = () => {
                         <PiElevatorDuotone className="inline-flex mx-2 mb-1" />
                         <strong>Elevators:</strong>{" "}
                         <strong className="text-[#6E6E6E]">
-                          {property?.amenitiesID?.mainFeatures?.inputs?.elevators}
+                          {
+                            property?.amenitiesID?.mainFeatures?.inputs
+                              ?.elevators
+                          }
                         </strong>
                       </div>
                     )}
@@ -378,7 +391,8 @@ const Page = () => {
                         </strong>
                       </div>
                     )}
-                    {property?.amenitiesID?.roomDetails?.inputs.servantQuater && (
+                    {property?.amenitiesID?.roomDetails?.inputs
+                      .servantQuater && (
                       <div className="border border-[#116A7B] text-2xl  text-[#00262D] p-2 rounded-lg">
                         <MdOutlineMeetingRoom className="inline-flex mx-2 mb-1" />
                         <strong>Servant Quater:</strong>{" "}
@@ -443,20 +457,22 @@ const Page = () => {
                     Community Features
                   </h1>
                   <div className="flex flex-row flex-wrap gap-x-14 gap-y-7 mt-5">
-                    {property?.amenitiesID?.community?.tags.map((tag, index) => {
-                      const words = tag.replace(/([A-Z])/g, " $1").trim(); // Add space before each capital letter
-                      const tagInString =
-                        words.charAt(0).toUpperCase() + words.slice(1);
-                      return (
-                        <div
-                          key={index}
-                          className="border border-[#116A7B] text-2xl text-[#00262D] px-4 py-2 rounded-lg"
-                        >
-                          {/* <PiElevatorDuotone className="inline-flex mx-2 mb-1" /> */}
-                          <strong>{tagInString}</strong>{" "}
-                        </div>
-                      );
-                    })}
+                    {property?.amenitiesID?.community?.tags.map(
+                      (tag, index) => {
+                        const words = tag.replace(/([A-Z])/g, " $1").trim(); // Add space before each capital letter
+                        const tagInString =
+                          words.charAt(0).toUpperCase() + words.slice(1);
+                        return (
+                          <div
+                            key={index}
+                            className="border border-[#116A7B] text-2xl text-[#00262D] px-4 py-2 rounded-lg"
+                          >
+                            {/* <PiElevatorDuotone className="inline-flex mx-2 mb-1" /> */}
+                            <strong>{tagInString}</strong>{" "}
+                          </div>
+                        );
+                      }
+                    )}
                   </div>
                 </div>
                 <div className="my-16">
@@ -494,7 +510,8 @@ const Page = () => {
                         <strong>Distance From Airport:</strong>{" "}
                         <strong className="text-[#6E6E6E]">
                           {
-                            property?.amenitiesID?.nearbyFacilitiesAndLocations?.inputs.distanceFromAirport
+                            property?.amenitiesID?.nearbyFacilitiesAndLocations
+                              ?.inputs.distanceFromAirport
                           }
                           km
                         </strong>
@@ -525,10 +542,18 @@ const Page = () => {
                     className="bg-[#116A7B] text-2xl text-white font-semibold px-5 py-3 rounded-xl"
                   >
                     Buy Share: $
-                    {property.valueOfProperty / property.totalStakes}
+                    {Math.round(
+                      Math.round(property.valueOfProperty / property.totalStakes)
+                    )}
                   </button>
                 </div>
-                <BuyShare isOpen={isModalOpen} onClose={handleCloseModal} />
+                <BuyShareModal
+                  isOpen={isModalOpen}
+                  onClose={handleCloseModal}
+                  propertyDocID={property._id}
+                  propertyID={property.propertyID}
+                  price={Math.round(property.valueOfProperty / property.totalStakes)}
+                />
               </>
             )}
           </div>
