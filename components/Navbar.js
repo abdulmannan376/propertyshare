@@ -26,6 +26,10 @@ const Navbar = () => {
     (state) => state.navbarSliceReducer.notificationIconColor
   );
 
+  const currentPage = useSelector(
+    (state) => state.navbarSliceReducer.currentPage
+  );
+
   const [loggedIn, setLoggedIn] = useState(false);
   const [showDropDowns, setShowDropDowns] = useState({
     user: false,
@@ -164,21 +168,43 @@ const Navbar = () => {
             />
           </Link>
           <nav className="md:ml-12 md:mr-auto flex flex-wrap items-center text-base justify-center">
-            <Link href={"/"} className={`mr-12 hover:${hoverTextColor}`}>
+            <Link
+              href={"/"}
+              className={`mr-12 hover:${hoverTextColor} ${
+                currentPage.tag === "Home"
+                  ? `${currentPage.bgColor} ${currentPage.textColor}`
+                  : "bg-transparent"
+              } px-3`}
+            >
               Home
             </Link>
-            <Link href={"/map"} className={`mr-12 hover:${hoverTextColor}`}>
+            <Link
+              href={"/map"}
+              className={`mr-12 hover:${hoverTextColor} ${
+                currentPage.tag === "Map"
+                  ? `${currentPage.bgColor} ${currentPage.textColor}`
+                  : "bg-transparent"
+              } px-3`}
+            >
               Map
             </Link>
             <Link
               href={"/buy-shares"}
-              className={`mr-12 hover:${hoverTextColor}`}
+              className={`mr-12 hover:${hoverTextColor} ${
+                currentPage.tag === "Buy Shares"
+                  ? `${currentPage.bgColor} ${currentPage.textColor}`
+                  : "bg-transparent"
+              } px-3`}
             >
               Buy Shares
             </Link>
             <Link
               href={"/under-development"}
-              className={`mr-12 hover:${hoverTextColor}`}
+              className={`mr-12 hover:${hoverTextColor} ${
+                currentPage.tag === "Rent Shares"
+                  ? `${currentPage.bgColor} ${currentPage.textColor}`
+                  : "bg-transparent"
+              } px-3`}
             >
               Rent Shares
             </Link>
@@ -187,19 +213,31 @@ const Navbar = () => {
           </Link> */}
             <Link
               href={"/contactus"}
-              className={`mr-12 hover:${hoverTextColor}`}
+              className={`mr-12 hover:${hoverTextColor} ${
+                currentPage.tag === "Contact"
+                  ? `${currentPage.bgColor} ${currentPage.textColor}`
+                  : "bg-transparent"
+              } px-3`}
             >
               Contact
             </Link>
             <Link
               href={"/under-development"}
-              className={`mr-12 hover:${hoverTextColor}`}
+              className={`mr-12 hover:${hoverTextColor} ${
+                currentPage.tag === "About"
+                  ? `${currentPage.bgColor} ${currentPage.textColor}`
+                  : "bg-transparent"
+              } px-3`}
             >
               About
             </Link>
             <Link
               href={"/privacy-policy"}
-              className={`mr-12 hover:${hoverTextColor}`}
+              className={`mr-12 hover:${hoverTextColor} ${
+                currentPage.tag === "Privacy"
+                  ? `${currentPage.bgColor} ${currentPage.textColor}`
+                  : "bg-transparent"
+              } px-3`}
             >
               Privacy
             </Link>

@@ -1,11 +1,38 @@
-"use client"
+"use client";
 import SectionContact from "@/components/landing-page/section-contactus";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import {
+  updateCurrentPageValue,
+  updateNavbarLogo,
+  updateNavbarTextColor,
+  updateNotificationIconColor,
+} from "../redux/features/navbarSlice";
 
 const Page = () => {
-  const[name, setName] = useState("");
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(
+      updateNavbarTextColor({
+        textColor: "text-[#116A7B]",
+        hoverTextColor: "text-[#116A7B]",
+      })
+    );
+    dispatch(updateNavbarLogo("/logo-bbh.png"));
+    dispatch(updateNotificationIconColor("text-white"));
+    dispatch(
+      updateCurrentPageValue({
+        tag: "Contact",
+        bgColor: "bg-[#116A7B]",
+        textColor: "text-white",
+      })
+    );
+  }, []);
   return (
     <div
       className="w-full h-full flex flex-row items-center justify-center bg-cover bg-center px-16 py-32"
@@ -74,4 +101,4 @@ const Page = () => {
     </div>
   );
 };
-export default Page
+export default Page;

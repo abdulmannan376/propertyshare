@@ -1,5 +1,9 @@
 "use client";
-import { updateNavbarTextColor } from "@/app/redux/features/navbarSlice";
+import {
+  updateCurrentPageValue,
+  updateNavbarTextColor,
+  updateNotificationIconColor,
+} from "@/app/redux/features/navbarSlice";
 import { updateActiveNavBtn } from "@/app/redux/features/propertyPageSlice";
 import Image from "next/image";
 import { useParams, useSearchParams } from "next/navigation";
@@ -36,6 +40,15 @@ const Page = () => {
       updateNavbarTextColor({
         textColor: "text-[#116A7B]",
         hoverTextColor: "text-[#116A7B]",
+      })
+    );
+
+    dispatch(updateNotificationIconColor("text-[#116A7B]"));
+    dispatch(
+      updateCurrentPageValue({
+        tag: "Buy Shares",
+        bgColor: "bg-[#116A7B]",
+        textColor: "text-white",
       })
     );
   }, []);
@@ -146,10 +159,10 @@ const Page = () => {
                         <Image
                           width={2000}
                           height={2000}
-                          src={`${process.env.NEXT_PUBLIC_SERVER_HOST}/${
+                          src={`http:89.22.120.46:9000/${
                             property.imageDirURL
                           }/image-${index + 1}.png`}
-                          className="w-full h-[44rem] object-cover object-center"
+                          className="w-full h-[44rem] object-contain object-center"
                           alt={`Image ${index + 1}`}
                         />
                       </div>
@@ -248,7 +261,10 @@ const Page = () => {
                       <IoIosPricetag className="inline-flex mx-2" />
                       <strong>Share Price:</strong>{" "}
                       <strong className="text-[#6E6E6E]">
-                        ${Math.round(property.valueOfProperty / property.totalStakes)}
+                        $
+                        {Math.round(
+                          property.valueOfProperty / property.totalStakes
+                        )}
                       </strong>
                       <text className="text-[#6E6E6E]">/share</text>
                     </div>
@@ -543,7 +559,9 @@ const Page = () => {
                   >
                     Buy Share: $
                     {Math.round(
-                      Math.round(property.valueOfProperty / property.totalStakes)
+                      Math.round(
+                        property.valueOfProperty / property.totalStakes
+                      )
                     )}
                   </button>
                 </div>
@@ -552,7 +570,9 @@ const Page = () => {
                   onClose={handleCloseModal}
                   propertyDocID={property._id}
                   propertyID={property.propertyID}
-                  price={Math.round(property.valueOfProperty / property.totalStakes)}
+                  price={Math.round(
+                    property.valueOfProperty / property.totalStakes
+                  )}
                 />
               </>
             )}

@@ -2,8 +2,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  updateCurrentPageValue,
   updateNavbarLogo,
   updateNavbarTextColor,
+  updateNotificationIconColor,
 } from "../redux/features/navbarSlice";
 import SearchBar from "@/components/buy-shares/searchBar";
 import FilterComponent from "@/components/buy-shares/filterComponent";
@@ -27,6 +29,14 @@ const Page = () => {
       })
     );
     dispatch(updateNavbarLogo("/logo-bbh.png"));
+    dispatch(updateNotificationIconColor("text-white"));
+    dispatch(
+      updateCurrentPageValue({
+        tag: "Buy Shares",
+        bgColor: "bg-white",
+        textColor: "text-[#116A7B]",
+      })
+    );
   }, []);
 
   const coordinates = useSelector(

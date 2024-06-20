@@ -5,8 +5,10 @@ import { IoFilterOutline } from "react-icons/io5";
 import { FaAngleDown } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  updateCurrentPageValue,
   updateNavbarLogo,
   updateNavbarTextColor,
+  updateNotificationIconColor,
 } from "@/app/redux/features/navbarSlice";
 import Link from "next/link";
 import Image from "next/image";
@@ -30,6 +32,14 @@ const Carousel = () => {
     );
 
     dispatch(updateNavbarLogo("/icon-bbh.png"));
+    dispatch(updateNotificationIconColor("text-white"));
+    dispatch(
+      updateCurrentPageValue({
+        tag: "Home",
+        bgColor: "bg-[#116A7B]",
+        textColor: "text-white",
+      })
+    );
   }, []);
 
   const [query, setQuery] = useState("");

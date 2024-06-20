@@ -1,11 +1,15 @@
-"use client"
-import React, { useEffect } from 'react'
-import { useDispatch } from 'react-redux';
-import { updateNavbarLogo, updateNavbarTextColor, updateNotificationIconColor } from '../redux/features/navbarSlice';
+"use client";
+import React, { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import {
+  updateCurrentPageValue,
+  updateNavbarLogo,
+  updateNavbarTextColor,
+  updateNotificationIconColor,
+} from "../redux/features/navbarSlice";
 
 const Page = () => {
-
-    const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(
@@ -15,16 +19,25 @@ const Page = () => {
       })
     );
     dispatch(updateNavbarLogo("/logo-bbh.png"));
-    dispatch(updateNotificationIconColor("text-[#116A7B]"))
+    dispatch(updateNotificationIconColor("text-[#116A7B]"));
+    dispatch(
+      updateCurrentPageValue({
+        tag: "Under Development",
+        bgColor: "bg-[#116A7B]",
+        textColor: "text-white",
+      })
+    );
   }, []);
   return (
     <>
-    {/* <div className="w-full h-20 bg-white"></div> */}
-    <div className='h-screen flex items-center justify-center'>
-        <h1 className='text-5xl font-semibold text-[#116A7B] text-center'>Under Development</h1>
-    </div>
+      {/* <div className="w-full h-20 bg-white"></div> */}
+      <div className="h-screen flex items-center justify-center">
+        <h1 className="text-5xl font-semibold text-[#116A7B] text-center">
+          Under Development
+        </h1>
+      </div>
     </>
-  )
-}
+  );
+};
 
-export default Page
+export default Page;
