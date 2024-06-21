@@ -1672,6 +1672,7 @@ const PropertyManagement = () => {
                       { length: myProperties[propertyByIndex]?.imageCount },
                       (_, index) => (
                         <button
+                          key={index}
                           type="button"
                           onClick={() => {
                             if (pinnedImage === index) {
