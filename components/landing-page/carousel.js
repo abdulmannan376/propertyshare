@@ -284,7 +284,7 @@ const Carousel = () => {
                 }}
                 className="w-64 bg-transparent border-r border-[#676767] p-3 text-xl text-[#676767] flex items-center justify-between"
               >
-                Price <FaAngleDown />
+                Price {"($)"} <FaAngleDown />
               </button>
               {dropdownsStatus["priceActive"] && (
                 <div className="absolute w-64 bg-white flex flex-row items-center justify-between">
@@ -365,7 +365,7 @@ const Carousel = () => {
                 }}
                 className="w-64 bg-transparent border-r border-[#676767] p-3 text-xl text-[#676767] flex items-center justify-between"
               >
-                Area <FaAngleDown />
+                Area {"(sqmt)"} <FaAngleDown />
               </button>
               {dropdownsStatus["areaActive"] && (
                 <div className="absolute w-64 bg-white flex flex-row items-center justify-between">

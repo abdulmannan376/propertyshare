@@ -1,7 +1,12 @@
+import { updateActivePropertyManagementTab } from "@/app/redux/features/dashboardSlice";
 import dynamic from "next/dynamic";
 import Image from "next/image";
+import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
+import { MdClose } from "react-icons/md";
+import { SiPinboard } from "react-icons/si";
+import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 const MapArea = dynamic(() => import("./mapArea"), { ssr: false });
 const compCities = require("countrycitystatejson");
@@ -47,6 +52,13 @@ const PropertyManagement = () => {
   const [distanceFromAirport, setDistanceFromAirport] = useState("");
 
   const [files, setFiles] = useState([]);
+  const [pinnedImage, setPinnedImage] = useState(-1);
+  const [deleteImageList, setDeleteImageList] = useState([]);
+
+  const dispatch = useDispatch();
+  const activeNavBtn = useSelector(
+    (state) => state.userDashboardSliceReducer.activePropertyManagementTab
+  );
 
   const allCountries = compCities.getCountries();
 
@@ -498,6 +510,7 @@ const PropertyManagement = () => {
           formData.append("userName", userDetails.name);
           formData.append("email", userDetails.email);
           formData.append("userRole", userDetails.role);
+          formData.append("pinnedImage", pinnedImage);
 
           for (const file of files) {
             formData.append("imageFiles", file);
@@ -718,6 +731,38 @@ const PropertyManagement = () => {
       });
       return newData;
     });
+  };
+
+  const [sharesCountByProperty, setSharesCountByProperty] = useState([]);
+
+  const fetchMyPurchase = async () => {
+    try {
+      const username = JSON.parse(localStorage.getItem("userDetails")).username;
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_HOST}/share/get-shares-by-username/${username}`,
+        {
+          method: "GET",
+        }
+      );
+
+      const response = await res.json();
+      if (response.success) {
+        setSharesCountByProperty(response.body.sharesPerProperty);
+      } else {
+        throw new Error(response.message);
+      }
+    } catch (error) {
+      toast.error(error.message, {
+        position: "bottom-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
   };
 
   return (
@@ -1618,14 +1663,79 @@ const PropertyManagement = () => {
                   onChange={({ target }) => setFiles(target.files)}
                   className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                 />
+                {true && (
+                  <div
+                    className="relative flex flex-row gap-x-3 overflow-y-visible overflow-x-auto my-5"
+                    style={{ maxWidth: "fit" }}
+                  >
+                    {Array.from(
+                      { length: myProperties[propertyByIndex]?.imageCount },
+                      (_, index) => (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (pinnedImage === index) {
+                              setPinnedImage(-1);
+                            } else {
+                              if (!deleteImageList.includes(index))
+                                setPinnedImage(index);
+                            }
+                          }}
+                          className="relative h-40"
+                        >
+                          <Image
+                            key={index}
+                            width={1000}
+                            height={1000}
+                            src={`http://89.22.120.46:9000/uploads/${
+                              myProperties[propertyByIndex].propertyID
+                            }/image-${index + 1}.png`}
+                            className="w-60 h-32  object-fit rounded-xl overflow-hidden "
+                            alt={`Property Image ${index + 1}`} // Always include an alt for accessibility
+                          />
+                          {deleteImageList.includes(index) && (
+                            <div className="absolute inset-y-4 w-60 h-32 bg-gray-700 opacity-60 rounded-xl"></div>
+                          )}
+                          {pinnedImage === index && (
+                            <span className="absolute inset-y-2 left-0 px-1 text-red-700 font-semibold focus:outline-none cursor-pointer">
+                              {" "}
+                              <SiPinboard className="text-xl" />
+                            </span>
+                          )}
+                          <span className="absolute inset-y-2 right-0 px-1 text-white font-semibold focus:outline-none cursor-pointer">
+                            {" "}
+                            <MdClose
+                              onClick={(event) => {
+                                event.stopPropagation();
+                                if (deleteImageList.includes(index)) {
+                                  const newList = deleteImageList.filter(
+                                    (item) => item !== index
+                                  );
+                                  setDeleteImageList(newList);
+                                } else {
+                                  const newList = [...deleteImageList];
+                                  newList.push(index);
+                                  setDeleteImageList(newList);
+                                  if (pinnedImage === index) setPinnedImage(-1);
+                                }
+                              }}
+                              className="bg-[#116A7B] rounded-full text-xl p-[2px]"
+                            />
+                          </span>
+                        </button>
+                      )
+                    )}
+                  </div>
+                )}
               </div>
-              <div className="mb-6 ml-6 flex flex-col">
+
+              {/* <div className="mb-6 ml-6 flex flex-col">
                 <input
                   type="button"
                   name="noName"
                   className="w-[620px] bg-transparent outline-none px-5 py-2 mt-3 rounded-full"
                 />
-              </div>
+              </div> */}
             </>
           )}
           <div className="mb-6 ml-6 flex flex-row space-x-3">
@@ -1670,71 +1780,186 @@ const PropertyManagement = () => {
           </div>
         </form>
       ) : (
-        <div className="py-10">
-          {myProperties.map((property, index) => (
-            <div
-              key={index}
-              onClick={(e) =>
-                handleClickToAdd(e, property.listingStatus, index)
+        <>
+          <div className="flex items-center justify-start md:space-x-20 space-x-14 my-3 px-14 text-white text-2xl font-semibold">
+            <button
+              onClick={() =>
+                dispatch(updateActivePropertyManagementTab("Listings"))
               }
-              className="w-full flex flex-row flex-wrap border border-[#D9D9D9] px-14 mb-5 cursor-pointer"
             >
-              {property.imageCount === 0 ? (
-                <Image
-                  width={1000}
-                  height={1000}
-                  src={"/assets/user/property-management/no-image.jpg"}
-                  className="w-64 h-60 object-cover object-center"
-                />
-              ) : (
-                <Image
-                  width={1000}
-                  height={1000}
-                  src={`${process.env.NEXT_PUBLIC_SERVER_HOST}/${property.imageDirURL}/image-1.png`}
-                  className="w-64 h-60 object-cover object-center"
-                />
-              )}
-              <div className="ml-10 space-y-5 my-5">
-                <div className="flex flex-row text-2xl text-[#09363F]">
-                  <h1 className="w-80 text-2xl font-medium">
-                    Property Title:{" "}
-                  </h1>
-                  <p className="ml-44">{property.title}</p>
-                </div>
-                <div className="flex flex-row text-2xl text-[#09363F]">
-                  <h1 className="w-80 text-2xl font-medium">
-                    Property Status:{" "}
-                  </h1>
-                  <p
-                    className={`ml-44 ${
-                      property.listingStatus === "live"
-                        ? "text-[#36FE62]"
-                        : property.listingStatus === "pending approval"
-                        ? "text-[#FF9900]"
-                        : property.listingStatus === "draft"
-                        ? "text-gray-700"
-                        : "text-[#FF0000]"
-                    }`}
+              <h1
+                className={`flex ${
+                  activeNavBtn === "Listings"
+                    ? "underline-text"
+                    : "hover-underline-animation"
+                } `}
+              >
+                Listings
+              </h1>
+            </button>
+            {/* <Link href={`${process.env.NEXT_PUBLIC_HOST}/chef`}> */}
+            <button
+              onClick={() => {
+                dispatch(updateActivePropertyManagementTab("Purchases"));
+                fetchMyPurchase();
+              }}
+            >
+              <h2
+                className={`flex ${
+                  activeNavBtn === "Purchases"
+                    ? "underline-text"
+                    : "hover-underline-animation"
+                } `}
+              >
+                Purchases
+              </h2>
+            </button>
+
+            {/* </Link> */}
+          </div>
+          {activeNavBtn === "Listings" && (
+            <div className="py-10">
+              {myProperties.length > 0 ? (
+                myProperties.map((property, index) => (
+                  <div
+                    key={index}
+                    onClick={(e) =>
+                      handleClickToAdd(e, property.listingStatus, index)
+                    }
+                    className="w-full flex flex-row flex-wrap border border-[#D9D9D9] px-14 mb-5 cursor-pointer"
                   >
-                    {property.listingStatus}
-                  </p>
-                </div>
-                <div className="flex flex-row text-2xl text-[#09363F]">
-                  <h1 className="w-80 text-2xl font-medium">Total Shares: </h1>
-                  <p className="ml-44">{property.totalStakes}</p>
-                </div>
-                <div className="flex flex-row text-2xl text-[#09363F]">
-                  <h1 className="w-80 text-2xl font-medium">
-                    Available Shares:{" "}
-                  </h1>
-                  <p className="ml-44">
-                    {property.totalStakes - property.stakesOccupied}
-                  </p>
-                </div>
-              </div>
+                    {property.imageCount === 0 ? (
+                      <Image
+                        width={1000}
+                        height={1000}
+                        src={"/assets/user/property-management/no-image.jpg"}
+                        className="w-64 h-60 object-cover object-center"
+                      />
+                    ) : (
+                      <Image
+                        width={1000}
+                        height={1000}
+                        src={`${process.env.NEXT_PUBLIC_SERVER_HOST}/${property.imageDirURL}/image-1.png`}
+                        className="w-64 h-60 object-cover object-center"
+                      />
+                    )}
+                    <div className="ml-10 space-y-5 my-5">
+                      <div className="flex flex-row text-2xl text-[#09363F]">
+                        <h1 className="w-80 text-2xl font-medium">
+                          Property Title:{" "}
+                        </h1>
+                        <p className="ml-44">{property.title}</p>
+                      </div>
+                      <div className="flex flex-row text-2xl text-[#09363F]">
+                        <h1 className="w-80 text-2xl font-medium">
+                          Property Status:{" "}
+                        </h1>
+                        <p
+                          className={`ml-44 ${
+                            property.listingStatus === "live"
+                              ? "text-[#36FE62]"
+                              : property.listingStatus === "pending approval"
+                              ? "text-[#FF9900]"
+                              : property.listingStatus === "draft"
+                              ? "text-gray-700"
+                              : "text-[#FF0000]"
+                          }`}
+                        >
+                          {property.listingStatus}
+                        </p>
+                      </div>
+                      <div className="flex flex-row text-2xl text-[#09363F]">
+                        <h1 className="w-80 text-2xl font-medium">
+                          Total Shares:{" "}
+                        </h1>
+                        <p className="ml-44">{property.totalStakes}</p>
+                      </div>
+                      <div className="flex flex-row text-2xl text-[#09363F]">
+                        <h1 className="w-80 text-2xl font-medium">
+                          Available Shares:{" "}
+                        </h1>
+                        <p className="ml-44">
+                          {property.totalStakes - property.stakesOccupied}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <h1 className="text-2xl text-[#116A7B] font-semibold px-14">
+                  No Properties Listed Yet.
+                </h1>
+              )}
             </div>
-          ))}
-        </div>
+          )}
+          {activeNavBtn === "Purchases" && (
+            <div>
+              {sharesCountByProperty.length > 0 &&
+                sharesCountByProperty.map((share, index) => (
+                  <Link
+                    key={index}
+                    href={`/buy-shares/property/${share.propertyDetails.propertyID}`}
+                    className="w-full flex flex-row flex-wrap border border-[#D9D9D9] px-14 mb-5 cursor-pointer"
+                  >
+                    {share.propertyDetails.imageCount === 0 ? (
+                      <Image
+                        width={1000}
+                        height={1000}
+                        src={"/assets/user/property-management/no-image.jpg"}
+                        className="w-64 h-60 object-cover object-center"
+                      />
+                    ) : (
+                      <Image
+                        width={1000}
+                        height={1000}
+                        src={`${process.env.NEXT_PUBLIC_SERVER_HOST}/${share.propertyDetails.imageDirURL}/image-1.png`}
+                        className="w-64 h-60 object-cover object-center"
+                      />
+                    )}
+                    <div className="ml-10 space-y-5 my-5">
+                      <div className="flex flex-row text-2xl text-[#09363F]">
+                        <h1 className="w-80 text-2xl font-medium">
+                          Property Title:{" "}
+                        </h1>
+                        <p className="ml-44">{share.propertyDetails.title}</p>
+                      </div>
+                      <div className="flex flex-row text-2xl text-[#09363F]">
+                        <h1 className="w-80 text-2xl font-medium">
+                          My Shares:{" "}
+                        </h1>
+                        <p className="ml-44">
+                          {
+                            sharesCountByProperty.filter(
+                              (entry) =>
+                                entry.propertyID ===
+                                share.propertyDetails.propertyID
+                            )[0]?.count
+                          }
+                        </p>
+                      </div>
+                      <div className="flex flex-row text-2xl text-[#09363F]">
+                        <h1 className="w-80 text-2xl font-medium">
+                          Total Shares:{" "}
+                        </h1>
+                        <p className="ml-44">
+                          {share.propertyDetails.totalStakes}
+                        </p>
+                      </div>
+                      <div className="flex flex-row text-2xl text-[#09363F]">
+                        <h1 className="w-80 text-2xl font-medium">
+                          Available Shares:{" "}
+                        </h1>
+                        <p className="ml-44">
+                          {share.propertyDetails.totalStakes -
+                            share.propertyDetails.stakesOccupied}
+                        </p>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+            </div>
+          )}
+        </>
       )}
     </div>
   );

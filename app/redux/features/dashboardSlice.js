@@ -5,6 +5,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   activeTab: "Profile",
   userRole: "",
+  activePropertyManagementTab: "Listings"
 };
 
 export const userDashboardSlice = createSlice({
@@ -16,9 +17,12 @@ export const userDashboardSlice = createSlice({
     },
     updateUserRole: (state, action) => {
         state.userRole = action.payload
+    },
+    updateActivePropertyManagementTab: (state, action) => {
+      state.activePropertyManagementTab = action.payload
     }
   },
 });
 
-export const { updateActiveTab, updateUserRole} = userDashboardSlice.actions
+export const { updateActiveTab, updateUserRole, updateActivePropertyManagementTab} = userDashboardSlice.actions
 export default userDashboardSlice.reducer

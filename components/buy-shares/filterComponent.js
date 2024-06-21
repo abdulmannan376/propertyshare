@@ -273,7 +273,7 @@ const FilterComponent = ({
                   }}
                   className="xl:w-96 lg:w-64 bg-transparent p-3 text-xl text-[#676767] flex items-center justify-between"
                 >
-                  Price{" "}
+                  Price {"($)"}
                   <div className="flex flex-row items-center space-x-5">
                     {priceRange.length > 0 && (
                       <span
@@ -386,7 +386,7 @@ const FilterComponent = ({
                   }}
                   className="xl:w-96 lg:w-64 bg-transparent p-3 text-xl text-[#676767] flex items-center justify-between"
                 >
-                  Area{" "}
+                  Area {"(sqmt)"}
                   <div className="flex flex-row items-center space-x-5">
                     {areaRange.length > 0 && (
                       <span

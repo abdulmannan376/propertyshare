@@ -107,3 +107,25 @@ input[type='range'].slider::-moz-range-thumb {
   transform: scaleX(1);
   transform-origin: bottom left;
 }
+
+/* Additional styles in your CSS file */
+.custom-prev,
+.custom-next {
+  background-color: #fff;
+  /* White background */
+  color: #000;
+  /* Black text color */
+  padding: 8px 16px;
+  /* Padding */
+  border-radius: 8px;
+  /* Rounded corners */
+  cursor: pointer;
+  /* Pointer cursor on hover */
+  margin: 16px 0px;
+}
+
+.custom-prev:hover,
+.custom-next:hover {
+  background-color: #ccc;
+  /* Light grey background on hover */
+}

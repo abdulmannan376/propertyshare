@@ -25,10 +25,11 @@ import GetPropertyID from "@/components/buy-shares/getPropertyID";
 // Import Swiper React components and Swiper styles
 import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperCore from "swiper";
-import { Pagination } from "swiper/modules";
+import { Pagination, Navigation } from "swiper/modules";
 
 import "swiper/css";
 import "swiper/css/pagination";
+import 'swiper/css/navigation';
 import BuyShare from "@/components/modals/buyShare";
 import BuyShareModal from "@/components/modals/buyShare";
 
@@ -141,8 +142,12 @@ const Page = () => {
               <div className="swiper-container">
                 {/* Swiper component */}
                 <Swiper
-                  modules={[Pagination]}
+                  modules={[Pagination, Navigation]}
                   slidesPerView={1}
+                  navigation={{
+                    nextEl: '.swiper-button-next', // Define next button class
+                    prevEl: '.swiper-button-prev', // Define prev button class
+                  }}
                   pagination={{
                     clickable: true,
                     el: "#swiper-pagination",
@@ -170,6 +175,9 @@ const Page = () => {
                   ))}
                 </Swiper>
 
+                {/* Custom navigation buttons */}
+                <div className="swiper-button-prev custom-prev"></div>
+                <div className="swiper-button-next custom-next"></div>
                 {/* Custom pagination */}
                 <div
                   id="swiper-pagination"
