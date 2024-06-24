@@ -511,7 +511,9 @@ const PropertyManagement = () => {
           formData.append("email", userDetails.email);
           formData.append("userRole", userDetails.role);
           formData.append("pinnedImage", pinnedImage);
+          formData.append("deleteImageList", deleteImageList);
 
+          console.log(formData);
           for (const file of files) {
             formData.append("imageFiles", file);
           }
@@ -748,6 +750,38 @@ const PropertyManagement = () => {
       const response = await res.json();
       if (response.success) {
         setSharesCountByProperty(response.body.sharesPerProperty);
+      } else {
+        throw new Error(response.message);
+      }
+    } catch (error) {
+      toast.error(error.message, {
+        position: "bottom-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  };
+
+  const [myShareReservations, setMyShareReservations] = useState([]);
+
+  const fetchMyReservations = async () => {
+    try {
+      const username = JSON.parse(localStorage.getItem("userDetails")).username;
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_HOST}/share/get-reservations-by-username/${username}`,
+        {
+          method: "GET",
+        }
+      );
+
+      const response = await res.json();
+      if (response.success) {
+        setMyShareReservations(response.body);
       } else {
         throw new Error(response.message);
       }
@@ -1815,6 +1849,22 @@ const PropertyManagement = () => {
                 Purchases
               </h2>
             </button>
+            <button
+              onClick={() => {
+                dispatch(updateActivePropertyManagementTab("Reservations"));
+                fetchMyReservations();
+              }}
+            >
+              <h2
+                className={`flex ${
+                  activeNavBtn === "Reservations"
+                    ? "underline-text"
+                    : "hover-underline-animation"
+                } `}
+              >
+                Reservations
+              </h2>
+            </button>
 
             {/* </Link> */}
           </div>
@@ -1931,6 +1981,73 @@ const PropertyManagement = () => {
                         <p className="ml-44">
                           {
                             sharesCountByProperty.filter(
+                              (entry) =>
+                                entry.propertyID ===
+                                share.propertyDetails.propertyID
+                            )[0]?.count
+                          }
+                        </p>
+                      </div>
+                      <div className="flex flex-row text-2xl text-[#09363F]">
+                        <h1 className="w-80 text-2xl font-medium">
+                          Total Shares:{" "}
+                        </h1>
+                        <p className="ml-44">
+                          {share.propertyDetails.totalStakes}
+                        </p>
+                      </div>
+                      <div className="flex flex-row text-2xl text-[#09363F]">
+                        <h1 className="w-80 text-2xl font-medium">
+                          Available Shares:{" "}
+                        </h1>
+                        <p className="ml-44">
+                          {share.propertyDetails.totalStakes -
+                            share.propertyDetails.stakesOccupied}
+                        </p>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+            </div>
+          )}
+          {activeNavBtn === "Reservations" && (
+            <div>
+              {myShareReservations.length > 0 &&
+                myShareReservations.map((share, index) => (
+                  <Link
+                    key={index}
+                    href={`/buy-shares/property/${share.propertyDetails.propertyID}`}
+                    className="w-full flex flex-row flex-wrap border border-[#D9D9D9] px-14 mb-5 cursor-pointer"
+                  >
+                    {share.propertyDetails.imageCount === 0 ? (
+                      <Image
+                        width={1000}
+                        height={1000}
+                        src={"/assets/user/property-management/no-image.jpg"}
+                        className="w-64 h-60 object-cover object-center"
+                      />
+                    ) : (
+                      <Image
+                        width={1000}
+                        height={1000}
+                        src={`${process.env.NEXT_PUBLIC_SERVER_HOST}/${share.propertyDetails.imageDirURL}/image-1.png`}
+                        className="w-64 h-60 object-cover object-center"
+                      />
+                    )}
+                    <div className="ml-10 space-y-5 my-5">
+                      <div className="flex flex-row text-2xl text-[#09363F]">
+                        <h1 className="w-80 text-2xl font-medium">
+                          Property Title:{" "}
+                        </h1>
+                        <p className="ml-44">{share.propertyDetails.title}</p>
+                      </div>
+                      <div className="flex flex-row text-2xl text-[#09363F]">
+                        <h1 className="w-80 text-2xl font-medium">
+                          My Reservations:{" "}
+                        </h1>
+                        <p className="ml-44">
+                          {
+                            myShareReservations.filter(
                               (entry) =>
                                 entry.propertyID ===
                                 share.propertyDetails.propertyID

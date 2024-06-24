@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
 import Image from "next/image";
 import { toast } from "react-toastify";
+import { MdClose } from "react-icons/md";
 
 // Set the app element for accessibility reasons
 Modal.setAppElement("#app-body");
@@ -106,6 +107,58 @@ const BuyShareModal = ({
     }
   };
 
+  const handlePayLaterSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      if (!localStorage.getItem("userDetails")) {
+        throw new Error("Login first.");
+      }
+      const data = {
+        username: JSON.parse(localStorage.getItem("userDetails")).username,
+        shareID: selectedShareID,
+        price: price,
+      };
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_HOST}/share/reserve-share`,
+        {
+          method: "POST",
+          headers: {
+            "Content-type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
+
+      const response = await res.json();
+      if (response.success) {
+        toast.success(response.message, {
+          position: "bottom-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        onClose(); // Close modal on success
+      } else {
+        throw new Error(response.message);
+      }
+    } catch (error) {
+      toast.error(error.message, {
+        position: "bottom-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  };
+
   return (
     <Modal
       isOpen={isOpen}
@@ -124,9 +177,9 @@ const BuyShareModal = ({
           background: "#fff",
           overflow: "auto",
           WebkitOverflowScrolling: "touch",
-          borderRadius: "4px",
+          borderRadius: "15px",
           outline: "none",
-          padding: "20px",
+          padding: "5px",
           width: "fit",
           maxHeight: "80vh",
         },
@@ -134,8 +187,8 @@ const BuyShareModal = ({
     >
       {/* Modal Content */}
 
-      <div className="flex flex-row items-stretch bg-white border border-[#116A7B] py-5 px-10 rounded-xl shadow-lg max-w-5xl w-full">
-        <div className="w-1/2">
+      <div className="relative flex flex-row items-stretch bg-white border border-[#116A7B] py-5 px-10 rounded-xl shadow-lg max-w-5xl w-full">
+        <div className="w-1/2 flex flex-col justify-between items-start">
           <div className="flex justify-between items-center mb-3">
             <h4 className="text-4xl text-[#09363F] font-medium">Buy shares</h4>
           </div>
@@ -173,13 +226,13 @@ const BuyShareModal = ({
               onClick={handleSubmit}
               className="bg-[#116A7B] text-white py-2 px-4 rounded  transition duration-150"
             >
-              Buy Now
+              Pay Now
             </button>
             <button
-              onClick={onClose}
+              onClick={handlePayLaterSubmit}
               className="bg-transparent text-white[#116A7B] py-2 px-4 rounded transition duration-150"
             >
-              Cancel
+              Pay Later
             </button>
           </div>
         </div>
@@ -187,10 +240,17 @@ const BuyShareModal = ({
           <Image
             width={2000}
             height={2000}
-            src={`/${process.env.NEXT_PUBLIC_SERVER_HOST}/uploads/${propertyID}/image-1.png`}
-            className="w-full h-auto object-contain object-center"
+            src={`http://89.22.120.46:9000/uploads/${propertyID}/image-1.png`}
+            className="w-full h-[25rem] object-contain object-center"
           />
         </div>
+        <button
+          type="button"
+          onClick={onClose}
+          className="absolute top-3 right-3 bg-[#116A7B] text-white p-1 rounded-full cursor-pointer"
+        >
+          <MdClose />
+        </button>
       </div>
     </Modal>
   );
