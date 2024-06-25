@@ -1,5 +1,6 @@
 "use client";
 import {
+  updateBgColor,
   updateCurrentPageValue,
   updateNavbarTextColor,
   updateNotificationIconColor,
@@ -45,6 +46,7 @@ const Page = () => {
     );
 
     dispatch(updateNotificationIconColor("text-[#116A7B]"));
+    dispatch(updateBgColor("bg-white"));
     dispatch(
       updateCurrentPageValue({
         tag: "Buy Shares",

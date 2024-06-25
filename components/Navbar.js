@@ -30,6 +30,8 @@ const Navbar = () => {
     (state) => state.navbarSliceReducer.currentPage
   );
 
+  const bgColor = useSelector(state => state.navbarSliceReducer.bgColor)
+
   const [loggedIn, setLoggedIn] = useState(false);
   const [showDropDowns, setShowDropDowns] = useState({
     user: false,
@@ -152,7 +154,7 @@ const Navbar = () => {
         theme="light"
       />
       <header
-        className={`absolute top-0 w-full ${textColor} body-font z-[1000]`}
+        className={`fixed top-0 w-full ${textColor} ${bgColor} body-font z-[1000]`}
       >
         <div className="xl:mx-24 mx-16 flex flex-wrap p-5 flex-col md:flex-row items-center">
           <Link

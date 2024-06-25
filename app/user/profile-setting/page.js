@@ -18,6 +18,7 @@ const Page = () => {
         hoverTextColor: "text-white",
       })
     );
+    dispatch(updateBgColor("bg-[#116A7B]"));
   }, []);
 
   const settingActiveTab = useSelector(

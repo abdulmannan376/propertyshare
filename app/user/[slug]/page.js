@@ -11,7 +11,7 @@ import PropertyManagement from "@/components/user/addProperty";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import UserManagement from "@/components/user/userManagement";
-import { updateNavbarLogo, updateNavbarTextColor } from "@/app/redux/features/navbarSlice";
+import { updateBgColor, updateCurrentPageValue, updateNavbarLogo, updateNavbarTextColor } from "@/app/redux/features/navbarSlice";
 
 const Page = () => {
   const dispatch = useDispatch();
@@ -19,7 +19,7 @@ const Page = () => {
   const [username, setUsername] = useState("");
   useEffect(() => {
     dispatch(
-      updateUserRole(JSON.parse(localStorage.getItem("userDetails")).role)
+      updateUserRole(JSON.parse(localStorage.getItem("userDetails"))?.role)
     );
 
     dispatch(
@@ -28,9 +28,19 @@ const Page = () => {
         hoverTextColor: "text-white",
       })
     );
+
+    dispatch(
+      updateCurrentPageValue({
+        tag: "Dashboard",
+        bgColor: "bg-[#116A7B]",
+        textColor: "text-white",
+      })
+    );
+
+    dispatch(updateBgColor("bg-[#116A7B]"));
     dispatch(updateNavbarLogo("/logo-bbh.png"));
-    setName(JSON.parse(localStorage.getItem("userDetails")).name);
-    setUsername(JSON.parse(localStorage.getItem("userDetails")).username);
+    setName(JSON.parse(localStorage.getItem("userDetails"))?.name);
+    setUsername(JSON.parse(localStorage.getItem("userDetails"))?.username);
     fetchSettings();
   });
 
@@ -38,7 +48,7 @@ const Page = () => {
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_SERVER_HOST}/user/get-default-settings/${
-          JSON.parse(localStorage.getItem("userDetails")).username
+          JSON.parse(localStorage.getItem("userDetails"))?.username
         }`
       );
       const response = await res.json();

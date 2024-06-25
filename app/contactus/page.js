@@ -32,6 +32,7 @@ const Page = () => {
         textColor: "text-white",
       })
     );
+    dispatch(updateBgColor("bg-transparent"));
   }, []);
   return (
     <div

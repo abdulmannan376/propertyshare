@@ -25,6 +25,7 @@ const Page = () => {
         textColor: "text-[#116A7B]",
       })
     );
+    dispatch(updateBgColor("bg-[#116A7B]"));
   }, []);
 
   return <MapPage />;

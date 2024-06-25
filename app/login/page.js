@@ -25,6 +25,7 @@ const Page = () => {
         hoverTextColor: "text-white",
       })
     );
+    dispatch(updateBgColor("bg-transparent"));
   }, []);
 
   function handleShowPassword() {

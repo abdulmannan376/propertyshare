@@ -7,7 +7,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { updateNavbarTextColor } from "../redux/features/navbarSlice";
+import { updateBgColor, updateNavbarTextColor } from "../redux/features/navbarSlice";
 
 const Page = () => {
   const dispatch = useDispatch();
@@ -19,6 +19,7 @@ const Page = () => {
         hoverTextColor: "text-white",
       })
     );
+    dispatch(updateBgColor("bg-transparent"));
   }, []);
 
   const [name, setName] = useState("");

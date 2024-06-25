@@ -2,6 +2,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  updateBgColor,
   updateCurrentPageValue,
   updateNavbarLogo,
   updateNavbarTextColor,
@@ -29,6 +30,7 @@ const Page = () => {
       })
     );
     dispatch(updateNavbarLogo("/logo-bbh.png"));
+    dispatch(updateBgColor("bg-[#116A7B]"));
     dispatch(updateNotificationIconColor("text-white"));
     dispatch(
       updateCurrentPageValue({

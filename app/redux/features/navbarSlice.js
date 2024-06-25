@@ -8,6 +8,7 @@ const initialState = {
   buttonTextColor: "text-white",
   logoURL: "/logo-bbh.png",
   notificationIconColor: "text-white",
+  bgColor: "bg-transparent",
   currentPage: "Home",
 };
 
@@ -28,6 +29,9 @@ export const navbarSlice = createSlice({
     updateCurrentPageValue: (state, action) => {
       state.currentPage = action.payload;
     },
+    updateBgColor: (state, action) => {
+      state.bgColor = action.payload
+    }
   },
 });
 
@@ -36,5 +40,6 @@ export const {
   updateNavbarLogo,
   updateNotificationIconColor,
   updateCurrentPageValue,
+  updateBgColor,
 } = navbarSlice.actions;
 export default navbarSlice.reducer;

@@ -511,14 +511,33 @@ const PropertyManagement = () => {
           formData.append("email", userDetails.email);
           formData.append("userRole", userDetails.role);
           formData.append("pinnedImage", pinnedImage);
-          formData.append("deleteImageList", deleteImageList);
+          // formData.append("deleteImageList", deleteImageList);
 
-          console.log(formData);
+          deleteImageList.map((entry, index) => {
+            formData.append(`deleteImageList[${index}]`, entry);
+          });
+
           for (const file of files) {
             formData.append("imageFiles", file);
           }
+          let res = null;
 
-          const res = await fetch(
+          if (
+            deleteImageList.length ===
+              myProperties[propertyByIndex]?.imageCount &&
+            files.length === 0
+          ) {
+            res = await fetch(
+              `${process.env.NEXT_PUBLIC_SERVER_HOST}/property/upload-property-images`,
+              {
+                method: "POST",
+                body: formData,
+              }
+            );
+          } else {
+          }
+
+          res = await fetch(
             `${process.env.NEXT_PUBLIC_SERVER_HOST}/property/upload-property-images`,
             {
               method: "POST",
