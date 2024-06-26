@@ -528,7 +528,7 @@ const PropertyManagement = () => {
             files.length === 0
           ) {
             res = await fetch(
-              `${process.env.NEXT_PUBLIC_SERVER_HOST}/property/upload-property-images`,
+              `${process.env.NEXT_PUBLIC_SERVER_HOST}/property/delete-all-images-by-propertyID`,
               {
                 method: "POST",
                 body: formData,
