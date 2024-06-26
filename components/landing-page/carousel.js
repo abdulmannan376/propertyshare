@@ -5,6 +5,7 @@ import { IoFilterOutline } from "react-icons/io5";
 import { FaAngleDown } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  updateBgColor,
   updateCurrentPageValue,
   updateNavbarLogo,
   updateNavbarTextColor,
@@ -32,6 +33,7 @@ const Carousel = () => {
     );
 
     dispatch(updateNavbarLogo("/icon-bbh.png"));
+    dispatch(updateBgColor("bg-transparent"))
     dispatch(updateNotificationIconColor("text-white"));
     dispatch(
       updateCurrentPageValue({

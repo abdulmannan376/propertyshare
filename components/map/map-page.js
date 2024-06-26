@@ -197,17 +197,24 @@ const MapPage = () => {
             </Marker>
           </>
         )}
-        {markers.map((data, index) => (
-          <Marker
-            key={index}
-            position={[data.coordinates.lat, data.coordinates.long]}
-            icon={customFilterIcon}
-          >
-            <Popup>
-              Marker at {data.coordinates.lat}, {data.coordinates.long}
-            </Popup>
-          </Marker>
-        ))}
+        {markers.map(
+          (data, index) =>
+            data.location.coordinates.length > 0 && (
+              <Marker
+                key={index}
+                position={[
+                  data.location.coordinates[1],
+                  data.location.coordinates[0],
+                ]}
+                icon={customFilterIcon}
+              >
+                <Popup>
+                  Marker at {data.location.coordinates[1]},{" "}
+                  {data.location.coordinates[0]}
+                </Popup>
+              </Marker>
+            )
+        )}
         {propertyTypeMarkers.map((data, index) => (
           <Marker
             key={index}
