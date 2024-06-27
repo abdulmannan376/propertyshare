@@ -4,6 +4,29 @@ const Modal = ({ isOpen, onClose, onSave, coordinates }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [contact, setContact] = useState("");
+  const [selectedPropertyType, setSelectedPropertyType] = useState("All");
+  const [areaRange, setAreaRange] = useState(["0", "ANY"]);
+  const [priceRange, setPriceRange] = useState(["0", "ANY"]);
+
+  const propertyTypes = [
+    "All",
+    "Mansion",
+    "Villa",
+    "Apartment",
+    "Suite",
+    "Condo",
+    "Townhouse",
+    "Bungalow",
+    "Cabin",
+    "Studio",
+    "Single family home",
+  ];
+
+  const areaMin = ["0", "50", "100", "150", "200", "250", "300"];
+  const areaMax = ["50", "100", "150", "200", "250", "300", "Any"];
+
+  const priceMin = ["0", "300", "600", "900"];
+  const priceMax = ["300", "600", "900", "Any"];
 
   const handleSubmit = () => {
     onSave({ name, email, contact, coordinates });
@@ -41,6 +64,22 @@ const Modal = ({ isOpen, onClose, onSave, coordinates }) => {
           onChange={(e) => setContact(e.target.value)}
           className="block w-[492px] text-xl border border-[#116A7B] mb-4 px-7 py-5 rounded-full"
         />
+        <input
+          type="text"
+          placeholder="Property Type"
+          className="block w-[492px] text-xl border border-[#116A7B] mb-4 px-7 py-5 rounded-full"
+        />
+        <input
+          type="text"
+          placeholder="Area"
+          className="block w-[492px] text-xl border border-[#116A7B] mb-4 px-7 py-5 rounded-full"
+        />
+        <input
+          type="text"
+          placeholder="Price"
+          className="block w-[492px] text-xl border border-[#116A7B] mb-4 px-7 py-5 rounded-full"
+        />
+
         <div className="flex justify-start mt-5">
           <button
             onClick={(e) => {

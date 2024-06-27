@@ -2,7 +2,7 @@
 import dynamic from "next/dynamic";
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { updateBgColor, updateCurrentPageValue, updateNavbarLogo, updateNavbarTextColor } from "../redux/features/navbarSlice";
+import { updateBgColor, updateCurrentPageValue, updateNavbarLogo, updateNavbarTextColor, updateNotificationIconColor } from "../redux/features/navbarSlice";
 const MapPage = dynamic(() => import("../../components/map/map-page"), {
   ssr: false,
 });
@@ -18,6 +18,7 @@ const Page = () => {
       })
     );
     dispatch(updateNavbarLogo("/logo-bbh.png"));
+    dispatch(updateNotificationIconColor("text-white"))
     dispatch(
       updateCurrentPageValue({
         tag: "Map",

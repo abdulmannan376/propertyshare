@@ -522,21 +522,21 @@ const PropertyManagement = () => {
           }
           let res = null;
 
-          if (
-            deleteImageList.length ===
-              myProperties[propertyByIndex]?.imageCount &&
-            files.length === 0
-          ) {
-            res = await fetch(
-              `${process.env.NEXT_PUBLIC_SERVER_HOST}/property/delete-all-images-by-propertyID`,
-              {
-                method: "POST",
-                body: formData,
-              }
-            );
-          } else {
-          }
-
+          // if (
+          //   deleteImageList.length ===
+          //     myProperties[propertyByIndex]?.imageCount &&
+          //   files.length === 0
+          // ) {
+          //   res = await fetch(
+          //     `${process.env.NEXT_PUBLIC_SERVER_HOST}/property/delete-all-images-by-propertyID`,
+          //     {
+          //       method: "POST",
+          //       body: formData,
+          //     }
+          //   );
+          // } else {
+          // }
+          // console.log(formData.get("propertyID"))
           res = await fetch(
             `${process.env.NEXT_PUBLIC_SERVER_HOST}/property/upload-property-images`,
             {

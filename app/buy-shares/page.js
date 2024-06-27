@@ -29,7 +29,7 @@ const Page = () => {
         hoverTextColor: "text-white",
       })
     );
-    dispatch(updateNavbarLogo("/logo-bbh.png"));
+    dispatch(updateNavbarLogo("/white-icon-bbh.png"));
     dispatch(updateBgColor("bg-[#116A7B]"));
     dispatch(updateNotificationIconColor("text-white"));
     dispatch(

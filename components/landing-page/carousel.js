@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { IoIosSearch, IoMdClose } from "react-icons/io";
 import { IoFilterOutline } from "react-icons/io5";
 import { FaAngleDown } from "react-icons/fa";
@@ -33,7 +33,7 @@ const Carousel = () => {
     );
 
     dispatch(updateNavbarLogo("/icon-bbh.png"));
-    dispatch(updateBgColor("bg-transparent"))
+    dispatch(updateBgColor("bg-transparent"));
     dispatch(updateNotificationIconColor("text-white"));
     dispatch(
       updateCurrentPageValue({
@@ -137,6 +137,40 @@ const Carousel = () => {
     setShowFilterBox(!showFilterBox);
   };
 
+  const carouselRef = useRef();
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        // Trigger updates to state based on the intersection ratio
+        // If less than 85% of the item is visible, we assume 15% is out of view
+        if (entry.intersectionRatio < 0.85) {
+          console.log(entry.intersectionRatio, "in if");
+          dispatch(updateBgColor("bg-white"));
+          dispatch(updateNotificationIconColor("text-[#116A7B]"));
+        } else {
+          console.log(entry.intersectionRatio, "in else");
+          dispatch(updateNotificationIconColor("text-white"));
+          dispatch(updateBgColor("bg-transparent"));
+        }
+      },
+      {
+        root: null, // using the viewport as the root
+        threshold: 0.85, // trigger when 85% of the element is in view
+      }
+    );
+
+    if (carouselRef.current) {
+      observer.observe(carouselRef.current);
+    }
+
+    return () => {
+      if (carouselRef.current) {
+        observer.unobserve(carouselRef.current);
+      }
+    };
+  }, []);
+
   const handleBuySharesClick = () => {};
   return (
     <div
@@ -148,6 +182,7 @@ const Carousel = () => {
       }}
       className="w-full h-screen flex flex-row items-center justify-start bg-cover bg-center xl:px-24 px-16"
       style={{ backgroundImage: "url('/assets/landing-page/carousel-bg.svg')" }}
+      ref={carouselRef}
     >
       <div className="mr-10">
         <Image
@@ -494,13 +529,13 @@ const Carousel = () => {
         )}
         <div className="flex flex-row space-x-5">
           <Link href={"/buy-shares"}>
-          <button
-            type="button"
-            onClick={() => handleBuySharesClick()}
-            className="bg-[#CDC2AE] bg-opacity-40 border border-[#F5F5F5] uppercase px-5 text-[#676767] py-1 rounded-full mt-6"
-          >
-            Buy
-          </button>
+            <button
+              type="button"
+              onClick={() => handleBuySharesClick()}
+              className="bg-[#CDC2AE] bg-opacity-40 border border-[#F5F5F5] uppercase px-5 text-[#676767] py-1 rounded-full mt-6"
+            >
+              Buy
+            </button>
           </Link>
           <Link href={"/under-development"}>
             <button

@@ -30,9 +30,10 @@ import { Pagination, Navigation } from "swiper/modules";
 
 import "swiper/css";
 import "swiper/css/pagination";
-import 'swiper/css/navigation';
+import "swiper/css/navigation";
 import BuyShare from "@/components/modals/buyShare";
 import BuyShareModal from "@/components/modals/buyShare";
+import ThreadDisplay from "@/components/buy-shares/threadComponent";
 
 const Page = () => {
   const dispatch = useDispatch();
@@ -147,8 +148,8 @@ const Page = () => {
                   modules={[Pagination, Navigation]}
                   slidesPerView={1}
                   navigation={{
-                    nextEl: '.swiper-button-next', // Define next button class
-                    prevEl: '.swiper-button-prev', // Define prev button class
+                    nextEl: ".swiper-button-next", // Define next button class
+                    prevEl: ".swiper-button-prev", // Define prev button class
                   }}
                   pagination={{
                     clickable: true,
@@ -586,6 +587,7 @@ const Page = () => {
                 />
               </>
             )}
+            {activeNavBtn === "Rent" && <ThreadDisplay propertyID={propertyID}/>}
           </div>
         </div>
       )}
