@@ -398,7 +398,7 @@ const PropertyManagement = () => {
             newData.push(response.body);
             return newData;
           });
-          setPropertyByIndex(myProperties.length - 1);
+          setPropertyByIndex(myProperties.length);
         } else {
           throw new Error(response.message);
         }
@@ -1704,19 +1704,27 @@ const PropertyManagement = () => {
               <div className="w-full flex flex-row items-center pb-8">
                 <h1 className="text-2xl font-medium">Upload Images</h1>
               </div>
-              <div className="mb-6 ml-6 flex flex-col">
-                <label htmlFor="yearBuilt" className="text-[#676767]">
-                  Max 10, {`supported formats: .png`}
-                </label>
-                <input
-                  type="file"
-                  multiple
-                  accept="image/png"
-                  required={true}
-                  onChange={({ target }) => setFiles(target.files)}
-                  className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
-                />
-                {true && (
+              <div
+                className={`mb-6 ml-6 flex ${
+                  myProperties[propertyByIndex]?.imageCount > 0
+                    ? "flex-col"
+                    : "flex-row"
+                } `}
+              >
+                <div className="flex flex-col">
+                  <label htmlFor="propertyImages" className="text-[#676767]">
+                    Max 10, {`supported formats: .png`}
+                  </label>
+                  <input
+                    type="file"
+                    multiple
+                    accept="image/png"
+                    required={true}
+                    onChange={({ target }) => setFiles(target.files)}
+                    className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                  />
+                </div>
+                {myProperties[propertyByIndex]?.imageCount > 0 ? (
                   <div
                     className="relative flex flex-row gap-x-3 overflow-y-visible overflow-x-auto my-5"
                     style={{ maxWidth: "fit" }}
@@ -1779,6 +1787,14 @@ const PropertyManagement = () => {
                         </button>
                       )
                     )}
+                  </div>
+                ) : (
+                  <div className="mb-6 ml-6 flex flex-col">
+                    <input
+                      type="button"
+                      name="noName"
+                      className="w-[620px] bg-transparent outline-none px-5 py-2 mt-3 rounded-full"
+                    />
                   </div>
                 )}
               </div>
