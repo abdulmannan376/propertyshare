@@ -587,7 +587,20 @@ const Page = () => {
                 />
               </>
             )}
-            {activeNavBtn === "Rent" && <ThreadDisplay propertyID={propertyID}/>}
+            {activeNavBtn === "Rent" && (
+              <ThreadDisplay
+                propertyID={propertyID}
+                propertyDocID={property._id}
+                category={"Rent"}
+              />
+            )}
+            {activeNavBtn === "Sell" && (
+              <ThreadDisplay
+                propertyID={propertyID}
+                propertyDocID={property._id}
+                category={"Sell"}
+              />
+            )}
           </div>
         </div>
       )}

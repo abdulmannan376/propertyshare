@@ -64,11 +64,30 @@ const Modal = ({ isOpen, onClose, onSave, coordinates }) => {
           onChange={(e) => setContact(e.target.value)}
           className="block w-[492px] text-xl border border-[#116A7B] mb-4 px-7 py-5 rounded-full"
         />
-        <input
-          type="text"
-          placeholder="Property Type"
-          className="block w-[492px] text-xl border border-[#116A7B] mb-4 px-7 py-5 rounded-full"
-        />
+        <div>
+          {/* <h2 className="text-2xl text-[#116A7B]">Duration:</h2> */}
+          <select
+            name="property types"
+            value={selectedPropertyType}
+            onChange={({ target }) => {
+              if (target.value == "Select") {
+                setSelectedPropertyType("");
+              } else {
+                setSelectedPropertyType(target.value);
+              }
+            }}
+            className="block w-[492px] text-xl border border-[#116A7B] mb-4 px-7 py-5 rounded-full"
+          >
+            <option value="Select">Select Property Type</option>
+            {propertyTypes.map((type, index) => {
+              return (
+                <option key={index} value={type}>
+                  {type}
+                </option>
+              );
+            })}
+          </select>
+        </div>
         <input
           type="text"
           placeholder="Area"
