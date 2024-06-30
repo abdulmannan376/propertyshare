@@ -13,20 +13,20 @@ const Page = () => {
   useEffect(() => {
     dispatch(
       updateNavbarTextColor({
-        textColor: "text-white",
-        hoverTextColor: "text-white",
+        textColor: "text-[#116A7B]",
+        hoverTextColor: "text-[#116A7B]",
       })
     );
     dispatch(updateNavbarLogo("/logo-bbh.png"));
-    dispatch(updateNotificationIconColor("text-white"))
+    dispatch(updateNotificationIconColor("text-[#116A7B]"))
     dispatch(
       updateCurrentPageValue({
         tag: "Map",
-        bgColor: "bg-white",
-        textColor: "text-[#116A7B]",
+        bgColor: "bg-[#116A7B]",
+        textColor: "text-white",
       })
     );
-    dispatch(updateBgColor("bg-[#116A7B]"));
+    dispatch(updateBgColor("bg-white"));
   }, []);
 
   return <MapPage />;

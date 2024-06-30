@@ -594,7 +594,7 @@ const Page = () => {
       {featuredProperties.length === 0 &&
         mostViewedProperties.length === 0 &&
         recentlyAddedProperties.length === 0 && (
-          <div className="my-20">
+          <div className="my-20 h-screen">
             <h1 className="xl:text-[4rem] text-4xl text-center text-[#116A7B] font-semibold">
               No properties yet.
             </h1>

@@ -155,7 +155,7 @@ const MapPage = () => {
           contact: data.contact,
           lat: data.coordinates.lat,
           long: data.coordinates.long,
-          propertyType: data.propertyType,
+          propertyType: data.selectedPropertyType,
           areaRange: data.areaRange,
           priceRange: data.priceRange
         }),

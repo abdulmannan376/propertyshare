@@ -2,6 +2,7 @@
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import {
+  updateBgColor,
   updateCurrentPageValue,
   updateNavbarLogo,
   updateNavbarTextColor,
@@ -27,6 +28,7 @@ const Page = () => {
         textColor: "text-white",
       })
     );
+    dispatch(updateBgColor("bg-white"));
   }, []);
   return (
     <>

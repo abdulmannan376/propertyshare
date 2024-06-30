@@ -3,6 +3,7 @@ import SectionContact from "@/components/landing-page/section-contactus";
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import {
+  updateBgColor,
   updateCurrentPageValue,
   updateNavbarLogo,
   updateNavbarTextColor,

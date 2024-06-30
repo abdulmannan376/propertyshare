@@ -22,50 +22,88 @@ const Modal = ({ isOpen, onClose, onSave, coordinates }) => {
     "Single family home",
   ];
 
-  const areaMin = ["0", "50", "100", "150", "200", "250", "300"];
-  const areaMax = ["50", "100", "150", "200", "250", "300", "Any"];
+  const areaMin = ["MIN (sqmt)", "0", "50", "100", "150", "200", "250", "300"];
+  const areaMax = [
+    "MAX (sqmt)",
+    "50",
+    "100",
+    "150",
+    "200",
+    "250",
+    "300",
+    "Any",
+  ];
 
-  const priceMin = ["0", "300", "600", "900"];
-  const priceMax = ["300", "600", "900", "Any"];
+  const priceMin = ["MIN", "0", "300", "600", "900"];
+  const priceMax = ["MAX", "300", "600", "900", "Any"];
 
   const handleSubmit = () => {
-    onSave({ name, email, contact, coordinates });
+    onSave({
+      name,
+      email,
+      contact,
+      coordinates,
+      areaRange,
+      priceRange,
+      selectedPropertyType,
+    });
     onClose(); // Close modal after saving
   };
 
   return isOpen ? (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[1000]">
       <div className="bg-white border-2 border-[#116A7B] p-8 rounded-3xl shadow-lg max-w-[550px] w-full">
-        <h2 className="text-3xl text-center font-semibold uppercase">
+        <h2 className="text-2xl text-center font-semibold uppercase">
           Notify me when available
         </h2>
-        <p className="text-base text-center mt-3 mb-10">
+        <p className="text-xl text-center mt-3 mb-10">
           We&apos;ll notify you when a property is listed within 5km of this
           area.
         </p>
-        <input
-          type="text"
-          placeholder="Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          className="block w-[492px] text-xl border border-[#116A7B] mb-4 px-7 py-5 rounded-full"
-        />
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="block w-[492px] text-xl border border-[#116A7B] mb-4 px-7 py-5 rounded-full"
-        />
-        <input
-          type="text"
-          placeholder="Contact"
-          value={contact}
-          onChange={(e) => setContact(e.target.value)}
-          className="block w-[492px] text-xl border border-[#116A7B] mb-4 px-7 py-5 rounded-full"
-        />
+        <div className="relative">
+          <label htmlFor="Name" className="text-xl text-[#116A7B] mx-7">
+            Name
+          </label>
+          <input
+            type="text"
+            placeholder="Enter name..."
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="block w-[492px] text-xl border border-[#116A7B] mb-4 px-7 py-3 rounded-full"
+          />
+          <span className="absolute inset-y-11 right-0 px-5 text-lg text-red-600 font-semibold focus:outline-none cursor-pointer">
+            *
+          </span>
+        </div>
+        <div className="relative">
+          <label htmlFor="Email" className="text-xl text-[#116A7B] mx-7">
+            Email
+          </label>
+          <input
+            type="email"
+            placeholder="Enter email..."
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="block w-[492px] text-xl border border-[#116A7B] mb-4 px-7 py-3 rounded-full"
+          />
+          <span className="absolute inset-y-11 right-0 px-5 text-lg text-red-600 font-semibold focus:outline-none cursor-pointer">
+            *
+          </span>
+        </div>
+        <div className="relative">
+          <label htmlFor="Contact" className="text-xl text-[#116A7B] mx-7">
+            Contact
+          </label>
+          <input
+            type="text"
+            placeholder="Enter Contact..."
+            value={contact}
+            onChange={(e) => setContact(e.target.value)}
+            className="block w-[492px] text-xl border border-[#116A7B] mb-4 px-7 py-3 rounded-full"
+          />
+        </div>
         <div>
-          {/* <h2 className="text-2xl text-[#116A7B]">Duration:</h2> */}
+          <h2 className="text-xl text-[#116A7B] mx-7">Property Type</h2>
           <select
             name="property types"
             value={selectedPropertyType}
@@ -76,9 +114,9 @@ const Modal = ({ isOpen, onClose, onSave, coordinates }) => {
                 setSelectedPropertyType(target.value);
               }
             }}
-            className="block w-[492px] text-xl border border-[#116A7B] mb-4 px-7 py-5 rounded-full"
+            className="block w-[492px] text-xl border border-[#116A7B] mb-4 px-7 py-3 rounded-full outline-none"
           >
-            <option value="Select">Select Property Type</option>
+            {/* <option value="Select">Select Property Type</option> */}
             {propertyTypes.map((type, index) => {
               return (
                 <option key={index} value={type}>
@@ -88,17 +126,138 @@ const Modal = ({ isOpen, onClose, onSave, coordinates }) => {
             })}
           </select>
         </div>
-        <input
-          type="text"
-          placeholder="Area"
-          className="block w-[492px] text-xl border border-[#116A7B] mb-4 px-7 py-5 rounded-full"
-        />
-        <input
-          type="text"
-          placeholder="Price"
-          className="block w-[492px] text-xl border border-[#116A7B] mb-4 px-7 py-5 rounded-full"
-        />
-
+        <div className="flex flex-row">
+          <div>
+            <h2 className="text-xl text-[#116A7B] mx-7">Area</h2>
+            <select
+              name="area range"
+              value={areaRange[0]}
+              onChange={({ target }) => {
+                if (target.value == "MIN (sqmt)") {
+                  setAreaRange((prevData) => {
+                    const newData = [...prevData];
+                    newData[0] = "";
+                    return newData;
+                  });
+                } else {
+                  setAreaRange((prevData) => {
+                    const newData = [...prevData];
+                    newData[0] = target.value;
+                    return newData;
+                  });
+                }
+              }}
+              className="block w-[242px] text-xl border border-[#116A7B] mb-4 px-7 py-3 rounded-s-full outline-none"
+            >
+              {/* <option value="Select">Select Property Type</option> */}
+              {areaMin.map((type, index) => {
+                return (
+                  <option key={index} value={type}>
+                    {type}
+                  </option>
+                );
+              })}
+            </select>
+          </div>
+          <div className="ml-2">
+            <h2 className="text-xl text-[#116A7B] mx-7">&nbsp;</h2>
+            <select
+              name="area range"
+              value={areaRange[1]}
+              onChange={({ target }) => {
+                if (target.value == "MIN (sqmt)") {
+                  setAreaRange((prevData) => {
+                    const newData = [...prevData];
+                    newData[1] = "";
+                    return newData;
+                  });
+                } else {
+                  setAreaRange((prevData) => {
+                    const newData = [...prevData];
+                    newData[1] = target.value;
+                    return newData;
+                  });
+                }
+              }}
+              className="block w-[242px] text-xl border border-[#116A7B] mb-4 px-7 py-3 rounded-e-full outline-none"
+            >
+              {/* <option value="Select">Select Property Type</option> */}
+              {areaMax.map((type, index) => {
+                return (
+                  <option key={index} value={type}>
+                    {type}
+                  </option>
+                );
+              })}
+            </select>
+          </div>
+        </div>
+        <div className="flex flex-row">
+          <div className="">
+            <h2 className="text-xl text-[#116A7B] mx-7">Price</h2>
+            <select
+              name="price range"
+              value={priceRange[0]}
+              onChange={({ target }) => {
+                if (target.value == "MIN") {
+                  setPriceRange((prevData) => {
+                    const newData = [...prevData];
+                    newData[0] = "";
+                    return newData;
+                  });
+                } else {
+                  setPriceRange((prevData) => {
+                    const newData = [...prevData];
+                    newData[0] = target.value;
+                    return newData;
+                  });
+                }
+              }}
+              className="block w-[242px] text-xl border border-[#116A7B] mb-4 px-7 py-3 rounded-s-full outline-none"
+            >
+              {/* <option value="Select">Select Property Type</option> */}
+              {priceMin.map((type, index) => {
+                return (
+                  <option key={index} value={type}>
+                    {type}
+                  </option>
+                );
+              })}
+            </select>
+          </div>
+          <div className="ml-2">
+            <h2 className="text-xl text-[#116A7B] mx-7">&nbsp;</h2>
+            <select
+              name="price range"
+              value={priceRange[1]}
+              onChange={({ target }) => {
+                if (target.value == "MIN") {
+                  setPriceRange((prevData) => {
+                    const newData = [...prevData];
+                    newData[1] = "";
+                    return newData;
+                  });
+                } else {
+                  setPriceRange((prevData) => {
+                    const newData = [...prevData];
+                    newData[1] = target.value;
+                    return newData;
+                  });
+                }
+              }}
+              className="block w-[242px] text-xl border border-[#116A7B] mb-4 px-7 py-3 rounded-e-full outline-none"
+            >
+              {/* <option value="Select">Select Property Type</option> */}
+              {priceMax.map((type, index) => {
+                return (
+                  <option key={index} value={type}>
+                    {type}
+                  </option>
+                );
+              })}
+            </select>
+          </div>
+        </div>
         <div className="flex justify-start mt-5">
           <button
             onClick={(e) => {
