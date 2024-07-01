@@ -121,17 +121,22 @@ const PropertyManagement = () => {
       setSelectedPropertyType(property.propertyType);
       setSelectedNumOfBeds(property.beds);
       setSelectedNumOfBaths(property.baths);
-      setHouseNumber(property.addressOfProperty.houseNumber);
-      setStreetNumber(property.addressOfProperty.streetNumber);
-      const country = compCities.getCountryByShort(
-        property.addressOfProperty.country
-      );
-      country.shortName = property.addressOfProperty.country;
-      setSelectedCountry(country);
-      setSelectedState(property.addressOfProperty.state);
-      setSelectedCity(property.addressOfProperty.city);
-      setZipCode(property.addressOfProperty.zipCode);
-      setFullAddress(property.addressOfProperty.addressInString);
+      if (
+        property.addressOfProperty.country &&
+        property.addressOfProperty.country.length > 0
+      ) {
+        setHouseNumber(property.addressOfProperty.houseNumber);
+        setStreetNumber(property.addressOfProperty.streetNumber);
+        const country = compCities.getCountryByShort(
+          property.addressOfProperty.country
+        );
+        country.shortName = property.addressOfProperty.country;
+        setSelectedCountry(country);
+        setSelectedState(property.addressOfProperty.state);
+        setSelectedCity(property.addressOfProperty.city);
+        setZipCode(property.addressOfProperty.zipCode);
+        setFullAddress(property.addressOfProperty.addressInString);
+      }
       setCoordinates({
         lat: property.location.coordinates[1],
         long: property.location.coordinates[0],

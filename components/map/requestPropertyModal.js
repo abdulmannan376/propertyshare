@@ -22,9 +22,9 @@ const Modal = ({ isOpen, onClose, onSave, coordinates }) => {
     "Single family home",
   ];
 
-  const areaMin = ["MIN (sqmt)", "0", "50", "100", "150", "200", "250", "300"];
+  const areaMin = ["MIN", "0", "50", "100", "150", "200", "250", "300"];
   const areaMax = [
-    "MAX (sqmt)",
+    "MAX",
     "50",
     "100",
     "150",
@@ -128,12 +128,12 @@ const Modal = ({ isOpen, onClose, onSave, coordinates }) => {
         </div>
         <div className="flex flex-row">
           <div>
-            <h2 className="text-xl text-[#116A7B] mx-7">Area</h2>
+            <h2 className="text-xl text-[#116A7B] mx-7">Area (sqmt)</h2>
             <select
               name="area range"
               value={areaRange[0]}
               onChange={({ target }) => {
-                if (target.value == "MIN (sqmt)") {
+                if (target.value == "MIN") {
                   setAreaRange((prevData) => {
                     const newData = [...prevData];
                     newData[0] = "";
@@ -165,7 +165,7 @@ const Modal = ({ isOpen, onClose, onSave, coordinates }) => {
               name="area range"
               value={areaRange[1]}
               onChange={({ target }) => {
-                if (target.value == "MIN (sqmt)") {
+                if (target.value == "MAX") {
                   setAreaRange((prevData) => {
                     const newData = [...prevData];
                     newData[1] = "";
@@ -194,7 +194,7 @@ const Modal = ({ isOpen, onClose, onSave, coordinates }) => {
         </div>
         <div className="flex flex-row">
           <div className="">
-            <h2 className="text-xl text-[#116A7B] mx-7">Price</h2>
+            <h2 className="text-xl text-[#116A7B] mx-7">Price ($)</h2>
             <select
               name="price range"
               value={priceRange[0]}
