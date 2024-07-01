@@ -1,5 +1,9 @@
 "use client";
-import { updateBgColor, updateCurrentPageValue, updateNavbarTextColor } from "@/app/redux/features/navbarSlice";
+import {
+  updateBgColor,
+  updateCurrentPageValue,
+  updateNavbarTextColor,
+} from "@/app/redux/features/navbarSlice";
 import {
   handleUserProfileSettingNavigation,
   handleUserSettingNavigation,
@@ -25,7 +29,7 @@ const Page = () => {
         textColor: "text-[#116A7B]",
       })
     );
-    dispatch(updateBgColor("bg-"));
+    dispatch(updateBgColor("bg-[#116A7B]"));
   }, []);
 
   const settingActiveTab = useSelector(

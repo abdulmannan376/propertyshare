@@ -333,7 +333,7 @@ const Page = () => {
                       height={1000}
                       src={
                         card.imageCount > 0
-                          ? `http://89.22.120.46:9000/uploads/${
+                          ? `${process.env.NEXT_PUBLIC_SERVER_HOST}/uploads/${
                               card.propertyID
                             }/image-${
                               card.pinnedImageIndex === -1
@@ -434,7 +434,7 @@ const Page = () => {
                       height={1000}
                       src={
                         card.imageCount > 0
-                          ? `http://89.22.120.46:9000/uploads/${
+                          ? `${process.env.NEXT_PUBLIC_SERVER_HOST}/uploads/${
                               card.propertyID
                             }/image-${
                               card.pinnedImageIndex === -1
@@ -535,7 +535,13 @@ const Page = () => {
                       height={1000}
                       src={
                         card.imageCount > 0
-                          ? `${process.env.NEXT_PUBLIC_SERVER_HOST}/uploads/${card.propertyID}/image-1.png`
+                          ? `${process.env.NEXT_PUBLIC_SERVER_HOST}/uploads/${
+                              card.propertyID
+                            }/image-${
+                              card.pinnedImageIndex === -1
+                                ? "1"
+                                : `${card.pinnedImageIndex}`
+                            }.png`
                           : "/assets/user/property-management/no-image.jpg"
                       }
                       className={`w-[20rem] h-[19rem] object-cover object-center rounded-md overflow-hidden`}

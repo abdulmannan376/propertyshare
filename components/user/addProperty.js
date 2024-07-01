@@ -144,6 +144,7 @@ const PropertyManagement = () => {
       setStartDate(property.startDurationFrom.split("T")[0]);
       setIsAddPropertyClicked(true);
       setPropertyByIndex(index);
+      setPinnedImage(property.pinnedImageIndex);
       console.log("length: ", Object.keys(property.amenitiesID)?.length);
       if (Object.keys(property.amenitiesID)?.length > 2) {
         const amenities = property.amenitiesID;
@@ -233,6 +234,9 @@ const PropertyManagement = () => {
         { name: "healthAndRecreational", tagsByName: [], tags: [] },
         { name: "nearbyFacilitiesAndLocations", tagsByName: [], tags: [] },
       ]);
+
+      setPinnedImage(-1);
+      setDeleteImageList([]);
     }
   };
 
