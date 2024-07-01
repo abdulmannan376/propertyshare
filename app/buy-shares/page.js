@@ -388,11 +388,15 @@ const Page = () => {
                     </h3>
                     <h4 className="text-xl flex items-start text-[#116A7B]">
                       <FiMapPin className="inline-flex mt-1 mr-1" />{" "}
-                      {card.addressOfProperty.city},{" "}
-                      {
+                      {card.addressOfProperty.city
+                        ? card.addressOfProperty.city
+                        : ""}
+                      ,{" "}
+                      {card.addressOfProperty.country?
                         compCities.getCountryByShort(
                           card.addressOfProperty.country
-                        ).name
+                        ).name:
+                        ""
                       }
                     </h4>
                   </div>
@@ -480,11 +484,15 @@ const Page = () => {
                     </h3>
                     <h4 className="text-xl flex items-start text-[#116A7B]">
                       <FiMapPin className="inline-flex mt-1 mr-1" />{" "}
-                      {card.addressOfProperty.city},{" "}
-                      {
+                      {card.addressOfProperty.city
+                        ? card.addressOfProperty.city
+                        : ""}
+                      ,{" "}
+                      {card.addressOfProperty.country?
                         compCities.getCountryByShort(
                           card.addressOfProperty.country
-                        ).name
+                        ).name:
+                        ""
                       }
                     </h4>
                   </div>
@@ -572,11 +580,15 @@ const Page = () => {
                     </h3>
                     <h4 className="text-xl flex items-start text-[#116A7B]">
                       <FiMapPin className="inline-flex mt-1 mr-1" />{" "}
-                      {card.addressOfProperty.city},{" "}
-                      {
+                      {card.addressOfProperty.city
+                        ? card.addressOfProperty.city
+                        : ""}
+                      ,{" "}
+                      {card.addressOfProperty.country?
                         compCities.getCountryByShort(
                           card.addressOfProperty.country
-                        ).name
+                        ).name:
+                        ""
                       }
                     </h4>
                   </div>
