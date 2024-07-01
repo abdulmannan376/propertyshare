@@ -32,8 +32,8 @@ const Page = () => {
     dispatch(
       updateCurrentPageValue({
         tag: "Dashboard",
-        bgColor: "bg-[#116A7B]",
-        textColor: "text-white",
+        bgColor: "bg-white",
+        textColor: "text-[#116A7B]",
       })
     );
 

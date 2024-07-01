@@ -146,8 +146,8 @@ const Carousel = () => {
         // If less than 85% of the item is visible, we assume 15% is out of view
         if (entry.intersectionRatio < 0.85) {
           console.log(entry.intersectionRatio, "in if");
-          dispatch(updateBgColor("bg-white"));
-          dispatch(updateNotificationIconColor("text-[#116A7B]"));
+          dispatch(updateBgColor("bg-[#116A7B]"));
+          dispatch(updateNotificationIconColor("text-white"));
         } else {
           console.log(entry.intersectionRatio, "in else");
           dispatch(updateNotificationIconColor("text-white"));

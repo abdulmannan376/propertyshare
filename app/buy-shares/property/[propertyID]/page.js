@@ -41,18 +41,18 @@ const Page = () => {
   useEffect(() => {
     dispatch(
       updateNavbarTextColor({
-        textColor: "text-[#116A7B]",
-        hoverTextColor: "text-[#116A7B]",
+        textColor: "text-white",
+        hoverTextColor: "text-white",
       })
     );
 
-    dispatch(updateNotificationIconColor("text-[#116A7B]"));
-    dispatch(updateBgColor("bg-white"));
+    dispatch(updateNotificationIconColor("text-white"));
+    dispatch(updateBgColor("bg-[#116A7B]"));
     dispatch(
       updateCurrentPageValue({
         tag: "Buy Shares",
-        bgColor: "bg-[#116A7B]",
-        textColor: "text-white",
+        bgColor: "bg-white",
+        textColor: "text-[#116A7B]",
       })
     );
   }, []);
@@ -140,7 +140,7 @@ const Page = () => {
       <div className="w-full h-20 bg-white"></div>
       {propertyFetched && (
         <div className="xl:mx-24 mx-16 ">
-          <div>
+          <div className="my-10">
             {property.imageCount > 0 ? (
               <div className="swiper-container">
                 {/* Swiper component */}

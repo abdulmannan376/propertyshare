@@ -15,8 +15,8 @@ const Page = () => {
   useEffect(() => {
     dispatch(
       updateNavbarTextColor({
-        textColor: "text-[#116A7B]",
-        hoverTextColor: "text-[#116A7B]",
+        textColor: "text-white",
+        hoverTextColor: "text-white",
       })
     );
     dispatch(updateNavbarLogo("/logo-bbh.png"));
@@ -24,11 +24,11 @@ const Page = () => {
     dispatch(
       updateCurrentPageValue({
         tag: "Privacy",
-        bgColor: "bg-[#116A7B]",
-        textColor: "text-white",
+        bgColor: "bg-white",
+        textColor: "text-[#116A7B]",
       })
     );
-    dispatch(updateBgColor("bg-white"));
+    dispatch(updateBgColor("bg-[#116A7B]"));
   }, []);
   return (
     <div className="bg-[#CDC2AE] bg-opacity-5 py-32">

@@ -19,12 +19,12 @@ const Page = () => {
   useEffect(() => {
     dispatch(
       updateNavbarTextColor({
-        textColor: "text-[#116A7B]",
-        hoverTextColor: "text-[#116A7B]",
+        textColor: "text-white",
+        hoverTextColor: "text-white",
       })
     );
     dispatch(updateNavbarLogo("/logo-bbh.png"));
-    dispatch(updateNotificationIconColor("text-[#116A7B]"));
+    dispatch(updateNotificationIconColor("text-white"));
     dispatch(
       updateCurrentPageValue({
         tag: "Map",

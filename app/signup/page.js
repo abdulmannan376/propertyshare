@@ -7,7 +7,10 @@ import React, { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { updateBgColor, updateNavbarTextColor } from "../redux/features/navbarSlice";
+import {
+  updateBgColor,
+  updateNavbarTextColor,
+} from "../redux/features/navbarSlice";
 
 const Page = () => {
   const dispatch = useDispatch();
@@ -17,6 +20,13 @@ const Page = () => {
       updateNavbarTextColor({
         textColor: "text-white",
         hoverTextColor: "text-white",
+      })
+    );
+    dispatch(
+      updateCurrentPageValue({
+        tag: "Login",
+        bgColor: "bg-[#116A7B]",
+        textColor: "text-white",
       })
     );
     dispatch(updateBgColor("bg-transparent"));
