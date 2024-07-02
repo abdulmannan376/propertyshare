@@ -24,7 +24,7 @@ const BuyShareModal = ({
     const fetchPropertyShares = async () => {
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_SERVER_HOST}/share/get-shares-by-property/${propertyDocID}`,
+          `${process.env.NEXT_PUBLIC_SERVER_HOST}/share/get-shares-by-property/${propertyDocID}/Listed`,
           {
             method: "GET",
             headers: {

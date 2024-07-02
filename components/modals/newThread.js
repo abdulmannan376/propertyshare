@@ -19,7 +19,7 @@ const NewThread = ({
     const fetchPropertyShares = async () => {
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_SERVER_HOST}/share/get-shares-by-property/${propertyDocID}`,
+          `${process.env.NEXT_PUBLIC_SERVER_HOST}/share/get-shares-by-property/${propertyDocID}/Purchased`,
           {
             method: "GET",
             headers: {
@@ -177,7 +177,8 @@ const NewThread = ({
               const startDate = new Date(share.availableInDuration.startDate);
               const endDate = new Date(share.availableInDuration.endDate);
               return (
-                share.utilisedStatus === "Listed" && (
+                share.currentOwnerDocID.username ===
+                  JSON.parse(localStorage.getItem("userDetails")).username && (
                   <option key={index} value={share.shareID}>
                     {index + 1}: {startDate.toISOString().split("T")[0]} -{" "}
                     {endDate.toISOString().split("T")[0]}

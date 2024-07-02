@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import { toast } from "react-toastify";
 import NewThread from "../modals/newThread";
+import { useSelector } from "react-redux";
 
 const Thread = ({ thread, isFirstLevel, threadIndex, handleFetchChildren }) => {
   return (
@@ -41,10 +42,14 @@ const ThreadDisplay = ({ propertyID, propertyDocID, category }) => {
   const handleCloseModal = () => setModalOpen(false);
   const [threads, setThreads] = useState([]);
 
+  const userRole = useSelector(state => state.adminSliceReducer.userRole)
+
   const fetchThreads = async () => {
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_SERVER_HOST}/thread/get-all-by-property/${JSON.stringify({
+        `${
+          process.env.NEXT_PUBLIC_SERVER_HOST
+        }/thread/get-all-by-property/${JSON.stringify({
           propertyID: propertyID,
           category: category,
         })}`,
@@ -83,6 +88,7 @@ const ThreadDisplay = ({ propertyID, propertyDocID, category }) => {
   }, [newThreadSubmitted]);
 
   const handleFetchChildren = async (threadID, threadIndex) => {
+    console.log("role: ", userRole, typeof userRole, userRole === "admin");
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_SERVER_HOST}/thread/get-childern-by-parent/${threadID}`,
@@ -128,16 +134,19 @@ const ThreadDisplay = ({ propertyID, propertyDocID, category }) => {
 
   return (
     <>
-      <div>
-        <button
-          type="button"
-          onClick={handleOpenModal}
-          className="text-3xl flex flex-row items-center px-3 py-1 border border-[#116A7B] text-[#116A7B] rounded-full"
-        >
-          {" "}
-          New <FaPlus className="text-xl ml-5" />
-        </button>
-      </div>
+      {userRole === "shareholder" ||
+        userRole === "admin" && (
+          <div>
+            <button
+              type="button"
+              onClick={handleOpenModal}
+              className="text-3xl flex flex-row items-center px-3 py-1 border border-[#116A7B] text-[#116A7B] rounded-full"
+            >
+              {" "}
+              New <FaPlus className="text-xl ml-5" />
+            </button>
+          </div>
+        )}
       <NewThread
         isOpen={isModalOpen}
         onClose={handleCloseModal}
