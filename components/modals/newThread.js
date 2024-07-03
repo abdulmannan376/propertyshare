@@ -51,8 +51,6 @@ const NewThread = ({
     fetchPropertyShares();
   }, [isOpen, propertyDocID]);
 
-  const [title, setTitle] = useState("");
-  const [body, setBody] = useState("");
   const [selectedShareID, setSelectedShareID] = useState("");
 
   const handleSubmit = async (e) => {
@@ -62,13 +60,9 @@ const NewThread = ({
       const data = {
         username: JSON.parse(localStorage.getItem("userDetails")).username,
         shareID: selectedShareID,
-        propertyID: propertyID,
-        category: category,
-        threadBody: body,
-        threadTitle: title,
       };
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_SERVER_HOST}/thread/create-root-thread`,
+        `${process.env.NEXT_PUBLIC_SERVER_HOST}/share/open-share-for-rent`,
         {
           method: "POST",
           headers: {
@@ -137,26 +131,8 @@ const NewThread = ({
     >
       <div className="relative flex flex-col items-center justify-between bg-white border border-[#116A7B] py-5 px-10 rounded-xl shadow-lg max-w-5xl w-full z-[5000]">
         <h1 className="text-3xl font-semibold text-[#116A7B]">
-          Start a new thread
+          Open share for Rent
         </h1>
-
-        <input
-          type="text"
-          name="threadTitle"
-          value={title}
-          onChange={({ target }) => setTitle(target.value)}
-          placeholder="Enter Title..."
-          className="w-96 border border-[#116A7B] text-[#676767] focus:border-[#015A6B] outline-none p-3 mt-7 rounded-full"
-        />
-
-        <input
-          type="text"
-          name="threadBody"
-          value={body}
-          onChange={({ target }) => setBody(target.value)}
-          placeholder="Enter Body..."
-          className="w-96 border border-[#116A7B] text-[#676767] focus:border-[#015A6B] outline-none p-3 mt-7 rounded-full"
-        />
 
         <div>
           {/* <h2 className="text-2xl text-[#116A7B]">Duration:</h2> */}
@@ -193,7 +169,7 @@ const NewThread = ({
             onClick={handleSubmit}
             className="bg-[#116A7B] text-white py-2 px-4 rounded  transition duration-150"
           >
-            Start Thread
+            Submit
           </button>
         </div>
       </div>
