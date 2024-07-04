@@ -277,11 +277,15 @@ const SectionMap = () => {
             {markers.map((data, index) => (
               <Marker
                 key={index}
-                position={[data.coordinates.lat, data.coordinates.long]}
+                position={[
+                  data.location.coordinates[1],
+                  data.location.coordinates[0],
+                ]}
                 icon={customFilterIcon}
               >
                 <Popup>
-                  Marker at {data.coordinates.lat}, {data.coordinates.long}
+                  Marker at {data.location.coordinates[1]},{" "}
+                  {data.location.coordinates[0]}
                 </Popup>
               </Marker>
             ))}
