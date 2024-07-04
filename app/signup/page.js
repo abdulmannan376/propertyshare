@@ -9,6 +9,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
   updateBgColor,
+  updateCurrentPageValue,
   updateNavbarTextColor,
 } from "../redux/features/navbarSlice";
 
@@ -24,7 +25,7 @@ const Page = () => {
     );
     dispatch(
       updateCurrentPageValue({
-        tag: "Login",
+        tag: "Signup",
         bgColor: "bg-[#116A7B]",
         textColor: "text-white",
       })
