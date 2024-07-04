@@ -201,7 +201,7 @@ const Navbar = () => {
               Buy Shares
             </Link>
             <Link
-              href={"/under-development"}
+              href={"/rent-shares"}
               className={`mr-12 hover:${hoverTextColor} ${
                 currentPage.tag === "Rent Shares"
                   ? `${currentPage.bgColor} ${currentPage.textColor}`

@@ -5,7 +5,7 @@ import {
   updateNavbarTextColor,
   updateNotificationIconColor,
 } from "@/app/redux/features/navbarSlice";
-import { updateActiveNavBtn } from "@/app/redux/features/propertyPageSlice";
+import { updateActiveBuyShareNavBtn } from "@/app/redux/features/propertyPageSlice";
 import Image from "next/image";
 import { useParams, useSearchParams } from "next/navigation";
 import React, { Suspense, useEffect, useState } from "react";
@@ -58,7 +58,7 @@ const Page = () => {
   }, []);
 
   const activeNavBtn = useSelector(
-    (state) => state.propertyPageSliceReducer.navBtnActive
+    (state) => state.propertyPageSliceReducer.navBtnBuyShareActive
   );
 
   const [isModalOpen, setModalOpen] = useState(false);
@@ -201,7 +201,9 @@ const Page = () => {
 
             <div className="w-screen flex items-center justify-start md:space-x-20 space-x-14 my-3 text-white text-2xl font-semibold">
               <button
-                onClick={() => dispatch(updateActiveNavBtn("Property Details"))}
+                onClick={() =>
+                  dispatch(updateActiveBuyShareNavBtn("Property Details"))
+                }
               >
                 <h1
                   className={`flex ${
@@ -214,7 +216,9 @@ const Page = () => {
                 </h1>
               </button>
               {/* <Link href={`${process.env.NEXT_PUBLIC_HOST}/chef`}> */}
-              <button onClick={() => dispatch(updateActiveNavBtn("Rent"))}>
+              <button
+                onClick={() => dispatch(updateActiveBuyShareNavBtn("Rent"))}
+              >
                 <h2
                   className={`flex ${
                     activeNavBtn === "Rent"
@@ -225,7 +229,9 @@ const Page = () => {
                   Rent
                 </h2>
               </button>
-              <button onClick={() => dispatch(updateActiveNavBtn("Sell"))}>
+              <button
+                onClick={() => dispatch(updateActiveBuyShareNavBtn("Sell"))}
+              >
                 <h2
                   className={`flex ${
                     activeNavBtn === "Sell"
@@ -236,7 +242,9 @@ const Page = () => {
                   Sell
                 </h2>
               </button>
-              <button onClick={() => dispatch(updateActiveNavBtn("Swap"))}>
+              <button
+                onClick={() => dispatch(updateActiveBuyShareNavBtn("Swap"))}
+              >
                 <h2
                   className={`flex ${
                     activeNavBtn === "Swap"

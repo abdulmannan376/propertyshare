@@ -18,6 +18,7 @@ import { FiMapPin } from "react-icons/fi";
 import compCities from "countrycitystatejson";
 import Link from "next/link";
 import { handleAllDropdownsActivity } from "../redux/features/buyShareSlice";
+import PropertyCard from "@/components/buy-shares/propertyCard";
 
 const Page = () => {
   const dispatch = useDispatch();
@@ -322,90 +323,7 @@ const Page = () => {
           {!isFeaturedPropertyLoading ? (
             <div className="xl:mx-24 mx-16 flex flex-row flex-wrap">
               {featuredProperties.map((card, cardIndex) => (
-                <Link
-                  href={`/buy-shares/property/${card.propertyID}`}
-                  key={cardIndex}
-                  className="w-[20rem] bg-white border-2 border-[#D9D9D9] rounded-xl mr-20 mt-20"
-                >
-                  <div className="p-2 relative">
-                    <Image
-                      width={1000}
-                      height={1000}
-                      src={
-                        card.imageCount > 0
-                          ? `${process.env.NEXT_PUBLIC_SERVER_HOST}/uploads/${
-                              card.propertyID
-                            }/image-${
-                              card.pinnedImageIndex === -1
-                                ? "1"
-                                : `${card.pinnedImageIndex}`
-                            }.png`
-                          : "/assets/user/property-management/no-image.jpg"
-                      }
-                      className={`w-[20rem] h-[19rem] object-cover object-center rounded-md overflow-hidden`}
-                      // alt={`${}`}
-                    />
-                    <span
-                      // onClick={() =>
-                      //   handleFavouriteList(
-                      //     slideIndex,
-                      //     cardIndex,
-                      //     !favourites[slideIndex][cardIndex]?.status
-                      //   )
-                      // }
-                      className="absolute inset-y-5 left-0 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer"
-                    >
-                      {/* {favourites[slideIndex][cardIndex]?.status ? (
-                  <FaHeart />
-                ) : (
-                  <FaRegHeart />
-                )} */}
-                    </span>
-                    <span className="absolute text-xs inset-y-5 right-0 px-5 text-[#116A7B] font-semibold focus:outline-none cursor-pointer">
-                      {" "}
-                      <VscEye className="inline-flex mb-[1px] mr-1 text-base" />
-                      {card.viewedCount}{" "}
-                    </span>
-                  </div>
-                  <div className="p-2 space-y-1">
-                    <TruncatingH1 text={card.title} />
-                    <h3 className="text-[#116A7B] font-semibold">
-                      {card.propertyType}
-                    </h3>
-                    <h2 className="text-sm text-[#116A7B]">
-                      <strong>
-                        {card?.amenities?.roomDetails?.inputs?.beds
-                          ? card?.amenities?.roomDetails?.inputs?.beds
-                          : "-"}
-                      </strong>{" "}
-                      bd{" "}
-                      <strong>
-                        {card?.amenities?.roomDetails?.inputs?.baths
-                          ? card?.amenities?.roomDetails?.inputs?.baths
-                          : "-"}
-                      </strong>{" "}
-                      ba <strong>{card.area}</strong> Sqft
-                    </h2>
-                    <h3 className="text-sm text-gray-300">
-                      <strong className="text-gray-900">
-                        {card.totalStakes - card.stakesOccupied}
-                      </strong>{" "}
-                      of {card.totalStakes} shares avi.
-                    </h3>
-                    <h4 className="text-xl flex items-start text-[#116A7B]">
-                      <FiMapPin className="inline-flex mt-1 mr-1" />{" "}
-                      {card.addressOfProperty.city
-                        ? card.addressOfProperty.city
-                        : ""}
-                      ,{" "}
-                      {card.addressOfProperty.country
-                        ? compCities.getCountryByShort(
-                            card.addressOfProperty.country
-                          ).name
-                        : ""}
-                    </h4>
-                  </div>
-                </Link>
+                <PropertyCard card={card} key={cardIndex} />
               ))}
             </div>
           ) : (
@@ -423,90 +341,7 @@ const Page = () => {
           {!isMostViewedLoading ? (
             <div className="xl:mx-24 mx-16 flex flex-row flex-wrap">
               {mostViewedProperties.map((card, cardIndex) => (
-                <Link
-                  href={`/buy-shares/property/${card.propertyID}`}
-                  key={cardIndex}
-                  className="w-[20rem] bg-white border-2 border-[#D9D9D9] rounded-xl mr-20 mt-20"
-                >
-                  <div className="p-2 relative">
-                    <Image
-                      width={1000}
-                      height={1000}
-                      src={
-                        card.imageCount > 0
-                          ? `${process.env.NEXT_PUBLIC_SERVER_HOST}/uploads/${
-                              card.propertyID
-                            }/image-${
-                              card.pinnedImageIndex === -1
-                                ? "1"
-                                : `${card.pinnedImageIndex}`
-                            }.png`
-                          : "/assets/user/property-management/no-image.jpg"
-                      }
-                      className={`w-[20rem] h-[19rem] object-cover object-center rounded-md overflow-hidden`}
-                      // alt={`${}`}
-                    />
-                    <span
-                      // onClick={() =>
-                      //   handleFavouriteList(
-                      //     slideIndex,
-                      //     cardIndex,
-                      //     !favourites[slideIndex][cardIndex]?.status
-                      //   )
-                      // }
-                      className="absolute inset-y-5 left-0 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer"
-                    >
-                      {/* {favourites[slideIndex][cardIndex]?.status ? (
-                  <FaHeart />
-                ) : (
-                  <FaRegHeart />
-                )} */}
-                    </span>
-                    <span className="absolute text-xs inset-y-5 right-0 px-5 text-[#116A7B] font-semibold focus:outline-none cursor-pointer">
-                      {" "}
-                      <VscEye className="inline-flex mb-[1px] mr-1 text-base" />
-                      {card.viewedCount}{" "}
-                    </span>
-                  </div>
-                  <div className="p-2 space-y-1">
-                    <TruncatingH1 text={card.title} />
-                    <h3 className="text-[#116A7B] font-semibold">
-                      {card.propertyType}
-                    </h3>
-                    <h2 className="text-sm text-[#116A7B]">
-                      <strong>
-                        {card?.amenities?.roomDetails?.inputs?.beds
-                          ? card?.amenities?.roomDetails?.inputs?.beds
-                          : "-"}
-                      </strong>{" "}
-                      bd{" "}
-                      <strong>
-                        {card?.amenities?.roomDetails?.inputs?.baths
-                          ? card?.amenities?.roomDetails?.inputs?.baths
-                          : "-"}
-                      </strong>{" "}
-                      ba <strong>{card.area}</strong> Sqft
-                    </h2>
-                    <h3 className="text-sm text-gray-300">
-                      <strong className="text-gray-900">
-                        {card.totalStakes - card.stakesOccupied}
-                      </strong>{" "}
-                      of {card.totalStakes} shares avi.
-                    </h3>
-                    <h4 className="text-xl flex items-start text-[#116A7B]">
-                      <FiMapPin className="inline-flex mt-1 mr-1" />{" "}
-                      {card.addressOfProperty.city
-                        ? card.addressOfProperty.city
-                        : ""}
-                      ,{" "}
-                      {card.addressOfProperty.country
-                        ? compCities.getCountryByShort(
-                            card.addressOfProperty.country
-                          ).name
-                        : ""}
-                    </h4>
-                  </div>
-                </Link>
+                <PropertyCard card={card} key={cardIndex} />
               ))}
             </div>
           ) : (
@@ -524,90 +359,7 @@ const Page = () => {
           {!isRecentlyAddedLoading ? (
             <div className="xl:mx-24 mx-16 flex flex-row flex-wrap">
               {recentlyAddedProperties.map((card, cardIndex) => (
-                <Link
-                  href={`/buy-shares/property/${card.propertyID}`}
-                  key={cardIndex}
-                  className="w-[20rem] bg-white border-2 border-[#D9D9D9] rounded-xl mr-20 mt-20"
-                >
-                  <div className="p-2 relative">
-                    <Image
-                      width={1000}
-                      height={1000}
-                      src={
-                        card.imageCount > 0
-                          ? `${process.env.NEXT_PUBLIC_SERVER_HOST}/uploads/${
-                              card.propertyID
-                            }/image-${
-                              card.pinnedImageIndex === -1
-                                ? "1"
-                                : `${card.pinnedImageIndex}`
-                            }.png`
-                          : "/assets/user/property-management/no-image.jpg"
-                      }
-                      className={`w-[20rem] h-[19rem] object-cover object-center rounded-md overflow-hidden`}
-                      // alt={`${}`}
-                    />
-                    <span
-                      // onClick={() =>
-                      //   handleFavouriteList(
-                      //     slideIndex,
-                      //     cardIndex,
-                      //     !favourites[slideIndex][cardIndex]?.status
-                      //   )
-                      // }
-                      className="absolute inset-y-5 left-0 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer"
-                    >
-                      {/* {favourites[slideIndex][cardIndex]?.status ? (
-                  <FaHeart />
-                ) : (
-                  <FaRegHeart />
-                )} */}
-                    </span>
-                    <span className="absolute text-xs inset-y-5 right-0 px-5 text-[#116A7B] font-semibold focus:outline-none cursor-pointer">
-                      {" "}
-                      <VscEye className="inline-flex mb-[1px] mr-1 text-base" />
-                      {card.viewedCount}{" "}
-                    </span>
-                  </div>
-                  <div className="p-2 space-y-1">
-                    <TruncatingH1 text={card.title} />
-                    <h3 className="text-[#116A7B] font-semibold">
-                      {card.propertyType}
-                    </h3>
-                    <h2 className="text-sm text-[#116A7B]">
-                      <strong>
-                        {card?.amenities?.roomDetails?.inputs?.beds
-                          ? card?.amenities?.roomDetails?.inputs?.beds
-                          : "-"}
-                      </strong>{" "}
-                      bd{" "}
-                      <strong>
-                        {card?.amenities?.roomDetails?.inputs?.baths
-                          ? card?.amenities?.roomDetails?.inputs?.baths
-                          : "-"}
-                      </strong>{" "}
-                      ba <strong>{card.area}</strong> Sqft
-                    </h2>
-                    <h3 className="text-sm text-gray-300">
-                      <strong className="text-gray-900">
-                        {card.totalStakes - card.stakesOccupied}
-                      </strong>{" "}
-                      of {card.totalStakes} shares avi.
-                    </h3>
-                    <h4 className="text-xl flex items-start text-[#116A7B]">
-                      <FiMapPin className="inline-flex mt-1 mr-1" />{" "}
-                      {card.addressOfProperty.city
-                        ? card.addressOfProperty.city
-                        : ""}
-                      ,{" "}
-                      {card.addressOfProperty.country
-                        ? compCities.getCountryByShort(
-                            card.addressOfProperty.country
-                          ).name
-                        : ""}
-                    </h4>
-                  </div>
-                </Link>
+                <PropertyCard card={card} key={cardIndex}/>
               ))}
             </div>
           ) : (

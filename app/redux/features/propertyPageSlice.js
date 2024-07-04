@@ -1,18 +1,23 @@
 const { createSlice } = require("@reduxjs/toolkit");
 
 const initialState = {
-  navBtnActive: "Property Details",
+  navBtnBuyShareActive: "Property Details",
+  navBtnRentShareActive: "Rent",
 };
 
 export const propertyPageSlice = createSlice({
   name: "property page actions",
   initialState,
   reducers: {
-    updateActiveNavBtn: (state, action) => {
-      state.navBtnActive = action.payload;
+    updateActiveBuyShareNavBtn: (state, action) => {
+      state.navBtnBuyShareActive = action.payload;
+    },
+    updateActiveRentShareNavBtn: (state, action) => {
+      state.navBtnRentShareActive = action.payload;
     },
   },
 });
 
-export const { updateActiveNavBtn } = propertyPageSlice.actions;
+export const { updateActiveBuyShareNavBtn, updateActiveRentShareNavBtn } =
+  propertyPageSlice.actions;
 export default propertyPageSlice.reducer;
