@@ -1,11 +1,79 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import { toast } from "react-toastify";
 import NewThread from "../modals/newThread";
 import { useSelector } from "react-redux";
 import Image from "next/image";
 
-const Thread = ({ thread, isFirstLevel, threadIndex, handleFetchChildren }) => {
+const Thread = ({
+  thread,
+  isFirstLevel,
+  threadIndex,
+  handleFetchChildren,
+  category,
+}) => {
+  const [replyForThreadID, setReplyForThreadID] = useState("");
+  const [text, setText] = useState("");
+
+  const textRef = useRef(null);
+  useEffect(() => {
+    if (textRef.current) {
+      textRef.current.style.height = "inherit"; // Reset the height so the scrollHeight measurement is correct
+      textRef.current.style.height = `${textRef.current.scrollHeight}px`;
+    }
+  }, [text]); // Adjust height whenever text changes
+
+  const handleReplySubmit = async (threadID) => {
+    try {
+      const data = {
+        threadID: threadID,
+        threadBody: text,
+        username: JSON.parse(localStorage.getItem("userDetails")).username,
+        category: category,
+      };
+
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_HOST}/thread/add-child-thread`,
+        {
+          method: "POST",
+          headers: {
+            "Content-type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
+
+      const response = await res.json();
+
+      if (response.success) {
+        setReplyForThreadID("");
+        toast.success(response.message, {
+          position: "bottom-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        setText("");
+      } else {
+        throw new Error(response.message);
+      }
+    } catch (error) {
+      toast.error(error.message, {
+        position: "bottom-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  };
   return (
     <div
       className={`${isFirstLevel ? "" : "pl-4 border-l border-gray-600 ml-0"}`}
@@ -19,7 +87,7 @@ const Thread = ({ thread, isFirstLevel, threadIndex, handleFetchChildren }) => {
             className="w-10 h-10"
           />
           <div className="my-2">
-            <div className="bg-white px-2 rounded-md text-xl text-[#116A7B] font-semibold">
+            <div className="bg-white px-2 mb-2 rounded-md text-xl text-[#116A7B] font-semibold">
               {thread.author.name}
             </div>
             {thread.title.length > 0 && (
@@ -27,33 +95,56 @@ const Thread = ({ thread, isFirstLevel, threadIndex, handleFetchChildren }) => {
                 {thread.title}
               </div>
             )}
-            {/* {isFirstLevel && (
-          <div className="bg-white px-2 rounded-md shadow-sm">
-          Duration: {thread.shareDocID.availableInDuration.startDate} -{" "}
-          {thread.shareDocID.availableInDuration.endDate}
-          </div>
-          )} */}
 
             <div className="bg-white px-2 rounded-md ">{thread.body}</div>
             <div className="flex flex-row mt-5">
               <button
                 type="button"
-                className="text-[#116A7B] font-semibold px-2"
+                onClick={() => {
+                  if (replyForThreadID === thread.threadID) {
+                    setReplyForThreadID("");
+                  } else {
+                    setReplyForThreadID(thread.threadID);
+                  }
+                }}
+                className="text-[#116A7B] text-sm font-semibold px-2"
               >
-                Reply
+                {replyForThreadID === thread.threadID ? "Cancel" : "Reply"}
               </button>
               <button
                 onClick={() =>
                   handleFetchChildren(thread.threadID, threadIndex)
                 }
                 type="button"
-                className="text-[#116A7B] font-semibold px-2"
+                className="text-[#116A7B] text-sm font-semibold px-2"
               >
                 Show replies
               </button>
             </div>
           </div>
         </div>
+        {replyForThreadID === thread.threadID && (
+          <div className="bg-[#FCFBF5] flex flex-row border border-[#D9D9D9] px-5 py-3 mb-5 rounded-full">
+            <textarea
+              ref={textRef}
+              rows="1"
+              className="w-full p-1 outline-none text-lg"
+              style={{ backgroundColor: "transparent", resize: "none" }}
+              value={text}
+              required={true}
+              onChange={({ target }) => setText(target.value)}
+            ></textarea>
+            <button
+              type="button"
+              onClick={() => {
+                handleReplySubmit(thread.threadID);
+              }}
+              className="text-lg font-semibold text-[#116A7B] p-1"
+            >
+              POST
+            </button>
+          </div>
+        )}
 
         {thread.children &&
           thread.children.map((child) => (
@@ -73,15 +164,11 @@ const ThreadDisplay = ({ propertyID, propertyDocID, category }) => {
 
   const userRole = useSelector((state) => state.adminSliceReducer.userRole);
 
-  const fetchThreads = async () => {
+  const fetchThreads = async (shareID) => {
+    console.log(shareID);
     try {
       const res = await fetch(
-        `${
-          process.env.NEXT_PUBLIC_SERVER_HOST
-        }/thread/get-all-by-property/${JSON.stringify({
-          propertyID: propertyID,
-          category: category,
-        })}`,
+        `${process.env.NEXT_PUBLIC_SERVER_HOST}/thread/get-root-threads/${shareID}`,
         {
           method: "GET",
         }
@@ -214,21 +301,79 @@ const ThreadDisplay = ({ propertyID, propertyDocID, category }) => {
     ];
 
     let commutedDateString = "";
-
-    if (date.getDate() === 1) {
+    const dateOfMonth = date.getDate();
+    if (dateOfMonth % 10 === 1) {
       commutedDateString += "1st";
-    } else if (date.getDate() === 2) {
+    } else if (dateOfMonth % 10 === 2) {
       commutedDateString += "2nd";
-    } else if (date.getDate() === 3) {
+    } else if (dateOfMonth % 10 === 3) {
       commutedDateString += "3rd";
     } else {
-      commutedDateString += `${date.getDate()}th`;
+      commutedDateString += `${dateOfMonth}th`;
     }
 
     commutedDateString += ` ${months[date.getMonth()]}`;
 
     return commutedDateString;
   }
+
+  const [text, setText] = useState("");
+
+  const textRef = useRef(null);
+  useEffect(() => {
+    if (textRef.current) {
+      textRef.current.style.height = "inherit"; // Reset the height so the scrollHeight measurement is correct
+      textRef.current.style.height = `${textRef.current.scrollHeight}px`;
+    }
+  }, [text]); // Adjust height whenever text changes
+
+  const handleThreadSubmit = async (shareID) => {
+    try {
+      const data = {
+        shareID: shareID,
+        username: JSON.parse(localStorage.getItem("userDetails")).username,
+        body: text,
+        category: category,
+      };
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_HOST}/thread/add-root-thread`,
+        {
+          method: "POST",
+          headers: {
+            "Content-type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
+
+      const response = await res.json();
+      if (response.success) {
+        toast.success(response.message, {
+          position: "bottom-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        setText("");
+        fetchThreads(shareID);
+      }
+    } catch (error) {
+      toast.error(error.message, {
+        position: "bottom-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  };
 
   return (
     <>
@@ -261,8 +406,10 @@ const ThreadDisplay = ({ propertyID, propertyDocID, category }) => {
                 onClick={() => {
                   if (selectedThread === index) {
                     setSelectedThread(-1);
+                    setThreads([]);
                   } else {
                     setSelectedThread(index);
+                    fetchThreads(share.shareID);
                   }
                 }}
                 className={`flex flex-row items-center justify-between ${
@@ -292,15 +439,45 @@ const ThreadDisplay = ({ propertyID, propertyDocID, category }) => {
                 {thread.childrenCount} responses
               </h2> */}
               </div>
+              {selectedThread === index && threads.length > 0
+                ? threads.map((thread) => (
+                    <div className="">
+                      <Thread
+                        key={thread.threadID}
+                        thread={thread}
+                        isFirstLevel={true}
+                        threadIndex={index}
+                        handleFetchChildren={handleFetchChildren}
+                        category={category}
+                      />
+                    </div>
+                  ))
+                : selectedThread === index && (
+                    <div className="text-[32px] font-semibold text-[#116A7B]">
+                      <h1 className="text-center">No Threads Yet.</h1>
+                    </div>
+                  )}
+
               {selectedThread === index && (
-                <div className="">
-                  {/* <Thread
-                  key={thread.threadID}
-                  thread={thread}
-                  isFirstLevel={true}
-                  threadIndex={index}
-                  handleFetchChildren={handleFetchChildren}
-                /> */}
+                <div className="bg-[#FCFBF5] flex flex-row border border-[#D9D9D9] px-5 py-3 rounded-full">
+                  <textarea
+                    ref={textRef}
+                    rows="1"
+                    className="w-full p-1 outline-none text-lg"
+                    style={{ backgroundColor: "transparent", resize: "none" }}
+                    value={text}
+                    required={true}
+                    onChange={({ target }) => setText(target.value)}
+                  ></textarea>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      handleThreadSubmit(share.shareID);
+                    }}
+                    className="text-lg font-semibold text-[#116A7B] p-1"
+                  >
+                    POST
+                  </button>
                 </div>
               )}
             </React.Fragment>
