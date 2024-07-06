@@ -441,7 +441,7 @@ const ThreadDisplay = ({ propertyID, propertyDocID, category }) => {
               </div>
               {selectedThread === index && threads.length > 0
                 ? threads.map((thread) => (
-                    <div className="">
+                    <div key={thread.threadID} className="">
                       <Thread
                         key={thread.threadID}
                         thread={thread}
