@@ -10,7 +10,7 @@ const Thread = ({
   isFirstLevel,
   threadIndex,
   threadCategory,
-  childIndex,
+  shareOwner,
   threadLevel,
 }) => {
   const [fetchChildren, setFetchChildren] = useState(false);
@@ -147,7 +147,11 @@ const Thread = ({
           />
           <div className="my-2">
             <div className="bg-white px-2 mb-2 rounded-md text-xl text-[#116A7B] font-semibold">
-              {thread?.author?.name}
+              {thread?.author?.name}{" "}
+              <strong className="text-sm">
+                {console.log(shareOwner)}
+                {thread?.author?.username === shareOwner ? "share owner" : ""}
+              </strong>
             </div>
             {thread.title?.length > 0 && (
               <div className="bg-white text-xl p-2 rounded-md shadow-sm">
@@ -541,6 +545,7 @@ const ThreadDisplay = ({ propertyID, propertyDocID, category }) => {
                     <div key={thread.threadID} className="">
                       <Thread
                         key={thread.threadID}
+                        shareOwner={share.currentOwnerDocID.username}
                         thread={thread}
                         isFirstLevel={true}
                         threadIndex={index}
