@@ -288,7 +288,7 @@ const ThreadDisplay = ({ propertyID, propertyDocID, category }) => {
   const fetchRentShares = async () => {
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_SERVER_HOST}/share/get-rent-shares-by-property/${propertyDocID}/${category}`,
+        `${process.env.NEXT_PUBLIC_SERVER_HOST}/share/get-shares-by-category/${propertyDocID}/${category}`,
         {
           method: "GET",
         }

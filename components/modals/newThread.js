@@ -60,9 +60,10 @@ const NewThread = ({
       const data = {
         username: JSON.parse(localStorage.getItem("userDetails")).username,
         shareID: selectedShareID,
+        category: category,
       };
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_SERVER_HOST}/share/open-share-for-rent`,
+        `${process.env.NEXT_PUBLIC_SERVER_HOST}/share/open-share-by-category`,
         {
           method: "POST",
           headers: {
@@ -131,7 +132,7 @@ const NewThread = ({
     >
       <div className="relative flex flex-col items-center justify-between bg-white border border-[#116A7B] py-5 px-10 rounded-xl shadow-lg max-w-5xl w-full z-[5000]">
         <h1 className="text-3xl font-semibold text-[#116A7B]">
-          Open share for Rent
+          Open Share For {category}
         </h1>
 
         <div>
