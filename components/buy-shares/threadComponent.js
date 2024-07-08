@@ -9,9 +9,62 @@ const Thread = ({
   thread,
   isFirstLevel,
   threadIndex,
-  handleFetchChildren,
-  category,
+  threadCategory,
+  childIndex,
+  threadLevel,
 }) => {
+  const [fetchChildren, setFetchChildren] = useState(false);
+  const [children, setChildren] = useState([]);
+  const handleFetchChildren = async () => {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_HOST}/thread/get-childern-by-parent/${thread.threadID}`,
+        {
+          method: "GET",
+        }
+      );
+
+      const response = await res.json();
+      console.log(response);
+      if (response.success) {
+        setChildren(response.body);
+
+        if (!response.body) {
+          toast.success(response.message, {
+            position: "bottom-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+        }
+      } else {
+        throw new Error(response.message);
+      }
+    } catch (error) {
+      toast.error(error.message, {
+        position: "bottom-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (fetchChildren) {
+      handleFetchChildren();
+      setFetchChildren(false);
+    }
+  }, [fetchChildren]);
+
   const [replyForThreadID, setReplyForThreadID] = useState("");
   const [text, setText] = useState("");
 
@@ -25,12 +78,16 @@ const Thread = ({
 
   const handleReplySubmit = async (threadID) => {
     try {
+      console.log("threadLevel: ", threadLevel);
       const data = {
         threadID: threadID,
         threadBody: text,
         username: JSON.parse(localStorage.getItem("userDetails")).username,
-        category: category,
+        category: threadCategory,
+        threadLevel: `${threadLevel + 1}`,
       };
+
+      console.log("reply submit: ", data);
 
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_SERVER_HOST}/thread/add-child-thread`,
@@ -47,6 +104,7 @@ const Thread = ({
 
       if (response.success) {
         setReplyForThreadID("");
+        setFetchChildren(true);
         toast.success(response.message, {
           position: "bottom-center",
           autoClose: 5000,
@@ -85,42 +143,55 @@ const Thread = ({
             height={500}
             src={"/dummy-image.png"}
             className="w-10 h-10"
+            alt="profile picture"
           />
           <div className="my-2">
             <div className="bg-white px-2 mb-2 rounded-md text-xl text-[#116A7B] font-semibold">
-              {thread.author.name}
+              {thread?.author?.name}
             </div>
-            {thread.title.length > 0 && (
+            {thread.title?.length > 0 && (
               <div className="bg-white text-xl p-2 rounded-md shadow-sm">
-                {thread.title}
+                {thread?.title}
               </div>
             )}
 
             <div className="bg-white px-2 rounded-md ">{thread.body}</div>
-            <div className="flex flex-row mt-5">
-              <button
-                type="button"
-                onClick={() => {
-                  if (replyForThreadID === thread.threadID) {
-                    setReplyForThreadID("");
-                  } else {
-                    setReplyForThreadID(thread.threadID);
-                  }
-                }}
-                className="text-[#116A7B] text-sm font-semibold px-2"
-              >
-                {replyForThreadID === thread.threadID ? "Cancel" : "Reply"}
-              </button>
-              <button
-                onClick={() =>
-                  handleFetchChildren(thread.threadID, threadIndex)
-                }
-                type="button"
-                className="text-[#116A7B] text-sm font-semibold px-2"
-              >
-                Show replies
-              </button>
-            </div>
+            {threadLevel < 2 && (
+              <div className="flex flex-row mt-5">
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (replyForThreadID === thread.threadID) {
+                      setReplyForThreadID("");
+                    } else {
+                      setReplyForThreadID(thread.threadID);
+                    }
+                  }}
+                  className="text-[#116A7B] text-sm font-semibold px-2"
+                >
+                  {replyForThreadID === thread.threadID ? "Cancel" : "Reply"}
+                </button>
+
+                <button
+                  onClick={() => {
+                    console.log("in onclick");
+                    if (children?.length > 0) {
+                      console.log("in if");
+                      setChildren([]);
+                    } else {
+                      console.log("in else");
+                      setFetchChildren(true);
+                    }
+                  }}
+                  type="button"
+                  className="text-[#116A7B] text-sm font-semibold px-2"
+                >
+                  {children && children?.length > 0
+                    ? "Hide replies"
+                    : "Show replies"}
+                </button>
+              </div>
+            )}
           </div>
         </div>
         {replyForThreadID === thread.threadID && (
@@ -133,6 +204,12 @@ const Thread = ({
               value={text}
               required={true}
               onChange={({ target }) => setText(target.value)}
+              onKeyDown={(event) => {
+                if (event.ctrlKey && event.key === "Enter") {
+                  handleReplySubmit(thread.threadID);
+                  event.preventDefault();
+                }
+              }}
             ></textarea>
             <button
               type="button"
@@ -146,9 +223,17 @@ const Thread = ({
           </div>
         )}
 
-        {thread.children &&
-          thread.children.map((child) => (
-            <Thread key={child.id} thread={child} isFirstLevel={false} />
+        {children &&
+          children.map((child, index) => (
+            <Thread
+              key={child.id}
+              thread={child}
+              isFirstLevel={false}
+              threadCategory={threadCategory}
+              threadIndex={threadIndex}
+              childIndex={index}
+              threadLevel={parseInt(child.threadLevel)}
+            />
           ))}
       </div>
     </div>
@@ -157,6 +242,8 @@ const Thread = ({
 
 const ThreadDisplay = ({ propertyID, propertyDocID, category }) => {
   const [isModalOpen, setModalOpen] = useState(false);
+
+  const [threadCategory, setThreadCategory] = useState(category);
 
   const handleOpenModal = () => setModalOpen(true);
   const handleCloseModal = () => setModalOpen(false);
@@ -235,7 +322,7 @@ const ThreadDisplay = ({ propertyID, propertyDocID, category }) => {
     }
   }, [newThreadSubmitted]);
 
-  const handleFetchChildren = async (threadID, threadIndex) => {
+  const handleFetchChildren = async (threadID, threadIndex, threadLevel) => {
     console.log("role: ", userRole, typeof userRole, userRole === "admin");
     try {
       const res = await fetch(
@@ -246,12 +333,21 @@ const ThreadDisplay = ({ propertyID, propertyDocID, category }) => {
       );
 
       const response = await res.json();
+      // console.log(threads, response)
       if (response.success) {
-        setThreads((prevData) => {
-          const newData = [...prevData];
-          newData[threadIndex].children = response.body;
-          return newData;
-        });
+        if (threadLevel === 1) {
+          setThreads((prevData) => {
+            const newData = [...prevData];
+            newData[threadIndex].children[childIndex] = response.body;
+            return newData;
+          });
+        } else {
+          setThreads((prevData) => {
+            const newData = [...prevData];
+            newData[threadIndex].children = response.body;
+            return newData;
+          });
+        }
 
         toast.success(response.message, {
           position: "bottom-center",
@@ -334,6 +430,7 @@ const ThreadDisplay = ({ propertyID, propertyDocID, category }) => {
         username: JSON.parse(localStorage.getItem("userDetails")).username,
         body: text,
         category: category,
+        threadLevel: "0",
       };
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_SERVER_HOST}/thread/add-root-thread`,
@@ -448,7 +545,8 @@ const ThreadDisplay = ({ propertyID, propertyDocID, category }) => {
                         isFirstLevel={true}
                         threadIndex={index}
                         handleFetchChildren={handleFetchChildren}
-                        category={category}
+                        threadCategory={thread.category}
+                        threadLevel={parseInt(thread.threadLevel)}
                       />
                     </div>
                   ))
@@ -468,6 +566,12 @@ const ThreadDisplay = ({ propertyID, propertyDocID, category }) => {
                     value={text}
                     required={true}
                     onChange={({ target }) => setText(target.value)}
+                    onKeyDown={(event) => {
+                      if (event.ctrlKey && event.key === "Enter") {
+                        handleThreadSubmit(share.shareID);
+                        event.preventDefault();
+                      }
+                    }}
                   ></textarea>
                   <button
                     type="button"
