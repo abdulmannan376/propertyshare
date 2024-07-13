@@ -16,7 +16,7 @@ const nextConfig = {
       },
       {
         protocol: "https",
-        hostname: "server.beachbunnyhouse",
+        hostname: "server.beachbunnyhouse.com",
         port: "443",
         pathname: "/uploads/**",
       }
