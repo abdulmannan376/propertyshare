@@ -14,6 +14,12 @@ const nextConfig = {
         port: "9000",
         pathname: "/uploads/**",
       },
+      {
+        protocol: "https",
+        hostname: "server.beachbunnyhouse",
+        port: "443",
+        pathname: "/uploads/**",
+      }
     ],
   },
 };

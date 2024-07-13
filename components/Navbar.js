@@ -11,6 +11,7 @@ import { FaBell } from "react-icons/fa";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from "next/navigation";
+import { FaAngleLeft } from "react-icons/fa6";
 
 const Navbar = () => {
   const pathname = usePathname();
@@ -30,7 +31,7 @@ const Navbar = () => {
     (state) => state.navbarSliceReducer.currentPage
   );
 
-  const bgColor = useSelector(state => state.navbarSliceReducer.bgColor)
+  const bgColor = useSelector((state) => state.navbarSliceReducer.bgColor);
 
   const [loggedIn, setLoggedIn] = useState(false);
   const [showDropDowns, setShowDropDowns] = useState({
@@ -41,6 +42,7 @@ const Navbar = () => {
   const userEmail = useSelector((state) => state.adminSliceReducer.userEmail);
 
   const [notificationsCount, setNotificationsCount] = useState(0);
+  const [notificationsList, setNotificationsList] = useState([]);
 
   const fetchNotifications = async () => {
     try {
@@ -61,6 +63,7 @@ const Navbar = () => {
       const response = await res.json();
 
       if (response.success) {
+        setNotificationsList(response.body.notificationList);
         setNotificationsCount(response.body.notificationsCount);
       } else {
         throw new Error(response.message);
@@ -137,6 +140,44 @@ const Navbar = () => {
       newDetails[field] = value;
       return newDetails;
     });
+  };
+
+  const [selectedNotification, setSelectedNotification] = useState(null);
+
+  const handleUnreadNotificationSelect = async (index) => {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_HOST}/notification/mark-notification-read/${notificationsList[index]?.notificationID}`,
+        {
+          method: "PUT",
+        }
+      );
+
+      const response = await res.json();
+      console.log(response);
+      if (response.success) {
+        setSelectedNotification(notificationsList[index]);
+        setNotificationsList((prevDetails) => {
+          const newDetails = [...prevDetails];
+          newDetails[index].inAppStatus = "read";
+          return newDetails;
+        });
+      } else {
+        setSelectedNotification(null);
+        throw new Error(response.message);
+      }
+    } catch (error) {
+      toast.error(error.message, {
+        position: "bottom-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
   };
 
   return (
@@ -247,11 +288,72 @@ const Navbar = () => {
           {loggedIn ? (
             <div className="flex flex-row items-start">
               <div className="relative mr-5 mt-1">
-                <FaBell className={`text-3xl ${notificationIconColor}`} />
-                {notificationsCount > 0 && (
-                  <span className="absolute w-5 h-5 -inset-y-2 right-0 px-0 bg-red-400 text-white text-sm text-center font-semibold focus:outline-none cursor-pointer rounded-full">
-                    {notificationsCount}
-                  </span>
+                <button
+                  type="button"
+                  onClick={() =>
+                    handleShowDropdown(
+                      "notification",
+                      !showDropDowns["notification"]
+                    )
+                  }
+                  className="relative"
+                >
+                  <FaBell className={`text-3xl ${notificationIconColor}`} />
+                  {notificationsCount > 0 && (
+                    <span className="absolute w-5 h-5 -inset-y-2 right-0 px-0 bg-red-400 text-white text-sm text-center font-semibold focus:outline-none cursor-pointer rounded-full">
+                      {notificationsCount}
+                    </span>
+                  )}
+                </button>
+                {showDropDowns["notification"] && !selectedNotification && (
+                  <ul className="absolute w-96 -right-0 bg-white border border-[#116A7B] mt-0 max-h-[34rem] overflow-y-auto">
+                    {notificationsList.map((notification, index) => (
+                      <li key={index}>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            console.log(notification.inAppStatus);
+                            if (notification.inAppStatus === "unread") {
+                              handleUnreadNotificationSelect(index);
+                            } else {
+                              setSelectedNotification(notification);
+                            }
+                          }}
+                          className="w-full text-start px-3 py-5 hover:bg-[#116A7B20] "
+                        >
+                          <div className="flex flex-row items-center justify-between">
+                            <h2 className={`font-semibold`}>
+                              {notification.subject}
+                            </h2>
+                            {notification.inAppStatus === "unread" && (
+                              <span className="inline-flex w-3 h-3 bg-[#116A7B] rounded-full mr-5 mb-2"></span>
+                            )}
+                          </div>
+                          <p>Date: {notification.createdAt.split("T")[0]}</p>
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                {showDropDowns["notification"] && selectedNotification && (
+                  <div className="absolute w-96 -right-0 bg-white border border-[#116A7B] mt-0 p-5 space-y-5 h-[34rem] max-h-[34rem] overflow-y-auto">
+                    <FaAngleLeft
+                      onClick={() => setSelectedNotification(null)}
+                      className="cursor-pointer"
+                    />
+                    <h2 className="text-xl text-start font-semibold">
+                      {selectedNotification?.subject}
+                    </h2>
+                    <textarea
+                      readOnly
+                      value={selectedNotification?.body}
+                      rows={10}
+                      className="w-full focus:outline-none"
+                      style={{ resize: "none" }}
+                    >
+                      {selectedNotification?.body}
+                    </textarea>
+                  </div>
                 )}
               </div>
               <div className="relative">
