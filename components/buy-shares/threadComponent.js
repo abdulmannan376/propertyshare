@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import NewThread from "../modals/newThread";
 import { useSelector } from "react-redux";
 import Image from "next/image";
+import { MdOutlineMessage } from "react-icons/md";
 
 const Thread = ({
   thread,
@@ -137,65 +138,74 @@ const Thread = ({
       className={`${isFirstLevel ? "" : "pl-4 border-l border-gray-600 ml-0"}`}
     >
       <div className="my-2 mx-5">
-        <div className="flex flex-row">
-          <Image
-            width={500}
-            height={500}
-            src={"/dummy-image.png"}
-            className="w-10 h-10"
-            alt="profile picture"
-          />
-          <div className="my-2">
-            <div className="bg-white px-2 mb-2 rounded-md text-xl text-[#116A7B] font-semibold">
-              {thread?.author?.name}{" "}
-              <strong className="text-sm">
-                {console.log(shareOwner)}
-                {thread?.author?.username === shareOwner ? "share owner" : ""}
-              </strong>
+        <div className="flex flex-row items-start justify-between">
+          <div className="flex flex-row">
+            <Image
+              width={500}
+              height={500}
+              src={"/dummy-image.png"}
+              className="w-10 h-10"
+              alt="profile picture"
+            />
+            <div className="my-2">
+              <div className="bg-white px-2 mb-2 rounded-md text-xl text-[#116A7B] font-semibold">
+                {thread?.author?.name}{" "}
+                <strong className="text-sm">
+                  {thread?.author?.username === shareOwner ? "share owner" : ""}
+                </strong>
+              </div>
+              {thread.title?.length > 0 && (
+                <div className="bg-white text-xl p-2 rounded-md shadow-sm">
+                  {thread?.title}
+                </div>
+              )}
+
+              <div className="bg-white px-2 rounded-md ">{thread.body}</div>
+              {threadLevel < 2 && (
+                <div className="flex flex-row mt-5">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (replyForThreadID === thread.threadID) {
+                        setReplyForThreadID("");
+                      } else {
+                        setReplyForThreadID(thread.threadID);
+                      }
+                    }}
+                    className="text-[#116A7B] text-sm font-semibold px-2"
+                  >
+                    {replyForThreadID === thread.threadID ? "Cancel" : "Reply"}
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      console.log("in onclick");
+                      if (children?.length > 0) {
+                        console.log("in if");
+                        setChildren([]);
+                      } else {
+                        console.log("in else");
+                        setFetchChildren(true);
+                      }
+                    }}
+                    type="button"
+                    className="text-[#116A7B] text-sm font-semibold px-2"
+                  >
+                    {children && children?.length > 0
+                      ? "Hide replies"
+                      : "Show replies"}
+                  </button>
+                </div>
+              )}
             </div>
-            {thread.title?.length > 0 && (
-              <div className="bg-white text-xl p-2 rounded-md shadow-sm">
-                {thread?.title}
-              </div>
-            )}
-
-            <div className="bg-white px-2 rounded-md ">{thread.body}</div>
-            {threadLevel < 2 && (
-              <div className="flex flex-row mt-5">
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (replyForThreadID === thread.threadID) {
-                      setReplyForThreadID("");
-                    } else {
-                      setReplyForThreadID(thread.threadID);
-                    }
-                  }}
-                  className="text-[#116A7B] text-sm font-semibold px-2"
-                >
-                  {replyForThreadID === thread.threadID ? "Cancel" : "Reply"}
-                </button>
-
-                <button
-                  onClick={() => {
-                    console.log("in onclick");
-                    if (children?.length > 0) {
-                      console.log("in if");
-                      setChildren([]);
-                    } else {
-                      console.log("in else");
-                      setFetchChildren(true);
-                    }
-                  }}
-                  type="button"
-                  className="text-[#116A7B] text-sm font-semibold px-2"
-                >
-                  {children && children?.length > 0
-                    ? "Hide replies"
-                    : "Show replies"}
-                </button>
-              </div>
-            )}
+          </div>
+          <div className="flex flex-row items-center space-x-3">
+            <button type="button">
+              <h2 className="underline text-[#A2B0B2]">Make an offer</h2>
+            </button>
+            <button type="button">
+              <MdOutlineMessage className="text-xl text-[#A2B0B2] "/>
+            </button>
           </div>
         </div>
         {replyForThreadID === thread.threadID && (
@@ -292,7 +302,7 @@ const ThreadDisplay = ({ propertyID, propertyDocID, category }) => {
   const fetchRentShares = async () => {
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_SERVER_HOST}/share/get-shares-by-category/${propertyDocID}/${category}`,
+        `${process.env.NEXT_PUBLIC_SERVER_HOST}/share/get-shares-by-category/${propertyID}/${category}`,
         {
           method: "GET",
         }
