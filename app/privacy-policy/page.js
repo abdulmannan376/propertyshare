@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import {
   updateBgColor,
   updateCurrentPageValue,
+  updateDropdrownStatus,
   updateNavbarLogo,
   updateNavbarTextColor,
   updateNotificationIconColor,
@@ -31,7 +32,10 @@ const Page = () => {
     dispatch(updateBgColor("bg-[#116A7B]"));
   }, []);
   return (
-    <div className="bg-[#CDC2AE] bg-opacity-5 py-32">
+    <div
+      className="bg-[#CDC2AE] bg-opacity-5 py-32"
+      onClick={() => dispatch(updateDropdrownStatus({ field: "close all" }))}
+    >
       <div className="px-14 pt-14">
         <h1 className="text-4xl text-start uppercase font-semibold text-[#116A7B] ">
           our privacy policy

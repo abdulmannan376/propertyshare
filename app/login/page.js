@@ -10,6 +10,7 @@ import "react-toastify/dist/ReactToastify.css";
 import {
   updateBgColor,
   updateCurrentPageValue,
+  updateDropdrownStatus,
   updateNavbarTextColor,
 } from "../redux/features/navbarSlice";
 
@@ -119,6 +120,7 @@ const Page = () => {
       <div
         className="w-screen h-screen flex flex-col justify-center items-center bg-cover bg-center"
         style={{ backgroundImage: "url('/background.png')" }}
+        onClick={() => dispatch(updateDropdrownStatus({ field: "close all" }))}
       >
         <div>
           <Image

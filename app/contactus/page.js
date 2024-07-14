@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import {
   updateBgColor,
   updateCurrentPageValue,
+  updateDropdrownStatus,
   updateNavbarLogo,
   updateNavbarTextColor,
   updateNotificationIconColor,
@@ -41,6 +42,7 @@ const Page = () => {
       style={{
         backgroundImage: "url('/assets/landing-page/section-contactus.png')",
       }}
+      onClick={() => dispatch(updateDropdrownStatus({ field: "close all" }))}
     >
       <div className="w-[35vw] bg-white py-14 px-7 rounded-3xl">
         <h1 className="text-4xl text-center text-[#116A7B] font-medium">

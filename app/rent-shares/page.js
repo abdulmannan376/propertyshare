@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   updateBgColor,
   updateCurrentPageValue,
+  updateDropdrownStatus,
   updateNavbarLogo,
   updateNavbarTextColor,
   updateNotificationIconColor,
@@ -69,7 +70,7 @@ const Page = () => {
           area: areaRange,
           priceRange: priceRange,
           page: 1,
-          category: "rent"
+          category: "rent",
         })}`,
         {
           method: "GET",
@@ -118,7 +119,7 @@ const Page = () => {
           area: areaRange,
           priceRange: priceRange,
           page: 1,
-          category: "rent"
+          category: "rent",
         })}`,
         {
           method: "GET",
@@ -166,7 +167,7 @@ const Page = () => {
           area: areaRange,
           priceRange: priceRange,
           page: 1,
-          category: "rent"
+          category: "rent",
         })}`,
         {
           method: "GET",
@@ -222,7 +223,12 @@ const Page = () => {
     handleFetchRecentlyAddedProperty();
   }, []);
   return (
-    <div onClick={() => dispatch(handleAllDropdownsActivity(false))}>
+    <div
+      onClick={() => {
+        dispatch(handleAllDropdownsActivity(false));
+        dispatch(updateDropdrownStatus({ field: "close all" }));
+      }}
+    >
       <ToastContainer
         position="bottom-center"
         autoClose={5000}

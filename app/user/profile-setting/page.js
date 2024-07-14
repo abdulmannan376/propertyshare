@@ -2,6 +2,7 @@
 import {
   updateBgColor,
   updateCurrentPageValue,
+  updateDropdrownStatus,
   updateNavbarTextColor,
 } from "@/app/redux/features/navbarSlice";
 import {
@@ -40,7 +41,7 @@ const Page = () => {
     (state) => state.adminSliceReducer.profileSettingActiveTab
   );
   return (
-    <div>
+    <div onClick={() => dispatch(updateDropdrownStatus({ field: "close all" }))}>
       <div className="w-full h-20 bg-[#116A7B]"></div>
       <div className="w-screen flex items-center justify-start xl:mx-24 mx-16 md:space-x-20 space-x-14 my-3 text-white text-2xl font-semibold">
         <button

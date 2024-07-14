@@ -11,7 +11,7 @@ import PropertyManagement from "@/components/user/addProperty";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import UserManagement from "@/components/user/userManagement";
-import { updateBgColor, updateCurrentPageValue, updateNavbarLogo, updateNavbarTextColor } from "@/app/redux/features/navbarSlice";
+import { updateBgColor, updateCurrentPageValue, updateDropdrownStatus, updateNavbarLogo, updateNavbarTextColor } from "@/app/redux/features/navbarSlice";
 
 const Page = () => {
   const dispatch = useDispatch();
@@ -112,7 +112,7 @@ const Page = () => {
   };
 
   return (
-    <div>
+    <div onClick={() => dispatch(updateDropdrownStatus({ field: "close all" }))}>
       <ToastContainer
         position="bottom-center"
         autoClose={5000}

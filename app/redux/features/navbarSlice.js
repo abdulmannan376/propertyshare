@@ -10,6 +10,10 @@ const initialState = {
   notificationIconColor: "text-white",
   bgColor: "bg-transparent",
   currentPage: "Home",
+  showDropdowns: {
+    user: false,
+    notification: false,
+  },
 };
 
 export const navbarSlice = createSlice({
@@ -30,8 +34,20 @@ export const navbarSlice = createSlice({
       state.currentPage = action.payload;
     },
     updateBgColor: (state, action) => {
-      state.bgColor = action.payload
-    }
+      state.bgColor = action.payload;
+    },
+    updateDropdrownStatus: (state, action) => {
+      if (action.payload.field === "user") {
+        state.showDropdowns.user = action.payload.value;
+        state.showDropdowns.notification = false;
+      } else if (action.payload.field === "notification") {
+        state.showDropdowns.notification = action.payload.value;
+        state.showDropdowns.user = false;
+      } else if (action.payload.field === "close all") {
+        state.showDropdowns.user = false;
+        state.showDropdowns.notification = false;
+      }
+    },
   },
 });
 
@@ -41,5 +57,6 @@ export const {
   updateNotificationIconColor,
   updateCurrentPageValue,
   updateBgColor,
+  updateDropdrownStatus,
 } = navbarSlice.actions;
 export default navbarSlice.reducer;

@@ -12,6 +12,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from "next/navigation";
 import { FaAngleLeft } from "react-icons/fa6";
+import { updateDropdrownStatus } from "@/app/redux/features/navbarSlice";
 
 const Navbar = () => {
   const pathname = usePathname();
@@ -34,10 +35,9 @@ const Navbar = () => {
   const bgColor = useSelector((state) => state.navbarSliceReducer.bgColor);
 
   const [loggedIn, setLoggedIn] = useState(false);
-  const [showDropDowns, setShowDropDowns] = useState({
-    user: false,
-    notification: false,
-  });
+  const showDropDowns = useSelector(
+    (state) => state.navbarSliceReducer.showDropdowns
+  );
 
   const userEmail = useSelector((state) => state.adminSliceReducer.userEmail);
 
@@ -135,11 +135,7 @@ const Navbar = () => {
   };
 
   const handleShowDropdown = (field, value) => {
-    setShowDropDowns((prevDetails) => {
-      const newDetails = { ...prevDetails };
-      newDetails[field] = value;
-      return newDetails;
-    });
+    dispatch(updateDropdrownStatus({ field: field, value: value }));
   };
 
   const [selectedNotification, setSelectedNotification] = useState(null);
@@ -196,6 +192,7 @@ const Navbar = () => {
       />
       <header
         className={`fixed top-0 w-full ${textColor} ${bgColor} body-font z-[1000]`}
+        onClick={() => dispatch(updateDropdrownStatus({ field: "close all" }))}
       >
         <div className="xl:mx-24 mx-16 flex flex-wrap p-5 flex-col md:flex-row items-center">
           <Link
@@ -290,12 +287,13 @@ const Navbar = () => {
               <div className="relative mr-5 mt-1">
                 <button
                   type="button"
-                  onClick={() =>
+                  onClick={(e) => {
+                    e.stopPropagation();
                     handleShowDropdown(
                       "notification",
                       !showDropDowns["notification"]
-                    )
-                  }
+                    );
+                  }}
                   className="relative"
                 >
                   <FaBell className={`text-3xl ${notificationIconColor}`} />
@@ -311,8 +309,8 @@ const Navbar = () => {
                       <li key={index}>
                         <button
                           type="button"
-                          onClick={() => {
-                            console.log(notification.inAppStatus);
+                          onClick={(e) => {
+                            e.stopPropagation();
                             if (notification.inAppStatus === "unread") {
                               handleUnreadNotificationSelect(index);
                             } else {
@@ -338,7 +336,10 @@ const Navbar = () => {
                 {showDropDowns["notification"] && selectedNotification && (
                   <div className="absolute w-96 -right-0 bg-white border border-[#116A7B] mt-0 p-5 space-y-5 h-[34rem] max-h-[34rem] overflow-y-auto">
                     <FaAngleLeft
-                      onClick={() => setSelectedNotification(null)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedNotification(null);
+                      }}
                       className="cursor-pointer"
                     />
                     <h2 className="text-xl text-start font-semibold">
@@ -359,9 +360,10 @@ const Navbar = () => {
               <div className="relative">
                 <button
                   type="button"
-                  onClick={() =>
-                    handleShowDropdown("user", !showDropDowns["user"])
-                  }
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleShowDropdown("user", !showDropDowns["user"]);
+                  }}
                   className=""
                 >
                   {" "}
@@ -383,9 +385,10 @@ const Navbar = () => {
                           JSON.parse(localStorage.getItem("userDetails"))
                             .username
                         }`}
-                        onClick={() =>
-                          handleShowDropdown("user", !showDropDowns["user"])
-                        }
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleShowDropdown("user", !showDropDowns["user"]);
+                        }}
                         className="w-full flex flex-row items-center space-x-3 text-[#116A7B] mt-1"
                       >
                         <Image
@@ -405,9 +408,10 @@ const Navbar = () => {
                     <li className="border-b border-[#116A7B] py-3 px-5">
                       <Link
                         href={"/user/profile-setting"}
-                        onClick={() =>
-                          handleShowDropdown("user", !showDropDowns["user"])
-                        }
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleShowDropdown("user", !showDropDowns["user"]);
+                        }}
                         className="w-full flex flex-row items-center space-x-3 text-[#116A7B] mt-1"
                       >
                         <CiSettings className="text-3xl" />
@@ -418,6 +422,7 @@ const Navbar = () => {
                       <button
                         type="button"
                         onClick={(e) => {
+                          e.stopPropagation();
                           handleShowDropdown("user", !showDropDowns["user"]);
                           handleLogout(e);
                         }}

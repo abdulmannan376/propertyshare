@@ -1,3 +1,4 @@
+"use client"
 import dynamic from "next/dynamic";
 import Carousel from "@/components/landing-page/carousel";
 import SectionAboutUs from "@/components/landing-page/section-aboutus";
@@ -9,10 +10,16 @@ const SectionMap = dynamic(
 );
 import Image from "next/image";
 import "react-toastify/dist/ReactToastify.css";
+import { useDispatch } from "react-redux";
+import { updateDropdrownStatus } from "./redux/features/navbarSlice";
 
 export default function Home() {
+  const dispatch = useDispatch();
   return (
-    <main className="">
+    <main
+      className=""
+      onClick={() => dispatch(updateDropdrownStatus({ field: "close all" }))}
+    >
       <Carousel />
       <SectionMap />
       <SectionFeaturedProperty />

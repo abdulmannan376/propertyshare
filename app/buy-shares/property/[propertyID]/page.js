@@ -2,6 +2,7 @@
 import {
   updateBgColor,
   updateCurrentPageValue,
+  updateDropdrownStatus,
   updateNavbarTextColor,
   updateNotificationIconColor,
 } from "@/app/redux/features/navbarSlice";
@@ -139,7 +140,12 @@ const Page = () => {
       />
       <div className="w-full h-20 bg-white"></div>
       {propertyFetched && (
-        <div className="xl:mx-24 mx-16 ">
+        <div
+          className="xl:mx-24 mx-16 "
+          onClick={() =>
+            dispatch(updateDropdrownStatus({ field: "close all" }))
+          }
+        >
           <div className="my-10">
             {property.imageCount > 0 ? (
               <div className="swiper-container">
