@@ -168,7 +168,7 @@ const Page = () => {
                         <Image
                           width={2000}
                           height={2000}
-                          src={`http:89.22.120.46:9000/${
+                          src={`${process.env.NEXT_PUBLIC_SERVER_HOST}/${
                             property.imageDirURL
                           }/image-${index + 1}.png`}
                           className="w-full h-[44rem] object-contain object-center"

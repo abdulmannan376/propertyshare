@@ -5,6 +5,7 @@ import NewThread from "../modals/newThread";
 import { useSelector } from "react-redux";
 import Image from "next/image";
 import { MdOutlineMessage } from "react-icons/md";
+import MakeOffer from "../modals/makeOffer";
 
 const Thread = ({
   thread,
@@ -13,7 +14,16 @@ const Thread = ({
   threadCategory,
   shareOwner,
   threadLevel,
+  propertyID,
+  startDate,
+  endDate,
+  shareID,
 }) => {
+  const [isMakeOfferModalOpen, setIsMakeOfferModalOpen] = useState(false);
+
+  const handleCloseMakeOfferModal = () => setIsMakeOfferModalOpen(false);
+  const handleOpenMakeOfferModal = () => setIsMakeOfferModalOpen(true);
+
   const [fetchChildren, setFetchChildren] = useState(false);
   const [children, setChildren] = useState([]);
   const handleFetchChildren = async () => {
@@ -137,6 +147,16 @@ const Thread = ({
     <div
       className={`${isFirstLevel ? "" : "pl-4 border-l border-gray-600 ml-0"}`}
     >
+      <MakeOffer
+        isOpen={isMakeOfferModalOpen}
+        onClose={handleCloseMakeOfferModal}
+        username={thread?.author?.username}
+        category={threadCategory}
+        propertyID={propertyID}
+        startDate={startDate}
+        endDate={endDate}
+        shareID={shareID}
+      />
       <div className="my-2 mx-5">
         <div className="flex flex-row items-start justify-between">
           <div className="flex flex-row">
@@ -199,14 +219,18 @@ const Thread = ({
               )}
             </div>
           </div>
-          <div className="flex flex-row items-center space-x-3">
-            <button type="button">
-              <h2 className="underline text-[#A2B0B2]">Make an offer</h2>
-            </button>
-            <button type="button">
-              <MdOutlineMessage className="text-xl text-[#A2B0B2] "/>
-            </button>
-          </div>
+          {thread?.author?.username !== shareOwner &&
+            JSON.parse(localStorage.getItem("userDetails")).username ===
+              shareOwner && (
+              <div className="flex flex-row items-center space-x-3">
+                <button type="button" onClick={handleOpenMakeOfferModal}>
+                  <h2 className="underline text-[#A2B0B2]">Make an offer</h2>
+                </button>
+                <button type="button">
+                  <MdOutlineMessage className="text-xl text-[#A2B0B2] " />
+                </button>
+              </div>
+            )}
         </div>
         {replyForThreadID === thread.threadID && (
           <div className="bg-[#FCFBF5] flex flex-row border border-[#D9D9D9] px-5 py-3 mb-5 rounded-full">
@@ -247,6 +271,10 @@ const Thread = ({
               threadIndex={threadIndex}
               childIndex={index}
               threadLevel={parseInt(child.threadLevel)}
+              propertyID={propertyID}
+              startDate={startDate}
+              endDate={endDate}
+              shareID={shareID}
             />
           ))}
       </div>
@@ -562,6 +590,12 @@ const ThreadDisplay = ({ propertyID, propertyDocID, category }) => {
                         handleFetchChildren={handleFetchChildren}
                         threadCategory={thread.category}
                         threadLevel={parseInt(thread.threadLevel)}
+                        propertyID={propertyID}
+                        startDate={processDate(
+                          share.availableInDuration.startDate
+                        )}
+                        endDate={processDate(share.availableInDuration.endDate)}
+                        shareID={share.shareID}
                       />
                     </div>
                   ))

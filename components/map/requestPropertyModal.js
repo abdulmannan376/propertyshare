@@ -23,16 +23,7 @@ const Modal = ({ isOpen, onClose, onSave, coordinates }) => {
   ];
 
   const areaMin = ["MIN", "0", "50", "100", "150", "200", "250", "300"];
-  const areaMax = [
-    "MAX",
-    "50",
-    "100",
-    "150",
-    "200",
-    "250",
-    "300",
-    "Any",
-  ];
+  const areaMax = ["MAX", "50", "100", "150", "200", "250", "300", "Any"];
 
   const priceMin = ["MIN", "0", "300", "600", "900"];
   const priceMax = ["MAX", "300", "600", "900", "Any"];
@@ -92,7 +83,7 @@ const Modal = ({ isOpen, onClose, onSave, coordinates }) => {
         </div>
         <div className="relative">
           <label htmlFor="Contact" className="text-xl text-[#116A7B] mx-7">
-            Contact
+            Contact Number
           </label>
           <input
             type="text"
@@ -257,6 +248,9 @@ const Modal = ({ isOpen, onClose, onSave, coordinates }) => {
               })}
             </select>
           </div>
+        </div>
+        <div>
+          <h4><span className="text-lg text-red-600">*</span> fields are mandatory.</h4>
         </div>
         <div className="flex justify-start mt-5">
           <button

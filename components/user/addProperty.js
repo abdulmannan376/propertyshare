@@ -1758,7 +1758,7 @@ const PropertyManagement = () => {
                             key={index}
                             width={1000}
                             height={1000}
-                            src={`http://89.22.120.46:9000/uploads/${
+                            src={`${process.env.NEXT_PUBLIC_SERVER_HOST}/uploads/${
                               myProperties[propertyByIndex].propertyID
                             }/image-${index + 1}.png`}
                             className="w-60 h-32  object-fit rounded-xl overflow-hidden "
