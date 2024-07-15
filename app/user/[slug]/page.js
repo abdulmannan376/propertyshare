@@ -12,6 +12,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import UserManagement from "@/components/user/userManagement";
 import { updateBgColor, updateCurrentPageValue, updateDropdrownStatus, updateNavbarLogo, updateNavbarTextColor } from "@/app/redux/features/navbarSlice";
+import Offers from "@/components/user/offers";
 
 const Page = () => {
   const dispatch = useDispatch();
@@ -131,7 +132,7 @@ const Page = () => {
           ref={panelRef}
           className={`${
             panelIsOpen ? "-translate-x-[0%]" : "-translate-x-[100%]"
-          } absolute w-1/5 h-[44rem] z-20 transition-transform bg-[#015A6B] duration-500`}
+          } absolute w-1/5 h-[90vh] max-h-[90vh] z-20 transition-transform bg-[#015A6B] duration-500`}
         >
           <div
             onClick={(event) => handleUpdateActiveTab(event, "Profile")}
@@ -198,7 +199,7 @@ const Page = () => {
         <div
           className={`w-${
             panelIsOpen ? "1/5" : "0"
-          } h-[44rem] duration-700 ease-in-out`}
+          } h-[90vh] duration-700 ease-in-out`}
         ></div>
         <div
           className={`${
@@ -207,6 +208,7 @@ const Page = () => {
         >
           {activeTab === "Property Management" && <PropertyManagement />}
           {activeTab === "Profile" && <UserManagement />}
+          {activeTab === "Offers" && <Offers/>}
         </div>
       </div>
     </div>

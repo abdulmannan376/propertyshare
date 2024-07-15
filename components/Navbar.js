@@ -141,6 +141,7 @@ const Navbar = () => {
   const [selectedNotification, setSelectedNotification] = useState(null);
 
   const handleUnreadNotificationSelect = async (index) => {
+    console.log("in function : handleUnreadNotificationSelect");
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_SERVER_HOST}/notification/mark-notification-read/${notificationsList[index]?.notificationID}`,
@@ -304,7 +305,7 @@ const Navbar = () => {
                   )}
                 </button>
                 {showDropDowns["notification"] && !selectedNotification && (
-                  <ul className="absolute w-96 -right-0 bg-white border border-[#116A7B] mt-0 max-h-[34rem] overflow-y-auto">
+                  <ul className="absolute w-96 -right-0 text-gray-800 bg-white border border-[#116A7B] mt-0 max-h-[34rem] overflow-y-auto">
                     {notificationsList.map((notification, index) => (
                       <li key={index}>
                         <button
@@ -334,7 +335,7 @@ const Navbar = () => {
                   </ul>
                 )}
                 {showDropDowns["notification"] && selectedNotification && (
-                  <div className="absolute w-96 -right-0 bg-white border border-[#116A7B] mt-0 p-5 space-y-5 h-[34rem] max-h-[34rem] overflow-y-auto">
+                  <div className="absolute w-96 -right-0 bg-white text-gray-800 border border-[#116A7B] mt-0 p-5 space-y-5 h-[34rem] max-h-[34rem] overflow-y-auto">
                     <FaAngleLeft
                       onClick={(e) => {
                         e.stopPropagation();
