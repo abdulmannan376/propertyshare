@@ -516,19 +516,30 @@ const ThreadDisplay = ({ propertyID, propertyDocID, category }) => {
 
   return (
     <>
-      {userRole === "shareholder" ||
-        (userRole === "admin" && (
-          <div>
-            <button
-              type="button"
-              onClick={handleOpenModal}
-              className="text-3xl flex flex-row items-center px-3 py-1 border border-[#116A7B] text-[#116A7B] rounded-full"
-            >
-              {" "}
-              New <FaPlus className="text-xl ml-5" />
-            </button>
-          </div>
-        ))}
+      {userRole === "shareholder" && (
+        <div>
+          <button
+            type="button"
+            onClick={handleOpenModal}
+            className="text-3xl flex flex-row items-center px-3 py-1 border border-[#116A7B] text-[#116A7B] rounded-full"
+          >
+            {" "}
+            New <FaPlus className="text-xl ml-5" />
+          </button>
+        </div>
+      )}
+      {userRole === "admin" && (
+        <div>
+          <button
+            type="button"
+            onClick={handleOpenModal}
+            className="text-3xl flex flex-row items-center px-3 py-1 border border-[#116A7B] text-[#116A7B] rounded-full"
+          >
+            {" "}
+            New <FaPlus className="text-xl ml-5" />
+          </button>
+        </div>
+      )}
       <NewThread
         isOpen={isModalOpen}
         onClose={handleCloseModal}
@@ -551,12 +562,16 @@ const ThreadDisplay = ({ propertyID, propertyDocID, category }) => {
                     fetchThreads(share.shareID);
                   }
                 }}
-                className={`flex flex-row items-center justify-between ${
+                className={`flex flex-col ${
                   selectedThread === index
                     ? "bg-[#116A7B] text-white"
                     : "bg-[#FCFBF5] text-[#116A7B]"
-                } border border-[#D9D9D9] px-5 py-7 my-5 cursor-pointer`}
+                } border border-[#D9D9D9] space-y-3 px-5 py-7 my-5 cursor-pointer`}
               >
+                <h2 className="text-xl">
+                  Share Owner:{" "}
+                  <strong>{share.currentOwnerDocID.username}</strong>
+                </h2>
                 <h1>
                   <strong
                     className={`text-2xl ${

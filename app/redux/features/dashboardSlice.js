@@ -1,11 +1,14 @@
 "use client";
 
 import { createSlice } from "@reduxjs/toolkit";
+import { act } from "react";
 
 const initialState = {
   activeTab: "Profile",
   userRole: "",
-  activePropertyManagementTab: "Listings"
+  activePropertyManagementTab: "Listings",
+  activeOffersTab: "Sent",
+  activeOfferCategoryTab: "Rent",
 };
 
 export const userDashboardSlice = createSlice({
@@ -16,13 +19,25 @@ export const userDashboardSlice = createSlice({
       state.activeTab = action.payload;
     },
     updateUserRole: (state, action) => {
-        state.userRole = action.payload
+      state.userRole = action.payload;
     },
     updateActivePropertyManagementTab: (state, action) => {
-      state.activePropertyManagementTab = action.payload
-    }
+      state.activePropertyManagementTab = action.payload;
+    },
+    updateOffersTab: (state, action) => {
+      state.activeOffersTab = action.payload;
+    },
+    updateOfferCategoryTab: (state, action) => {
+      state.activeOfferCategoryTab = action.payload;
+    },
   },
 });
 
-export const { updateActiveTab, updateUserRole, updateActivePropertyManagementTab} = userDashboardSlice.actions
-export default userDashboardSlice.reducer
+export const {
+  updateActiveTab,
+  updateUserRole,
+  updateActivePropertyManagementTab,
+  updateOffersTab,
+  updateOfferCategoryTab,
+} = userDashboardSlice.actions;
+export default userDashboardSlice.reducer;
