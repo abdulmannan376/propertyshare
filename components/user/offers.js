@@ -90,12 +90,16 @@ const Offers = () => {
   };
 
   const dispatch = useDispatch();
-  useEffect(() => {
+  
+  const fetchData = () => {
     if (activeOffersTab === "Sent") {
       fetchMySentOffers();
     } else {
       fetchMyReceivedOffers();
     }
+  }
+  useEffect(() => {
+    fetchData()
   }, [activeOffersTab, activeOfferCategoryTab]);
 
   return (
@@ -214,7 +218,7 @@ const Offers = () => {
             <div className="mx-14 flex flex-row flex-wrap">
               {mySentOffers.length > 0 ? (
                 mySentOffers.map((card, cardIndex) => (
-                  <OfferCard card={card} key={cardIndex} />
+                  <OfferCard card={card} key={cardIndex} fetchData={fetchData}/>
                 ))
               ) : (
                 <div>No Offers Sent for {activeOfferCategoryTab}</div>
@@ -233,7 +237,7 @@ const Offers = () => {
             <div className="mx-14 flex flex-row flex-wrap">
               {myReceivedOffers.length > 0 ? (
                 myReceivedOffers.map((card, cardIndex) => (
-                  <OfferCard card={card} key={cardIndex} />
+                  <OfferCard card={card} key={cardIndex} fetchData={fetchData}/>
                 ))
               ) : (
                 <div>No Offers Received for {activeOfferCategoryTab}</div>

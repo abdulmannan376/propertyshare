@@ -8,11 +8,16 @@ import { useSelector } from "react-redux";
 import { MdCancel, MdOutlinePending, MdPending } from "react-icons/md";
 import { IoMdCloseCircle } from "react-icons/io";
 import { FaCheckCircle } from "react-icons/fa";
+import { toast } from "react-toastify";
 
-const OfferCard = ({ card }) => {
+const OfferCard = ({ card, fetchData }) => {
   const activeOffersTab = useSelector(
     (state) => state.userDashboardSliceReducer.activeOffersTab
   );
+  const activeOfferCategoryTab = useSelector(
+    (state) => state.userDashboardSliceReducer.activeOfferCategoryTab
+  );
+
   const TruncatingH1 = ({ text }) => {
     const h1Ref = useRef(null);
     const [displayText, setDisplayText] = useState(text);
@@ -104,11 +109,52 @@ const OfferCard = ({ card }) => {
 
     return commutedDateString;
   }
+
+  const handleRentOfferAction = async (action, offerID) => {
+    try {
+      const data = {
+        username: JSON.parse(localStorage.getItem("userDetails")).username,
+        offerID: offerID,
+        action: action,
+      };
+
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_HOST}/share/update-share-rent-offer`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
+
+      const response = await res.json();
+
+      if (response.success) {
+        fetchData();
+      } else {
+        throw new Error(response.message);
+      }
+    } catch (error) {
+      toast.error(error.message, {
+        position: "bottom-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  };
   return (
-    <Link
-      href={`/rent-shares/property/${card.shareDocID.propertyDocID.propertyID}`}
-      className="w-[20rem] bg-white border-2 border-[#D9D9D9] rounded-xl mr-20 mt-5"
-    >
+    // <Link
+    //   href={`/rent-shares/property/${card.shareDocID.propertyDocID.propertyID}`}
+    //   className="w-[20rem] bg-white border-2 border-[#D9D9D9] rounded-xl mr-20 mt-5"
+    // >
+    <div className="w-[20rem] bg-white border-2 border-[#D9D9D9] rounded-xl mr-20 mt-5">
       <div className="p-2 relative">
         <Image
           width={1000}
@@ -224,12 +270,30 @@ const OfferCard = ({ card }) => {
             )}
           </div>
         )}
+        {activeOffersTab === "Sent" && card.status !== "cancelled" && (
+          <button
+            type="button"
+            onClick={() => {
+              if (activeOfferCategoryTab === "Rent") {
+                handleRentOfferAction("cancelled", card.shareOfferID);
+              }
+            }}
+            className="flex flex-row items-center justify-center"
+          >
+            <p className="mx-2 text-gray-500 underline">Cancel</p>
+          </button>
+        )}
         {activeOffersTab === "Received" && (
           <div className="flex flex-row items-center">
             {card.status === "pending" && (
               <div className="w-full flex flex-row items-center justify-around">
                 <button
                   type="button"
+                  onClick={() => {
+                    if (activeOfferCategoryTab === "Rent") {
+                      handleRentOfferAction("rejected", card.shareOfferID);
+                    }
+                  }}
                   className="flex flex-row items-center justify-center"
                 >
                   <IoMdCloseCircle className="text-xl text-gray-500" />{" "}
@@ -237,6 +301,11 @@ const OfferCard = ({ card }) => {
                 </button>
                 <button
                   type="button"
+                  onClick={() => {
+                    if (activeOfferCategoryTab === "Rent") {
+                      handleRentOfferAction("accepted", card.shareOfferID);
+                    }
+                  }}
                   className="flex flex-row items-center justify-center"
                 >
                   <FaCheckCircle className="text-xl text-[#116A7B]" />{" "}
@@ -265,7 +334,8 @@ const OfferCard = ({ card }) => {
           </div>
         )}
       </div>
-    </Link>
+    </div>
+    // </Link>
   );
 };
 
