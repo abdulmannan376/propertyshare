@@ -7,12 +7,12 @@ const SectionContact = () => {
   const [message, setMessage] = useState("");
   return (
     <div
-      className="w-full h-full flex flex-row items-center justify-center bg-cover bg-center p-16"
+      className="w-full h-full flex flex-row items-center justify-center bg-cover bg-center xxl:px-24 xl:px-16 lg:px-10 py-24"
       style={{
         backgroundImage: "url('/assets/landing-page/section-contactus.png')",
       }}
     >
-      <div className="w-[35vw] bg-white py-14 px-7 rounded-3xl">
+      <div className="xl:w-[35vw] lg:w-[45vw] w-[45vw] bg-white py-14 px-7 rounded-3xl">
         <h1 className="text-4xl text-center text-[#116A7B] font-medium">
           Contact Us!
         </h1>

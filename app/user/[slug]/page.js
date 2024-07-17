@@ -11,7 +11,13 @@ import PropertyManagement from "@/components/user/addProperty";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import UserManagement from "@/components/user/userManagement";
-import { updateBgColor, updateCurrentPageValue, updateDropdrownStatus, updateNavbarLogo, updateNavbarTextColor } from "@/app/redux/features/navbarSlice";
+import {
+  updateBgColor,
+  updateCurrentPageValue,
+  updateDropdrownStatus,
+  updateNavbarLogo,
+  updateNavbarTextColor,
+} from "@/app/redux/features/navbarSlice";
 import Offers from "@/components/user/offers";
 
 const Page = () => {
@@ -113,7 +119,9 @@ const Page = () => {
   };
 
   return (
-    <div onClick={() => dispatch(updateDropdrownStatus({ field: "close all" }))}>
+    <div
+      onClick={() => dispatch(updateDropdrownStatus({ field: "close all" }))}
+    >
       <ToastContainer
         position="bottom-center"
         autoClose={5000}
@@ -132,7 +140,7 @@ const Page = () => {
           ref={panelRef}
           className={`${
             panelIsOpen ? "-translate-x-[0%]" : "-translate-x-[100%]"
-          } absolute w-1/5 h-[90vh] max-h-[90vh] z-20 transition-transform bg-[#015A6B] duration-500`}
+          } absolute xl:w-1/5 lg:w-[23%] xxl:h-[90vh] xl:h-[93vh] lg:h-[93vh] max-h-[100vh] z-20 transition-transform bg-[#015A6B] duration-500`}
         >
           <div
             onClick={(event) => handleUpdateActiveTab(event, "Profile")}
@@ -177,7 +185,7 @@ const Page = () => {
                 option.roles.includes(userRole) && (
                   <li
                     key={index}
-                    className={`text-xl text-white font-medium  ${
+                    className={`xl:text-xl lg:text-base text-white font-medium  ${
                       activeTab === option.name ? "bg-[#8E9B9D]" : ""
                     }`}
                   >
@@ -197,18 +205,19 @@ const Page = () => {
           </ul>
         </div>
         <div
-          className={`w-${
-            panelIsOpen ? "1/5" : "0"
-          } h-[90vh] duration-700 ease-in-out`}
+          className={`${
+            panelIsOpen ? "xl:w-[20%] lg:w-[23%]" : "0"
+          } xxl:h-[90vh] xl:h-[93vh] lg:h-[93vh] duration-700 ease-in-out`}
         ></div>
         <div
           className={`${
-            panelIsOpen ? "w-4/5" : "w-full"
+            panelIsOpen ? "xl:w-4/5 lg:w-[77%]" : "w-full"
           } duration-700 ease-in-out`}
         >
           {activeTab === "Property Management" && <PropertyManagement />}
           {activeTab === "Profile" && <UserManagement />}
-          {activeTab === "Offers" && <Offers/>}
+          {activeTab === "Offers" && <Offers />}
+
         </div>
       </div>
     </div>

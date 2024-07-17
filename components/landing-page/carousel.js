@@ -145,13 +145,37 @@ const Carousel = () => {
         // Trigger updates to state based on the intersection ratio
         // If less than 85% of the item is visible, we assume 15% is out of view
         if (entry.intersectionRatio < 0.85) {
-          console.log(entry.intersectionRatio, "in if");
           dispatch(updateBgColor("bg-[#116A7B]"));
           dispatch(updateNotificationIconColor("text-white"));
+          dispatch(
+            updateCurrentPageValue({
+              tag: "Home",
+              bgColor: "bg-white",
+              textColor: "text-[#116A7B]",
+            })
+          );
+          dispatch(
+            updateNavbarTextColor({
+              textColor: "text-white",
+              hoverTextColor: "text-white",
+            })
+          );
         } else {
-          console.log(entry.intersectionRatio, "in else");
           dispatch(updateNotificationIconColor("text-white"));
           dispatch(updateBgColor("bg-transparent"));
+          dispatch(
+            updateCurrentPageValue({
+              tag: "Home",
+              bgColor: "bg-[#116A7B]",
+              textColor: "text-white",
+            })
+          );
+          dispatch(
+            updateNavbarTextColor({
+              textColor: "text-gray-600",
+              hoverTextColor: "text-gray-900",
+            })
+          );
         }
       },
       {
@@ -180,7 +204,7 @@ const Carousel = () => {
         handleDropdownActivity("areaActive", false, e);
         handleDropdownActivity("bedsActive", false, e);
       }}
-      className="w-full h-screen flex flex-row items-center justify-start bg-cover bg-center xl:px-24 px-16"
+      className="w-full h-screen flex flex-row items-center justify-start bg-cover bg-center xxl:px-24 xl:px-16 lg:px-10 px-16"
       style={{ backgroundImage: "url('/assets/landing-page/carousel-bg.svg')" }}
       ref={carouselRef}
     >

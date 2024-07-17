@@ -43,7 +43,7 @@ const Page = () => {
   return (
     <div onClick={() => dispatch(updateDropdrownStatus({ field: "close all" }))}>
       <div className="w-full h-20 bg-[#116A7B]"></div>
-      <div className="w-screen flex items-center justify-start xl:mx-24 mx-16 md:space-x-20 space-x-14 my-3 text-white text-2xl font-semibold">
+      <div className="w-screen flex items-center justify-start xxl:mx-24 xl:mx-16 lg:mx-10 md:space-x-20 space-x-14 my-3 text-white text-2xl font-semibold">
         <button
           onClick={() =>
             dispatch(handleUserSettingNavigation("Profile Setting"))
@@ -78,7 +78,7 @@ const Page = () => {
         {/* </Link> */}
       </div>
       {settingActiveTab === "Profile Setting" && (
-        <div className="flex flex-row flex-wrap space-x-5 xl:mx-24 mx-16 my-16 text-xl">
+        <div className="flex flex-row flex-wrap space-x-5 xxl:mx-24 xl:mx-16 lg:mx-10 my-16 text-xl">
           <button
             type="button"
             onClick={() =>

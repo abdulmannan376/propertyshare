@@ -3,13 +3,13 @@ import React from "react";
 
 const SectionAboutUs = () => {
   return (
-    <div className="bg-[#116A7B]">
-      <div className="px-14 pt-14">
+    <div className="bg-[#116A7B] xxl:px-24 xl:px-16 lg:px-10">
+      <div className="pt-14">
         <h1 className="xl:text-[40px] text-4xl text-center uppercase font-semibold text-white">
           Discover how we can help
         </h1>
       </div>
-      <div className="w-full flex flex-row items-start justify-between px-14 pt-16">
+      <div className="w-full flex flex-row items-start justify-between pt-16">
         <div className="w-1/2 bg-white p-2 rounded-3xl">
           <Image
             width={2000}
@@ -31,7 +31,7 @@ const SectionAboutUs = () => {
           </p>
         </div>
       </div>
-      <div className="w-full flex flex-row items-start justify-between px-14 pt-16">
+      <div className="w-full flex flex-row items-start justify-between pt-16">
         <div className="w-1/2 px-20">
           <h2 className="text-4xl tracking-widest text-white font-raleway">
             Know the facts about a location
@@ -53,7 +53,7 @@ const SectionAboutUs = () => {
           />
         </div>
       </div>
-      <div className="w-full flex flex-row items-start justify-between px-14 py-16">
+      <div className="w-full flex flex-row items-start justify-between py-16">
         <div className="w-1/2 bg-white p-2 rounded-3xl">
           <Image
             width={2000}

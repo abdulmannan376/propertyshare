@@ -242,7 +242,7 @@ const Page = () => {
         theme="light"
       />
       <div className="w-full h-20 bg-[#116A7B]"></div>
-      <div className="xl:mx-24 mx-16 relative mb-20">
+      <div className="xxl:mx-24 xl:mx-16 lg:mx-10 relative mb-20">
         <div className="">
           <SearchBar setIsFilterUpdated={setIsFilterUpdated} />
         </div>
@@ -267,7 +267,7 @@ const Page = () => {
             Featured Properties
           </h1>
           {!isFeaturedPropertyLoading ? (
-            <div className="xl:mx-24 mx-16 flex flex-row flex-wrap">
+            <div className="xxl:mx-24 xl:mx-16 lg:mx-10 flex flex-row flex-wrap">
               {featuredProperties.map((card, cardIndex) => (
                 <PropertyCard card={card} key={cardIndex} />
               ))}
@@ -285,7 +285,7 @@ const Page = () => {
             Most Viewed Properties
           </h1>
           {!isMostViewedLoading ? (
-            <div className="xl:mx-24 mx-16 flex flex-row flex-wrap">
+            <div className="xxl:mx-24 xl:mx-16 lg:mx-10 flex flex-row flex-wrap">
               {mostViewedProperties.map((card, cardIndex) => (
                 <PropertyCard card={card} key={cardIndex} />
               ))}
@@ -303,7 +303,7 @@ const Page = () => {
             Recently Added Properties
           </h1>
           {!isRecentlyAddedLoading ? (
-            <div className="xl:mx-24 mx-16 flex flex-row flex-wrap">
+            <div className="xxl:mx-24 xl:mx-16 lg:mx-10 flex flex-row flex-wrap">
               {recentlyAddedProperties.map((card, cardIndex) => (
                 <PropertyCard card={card} key={cardIndex} />
               ))}

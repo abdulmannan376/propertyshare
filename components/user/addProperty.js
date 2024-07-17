@@ -828,7 +828,7 @@ const PropertyManagement = () => {
   };
 
   return (
-    <div className="bg-white w-full my-6 h-[85vh] max-h-[90vh] overflow-y-auto">
+    <div className="bg-white w-full my-6 lg:h-[85vh] max-h-[85vh] overflow-y-auto">
       {isAddPropertyClicked ? (
         <div className="w-full flex flex-row items-center pb-8 px-14">
           <h1 className="text-2xl font-medium">Add Property</h1>
@@ -2007,28 +2007,28 @@ const PropertyManagement = () => {
                         width={1000}
                         height={1000}
                         src={"/assets/user/property-management/no-image.jpg"}
-                        className="w-64 h-60 object-cover object-center"
+                        className="xl:w-64 lg:w-52 xl:h-60 lg:h-48 object-cover object-center"
                       />
                     ) : (
                       <Image
                         width={1000}
                         height={1000}
                         src={`${process.env.NEXT_PUBLIC_SERVER_HOST}/${share.propertyDetails.imageDirURL}/image-1.png`}
-                        className="w-64 h-60 object-cover object-center"
+                        className="xl:w-64 lg:w-52 xl:h-60 lg:h-56 object-cover object-center"
                       />
                     )}
                     <div className="ml-10 space-y-5 my-5">
                       <div className="flex flex-row text-2xl text-[#09363F]">
-                        <h1 className="w-80 text-2xl font-medium">
+                        <h1 className="xl:w-80 lg:w-60 text-2xl font-medium">
                           Property Title:{" "}
                         </h1>
-                        <p className="ml-44">{share.propertyDetails.title}</p>
+                        <p className="xl:hare. lg:ml-20">{share.propertyDetails.title}</p>
                       </div>
                       <div className="flex flex-row text-2xl text-[#09363F]">
-                        <h1 className="w-80 text-2xl font-medium">
+                        <h1 className="xl:w-80 lg:w-60 text-2xl font-medium">
                           My Shares:{" "}
                         </h1>
-                        <p className="ml-44">
+                        <p className="xl:ml-44 lg:ml-20">
                           {
                             sharesCountByProperty.filter(
                               (entry) =>
@@ -2039,18 +2039,18 @@ const PropertyManagement = () => {
                         </p>
                       </div>
                       <div className="flex flex-row text-2xl text-[#09363F]">
-                        <h1 className="w-80 text-2xl font-medium">
+                        <h1 className="xl:w-80 lg:w-60 text-2xl font-medium">
                           Total Shares:{" "}
                         </h1>
-                        <p className="ml-44">
+                        <p className="xl:ml-44 lg:ml-20">
                           {share.propertyDetails.totalStakes}
                         </p>
                       </div>
                       <div className="flex flex-row text-2xl text-[#09363F]">
-                        <h1 className="w-80 text-2xl font-medium">
+                        <h1 className="xl:w-80 lg:w-60 text-2xl font-medium">
                           Available Shares:{" "}
                         </h1>
-                        <p className="ml-44">
+                        <p className="xl:ml-44 lg:ml-20">
                           {share.propertyDetails.totalStakes -
                             share.propertyDetails.stakesOccupied}
                         </p>
@@ -2074,28 +2074,28 @@ const PropertyManagement = () => {
                         width={1000}
                         height={1000}
                         src={"/assets/user/property-management/no-image.jpg"}
-                        className="w-64 h-60 object-cover object-center"
+                        className="xl:w-64 lg:w-52 xl:h-60 lg:h-56 object-cover object-center"
                       />
                     ) : (
                       <Image
                         width={1000}
                         height={1000}
                         src={`${process.env.NEXT_PUBLIC_SERVER_HOST}/${share.propertyDetails.imageDirURL}/image-1.png`}
-                        className="w-64 h-60 object-cover object-center"
+                        className="xl:w-64 lg:w-52 xl:h-60 lg:h-56 object-cover object-center"
                       />
                     )}
                     <div className="ml-10 space-y-5 my-5">
                       <div className="flex flex-row text-2xl text-[#09363F]">
-                        <h1 className="w-80 text-2xl font-medium">
+                        <h1 className="xl:w-80 lg:w-60 text-2xl font-medium">
                           Property Title:{" "}
                         </h1>
-                        <p className="ml-44">{share.propertyDetails.title}</p>
+                        <p className="xl:ml-44 lg:ml-20">{share.propertyDetails.title}</p>
                       </div>
                       <div className="flex flex-row text-2xl text-[#09363F]">
-                        <h1 className="w-80 text-2xl font-medium">
+                        <h1 className="xl:w-80 lg:w-60 text-2xl font-medium">
                           My Reservations:{" "}
                         </h1>
-                        <p className="ml-44">
+                        <p className="xl:ml-44 lg:ml-20">
                           {
                             myShareReservations.filter(
                               (entry) =>
@@ -2106,18 +2106,18 @@ const PropertyManagement = () => {
                         </p>
                       </div>
                       <div className="flex flex-row text-2xl text-[#09363F]">
-                        <h1 className="w-80 text-2xl font-medium">
+                        <h1 className="xl:w-80 lg:w-60 text-2xl font-medium">
                           Total Shares:{" "}
                         </h1>
-                        <p className="ml-44">
+                        <p className="xl:ml-44 lg:ml-20">
                           {share.propertyDetails.totalStakes}
                         </p>
                       </div>
                       <div className="flex flex-row text-2xl text-[#09363F]">
-                        <h1 className="w-80 text-2xl font-medium">
+                        <h1 className="xl:w-80 lg:w-60 text-2xl font-medium">
                           Available Shares:{" "}
                         </h1>
-                        <p className="ml-44">
+                        <p className="xl:ml-44 lg:ml-20">
                           {share.propertyDetails.totalStakes -
                             share.propertyDetails.stakesOccupied}
                         </p>

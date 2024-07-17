@@ -204,7 +204,7 @@ const FilterComponent = ({
                       e
                     );
                   }}
-                  className="xl:w-96 lg:w-64 bg-transparent p-3 text-xl text-[#676767] flex items-center justify-between"
+                  className="xxl:w-96 xl:w-64 lg:w-52 bg-transparent p-3 text-xl text-[#676767] flex items-center justify-between"
                 >
                   Property Type{" "}
                   <div className="flex flex-row items-center space-x-5">

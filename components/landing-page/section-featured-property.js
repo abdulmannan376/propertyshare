@@ -139,7 +139,7 @@ const SectionFeaturedProperty = () => {
             Featured Properties
           </h1> */}
           {!isFeaturedPropertyLoading ? (
-            <div className="xl:mx-24 mx-16 flex flex-row flex-wrap">
+            <div className="xxl:mx-24 xl:mx-16 lg:mx-10 mx-16 flex flex-row flex-wrap items-center justify-around">
               {featuredProperties.map((card, cardIndex) => (
                 <Link
                   href={`/buy-shares/property/${card.propertyID}`}

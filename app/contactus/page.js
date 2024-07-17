@@ -44,7 +44,7 @@ const Page = () => {
       }}
       onClick={() => dispatch(updateDropdrownStatus({ field: "close all" }))}
     >
-      <div className="w-[35vw] bg-white py-14 px-7 rounded-3xl">
+      <div className="xxl:w-[35vw] lg:w-[45vw] bg-white py-14 px-7 rounded-3xl">
         <h1 className="text-4xl text-center text-[#116A7B] font-medium">
           Contact Us!
         </h1>

@@ -195,7 +195,7 @@ const Navbar = () => {
         className={`fixed top-0 w-full ${textColor} ${bgColor} body-font z-[1000]`}
         onClick={() => dispatch(updateDropdrownStatus({ field: "close all" }))}
       >
-        <div className="xl:mx-24 mx-16 flex flex-wrap p-5 flex-col md:flex-row items-center">
+        <div className="xxl:mx-24 xl:mx-16 lg:mx-10 mx-16 flex flex-wrap p-5 flex-col md:flex-row items-center">
           <Link
             href={"/"}
             className="flex flex-col title-font font-medium items-center justify-center text-gray-900 mb-4 md:mb-0"

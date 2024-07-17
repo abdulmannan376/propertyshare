@@ -226,7 +226,7 @@ const SectionMap = () => {
         }}
         className="bg-white"
       >
-        <div className="mx-14 mt-14">
+        <div className=" xxl:mx-24 xl:mx-16 mx-16 lg:mx-10 mt-14">
           <h1 className="xl:text-[40px] text-4xl text-center uppercase font-semibold text-[#116A7B] ">
             request property <i className="text-[#CDC2AE]"> anywhere</i> you
             wish
@@ -248,7 +248,7 @@ const SectionMap = () => {
             nameResult={setSearchedName}
           />
         </div>
-        <div className="mt-6 mx-14">
+        <div className="mt-6 xxl:mx-24 xl:mx-16 lg:mx-10">
           <MapContainer
             center={position || [51.505, -0.09]}
             zoom={15}

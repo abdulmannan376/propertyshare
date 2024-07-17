@@ -17,10 +17,12 @@ module.exports = {
       raleway: ["Raleway", "sans-serif"],
     },
     screens: {
+      xxl: "1920px",
       xl: "1760px",
       lg: "1360px",
       md: "1024px",
-      sm: "520px",
+      sm: "720px",
+      xs: "480px"
     },
   },
 
