@@ -14,6 +14,7 @@ const initialState = {
     user: false,
     notification: false,
   },
+  menuIconColor: "text-white",
 };
 
 export const navbarSlice = createSlice({
@@ -48,6 +49,9 @@ export const navbarSlice = createSlice({
         state.showDropdowns.notification = false;
       }
     },
+    updateMenuColor: (state, action) => {
+      state.menuIconColor = action.payload;
+    },
   },
 });
 
@@ -58,5 +62,6 @@ export const {
   updateCurrentPageValue,
   updateBgColor,
   updateDropdrownStatus,
+  updateMenuColor,
 } = navbarSlice.actions;
 export default navbarSlice.reducer;

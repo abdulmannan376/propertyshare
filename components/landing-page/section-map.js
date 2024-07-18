@@ -226,8 +226,8 @@ const SectionMap = () => {
         }}
         className="bg-white"
       >
-        <div className=" xxl:mx-24 xl:mx-16 mx-16 lg:mx-10 md:mx-5 mt-14">
-          <h1 className="xl:text-[40px] text-4xl text-center uppercase font-semibold text-[#116A7B] ">
+        <div className=" xxl:mx-24 xl:mx-16 mx-16 lg:mx-10 sm:mx-5 mt-14">
+          <h1 className="xl:text-[40px] md:text-4xl text-2xl text-center uppercase font-semibold text-[#116A7B] ">
             request property <i className="text-[#CDC2AE]"> anywhere</i> you
             wish
           </h1>
@@ -248,7 +248,7 @@ const SectionMap = () => {
             nameResult={setSearchedName}
           />
         </div>
-        <div className="mt-6 xxl:mx-24 xl:mx-16 lg:mx-10 md:mx-5">
+        <div className="mt-6 xxl:mx-24 xl:mx-16 lg:mx-10 sm:mx-5">
           <MapContainer
             center={position || [51.505, -0.09]}
             zoom={15}
@@ -346,7 +346,7 @@ const SectionMap = () => {
                     handleDropdownActivity("propertyTypeActive", false, e);
                   }
                 }}
-                className="w-72 bg-transparent p-3 text-xl font-semibold flex items-center justify-between"
+                className="md:w-72 w-56 bg-transparent p-3 md:text-xl text-base font-semibold flex items-center justify-between"
               >
                 <h1>
                   {filter.name}{" "}
@@ -363,7 +363,7 @@ const SectionMap = () => {
                 )}
               </button>
               {index === 1 && dropdownsStatus["availableSharesActive"] && (
-                <div className="absolute w-72 bg-white ">
+                <div className="absolute md:w-72 w-56 bg-white ">
                   <ul className="px-5 space-y-1 max-h-40 overflow-y-auto">
                     {filter.data.map((listItem, i) => (
                       <li
@@ -381,7 +381,7 @@ const SectionMap = () => {
                 </div>
               )}
               {index === 0 && dropdownsStatus["propertyTypeActive"] && (
-                <div className="absolute w-72 bg-white z-[5000]">
+                <div className="absolute md:w-72 w-56 bg-white z-[5000]">
                   <ul className="px-5 space-y-1 max-h-60 overflow-y-auto">
                     {filter.data.map((listItem, i) => (
                       <li

@@ -1758,7 +1758,9 @@ const PropertyManagement = () => {
                             key={index}
                             width={1000}
                             height={1000}
-                            src={`${process.env.NEXT_PUBLIC_SERVER_HOST}/uploads/${
+                            src={`${
+                              process.env.NEXT_PUBLIC_SERVER_HOST
+                            }/uploads/${
                               myProperties[propertyByIndex].propertyID
                             }/image-${index + 1}.png`}
                             className="w-60 h-32  object-fit rounded-xl overflow-hidden "
@@ -1909,6 +1911,22 @@ const PropertyManagement = () => {
                 Reservations
               </h2>
             </button>
+            <button
+              onClick={() => {
+                dispatch(updateActivePropertyManagementTab("Rentals"));
+                fetchMyRentals();
+              }}
+            >
+              <h2
+                className={`flex ${
+                  activeNavBtn === "Rentals"
+                    ? "underline-text"
+                    : "hover-underline-animation"
+                } `}
+              >
+                Rentals
+              </h2>
+            </button>
 
             {/* </Link> */}
           </div>
@@ -2007,25 +2025,27 @@ const PropertyManagement = () => {
                         width={1000}
                         height={1000}
                         src={"/assets/user/property-management/no-image.jpg"}
-                        className="xl:w-64 lg:w-52 xl:h-60 lg:h-48 object-cover object-center"
+                        className="xl:w-64 lg:w-52 md:w-44 md:h-48 xl:h-60 lg:h-48 object-cover object-center"
                       />
                     ) : (
                       <Image
                         width={1000}
                         height={1000}
                         src={`${process.env.NEXT_PUBLIC_SERVER_HOST}/${share.propertyDetails.imageDirURL}/image-1.png`}
-                        className="xl:w-64 lg:w-52 xl:h-60 lg:h-56 object-cover object-center"
+                        className="xl:w-64 lg:w-52 md:w-52 md:h-60 xl:h-60 lg:h-56 object-cover object-center"
                       />
                     )}
                     <div className="ml-10 space-y-5 my-5">
                       <div className="flex flex-row text-2xl text-[#09363F]">
-                        <h1 className="xl:w-80 lg:w-60 text-2xl font-medium">
+                        <h1 className="xl:w-80 lg:w-60 md:w-60 text-2xl font-medium">
                           Property Title:{" "}
                         </h1>
-                        <p className="xl:hare. lg:ml-20">{share.propertyDetails.title}</p>
+                        <p className="xl:hare. lg:ml-20">
+                          {share.propertyDetails.title}
+                        </p>
                       </div>
                       <div className="flex flex-row text-2xl text-[#09363F]">
-                        <h1 className="xl:w-80 lg:w-60 text-2xl font-medium">
+                        <h1 className="xl:w-80 lg:w-60 md:w-60 text-2xl font-medium">
                           My Shares:{" "}
                         </h1>
                         <p className="xl:ml-44 lg:ml-20">
@@ -2039,7 +2059,7 @@ const PropertyManagement = () => {
                         </p>
                       </div>
                       <div className="flex flex-row text-2xl text-[#09363F]">
-                        <h1 className="xl:w-80 lg:w-60 text-2xl font-medium">
+                        <h1 className="xl:w-80 lg:w-60 md:w-60 text-2xl font-medium">
                           Total Shares:{" "}
                         </h1>
                         <p className="xl:ml-44 lg:ml-20">
@@ -2047,7 +2067,7 @@ const PropertyManagement = () => {
                         </p>
                       </div>
                       <div className="flex flex-row text-2xl text-[#09363F]">
-                        <h1 className="xl:w-80 lg:w-60 text-2xl font-medium">
+                        <h1 className="xl:w-80 lg:w-60 md:w-60 text-2xl font-medium">
                           Available Shares:{" "}
                         </h1>
                         <p className="xl:ml-44 lg:ml-20">
@@ -2074,25 +2094,27 @@ const PropertyManagement = () => {
                         width={1000}
                         height={1000}
                         src={"/assets/user/property-management/no-image.jpg"}
-                        className="xl:w-64 lg:w-52 xl:h-60 lg:h-56 object-cover object-center"
+                        className="xl:w-64 lg:w-52 md:w-52 xl:h-60 lg:h-56 md:h-60 object-cover object-center"
                       />
                     ) : (
                       <Image
                         width={1000}
                         height={1000}
                         src={`${process.env.NEXT_PUBLIC_SERVER_HOST}/${share.propertyDetails.imageDirURL}/image-1.png`}
-                        className="xl:w-64 lg:w-52 xl:h-60 lg:h-56 object-cover object-center"
+                        className="xl:w-64 lg:w-52 md:w-52 xl:h-60 lg:h-56 md:h-60 object-cover object-center"
                       />
                     )}
                     <div className="ml-10 space-y-5 my-5">
                       <div className="flex flex-row text-2xl text-[#09363F]">
-                        <h1 className="xl:w-80 lg:w-60 text-2xl font-medium">
+                        <h1 className="xl:w-80 lg:w-60 md:w-60 text-2xl font-medium">
                           Property Title:{" "}
                         </h1>
-                        <p className="xl:ml-44 lg:ml-20">{share.propertyDetails.title}</p>
+                        <p className="xl:ml-44 lg:ml-20">
+                          {share.propertyDetails.title}
+                        </p>
                       </div>
                       <div className="flex flex-row text-2xl text-[#09363F]">
-                        <h1 className="xl:w-80 lg:w-60 text-2xl font-medium">
+                        <h1 className="xl:w-80 lg:w-60 md:w-60 text-2xl font-medium">
                           My Reservations:{" "}
                         </h1>
                         <p className="xl:ml-44 lg:ml-20">
@@ -2106,7 +2128,7 @@ const PropertyManagement = () => {
                         </p>
                       </div>
                       <div className="flex flex-row text-2xl text-[#09363F]">
-                        <h1 className="xl:w-80 lg:w-60 text-2xl font-medium">
+                        <h1 className="xl:w-80 lg:w-60 md:w-60 text-2xl font-medium">
                           Total Shares:{" "}
                         </h1>
                         <p className="xl:ml-44 lg:ml-20">
@@ -2114,7 +2136,7 @@ const PropertyManagement = () => {
                         </p>
                       </div>
                       <div className="flex flex-row text-2xl text-[#09363F]">
-                        <h1 className="xl:w-80 lg:w-60 text-2xl font-medium">
+                        <h1 className="xl:w-80 lg:w-60 md:w-60 text-2xl font-medium">
                           Available Shares:{" "}
                         </h1>
                         <p className="xl:ml-44 lg:ml-20">

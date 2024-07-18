@@ -121,7 +121,7 @@ const SectionFeaturedProperty = () => {
   return (
     <div className="bg-[#CDC2AE] bg-opacity-5">
       <div className="px-14 pt-14">
-        <h1 className="xl:text-[40px] text-4xl text-center uppercase font-semibold text-[#116A7B] ">
+        <h1 className="xl:text-[40px] md:text-4xl text-2xl text-center uppercase font-semibold text-[#116A7B] ">
           Featured property around the globe
         </h1>
         {/* <h1 className="text-4xl text-center uppercase font-semibold text-[#116A7B] ">
@@ -141,12 +141,12 @@ const SectionFeaturedProperty = () => {
             Featured Properties
           </h1> */}
           {!isFeaturedPropertyLoading ? (
-            <div className="xxl:mx-24 xl:mx-16 lg:mx-10 md:mx-5 mx-16 flex flex-row flex-wrap items-center justify-center">
+            <div className="xxl:mx-24 xl:mx-16 lg:mx-10 sm:mx-5 mx-16 flex flex-row flex-wrap items-center justify-center">
               {featuredProperties.map((card, cardIndex) => (
                 <Link
                   href={`/buy-shares/property/${card.propertyID}`}
                   key={cardIndex}
-                  className="w-[20rem] bg-white border-2 border-[#D9D9D9] rounded-xl mx-10 mt-20"
+                  className="w-[20rem] bg-white border-2 border-[#D9D9D9] rounded-xl md:mx-10 mx-1 mt-20"
                 >
                   <div className="p-2 relative">
                     <Image

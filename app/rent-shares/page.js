@@ -242,7 +242,7 @@ const Page = () => {
         theme="light"
       />
       <div className="w-full h-20 bg-[#116A7B]"></div>
-      <div className="xxl:mx-24 xl:mx-16 lg:mx-10 md:mx-5 relative mb-20">
+      <div className="xxl:mx-24 xl:mx-16 lg:mx-10 sm:mx-5 relative mb-20">
         <div className="">
           <SearchBar setIsFilterUpdated={setIsFilterUpdated} />
         </div>
@@ -267,7 +267,7 @@ const Page = () => {
             Featured Properties
           </h1>
           {!isFeaturedPropertyLoading ? (
-            <div className="xxl:mx-24 xl:mx-16 lg:mx-10 md:mx-5 flex flex-row flex-wrap items-center justify-center">
+            <div className="xxl:mx-24 xl:mx-16 lg:mx-10 sm:mx-5 flex flex-row flex-wrap items-center justify-center">
               {featuredProperties.map((card, cardIndex) => (
                 <PropertyCard card={card} key={cardIndex} />
               ))}
@@ -285,7 +285,7 @@ const Page = () => {
             Most Viewed Properties
           </h1>
           {!isMostViewedLoading ? (
-            <div className="xxl:mx-24 xl:mx-16 lg:mx-10 md:mx-5 flex flex-row flex-wrap items-center justify-center">
+            <div className="xxl:mx-24 xl:mx-16 lg:mx-10 sm:mx-5 flex flex-row flex-wrap items-center justify-center">
               {mostViewedProperties.map((card, cardIndex) => (
                 <PropertyCard card={card} key={cardIndex} />
               ))}
@@ -303,7 +303,7 @@ const Page = () => {
             Recently Added Properties
           </h1>
           {!isRecentlyAddedLoading ? (
-            <div className="xxl:mx-24 xl:mx-16 lg:mx-10 md:mx-5 flex flex-row flex-wrap items-center justify-center">
+            <div className="xxl:mx-24 xl:mx-16 lg:mx-10 sm:mx-5 flex flex-row flex-wrap items-center justify-center">
               {recentlyAddedProperties.map((card, cardIndex) => (
                 <PropertyCard card={card} key={cardIndex} />
               ))}

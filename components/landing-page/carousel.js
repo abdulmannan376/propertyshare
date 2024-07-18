@@ -145,6 +145,7 @@ const Carousel = () => {
         // Trigger updates to state based on the intersection ratio
         // If less than 85% of the item is visible, we assume 15% is out of view
         if (entry.intersectionRatio < 0.85) {
+          dispatch(updateNavbarLogo("/white-icon-bbh.png"));
           dispatch(updateBgColor("bg-[#116A7B]"));
           dispatch(updateNotificationIconColor("text-white"));
           dispatch(
@@ -161,6 +162,7 @@ const Carousel = () => {
             })
           );
         } else {
+          dispatch(updateNavbarLogo("/icon-bbh.png"));
           dispatch(updateNotificationIconColor("text-white"));
           dispatch(updateBgColor("bg-transparent"));
           dispatch(
@@ -204,7 +206,7 @@ const Carousel = () => {
         handleDropdownActivity("areaActive", false, e);
         handleDropdownActivity("bedsActive", false, e);
       }}
-      className="w-full h-screen flex flex-row items-center justify-start bg-cover bg-center xxl:px-24 xl:px-16 lg:px-10 md:px-5 px-16"
+      className="w-full h-screen flex md:flex-row flex-col items-center md:justify-start justify-center bg-cover bg-center xxl:px-24 xl:px-16 lg:px-10 md:px-5 px-10"
       style={{ backgroundImage: "url('/assets/landing-page/carousel-bg.svg')" }}
       ref={carouselRef}
     >
@@ -216,7 +218,7 @@ const Carousel = () => {
           className="lg:w-[245px] lg:h-[210px] w-[230px] h-[195px] object-contain"
         />
       </div>
-      <div className="w-1/2 h-full flex flex-col items-start justify-center py-10">
+      <div className="md:w-1/2 w-full md:h-full flex flex-col items-center justify-center py-10">
         <h1 className="lg:text-3xl text-2xl font-raleway text-[#116A7B] tracking-wide font-thin">
           Find your dream vacation home
         </h1>
@@ -285,12 +287,12 @@ const Carousel = () => {
                   handleDropdownActivity("areaActive", false, e);
                   handleDropdownActivity("bedsActive", false, e);
                 }}
-                className="lg:w-64 md:w-40 bg-transparent border-r border-[#676767] p-3 lg:text-xl md:text-base text-[#676767] flex items-center justify-between"
+                className="lg:w-64 md:w-40 sm:w-40 xs:w-40 bg-transparent border-r border-[#676767] p-3 lg:text-xl md:text-base text-[#676767] flex items-center justify-between"
               >
                 Property Type <FaAngleDown />
               </button>
               {dropdownsStatus["propertyTypeActive"] && (
-                <div className="absolute lg:w-64 md:w-40 bg-white ">
+                <div className="absolute lg:w-64 md:w-40 sm:w-40 xs:w-40 bg-white ">
                   <ul className="px-5 space-y-1 max-h-60 overflow-y-auto">
                     {dropdowns.propertyType.data.map((listItem, index) => (
                       <li
@@ -343,12 +345,12 @@ const Carousel = () => {
                   handleDropdownActivity("areaActive", false, e);
                   handleDropdownActivity("bedsActive", false, e);
                 }}
-                className="lg:w-64 md:w-40 bg-transparent border-r border-[#676767] p-3 lg:text-xl md:text-base text-[#676767] flex items-center justify-between"
+                className="lg:w-64 md:w-40 sm:w-40 xs:w-40 bg-transparent border-r border-[#676767] p-3 lg:text-xl md:text-base text-[#676767] flex items-center justify-between"
               >
                 Price {"($)"} <FaAngleDown />
               </button>
               {dropdownsStatus["priceActive"] && (
-                <div className="absolute lg:w-64 md:w-40 bg-white flex flex-row items-center justify-between">
+                <div className="absolute lg:w-64 md:w-40 sm:w-40 xs:w-40 bg-white flex flex-row items-center justify-between">
                   <ul className="w-1/2 px-3 space-y-1 max-h-60 overflow-y-auto">
                     <input
                       type="text"
@@ -424,12 +426,12 @@ const Carousel = () => {
                   handleDropdownActivity("priceActive", false, e);
                   handleDropdownActivity("bedsActive", false, e);
                 }}
-                className="lg:w-64 md:w-40 bg-transparent border-r border-[#676767] p-3 lg:text-xl md:text-base text-[#676767] flex items-center justify-between"
+                className="lg:w-64 md:w-40 sm:w-40 xs:w-40 bg-transparent border-r border-[#676767] p-3 lg:text-xl md:text-base text-[#676767] flex items-center justify-between"
               >
                 Area {"(sqmt)"} <FaAngleDown />
               </button>
               {dropdownsStatus["areaActive"] && (
-                <div className="absolute lg:w-64 md:w-40 bg-white flex flex-row items-center justify-between">
+                <div className="absolute lg:w-64 md:w-40 sm:w-40 xs:w-40 bg-white flex flex-row items-center justify-between">
                   <ul className="w-1/2 px-3 space-y-1 max-h-60 overflow-y-auto overflow-x-hidden">
                     <input
                       type="text"
@@ -505,12 +507,12 @@ const Carousel = () => {
                   handleDropdownActivity("priceActive", false, e);
                   handleDropdownActivity("areaActive", false, e);
                 }}
-                className="lg:w-64 md:w-40 bg-transparent border-r border-[#676767] p-3 lg:text-xl md:text-base text-[#676767] flex items-center justify-between"
+                className="lg:w-64 md:w-40 sm:w-40 xs:w-40 bg-transparent border-r border-[#676767] p-3 lg:text-xl md:text-base text-[#676767] flex items-center justify-between"
               >
                 Beds <FaAngleDown />
               </button>
               {dropdownsStatus["bedsActive"] && (
-                <div className="absolute lg:w-64 md:w-40 bg-white ">
+                <div className="absolute lg:w-64 md:w-40 sm:w-40 xs:w-40 bg-white ">
                   <ul className="px-5 space-y-1 max-h-60 overflow-y-auto">
                     {dropdowns.beds.data.map((listItem, index) => (
                       <li
