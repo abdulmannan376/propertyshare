@@ -103,7 +103,7 @@ const Offers = () => {
   }, [activeOffersTab, activeOfferCategoryTab]);
 
   return (
-    <div className="bg-white w-full my-6 xxl:h-[85vh] lg:h-[88vh] max-h-[88vh] overflow-y-auto">
+    <div className="bg-white w-full my-6 xxl:h-[85vh] md:h-[88vh] max-h-[88vh] overflow-y-auto">
       <div className="w-full flex flex-row items-center border-b border-b-[#D9D9D9] pt-1 pb-7 px-14">
         <h1 className="text-2xl font-medium">Offers</h1>
       </div>

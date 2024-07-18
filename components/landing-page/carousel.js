@@ -204,7 +204,7 @@ const Carousel = () => {
         handleDropdownActivity("areaActive", false, e);
         handleDropdownActivity("bedsActive", false, e);
       }}
-      className="w-full h-screen flex flex-row items-center justify-start bg-cover bg-center xxl:px-24 xl:px-16 lg:px-10 px-16"
+      className="w-full h-screen flex flex-row items-center justify-start bg-cover bg-center xxl:px-24 xl:px-16 lg:px-10 md:px-5 px-16"
       style={{ backgroundImage: "url('/assets/landing-page/carousel-bg.svg')" }}
       ref={carouselRef}
     >
@@ -213,11 +213,11 @@ const Carousel = () => {
           width={2000}
           height={2000}
           src={"/logo-bbh-without-bg.png"}
-          className="w-[245px] h-[210px] object-contain"
+          className="lg:w-[245px] lg:h-[210px] w-[230px] h-[195px] object-contain"
         />
       </div>
       <div className="w-1/2 h-full flex flex-col items-start justify-center py-10">
-        <h1 className="text-3xl font-raleway text-[#116A7B] tracking-wide font-thin">
+        <h1 className="lg:text-3xl text-2xl font-raleway text-[#116A7B] tracking-wide font-thin">
           Find your dream vacation home
         </h1>
         <form className="flex flex-row bg-[#D9D9D9] bg-opacity-40 border border-[#F5F5F5] mt-6 rounded-md">
@@ -227,7 +227,7 @@ const Carousel = () => {
             value={query}
             placeholder="City, Address, Zip..."
             onChange={handleSearch}
-            className="w-96 bg-transparent text-xl font-raleway placeholder:text-[#676767] placeholder:opacity-80 text-[#FFFDF4] m-1 pl-2 outline-none"
+            className="w-96 bg-transparent lg:text-xl text-lg font-raleway placeholder:text-[#676767] placeholder:opacity-80 text-[#FFFDF4] m-1 pl-2 outline-none"
           />
           <button type="submit">
             {query.length > 0 ? (
@@ -285,12 +285,12 @@ const Carousel = () => {
                   handleDropdownActivity("areaActive", false, e);
                   handleDropdownActivity("bedsActive", false, e);
                 }}
-                className="w-64 bg-transparent border-r border-[#676767] p-3 text-xl text-[#676767] flex items-center justify-between"
+                className="lg:w-64 md:w-40 bg-transparent border-r border-[#676767] p-3 lg:text-xl md:text-base text-[#676767] flex items-center justify-between"
               >
                 Property Type <FaAngleDown />
               </button>
               {dropdownsStatus["propertyTypeActive"] && (
-                <div className="absolute w-64 bg-white ">
+                <div className="absolute lg:w-64 md:w-40 bg-white ">
                   <ul className="px-5 space-y-1 max-h-60 overflow-y-auto">
                     {dropdowns.propertyType.data.map((listItem, index) => (
                       <li
@@ -343,12 +343,12 @@ const Carousel = () => {
                   handleDropdownActivity("areaActive", false, e);
                   handleDropdownActivity("bedsActive", false, e);
                 }}
-                className="w-64 bg-transparent border-r border-[#676767] p-3 text-xl text-[#676767] flex items-center justify-between"
+                className="lg:w-64 md:w-40 bg-transparent border-r border-[#676767] p-3 lg:text-xl md:text-base text-[#676767] flex items-center justify-between"
               >
                 Price {"($)"} <FaAngleDown />
               </button>
               {dropdownsStatus["priceActive"] && (
-                <div className="absolute w-64 bg-white flex flex-row items-center justify-between">
+                <div className="absolute lg:w-64 md:w-40 bg-white flex flex-row items-center justify-between">
                   <ul className="w-1/2 px-3 space-y-1 max-h-60 overflow-y-auto">
                     <input
                       type="text"
@@ -424,12 +424,12 @@ const Carousel = () => {
                   handleDropdownActivity("priceActive", false, e);
                   handleDropdownActivity("bedsActive", false, e);
                 }}
-                className="w-64 bg-transparent border-r border-[#676767] p-3 text-xl text-[#676767] flex items-center justify-between"
+                className="lg:w-64 md:w-40 bg-transparent border-r border-[#676767] p-3 lg:text-xl md:text-base text-[#676767] flex items-center justify-between"
               >
                 Area {"(sqmt)"} <FaAngleDown />
               </button>
               {dropdownsStatus["areaActive"] && (
-                <div className="absolute w-64 bg-white flex flex-row items-center justify-between">
+                <div className="absolute lg:w-64 md:w-40 bg-white flex flex-row items-center justify-between">
                   <ul className="w-1/2 px-3 space-y-1 max-h-60 overflow-y-auto overflow-x-hidden">
                     <input
                       type="text"
@@ -505,12 +505,12 @@ const Carousel = () => {
                   handleDropdownActivity("priceActive", false, e);
                   handleDropdownActivity("areaActive", false, e);
                 }}
-                className="w-64 bg-transparent border-r border-[#676767] p-3 text-xl text-[#676767] flex items-center justify-between"
+                className="lg:w-64 md:w-40 bg-transparent border-r border-[#676767] p-3 lg:text-xl md:text-base text-[#676767] flex items-center justify-between"
               >
                 Beds <FaAngleDown />
               </button>
               {dropdownsStatus["bedsActive"] && (
-                <div className="absolute w-64 bg-white ">
+                <div className="absolute lg:w-64 md:w-40 bg-white ">
                   <ul className="px-5 space-y-1 max-h-60 overflow-y-auto">
                     {dropdowns.beds.data.map((listItem, index) => (
                       <li
@@ -556,15 +556,15 @@ const Carousel = () => {
             <button
               type="button"
               onClick={() => handleBuySharesClick()}
-              className="bg-[#CDC2AE] bg-opacity-40 border border-[#F5F5F5] uppercase px-5 text-[#676767] py-1 rounded-full mt-6"
+              className="bg-[#CDC2AE] bg-opacity-40 border border-[#F5F5F5] uppercase px-5 lg:text-base text-sm text-[#676767] py-1 rounded-full mt-6"
             >
               Buy
             </button>
           </Link>
-          <Link href={"/under-development"}>
+          <Link href={"/rent-shares"}>
             <button
               type="button"
-              className="bg-[#D9D9D9] bg-opacity-40 border border-[#F5F5F5] uppercase px-5 text-[#676767] py-1 rounded-full mt-6"
+              className="bg-[#D9D9D9] bg-opacity-40 border border-[#F5F5F5] uppercase px-5 lg:text-base text-sm text-[#676767] py-1 rounded-full mt-6"
             >
               Rent
             </button>

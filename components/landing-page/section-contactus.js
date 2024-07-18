@@ -12,7 +12,7 @@ const SectionContact = () => {
         backgroundImage: "url('/assets/landing-page/section-contactus.png')",
       }}
     >
-      <div className="xl:w-[35vw] lg:w-[45vw] w-[45vw] bg-white py-14 px-7 rounded-3xl">
+      <div className="xl:w-[35vw] lg:w-[45vw] md:w-[65vw] w-[45vw] bg-white py-14 px-7 rounded-3xl">
         <h1 className="text-4xl text-center text-[#116A7B] font-medium">
           Contact Us!
         </h1>

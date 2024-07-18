@@ -195,7 +195,7 @@ const Navbar = () => {
         className={`fixed top-0 w-full ${textColor} ${bgColor} body-font z-[1000]`}
         onClick={() => dispatch(updateDropdrownStatus({ field: "close all" }))}
       >
-        <div className="xxl:mx-24 xl:mx-16 lg:mx-10 mx-16 flex flex-wrap p-5 flex-col md:flex-row items-center">
+        <div className="xxl:mx-24 xl:mx-16 lg:mx-10 md:mx-5 mx-16 flex flex-wrap p-5 flex-row items-center">
           <Link
             href={"/"}
             className="flex flex-col title-font font-medium items-center justify-center text-gray-900 mb-4 md:mb-0"
@@ -208,10 +208,10 @@ const Navbar = () => {
               className="w-auto h-10 object-contain object-center"
             />
           </Link>
-          <nav className="md:ml-12 md:mr-auto flex flex-wrap items-center text-base justify-center">
+          <nav className="md:ml-12 md:mr-auto flex flex-wrap items-center lg:text-base md:text-sm justify-center">
             <Link
               href={"/"}
-              className={`mr-12 hover:${hoverTextColor} ${
+              className={`lg:mr-12 mr-5 hover:${hoverTextColor} ${
                 currentPage.tag === "Home"
                   ? `${currentPage.bgColor} ${currentPage.textColor}`
                   : "bg-transparent"
@@ -221,7 +221,7 @@ const Navbar = () => {
             </Link>
             <Link
               href={"/map"}
-              className={`mr-12 hover:${hoverTextColor} ${
+              className={`lg:mr-12 mr-5 hover:${hoverTextColor} ${
                 currentPage.tag === "Map"
                   ? `${currentPage.bgColor} ${currentPage.textColor}`
                   : "bg-transparent"
@@ -231,7 +231,7 @@ const Navbar = () => {
             </Link>
             <Link
               href={"/buy-shares"}
-              className={`mr-12 hover:${hoverTextColor} ${
+              className={`lg:mr-12 mr-5 hover:${hoverTextColor} ${
                 currentPage.tag === "Buy Shares"
                   ? `${currentPage.bgColor} ${currentPage.textColor}`
                   : "bg-transparent"
@@ -241,7 +241,7 @@ const Navbar = () => {
             </Link>
             <Link
               href={"/rent-shares"}
-              className={`mr-12 hover:${hoverTextColor} ${
+              className={`lg:mr-12 mr-5 hover:${hoverTextColor} ${
                 currentPage.tag === "Rent Shares"
                   ? `${currentPage.bgColor} ${currentPage.textColor}`
                   : "bg-transparent"
@@ -249,12 +249,12 @@ const Navbar = () => {
             >
               Rent Shares
             </Link>
-            {/* <Link href={"/"} className={`mr-12 hover:${hoverTextColor}`}>
+            {/* <Link href={"/"} className={`lg:mr-12 mr-5 hover:${hoverTextColor}`}>
             Rent
           </Link> */}
             <Link
               href={"/contactus"}
-              className={`mr-12 hover:${hoverTextColor} ${
+              className={`lg:mr-12 mr-5 hover:${hoverTextColor} ${
                 currentPage.tag === "Contact"
                   ? `${currentPage.bgColor} ${currentPage.textColor}`
                   : "bg-transparent"
@@ -264,7 +264,7 @@ const Navbar = () => {
             </Link>
             <Link
               href={"/under-development"}
-              className={`mr-12 hover:${hoverTextColor} ${
+              className={`lg:mr-12 mr-5 hover:${hoverTextColor} ${
                 currentPage.tag === "About"
                   ? `${currentPage.bgColor} ${currentPage.textColor}`
                   : "bg-transparent"
@@ -274,7 +274,7 @@ const Navbar = () => {
             </Link>
             <Link
               href={"/privacy-policy"}
-              className={`mr-12 hover:${hoverTextColor} ${
+              className={`lg:mr-12 mr-5 hover:${hoverTextColor} ${
                 currentPage.tag === "Privacy"
                   ? `${currentPage.bgColor} ${currentPage.textColor}`
                   : "bg-transparent"

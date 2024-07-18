@@ -828,7 +828,7 @@ const PropertyManagement = () => {
   };
 
   return (
-    <div className="bg-white w-full my-6 lg:h-[85vh] max-h-[85vh] overflow-y-auto">
+    <div className="bg-white w-full my-6 lg:h-[85vh] md:h-[89vh] lg:max-h-[85vh] max-h-[93vh] overflow-y-auto">
       {isAddPropertyClicked ? (
         <div className="w-full flex flex-row items-center pb-8 px-14">
           <h1 className="text-2xl font-medium">Add Property</h1>

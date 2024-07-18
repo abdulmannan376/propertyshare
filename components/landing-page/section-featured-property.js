@@ -62,6 +62,8 @@ const SectionFeaturedProperty = () => {
     handleFetchFeaturedProperty();
   }, []);
 
+  
+
   const TruncatingH1 = ({ text }) => {
     const h1Ref = useRef(null);
     const [displayText, setDisplayText] = useState(text);
@@ -139,12 +141,12 @@ const SectionFeaturedProperty = () => {
             Featured Properties
           </h1> */}
           {!isFeaturedPropertyLoading ? (
-            <div className="xxl:mx-24 xl:mx-16 lg:mx-10 mx-16 flex flex-row flex-wrap items-center justify-around">
+            <div className="xxl:mx-24 xl:mx-16 lg:mx-10 md:mx-5 mx-16 flex flex-row flex-wrap items-center justify-center">
               {featuredProperties.map((card, cardIndex) => (
                 <Link
                   href={`/buy-shares/property/${card.propertyID}`}
                   key={cardIndex}
-                  className="w-[20rem] bg-white border-2 border-[#D9D9D9] rounded-xl mr-20 mt-20"
+                  className="w-[20rem] bg-white border-2 border-[#D9D9D9] rounded-xl mx-10 mt-20"
                 >
                   <div className="p-2 relative">
                     <Image

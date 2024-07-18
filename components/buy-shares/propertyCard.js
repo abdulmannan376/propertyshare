@@ -63,7 +63,7 @@ const PropertyCard = ({ card }) => {
   return (
     <Link
       href={`/buy-shares/property/${card.propertyID}`}
-      className="w-[20rem] bg-white border-2 border-[#D9D9D9] rounded-xl mr-20 mt-20"
+      className="w-[20rem] bg-white border-2 border-[#D9D9D9] rounded-xl mx-10 mt-20"
     >
       <div className="p-2 relative">
         <Image
