@@ -61,7 +61,11 @@ const Offers = () => {
     try {
       const username = JSON.parse(localStorage.getItem("userDetails")).username;
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_SERVER_HOST}/share/get-received-offers-by-category/${username}/${activeOfferCategoryTab}`,
+        `${
+          process.env.NEXT_PUBLIC_SERVER_HOST
+        }/share/get-received-offers-by-category/${username}/${
+          activeOfferCategoryTab === "Buy" ? "Sell" : activeOfferCategoryTab
+        }`,
         {
           method: "GET",
         }
@@ -90,16 +94,16 @@ const Offers = () => {
   };
 
   const dispatch = useDispatch();
-  
+
   const fetchData = () => {
     if (activeOffersTab === "Sent") {
       fetchMySentOffers();
     } else {
       fetchMyReceivedOffers();
     }
-  }
+  };
   useEffect(() => {
-    fetchData()
+    fetchData();
   }, [activeOffersTab, activeOfferCategoryTab]);
 
   return (
@@ -218,7 +222,11 @@ const Offers = () => {
             <div className="mx-14 flex flex-row flex-wrap">
               {mySentOffers.length > 0 ? (
                 mySentOffers.map((card, cardIndex) => (
-                  <OfferCard card={card} key={cardIndex} fetchData={fetchData}/>
+                  <OfferCard
+                    card={card}
+                    key={cardIndex}
+                    fetchData={fetchData}
+                  />
                 ))
               ) : (
                 <div>No Offers Sent for {activeOfferCategoryTab}</div>
@@ -237,7 +245,11 @@ const Offers = () => {
             <div className="mx-14 flex flex-row flex-wrap">
               {myReceivedOffers.length > 0 ? (
                 myReceivedOffers.map((card, cardIndex) => (
-                  <OfferCard card={card} key={cardIndex} fetchData={fetchData}/>
+                  <OfferCard
+                    card={card}
+                    key={cardIndex}
+                    fetchData={fetchData}
+                  />
                 ))
               ) : (
                 <div>No Offers Received for {activeOfferCategoryTab}</div>

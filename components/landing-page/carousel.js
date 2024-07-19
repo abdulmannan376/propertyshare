@@ -218,7 +218,7 @@ const Carousel = () => {
           className="lg:w-[245px] lg:h-[210px] w-[230px] h-[195px] object-contain"
         />
       </div>
-      <div className="md:w-1/2 w-full md:h-full flex flex-col items-center justify-center py-10">
+      <div className="md:w-1/2 w-full md:h-full flex flex-col md:items-start sm:items-center justify-center py-10">
         <h1 className="lg:text-3xl text-2xl font-raleway text-[#116A7B] tracking-wide font-thin">
           Find your dream vacation home
         </h1>

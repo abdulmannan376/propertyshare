@@ -46,14 +46,14 @@ const Navbar = () => {
 
   const userEmail = useSelector((state) => state.adminSliceReducer.userEmail);
 
-  const [isMobView, setIsMobView] = useState(true);
+  const [isMobView, setIsMobView] = useState(false);
 
   useEffect(() => {
-    // if (window.innerWidth < 1024) {
-    //   setIsMobView(true);
-    // } else {
-    //   setIsMobView(false);
-    // }
+    if (window.innerWidth < 1024) {
+      setIsMobView(true);
+    } else {
+      setIsMobView(false);
+    }
   }, []);
 
   const [notificationsCount, setNotificationsCount] = useState(0);
@@ -222,7 +222,9 @@ const Navbar = () => {
               }}
               className="mb-1 mr-5"
             >
-              <TiThMenu className={`sm:text-3xl xs:text-2xl text-xl ${menuIconColor}`} />
+              <TiThMenu
+                className={`sm:text-3xl xs:text-2xl text-xl ${menuIconColor}`}
+              />
             </button>
           )}
           <Link
@@ -327,7 +329,9 @@ const Navbar = () => {
                     }}
                     className="relative"
                   >
-                    <FaBell className={`sm:text-3xl xs:text-2xl text-xl ${notificationIconColor}`} />
+                    <FaBell
+                      className={`sm:text-3xl xs:text-2xl text-xl ${notificationIconColor}`}
+                    />
                     {notificationsCount > 0 && (
                       <span className="absolute w-5 h-5 -inset-y-2 right-0 px-0 bg-red-400 text-white text-sm text-center font-semibold focus:outline-none cursor-pointer rounded-full">
                         {notificationsCount}

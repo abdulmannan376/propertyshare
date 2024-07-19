@@ -1,10 +1,63 @@
 "use client";
 import React, { useState } from "react";
+import { toast } from "react-toastify";
 
 const SectionContact = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
+
+  const handleSubmit = async (event) => {
+    event.preventDefault()
+    try {
+      const data = {
+        name: name,
+        email: email,
+        message: message,
+      };
+
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_HOST}/contact-us`,
+        {
+          method: "POST",
+          headers: {
+            "Content-type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
+
+      const response = await res.json();
+      if (response.success) {
+        setName("");
+        setEmail("");
+        setMessage("");
+        toast.success(response.message, {
+          position: "bottom-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      } else {
+        throw new Error(response.message);
+      }
+    } catch (error) {
+      toast.error(error.message, {
+        position: "bottom-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  };
   return (
     <div
       className="w-full h-full flex flex-row items-center justify-center bg-cover bg-center xxl:px-24 xl:px-16 lg:px-10 sm:px-5 py-24"
@@ -22,7 +75,7 @@ const SectionContact = () => {
             representatives will get in touch with you.{" "}
           </i>
         </h2>
-        <form className="pt-16 pb-10 px-5 space-y-10">
+        <form onSubmit={handleSubmit} className="pt-16 pb-10 px-5 space-y-10">
           <div className="relative">
             <input
               type="text"
@@ -62,7 +115,7 @@ const SectionContact = () => {
           />
           <div className="w-full flex items-center justify-center">
             <button
-              type="button"
+              type="submit"
               className="text-3xl text-[#116A7B] font-semibold uppercase underline px-2"
             >
               send
