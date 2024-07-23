@@ -35,6 +35,7 @@ import "swiper/css/navigation";
 import BuyShare from "@/components/modals/buyShare";
 import BuyShareModal from "@/components/modals/buyShare";
 import ThreadDisplay from "@/components/buy-shares/threadComponent";
+import SwapShareComponent from "@/components/buy-shares/swapShareComponent";
 
 const Page = () => {
   const dispatch = useDispatch();
@@ -248,19 +249,38 @@ const Page = () => {
                   Sell
                 </h2>
               </button>
-              <button
-                onClick={() => dispatch(updateActiveBuyShareNavBtn("Swap"))}
-              >
-                <h2
-                  className={`flex ${
-                    activeNavBtn === "Swap"
-                      ? "underline-text"
-                      : "hover-underline-animation"
-                  } `}
+              {JSON.parse(localStorage.getItem("userDetails")).role ===
+                "admin" && (
+                <button
+                  onClick={() => dispatch(updateActiveBuyShareNavBtn("Swap"))}
                 >
-                  Swap
-                </h2>
-              </button>
+                  <h2
+                    className={`flex ${
+                      activeNavBtn === "Swap"
+                        ? "underline-text"
+                        : "hover-underline-animation"
+                    } `}
+                  >
+                    Swap
+                  </h2>
+                </button>
+              )}
+              {JSON.parse(localStorage.getItem("userDetails")).role ===
+                "shareholder" && (
+                <button
+                  onClick={() => dispatch(updateActiveBuyShareNavBtn("Swap"))}
+                >
+                  <h2
+                    className={`flex ${
+                      activeNavBtn === "Swap"
+                        ? "underline-text"
+                        : "hover-underline-animation"
+                    } `}
+                  >
+                    Swap
+                  </h2>
+                </button>
+              )}
               {/* </Link> */}
             </div>
             {activeNavBtn === "Property Details" && (
@@ -613,6 +633,13 @@ const Page = () => {
                 propertyID={propertyID}
                 propertyDocID={property._id}
                 category={"Sell"}
+              />
+            )}
+            {activeNavBtn === "Swap" && (
+              <SwapShareComponent
+                propertyID={propertyID}
+                propertyDocID={property._id}
+                category={"Swap"}
               />
             )}
           </div>

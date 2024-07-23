@@ -3,6 +3,7 @@ const { createSlice } = require("@reduxjs/toolkit");
 const initialState = {
   navBtnBuyShareActive: "Property Details",
   navBtnRentShareActive: "Rent",
+  navBtnSwapShareActive: "My Shares"
 };
 
 export const propertyPageSlice = createSlice({
@@ -15,9 +16,12 @@ export const propertyPageSlice = createSlice({
     updateActiveRentShareNavBtn: (state, action) => {
       state.navBtnRentShareActive = action.payload;
     },
+    updateActiveSwapNavBtn: (state, action) => {
+      state.navBtnSwapShareActive = action.payload
+    }
   },
 });
 
-export const { updateActiveBuyShareNavBtn, updateActiveRentShareNavBtn } =
+export const { updateActiveBuyShareNavBtn, updateActiveRentShareNavBtn, updateActiveSwapNavBtn } =
   propertyPageSlice.actions;
 export default propertyPageSlice.reducer;

@@ -15,6 +15,12 @@ const nextConfig = {
         pathname: "/uploads/**",
       },
       {
+        protocol: "http",
+        hostname: "192.168.18.91",
+        port: "9000",
+        pathname: "/uploads/**",
+      },
+      {
         protocol: "https",
         hostname: "server.beachbunnyhouse.com",
         pathname: "/uploads/**",
