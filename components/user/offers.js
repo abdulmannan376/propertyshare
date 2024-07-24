@@ -7,8 +7,10 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import OfferCard from "./offersCard";
+import NewSwapOfferModal from "../modals/newSwapOffer";
 
 const Offers = () => {
+
   const [mySentOffers, setMySentOffers] = useState([]);
   const [myReceivedOffers, setMyReceivedOffers] = useState([]);
 

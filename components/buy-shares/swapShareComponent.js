@@ -2,8 +2,14 @@ import { updateActiveSwapNavBtn } from "@/app/redux/features/propertyPageSlice";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import NewSwapOfferModal from "../modals/newSwapOffer";
 
 const SwapShareComponent = ({ propertyID, propertyDocID, category }) => {
+  const [isModalOpen, setModalOpen] = useState(false);
+
+  const handleOpenModal = () => setModalOpen(true);
+  const handleCloseModal = () => setModalOpen(false);
+
   const dispatch = useDispatch();
 
   const activeNavBtn = useSelector(
@@ -368,12 +374,19 @@ const SwapShareComponent = ({ propertyID, propertyDocID, category }) => {
                         .username && (
                       <button
                         type="button"
-                        onClick={() => handleGenShareSwapRequest(share.shareID)}
+                        onClick={() => handleOpenModal()}
                         className="p-1 text-base text-[#116A7B] uppercase font-bold"
                       >
                         request
                       </button>
                     )}
+                    <NewSwapOfferModal
+                      isOpen={isModalOpen}
+                      onClose={handleCloseModal}
+                      propertyID={propertyID}
+                      username={share.currentOwnerDocID.username}
+                      shareID={share.shareID}
+                    />
                   </div>
                 ))
               ) : (

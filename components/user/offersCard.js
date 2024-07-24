@@ -189,6 +189,46 @@ const OfferCard = ({ card, fetchData }) => {
       });
     }
   };
+
+  const handleSwapOfferAction = async (action, offerID) => {
+    try {
+      const data = {
+        username: JSON.parse(localStorage.getItem("userDetails")).username,
+        offerID: offerID,
+        action: action,
+      };
+
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_HOST}/share/update-share-swap-offer`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
+
+      const response = await res.json();
+
+      if (response.success) {
+        fetchData();
+      } else {
+        throw new Error(response.message);
+      }
+    } catch (error) {
+      toast.error(error.message, {
+        position: "bottom-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  };
   return (
     // <Link
     //   href={`/rent-shares/property/${card.shareDocID.propertyDocID.propertyID}`}
@@ -318,6 +358,8 @@ const OfferCard = ({ card, fetchData }) => {
                 handleRentOfferAction("cancelled", card.shareOfferID);
               } else if (activeOfferCategoryTab === "Sell") {
                 handleSellOfferAction("cancelled", card.shareOfferID);
+              } else if (activeOfferCategoryTab === "Swap") {
+                handleSwapOfferAction("cancelled", card.shareOfferID);
               }
             }}
             className="flex flex-row items-center justify-center"
@@ -336,6 +378,8 @@ const OfferCard = ({ card, fetchData }) => {
                       handleRentOfferAction("rejected", card.shareOfferID);
                     } else if (activeOfferCategoryTab === "Buy") {
                       handleSellOfferAction("rejected", card.shareOfferID);
+                    } else if (activeOfferCategoryTab === "Swap") {
+                      handleSwapOfferAction("rejected", card.shareOfferID);
                     }
                   }}
                   className="flex flex-row items-center justify-center"
@@ -350,6 +394,8 @@ const OfferCard = ({ card, fetchData }) => {
                       handleRentOfferAction("accepted", card.shareOfferID);
                     } else if (activeOfferCategoryTab === "Buy") {
                       handleSellOfferAction("accepted", card.shareOfferID);
+                    } else if (activeOfferCategoryTab === "Swap") {
+                      handleSwapOfferAction("accepted", card.shareOfferID);
                     }
                   }}
                   className="flex flex-row items-center justify-center"
