@@ -1,5 +1,5 @@
 import { updateActiveSwapNavBtn } from "@/app/redux/features/propertyPageSlice";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
@@ -170,6 +170,63 @@ const SwapShareComponent = ({ propertyID, propertyDocID, category }) => {
       });
     }
   };
+
+  const handleGenShareSwapRequest = async (shareID) => {
+    try {
+      const data = {
+        shareID: shareID,
+        username: JSON.parse(localStorage.getItem("userDetails")).username,
+      };
+
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_HOST}/share/gen-share-swap-offer`,
+        {
+          method: "POST",
+          headers: {
+            "Content-type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
+
+      const response = await res.json();
+
+      if (response.success) {
+        toast.success(response.message, {
+          position: "bottom-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      } else {
+        throw new Error(response.message);
+      }
+    } catch (error) {
+      toast.error(error.message, {
+        position: "bottom-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (activeNavBtn === "My Shares") {
+      fetchMyShares();
+    } else {
+      fetchForSwapShares();
+    }
+  }, [activeNavBtn]);
+
   return (
     <div>
       <div className="w-screen flex items-center justify-start md:space-x-20 space-x-14 my-3 text-white text-lg font-semibold">
@@ -261,13 +318,6 @@ const SwapShareComponent = ({ propertyID, propertyDocID, category }) => {
                         </div>
                       </div>
                     );
-                  else {
-                    return (
-                      <div className="text-[32px] font-semibold text-[#116A7B]">
-                        <h1 className="text-center">No Shares to Swap.</h1>
-                      </div>
-                    );
-                  }
                 })
               ) : (
                 <div className="text-[32px] font-semibold text-[#116A7B]">
@@ -290,7 +340,7 @@ const SwapShareComponent = ({ propertyID, propertyDocID, category }) => {
                 forSwapShareList.map((share, index) => (
                   <div
                     key={index}
-                    className={`flex flex-row items-center justify-between bg-[#FCFBF5] text-[#116A7B] border border-[#D9D9D9] space-y-3 px-5 py-7 my-5 cursor-pointer`}
+                    className={`flex flex-row items-center justify-between bg-[#FCFBF5] text-[#116A7B] border border-[#D9D9D9] px-5 py-7 my-5 cursor-pointer`}
                   >
                     <div>
                       <h1>
@@ -313,12 +363,17 @@ const SwapShareComponent = ({ propertyID, propertyDocID, category }) => {
                         )} - {processDate(share.availableInDuration.endDate)}
                       </h1>
                     </div>
-                    <button
-                      type="button"
-                      className="p-1 text-base text-[#116A7B] uppercase font-bold"
-                    >
-                      request
-                    </button>
+                    {share.currentOwnerDocID.username !==
+                      JSON.parse(localStorage.getItem("userDetails"))
+                        .username && (
+                      <button
+                        type="button"
+                        onClick={() => handleGenShareSwapRequest(share.shareID)}
+                        className="p-1 text-base text-[#116A7B] uppercase font-bold"
+                      >
+                        request
+                      </button>
+                    )}
                   </div>
                 ))
               ) : (

@@ -433,7 +433,7 @@ const Navbar = () => {
                             src={"/dummy-image.png"}
                             className="w-8 h-8 object-scale-down object-center rounded-full"
                           />
-                          <p className="text-lg">
+                          <p className="text-base">
                             {
                               JSON.parse(localStorage.getItem("userDetails"))
                                 .username
@@ -451,7 +451,7 @@ const Navbar = () => {
                           className="w-full flex flex-row items-center space-x-3 text-[#116A7B] mt-1"
                         >
                           <CiSettings className="text-3xl" />
-                          <p className="text-lg">Settings</p>
+                          <p className="text-base">Settings</p>
                         </Link>
                       </li>
                       <li className=" border-[#116A7B] py-3 px-5">
@@ -465,7 +465,7 @@ const Navbar = () => {
                           className="w-full flex flex-row items-center space-x-3 text-[#116A7B] mt-1"
                         >
                           <IoMdLogOut className="text-3xl" />
-                          <p className="text-lg">Sign Out</p>
+                          <p className="text-base">Sign Out</p>
                         </button>
                       </li>
                     </ul>
