@@ -414,7 +414,7 @@ const Navbar = () => {
                     />{" "}
                   </button>
                   {showDropDowns["user"] && (
-                    <ul className="absolute w-48 -right-0 bg-white border border-[#116A7B] mt-0 rounded-xl">
+                    <ul className="absolute w-52 -right-0 bg-white border border-[#116A7B] mt-0 rounded-xl">
                       <li className="border-b border-[#116A7B] py-3 px-5">
                         <Link
                           href={`/user/${

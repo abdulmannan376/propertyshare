@@ -519,7 +519,10 @@ const PropertyManagement = () => {
           formData.append("userName", userDetails.name);
           formData.append("email", userDetails.email);
           formData.append("userRole", userDetails.role);
-          formData.append("pinnedImage", pinnedImage);
+          formData.append(
+            "pinnedImage",
+            pinnedImage === -1 ? pinnedImage : pinnedImage + 1
+          );
           // formData.append("deleteImageList", deleteImageList);
 
           deleteImageList.map((entry, index) => {
@@ -2045,7 +2048,7 @@ const PropertyManagement = () => {
           )}
           {activeNavBtn === "Purchases" && (
             <div>
-              {sharesCountByProperty.length > 0 &&
+              {sharesCountByProperty.length > 0 ? (
                 sharesCountByProperty.map((share, index) => (
                   <Link
                     key={index}
@@ -2109,12 +2112,17 @@ const PropertyManagement = () => {
                       </div>
                     </div>
                   </Link>
-                ))}
+                ))
+              ) : (
+                <h1 className="text-2xl text-[#116A7B] font-semibold px-14">
+                  No Purchases Yet.
+                </h1>
+              )}
             </div>
           )}
           {activeNavBtn === "Reservations" && (
             <div>
-              {myShareReservations.length > 0 &&
+              {myShareReservations.length > 0 ? (
                 myShareReservations.map((share, index) => (
                   <Link
                     key={index}
@@ -2178,12 +2186,17 @@ const PropertyManagement = () => {
                       </div>
                     </div>
                   </Link>
-                ))}
+                ))
+              ) : (
+                <h1 className="text-2xl text-[#116A7B] font-semibold px-14">
+                  No Reservations Yet.
+                </h1>
+              )}
             </div>
           )}
           {activeNavBtn === "Rentals" && (
             <div>
-              {myShareRentals.length > 0 &&
+              {myShareRentals.length > 0 ? (
                 myShareRentals.map((share, index) => (
                   <Link
                     key={index}
@@ -2247,7 +2260,12 @@ const PropertyManagement = () => {
                       </div>
                     </div>
                   </Link>
-                ))}
+                ))
+              ) : (
+                <h1 className="text-2xl text-[#116A7B] font-semibold px-14">
+                  No Rentals Yet.
+                </h1>
+              )}
             </div>
           )}
         </>

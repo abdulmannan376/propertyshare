@@ -251,7 +251,7 @@ const FilterComponent = ({
           </button>
           {index === 0 && dropdownsStatus["propertyTypeDropdownActive"] && (
             <div className="absolute w-64 bg-white bottom-12 z-[1000]">
-              <ul className="px-5 space-y-1 max-h-60 overflow-y-auto">
+              <ul className="px-5 space-y-1 max-h-full overflow-y-auto">
                 {filter.data.map((listItem, i) => (
                   <button
                     type="button"
@@ -278,7 +278,7 @@ const FilterComponent = ({
           )}
           {index === 1 && dropdownsStatus["availableSharesDropdownActive"] && (
             <div className="absolute w-64 bg-white bottom-12 z-[1000]">
-              <ul className="px-5 space-y-1 max-h-60 overflow-y-auto">
+              <ul className="px-5 space-y-1 max-h-full overflow-y-auto">
                 {filter.data.map((listItem, i) => (
                   <button
                     type="button"
