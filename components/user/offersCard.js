@@ -74,40 +74,42 @@ const OfferCard = ({ card, fetchData }) => {
   };
 
   function processDate(dateString) {
-    const date = new Date(dateString);
+    if (dateString && dateString.length > 0) {
+      const date = new Date(dateString);
 
-    const months = [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
-    ];
+      const months = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+      ];
 
-    let commutedDateString = "";
-    const dateOfMonth = date.getDate();
-    if (dateOfMonth % 10 === 1) {
-      commutedDateString += "1st";
-    } else if (dateOfMonth % 10 === 2) {
-      commutedDateString += "2nd";
-    } else if (dateOfMonth % 10 === 3) {
-      commutedDateString += "3rd";
-    } else {
-      commutedDateString += `${dateOfMonth}th`;
+      let commutedDateString = "";
+      const dateOfMonth = date.getDate();
+      if (dateOfMonth % 10 === 1) {
+        commutedDateString += "1st";
+      } else if (dateOfMonth % 10 === 2) {
+        commutedDateString += "2nd";
+      } else if (dateOfMonth % 10 === 3) {
+        commutedDateString += "3rd";
+      } else {
+        commutedDateString += `${dateOfMonth}th`;
+      }
+
+      commutedDateString += ` ${months[date.getMonth()]} ${
+        dateString.split("-")[0]
+      }`;
+
+      return commutedDateString;
     }
-
-    commutedDateString += ` ${months[date.getMonth()]} ${
-      dateString.split("-")[0]
-    }`;
-
-    return commutedDateString;
   }
 
   const handleRentOfferAction = async (action, offerID) => {
@@ -296,10 +298,21 @@ const OfferCard = ({ card, fetchData }) => {
           ba <strong>{card.shareDocID.propertyDocID.area}</strong> Sqft
         </h2>
         <h3 className="text-sm text-[#116A7B]">
-          Duration: {processDate(card.shareDocID.availableInDuration.startDate)}{" "}
+          {activeOfferCategoryTab === "Swap"? "Swap To" : "Duration"}: {processDate(card.shareDocID.availableInDuration.startDate)}{" "}
           - {processDate(card.shareDocID.availableInDuration.endDate)}
         </h3>
-        <h5 className="text-sm text-[#116A7B]">Rent: ${card.price}</h5>
+        {activeOfferCategoryTab !== "Swap" && (
+          <h5 className="text-sm text-[#116A7B]">
+            {activeOfferCategoryTab}: ${card.price}
+          </h5>
+        )}
+        {activeOfferCategoryTab === "Swap" && (
+          <h3 className="text-sm text-[#116A7B]">
+            Swap with:{" "}
+            {processDate(card.offeredShareDocID?.availableInDuration.startDate)}{" "}
+            - {processDate(card.offeredShareDocID?.availableInDuration.endDate)}
+          </h3>
+        )}
         {activeOffersTab === "Sent" && activeOfferCategoryTab !== "Swap" && (
           <h5 className="text-sm text-[#116A7B]">
             User: <strong>{card.userDocID.username}</strong>
@@ -310,16 +323,18 @@ const OfferCard = ({ card, fetchData }) => {
             Shareholder: <strong>{card.shareholderDocID.username}</strong>
           </h5>
         )}
-        {activeOffersTab === "Received" && activeOfferCategoryTab !== "Swap" &&(
-          <h5 className="text-sm text-[#116A7B]">
-            Shareholder: <strong>{card.shareholderDocID.username}</strong>
-          </h5>
-        )}
-        {activeOffersTab === "Received" && activeOfferCategoryTab === "Swap" && (
-          <h5 className="text-sm text-[#116A7B]">
-            Shareholder: <strong>{card.userDocID.username}</strong>
-          </h5>
-        )}
+        {activeOffersTab === "Received" &&
+          activeOfferCategoryTab !== "Swap" && (
+            <h5 className="text-sm text-[#116A7B]">
+              Shareholder: <strong>{card.shareholderDocID.username}</strong>
+            </h5>
+          )}
+        {activeOffersTab === "Received" &&
+          activeOfferCategoryTab === "Swap" && (
+            <h5 className="text-sm text-[#116A7B]">
+              Shareholder: <strong>{card.userDocID.username}</strong>
+            </h5>
+          )}
         <h4 className="text-xl flex items-start text-[#116A7B]">
           <FiMapPin className="inline-flex mt-1 mr-1" />{" "}
           {card.shareDocID.propertyDocID.addressOfProperty.city
@@ -360,23 +375,25 @@ const OfferCard = ({ card, fetchData }) => {
             )}
           </div>
         )}
-        {activeOffersTab === "Sent" && card.status !== "cancelled" && card.status === "pending" && (
-          <button
-            type="button"
-            onClick={() => {
-              if (activeOfferCategoryTab === "Rent") {
-                handleRentOfferAction("cancelled", card.shareOfferID);
-              } else if (activeOfferCategoryTab === "Sell") {
-                handleSellOfferAction("cancelled", card.shareOfferID);
-              } else if (activeOfferCategoryTab === "Swap") {
-                handleSwapOfferAction("cancelled", card.shareOfferID);
-              }
-            }}
-            className="flex flex-row items-center justify-center"
-          >
-            <p className="mx-2 text-gray-500 underline">Cancel</p>
-          </button>
-        )}
+        {activeOffersTab === "Sent" &&
+          card.status !== "cancelled" &&
+          card.status === "pending" && (
+            <button
+              type="button"
+              onClick={() => {
+                if (activeOfferCategoryTab === "Rent") {
+                  handleRentOfferAction("cancelled", card.shareOfferID);
+                } else if (activeOfferCategoryTab === "Sell") {
+                  handleSellOfferAction("cancelled", card.shareOfferID);
+                } else if (activeOfferCategoryTab === "Swap") {
+                  handleSwapOfferAction("cancelled", card.shareOfferID);
+                }
+              }}
+              className="flex flex-row items-center justify-center"
+            >
+              <p className="mx-2 text-gray-500 underline">Cancel</p>
+            </button>
+          )}
         {activeOffersTab === "Received" && (
           <div className="flex flex-row items-center">
             {card.status === "pending" && (
