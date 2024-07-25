@@ -195,7 +195,6 @@ const OfferCard = ({ card, fetchData }) => {
   const handleSwapOfferAction = async (action, offerID) => {
     try {
       const data = {
-        username: JSON.parse(localStorage.getItem("userDetails")).username,
         offerID: offerID,
         action: action,
       };
