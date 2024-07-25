@@ -300,14 +300,24 @@ const OfferCard = ({ card, fetchData }) => {
           - {processDate(card.shareDocID.availableInDuration.endDate)}
         </h3>
         <h5 className="text-sm text-[#116A7B]">Rent: ${card.price}</h5>
-        {activeOffersTab === "Sent" && (
+        {activeOffersTab === "Sent" && activeOfferCategoryTab !== "Swap" && (
           <h5 className="text-sm text-[#116A7B]">
             User: <strong>{card.userDocID.username}</strong>
           </h5>
         )}
-        {activeOffersTab === "Received" && (
+        {activeOffersTab === "Sent" && activeOfferCategoryTab === "Swap" && (
           <h5 className="text-sm text-[#116A7B]">
             Shareholder: <strong>{card.shareholderDocID.username}</strong>
+          </h5>
+        )}
+        {activeOffersTab === "Received" && activeOfferCategoryTab !== "Swap" &&(
+          <h5 className="text-sm text-[#116A7B]">
+            Shareholder: <strong>{card.shareholderDocID.username}</strong>
+          </h5>
+        )}
+        {activeOffersTab === "Received" && activeOfferCategoryTab === "Swap" && (
+          <h5 className="text-sm text-[#116A7B]">
+            Shareholder: <strong>{card.userDocID.username}</strong>
           </h5>
         )}
         <h4 className="text-xl flex items-start text-[#116A7B]">
@@ -350,7 +360,7 @@ const OfferCard = ({ card, fetchData }) => {
             )}
           </div>
         )}
-        {activeOffersTab === "Sent" && card.status !== "cancelled" && (
+        {activeOffersTab === "Sent" && card.status !== "cancelled" && card.status === "pending" && (
           <button
             type="button"
             onClick={() => {

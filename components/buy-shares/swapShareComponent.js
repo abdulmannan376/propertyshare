@@ -7,8 +7,10 @@ import NewSwapOfferModal from "../modals/newSwapOffer";
 const SwapShareComponent = ({ propertyID, propertyDocID, category }) => {
   const [isModalOpen, setModalOpen] = useState(false);
 
-  const handleOpenModal = () => setModalOpen(true);
-  const handleCloseModal = () => setModalOpen(false);
+  const [selectedShareIDForModal, setSelectedShareIDForModal] = useState("");
+
+  const handleOpenModal = (shareID) => setSelectedShareIDForModal(shareID);
+  const handleCloseModal = () => setSelectedShareIDForModal("");
 
   const dispatch = useDispatch();
 
@@ -374,14 +376,16 @@ const SwapShareComponent = ({ propertyID, propertyDocID, category }) => {
                         .username && (
                       <button
                         type="button"
-                        onClick={() => handleOpenModal()}
+                        onClick={() => handleOpenModal(share.shareID)}
                         className="p-1 text-base text-[#116A7B] uppercase font-bold"
                       >
                         request
                       </button>
                     )}
                     <NewSwapOfferModal
-                      isOpen={isModalOpen}
+                      isOpen={
+                        selectedShareIDForModal === share.shareID ? true : false
+                      }
                       onClose={handleCloseModal}
                       propertyID={propertyID}
                       username={share.currentOwnerDocID.username}
