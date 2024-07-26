@@ -112,7 +112,7 @@ const Navbar = () => {
         if (response.success) {
           const user = response.body;
           const userDetails = {
-            name: user.name,
+            role: user.role,
             username: user.username,
             email: user.email,
           };
