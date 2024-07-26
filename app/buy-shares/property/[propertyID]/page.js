@@ -20,7 +20,8 @@ import { IoCalendar } from "react-icons/io5";
 import { FaStairs, FaPlane } from "react-icons/fa6";
 import { TbParkingCircle, TbBath } from "react-icons/tb";
 import { PiElevatorDuotone } from "react-icons/pi";
-import { MdOutlineMeetingRoom } from "react-icons/md";
+import { MdOutlineMeetingRoom, MdPlaylistAddCheckCircle } from "react-icons/md";
+import { MdPlaylistAddCircle } from "react-icons/md";
 import compCities from "countrycitystatejson";
 import GetPropertyID from "@/components/buy-shares/getPropertyID";
 
@@ -36,6 +37,8 @@ import BuyShare from "@/components/modals/buyShare";
 import BuyShareModal from "@/components/modals/buyShare";
 import ThreadDisplay from "@/components/buy-shares/threadComponent";
 import SwapShareComponent from "@/components/buy-shares/swapShareComponent";
+import { FaHeart, FaRegHeart } from "react-icons/fa";
+import { updateFavoritesList, updateWishList } from "@/app/redux/features/userSlice";
 
 const Page = () => {
   const dispatch = useDispatch();
@@ -125,6 +128,94 @@ const Page = () => {
     }
   }, [propertyID]);
 
+  const favouriteList = useSelector(
+    (state) => state.adminSliceReducer.favouriteList
+  );
+
+  const handleFavouriteListRequest = async (action) => {
+    console.log("action: ", action);
+    try {
+      const username = JSON.parse(localStorage.getItem("userDetails")).username;
+
+      const data = {
+        username: username,
+        propertyID: propertyID,
+        action: action,
+      };
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_HOST}/user/update-user-favourites`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
+
+      const response = await res.json();
+      if (response.success) {
+        dispatch(updateFavoritesList({ action: "all", body: response.body }));
+      } else {
+        throw new Error(response.message);
+      }
+    } catch (error) {
+      toast.error(error.message, {
+        position: "bottom-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  };
+
+  const wishList = useSelector((state) => state.adminSliceReducer.wishList);
+
+  const handleWishListRequest = async (action) => {
+    console.log("action: ", action);
+    try {
+      const username = JSON.parse(localStorage.getItem("userDetails")).username;
+
+      const data = {
+        username: username,
+        propertyID: propertyID,
+        action: action,
+      };
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_HOST}/user/update-user-wishlist`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
+
+      const response = await res.json();
+      if (response.success) {
+        dispatch(updateWishList({ action: "all", body: response.body }));
+      } else {
+        throw new Error(response.message);
+      }
+    } catch (error) {
+      toast.error(error.message, {
+        position: "bottom-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  };
+
   return (
     <>
       <ToastContainer
@@ -205,83 +296,120 @@ const Page = () => {
                 />
               </div>
             )}
-
-            <div className="w-screen flex items-center justify-start md:space-x-20 space-x-14 my-3 text-white text-2xl font-semibold">
-              <button
-                onClick={() =>
-                  dispatch(updateActiveBuyShareNavBtn("Property Details"))
-                }
-              >
-                <h1
-                  className={`flex ${
-                    activeNavBtn === "Property Details"
-                      ? "underline-text"
-                      : "hover-underline-animation"
-                  } `}
-                >
-                  Property Details
-                </h1>
-              </button>
-              {/* <Link href={`${process.env.NEXT_PUBLIC_HOST}/chef`}> */}
-              <button
-                onClick={() => dispatch(updateActiveBuyShareNavBtn("Rent"))}
-              >
-                <h2
-                  className={`flex ${
-                    activeNavBtn === "Rent"
-                      ? "underline-text"
-                      : "hover-underline-animation"
-                  } `}
-                >
-                  Rent
-                </h2>
-              </button>
-              <button
-                onClick={() => dispatch(updateActiveBuyShareNavBtn("Sell"))}
-              >
-                <h2
-                  className={`flex ${
-                    activeNavBtn === "Sell"
-                      ? "underline-text"
-                      : "hover-underline-animation"
-                  } `}
-                >
-                  Sell
-                </h2>
-              </button>
-              {JSON.parse(localStorage.getItem("userDetails")).role ===
-                "admin" && (
+            <div className="flex items-center justify-between">
+              <div className="w-full flex items-center justify-start md:space-x-20 space-x-14 my-3 text-white text-2xl font-semibold">
                 <button
-                  onClick={() => dispatch(updateActiveBuyShareNavBtn("Swap"))}
+                  onClick={() =>
+                    dispatch(updateActiveBuyShareNavBtn("Property Details"))
+                  }
                 >
-                  <h2
+                  <h1
                     className={`flex ${
-                      activeNavBtn === "Swap"
+                      activeNavBtn === "Property Details"
                         ? "underline-text"
                         : "hover-underline-animation"
                     } `}
                   >
-                    Swap
-                  </h2>
+                    Property Details
+                  </h1>
                 </button>
-              )}
-              {JSON.parse(localStorage.getItem("userDetails")).role ===
-                "shareholder" && (
+                {/* <Link href={`${process.env.NEXT_PUBLIC_HOST}/chef`}> */}
                 <button
-                  onClick={() => dispatch(updateActiveBuyShareNavBtn("Swap"))}
+                  onClick={() => dispatch(updateActiveBuyShareNavBtn("Rent"))}
                 >
                   <h2
                     className={`flex ${
-                      activeNavBtn === "Swap"
+                      activeNavBtn === "Rent"
                         ? "underline-text"
                         : "hover-underline-animation"
                     } `}
                   >
-                    Swap
+                    Rent
                   </h2>
                 </button>
-              )}
-              {/* </Link> */}
+                <button
+                  onClick={() => dispatch(updateActiveBuyShareNavBtn("Sell"))}
+                >
+                  <h2
+                    className={`flex ${
+                      activeNavBtn === "Sell"
+                        ? "underline-text"
+                        : "hover-underline-animation"
+                    } `}
+                  >
+                    Sell
+                  </h2>
+                </button>
+                {JSON.parse(localStorage.getItem("userDetails")).role ===
+                  "admin" && (
+                  <button
+                    onClick={() => dispatch(updateActiveBuyShareNavBtn("Swap"))}
+                  >
+                    <h2
+                      className={`flex ${
+                        activeNavBtn === "Swap"
+                          ? "underline-text"
+                          : "hover-underline-animation"
+                      } `}
+                    >
+                      Swap
+                    </h2>
+                  </button>
+                )}
+                {JSON.parse(localStorage.getItem("userDetails")).role ===
+                  "shareholder" && (
+                  <button
+                    onClick={() => dispatch(updateActiveBuyShareNavBtn("Swap"))}
+                  >
+                    <h2
+                      className={`flex ${
+                        activeNavBtn === "Swap"
+                          ? "underline-text"
+                          : "hover-underline-animation"
+                      } `}
+                    >
+                      Swap
+                    </h2>
+                  </button>
+                )}
+                {/* </Link> */}
+              </div>
+              <div className="flex items-center">
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (favouriteList.includes(propertyID)) {
+                      handleFavouriteListRequest("remove");
+                    } else {
+                      handleFavouriteListRequest("add");
+                    }
+                  }}
+                  className="px-1 mx-2 text-xl text-red-600 font-semibold focus:outline-none cursor-pointer"
+                >
+                  {favouriteList.includes(propertyID) ? (
+                    <FaHeart />
+                  ) : (
+                    <FaRegHeart />
+                  )}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (wishList.includes(propertyID)) {
+                      handleWishListRequest("remove");
+                    } else {
+                      handleWishListRequest("add");
+                    }
+                  }}
+                  className="px-1 mx-2 text-2xl  font-semibold focus:outline-none cursor-pointer"
+                >
+                  {wishList.includes(propertyID) ? (
+                    <MdPlaylistAddCheckCircle className="text-green-600"/>
+                  ) : (
+                    <MdPlaylistAddCircle className="text-gray-600"/>
+                  )}
+                </button>
+              </div>
             </div>
             {activeNavBtn === "Property Details" && (
               <>

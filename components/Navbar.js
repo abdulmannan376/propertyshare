@@ -1,5 +1,9 @@
 "use client";
-import { updateUserDetails } from "@/app/redux/features/userSlice";
+import {
+  updateFavoritesList,
+  updateUserDetails,
+  updateWishList,
+} from "@/app/redux/features/userSlice";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -88,15 +92,73 @@ const Navbar = () => {
     }
   };
 
-  useEffect(() => {
+  const fetchUserDetails = async () => {
     const token = localStorage.getItem("token");
-    if (token?.length > 0) {
-      const userDetails = JSON.parse(localStorage.getItem("userDetails"));
-      dispatch(updateUserDetails(userDetails));
-      setLoggedIn(true);
-      fetchNotifications();
-    } else {
-      setLoggedIn(false);
+
+    if (token) {
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_SERVER_HOST}/user/get-user-data`,
+          {
+            method: "GET",
+            headers: {
+              "Content-type": "application/json",
+              authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        const response = await res.json();
+        if (response.success) {
+          const user = response.body;
+          const userDetails = {
+            name: user.name,
+            username: user.username,
+            email: user.email,
+          };
+          dispatch(
+            updateFavoritesList({
+              action: "all",
+              body: user.userProfile.favouriteList,
+            })
+          );
+          dispatch(
+            updateWishList({
+              action: "all",
+              body: user.userProfile.favouriteList,
+            })
+          );
+          dispatch(updateUserDetails(userDetails));
+          setLoggedIn(true);
+          fetchNotifications();
+        } else {
+          setLoggedIn(false);
+          if (response.action && response.action === "login")
+            setTimeout(() => {
+              router.push("/login");
+            }, 2100);
+
+          throw new Error(response.message);
+        }
+      } catch (error) {
+        toast.error(error.message, {
+          position: "bottom-center",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (pathname != "/login" && pathname != "/signup") {
+      console.log(pathname, typeof pathname);
+      fetchUserDetails();
     }
   }, [pathname]);
 

@@ -4,6 +4,8 @@ import Modal from "react-modal";
 import Image from "next/image";
 import { toast } from "react-toastify";
 import { MdClose } from "react-icons/md";
+import { useDispatch, useSelector } from "react-redux";
+import { updateWishList } from "@/app/redux/features/userSlice";
 
 // Set the app element for accessibility reasons
 Modal.setAppElement("#app-body");
@@ -158,6 +160,8 @@ const BuyShareModal = ({
       });
     }
   };
+
+  const dispatch = useDispatch();
 
   return (
     <Modal

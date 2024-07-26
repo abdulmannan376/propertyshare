@@ -9,6 +9,8 @@ const initialState = {
   settingActiveTab: "Profile Setting",
   profileSettingActiveTab: "Primary Details",
   currentLocation: [],
+  favouriteList: [],
+  wishList: [],
 };
 
 export const adminSlice = createSlice({
@@ -35,6 +37,32 @@ export const adminSlice = createSlice({
     updateCurrentLocation: (state, action) => {
       state.currentLocation = action.payload;
     },
+    updateFavoritesList: (state, action) => {
+      console.log("payload: ", action.payload);
+      if (action.payload.action === "all") {
+        state.favouriteList = action.payload.body;
+      } else if (action.payload.action === "add") {
+        state.favouriteList.push(action.payload.body);
+      } else if (action.payload.action === "remove") {
+        const prevDetails = [...state.favouriteList];
+        state.favouriteList = prevDetails.filter((data) => {
+          return data !== action.payload.body;
+        });
+      }
+    },
+    updateWishList: (state, action) => {
+      console.log("payload: ", action.payload);
+      if (action.payload.action === "all") {
+        state.wishList = action.payload.body;
+      } else if (action.payload.action === "add") {
+        state.wishList.push(action.payload.body);
+      } else if (action.payload.action === "remove") {
+        const prevDetails = [...state.wishList];
+        state.wishList = prevDetails.filter((data) => {
+          return data !== action.payload.body;
+        });
+      }
+    },
   },
 });
 
@@ -43,5 +71,7 @@ export const {
   handleUserSettingNavigation,
   handleUserProfileSettingNavigation,
   updateCurrentLocation,
+  updateFavoritesList,
+  updateWishList,
 } = adminSlice.actions;
 export default adminSlice.reducer;

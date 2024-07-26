@@ -1,11 +1,64 @@
+import { updateFavoritesList } from "@/app/redux/features/userSlice";
 import compCities from "countrycitystatejson";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
+import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { FiMapPin } from "react-icons/fi";
 import { VscEye } from "react-icons/vsc";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
 const PropertyCard = ({ card }) => {
+  const router = useRouter();
+  const dispatch = useDispatch();
+
+  const favouriteList = useSelector(
+    (state) => state.adminSliceReducer.favouriteList
+  );
+
+  const handleFavouriteListRequest = async (action) => {
+    console.log("action: ", action)
+    try {
+      const username = JSON.parse(localStorage.getItem("userDetails")).username;
+
+      const data = {
+        username: username,
+        propertyID: card.propertyID,
+        action: action,
+      };
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_HOST}/user/update-user-favourites`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
+
+      const response = await res.json();
+      if (response.success) {
+        dispatch(updateFavoritesList({ action: "all", body: response.body }));
+      } else {
+        throw new Error(response.message);
+      }
+    } catch (error) {
+      toast.error(error.message, {
+        position: "bottom-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  };
+
   const TruncatingH1 = ({ text }) => {
     const h1Ref = useRef(null);
     const [displayText, setDisplayText] = useState(text);
@@ -61,9 +114,9 @@ const PropertyCard = ({ card }) => {
     );
   };
   return (
-    <Link
-      href={`/buy-shares/property/${card.propertyID}`}
-      className="w-[20rem] bg-white border-2 border-[#D9D9D9] rounded-xl md:mx-10 mx-1 mt-20"
+    <div
+      onClick={() => router.push(`/buy-shares/property/${card.propertyID}`)}
+      className="w-[20rem] bg-white border-2 border-[#D9D9D9] rounded-xl md:mx-10 mx-1 mt-20 cursor-pointer"
     >
       <div className="p-2 relative">
         <Image
@@ -84,20 +137,21 @@ const PropertyCard = ({ card }) => {
           // alt={`${}`}
         />
         <span
-          // onClick={() =>
-          //   handleFavouriteList(
-          //     slideIndex,
-          //     cardIndex,
-          //     !favourites[slideIndex][cardIndex]?.status
-          //   )
-          // }
+          onClick={(e) => {
+            e.stopPropagation();
+            if (favouriteList.includes(card.propertyID)) {
+              handleFavouriteListRequest("remove");
+            } else {
+              handleFavouriteListRequest("add");
+            }
+          }}
           className="absolute inset-y-5 left-0 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer"
         >
-          {/* {favourites[slideIndex][cardIndex]?.status ? (
-                  <FaHeart />
-                ) : (
-                  <FaRegHeart />
-                )} */}
+          {favouriteList.includes(card.propertyID) ? (
+            <FaHeart />
+          ) : (
+            <FaRegHeart />
+          )}
         </span>
         <span className="absolute text-xs inset-y-5 right-0 px-5 text-[#116A7B] font-semibold focus:outline-none cursor-pointer">
           {" "}
@@ -136,7 +190,7 @@ const PropertyCard = ({ card }) => {
             : ""}
         </h4>
       </div>
-    </Link>
+    </div>
   );
 };
 
