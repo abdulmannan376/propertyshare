@@ -92,24 +92,28 @@ const OfferCard = ({ card, fetchData }) => {
         "December",
       ];
 
-      let commutedDateString = "";
       const dateOfMonth = date.getDate();
-      if (dateOfMonth % 10 === 1) {
-        commutedDateString += "1st";
-      } else if (dateOfMonth % 10 === 2) {
-        commutedDateString += "2nd";
-      } else if (dateOfMonth % 10 === 3) {
-        commutedDateString += "3rd";
-      } else {
-        commutedDateString += `${dateOfMonth}th`;
-      }
-
-      commutedDateString += ` ${months[date.getMonth()]} ${
-        dateString.split("-")[0]
-      }`;
+      const commutedDateString = `${getDaySuffix(dateOfMonth)} ${
+        months[date.getMonth()]
+      } ${date.getFullYear()}`;
 
       return commutedDateString;
     }
+  }
+
+  function getDaySuffix(dateOfMonth) {
+    const j = dateOfMonth % 10,
+      k = dateOfMonth % 100;
+    if (j === 1 && k !== 11) {
+      return `${dateOfMonth}st`;
+    }
+    if (j === 2 && k !== 12) {
+      return `${dateOfMonth}nd`;
+    }
+    if (j === 3 && k !== 13) {
+      return `${dateOfMonth}rd`;
+    }
+    return `${dateOfMonth}th`;
   }
 
   const handleRentOfferAction = async (action, offerID) => {
@@ -297,8 +301,9 @@ const OfferCard = ({ card, fetchData }) => {
           ba <strong>{card.shareDocID.propertyDocID.area}</strong> Sqft
         </h2>
         <h3 className="text-sm text-[#116A7B]">
-          {activeOfferCategoryTab === "Swap"? "Swap To" : "Duration"}: {processDate(card.shareDocID.availableInDuration.startDate)}{" "}
-          - {processDate(card.shareDocID.availableInDuration.endDate)}
+          {activeOfferCategoryTab === "Swap" ? "Swap To" : "Duration"}:{" "}
+          {processDate(card.shareDocID.availableInDuration.startDate)} -{" "}
+          {processDate(card.shareDocID.availableInDuration.endDate)}
         </h3>
         {activeOfferCategoryTab !== "Swap" && (
           <h5 className="text-sm text-[#116A7B]">

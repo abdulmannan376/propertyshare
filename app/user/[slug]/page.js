@@ -19,6 +19,8 @@ import {
   updateNavbarTextColor,
 } from "@/app/redux/features/navbarSlice";
 import Offers from "@/components/user/offers";
+import Favourites from "@/components/user/favourites";
+import WishList from "@/components/user/wishlist";
 
 const Page = () => {
   const dispatch = useDispatch();
@@ -217,7 +219,8 @@ const Page = () => {
           {activeTab === "Property Management" && <PropertyManagement />}
           {activeTab === "Profile" && <UserManagement />}
           {activeTab === "Offers" && <Offers />}
-
+          {activeTab === "Favourites" && <Favourites />}
+          {activeTab === "Wishlist" && <WishList />}
         </div>
       </div>
     </div>
