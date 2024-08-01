@@ -590,8 +590,8 @@ const ThreadDisplay = ({ propertyID, propertyDocID, category }) => {
                     Duration:
                   </strong>{" "}
                   <br /> {processDate(
-                    share.availableInDuration.startDate
-                  )} - {processDate(share.availableInDuration.endDate)}
+                    share.availableInDuration.startDateString
+                  )} - {processDate(share.availableInDuration.endDateString)}
                 </h1>
                 {/* <h2
                 className={`${
@@ -615,9 +615,9 @@ const ThreadDisplay = ({ propertyID, propertyDocID, category }) => {
                         threadLevel={parseInt(thread.threadLevel)}
                         propertyID={propertyID}
                         startDate={processDate(
-                          share.availableInDuration.startDate
+                          share.availableInDuration.startDateString
                         )}
-                        endDate={processDate(share.availableInDuration.endDate)}
+                        endDate={processDate(share.availableInDuration.endDateString)}
                         shareID={share.shareID}
                       />
                     </div>

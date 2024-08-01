@@ -9,6 +9,7 @@ const initialState = {
   activePropertyManagementTab: "Listings",
   activeOffersTab: "Sent",
   activeOfferCategoryTab: "Rent",
+  activeInspectionTab: "My Inspections",
 };
 
 export const userDashboardSlice = createSlice({
@@ -30,6 +31,9 @@ export const userDashboardSlice = createSlice({
     updateOfferCategoryTab: (state, action) => {
       state.activeOfferCategoryTab = action.payload;
     },
+    updateActiveInspectionTab: (state, action) => {
+      state.activeInspectionTab = action.payload;
+    },
   },
 });
 
@@ -39,5 +43,6 @@ export const {
   updateActivePropertyManagementTab,
   updateOffersTab,
   updateOfferCategoryTab,
+  updateActiveInspectionTab,
 } = userDashboardSlice.actions;
 export default userDashboardSlice.reducer;

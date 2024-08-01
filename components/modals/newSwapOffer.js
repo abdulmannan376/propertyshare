@@ -164,8 +164,8 @@ const NewSwapOfferModal = ({
             >
               <option value="Select">Select</option>
               {myPropertyShares.map((share, index) => {
-                const startDate = new Date(share.availableInDuration.startDate);
-                const endDate = new Date(share.availableInDuration.endDate);
+                const startDate = new Date(share.availableInDuration.startDateString);
+                const endDate = new Date(share.availableInDuration.endDateString);
                 return (
                   <option key={index} value={share.shareID}>
                     {index + 1}: {startDate.toISOString().split("T")[0]} -{" "}

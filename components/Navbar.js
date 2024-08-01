@@ -116,6 +116,9 @@ const Navbar = () => {
             username: user.username,
             email: user.email,
           };
+          dispatch(updateUserDetails(userDetails));
+          userDetails.name = user.name;
+          localStorage.setItem("userDetails", JSON.stringify(userDetails));
           dispatch(
             updateFavoritesList({
               action: "all",
@@ -128,7 +131,6 @@ const Navbar = () => {
               body: user.userProfile.favouriteList,
             })
           );
-          dispatch(updateUserDetails(userDetails));
           setLoggedIn(true);
           fetchNotifications();
         } else {

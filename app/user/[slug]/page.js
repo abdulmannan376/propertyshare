@@ -21,6 +21,7 @@ import {
 import Offers from "@/components/user/offers";
 import Favourites from "@/components/user/favourites";
 import WishList from "@/components/user/wishlist";
+import Inspections from "@/components/user/inspections";
 
 const Page = () => {
   const dispatch = useDispatch();
@@ -98,7 +99,7 @@ const Page = () => {
     { name: "Offers", roles: ["shareholder", "user"] },
     { name: "Wishlist", roles: ["shareholder", "user"] },
     { name: "Favourites", roles: ["shareholder", "user"] },
-    { name: "Inspection", roles: ["admin", "shareholder", "user"] },
+    { name: "Inspections", roles: ["admin", "shareholder", "user"] },
     {
       name: "Modification & Maintenance",
       roles: ["admin", "shareholder", "user"],
@@ -221,6 +222,7 @@ const Page = () => {
           {activeTab === "Offers" && <Offers />}
           {activeTab === "Favourites" && <Favourites />}
           {activeTab === "Wishlist" && <WishList />}
+          {activeTab === "Inspections" && <Inspections />}
         </div>
       </div>
     </div>

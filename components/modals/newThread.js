@@ -151,8 +151,8 @@ const NewThread = ({
           >
             <option value="Select">Select Duration</option>
             {propertyShares.map((share, index) => {
-              const startDate = new Date(share.availableInDuration.startDate);
-              const endDate = new Date(share.availableInDuration.endDate);
+              const startDate = new Date(share.availableInDuration.startDateString);
+              const endDate = new Date(share.availableInDuration.endDateString);
               return (
                 share.currentOwnerDocID.username ===
                   JSON.parse(localStorage.getItem("userDetails")).username && (

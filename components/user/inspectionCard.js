@@ -10,14 +10,7 @@ import { IoMdCloseCircle } from "react-icons/io";
 import { FaCheckCircle } from "react-icons/fa";
 import { toast } from "react-toastify";
 
-const OfferCard = ({ card, fetchData }) => {
-  const activeOffersTab = useSelector(
-    (state) => state.userDashboardSliceReducer.activeOffersTab
-  );
-  const activeOfferCategoryTab = useSelector(
-    (state) => state.userDashboardSliceReducer.activeOfferCategoryTab
-  );
-
+const InspectionCard = ({ card, fetchData }) => {
   const TruncatingH1 = ({ text }) => {
     const h1Ref = useRef(null);
     const [displayText, setDisplayText] = useState(text);
@@ -116,124 +109,6 @@ const OfferCard = ({ card, fetchData }) => {
     return `${dateOfMonth}th`;
   }
 
-  const handleRentOfferAction = async (action, offerID) => {
-    try {
-      const data = {
-        username: JSON.parse(localStorage.getItem("userDetails")).username,
-        offerID: offerID,
-        action: action,
-      };
-
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_SERVER_HOST}/share/update-share-rent-offer`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-type": "application/json",
-          },
-          body: JSON.stringify(data),
-        }
-      );
-
-      const response = await res.json();
-
-      if (response.success) {
-        fetchData();
-      } else {
-        throw new Error(response.message);
-      }
-    } catch (error) {
-      toast.error(error.message, {
-        position: "bottom-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
-    }
-  };
-
-  const handleSellOfferAction = async (action, offerID) => {
-    try {
-      const data = {
-        username: JSON.parse(localStorage.getItem("userDetails")).username,
-        offerID: offerID,
-        action: action,
-      };
-
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_SERVER_HOST}/share/update-share-sell-offer`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-type": "application/json",
-          },
-          body: JSON.stringify(data),
-        }
-      );
-
-      const response = await res.json();
-
-      if (response.success) {
-        fetchData();
-      } else {
-        throw new Error(response.message);
-      }
-    } catch (error) {
-      toast.error(error.message, {
-        position: "bottom-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
-    }
-  };
-
-  const handleSwapOfferAction = async (action, offerID) => {
-    try {
-      const data = {
-        offerID: offerID,
-        action: action,
-      };
-
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_SERVER_HOST}/share/update-share-swap-offer`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-type": "application/json",
-          },
-          body: JSON.stringify(data),
-        }
-      );
-
-      const response = await res.json();
-
-      if (response.success) {
-        fetchData();
-      } else {
-        throw new Error(response.message);
-      }
-    } catch (error) {
-      toast.error(error.message, {
-        position: "bottom-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
-    }
-  };
   return (
     // <Link
     //   href={`/rent-shares/property/${card.shareDocID.propertyDocID.propertyID}`}
@@ -245,13 +120,13 @@ const OfferCard = ({ card, fetchData }) => {
           width={1000}
           height={1000}
           src={
-            card.shareDocID.propertyDocID.imageCount > 0
+            card.propertyDocID.imageCount > 0
               ? `${process.env.NEXT_PUBLIC_SERVER_HOST}/uploads/${
-                  card.shareDocID.propertyDocID.propertyID
+                  card.propertyDocID.propertyID
                 }/image-${
-                  card.shareDocID.propertyDocID.pinnedImageIndex === -1
+                  card.propertyDocID.pinnedImageIndex === -1
                     ? "1"
-                    : `${card.shareDocID.propertyDocID.pinnedImageIndex}`
+                    : `${card.propertyDocID.pinnedImageIndex}`
                 }.png`
               : "/assets/user/property-management/no-image.jpg"
           }
@@ -281,36 +156,35 @@ const OfferCard = ({ card, fetchData }) => {
         </span> */}
       </div>
       <div className="p-2 space-y-2">
-        <TruncatingH1 text={card.shareDocID.propertyDocID.title} />
+        <TruncatingH1 text={card.propertyDocID.title} />
         {/* <h3 className="text-[#116A7B] font-semibold">{card.propertyType}</h3> */}
         <h2 className="text-sm text-[#116A7B]">
           <strong>
-            {card?.shareDocID.propertyDocID.amenities?.roomDetails?.inputs?.beds
-              ? card?.shareDocID.propertyDocID.amenities?.roomDetails?.inputs
-                  ?.beds
+            {card?.propertyDocID.amenities?.roomDetails?.inputs?.beds
+              ? card?.propertyDocID.amenities?.roomDetails?.inputs?.beds
               : "-"}
           </strong>{" "}
           bd{" "}
           <strong>
-            {card?.shareDocID.propertyDocID.amenities?.roomDetails?.inputs
-              ?.baths
-              ? card?.shareDocID.propertyDocID.amenities?.roomDetails?.inputs
-                  ?.baths
+            {card?.propertyDocID?.amenities?.roomDetails?.inputs?.baths
+              ? card?.propertyDocID?.amenities?.roomDetails?.inputs?.baths
               : "-"}
           </strong>{" "}
-          ba <strong>{card.shareDocID.propertyDocID.area}</strong> Sqft
+          ba <strong>{card.propertyDocID.area}</strong> Sqft
         </h2>
         <h3 className="text-sm text-[#116A7B]">
-          {activeOfferCategoryTab === "Swap" ? "Swap To" : "Duration"}:{" "}
-          {processDate(card.shareDocID.availableInDuration.startDateString)} -{" "}
-          {processDate(card.shareDocID.availableInDuration.endDateString)}
+          Duration: <br/>
+          {processDate(
+            card.shareDocID?.availableInDuration?.startDateString
+          )} -{" "}
+          {processDate(card.shareDocID?.availableInDuration?.endDateString)}
         </h3>
-        {activeOfferCategoryTab !== "Swap" && (
+        {/* {activeOfferCategoryTab !== "Swap" && (
           <h5 className="text-sm text-[#116A7B]">
             {activeOfferCategoryTab}: ${card.price}
           </h5>
-        )}
-        {activeOfferCategoryTab === "Swap" && (
+        )} */}
+        {/* {activeOfferCategoryTab === "Swap" && (
           <h3 className="text-sm text-[#116A7B]">
             Swap with:{" "}
             {processDate(
@@ -321,8 +195,8 @@ const OfferCard = ({ card, fetchData }) => {
               card.offeredShareDocID?.availableInDuration.endDateString
             )}
           </h3>
-        )}
-        {activeOffersTab === "Sent" && activeOfferCategoryTab !== "Swap" && (
+        )} */}
+        {/* {activeOffersTab === "Sent" && activeOfferCategoryTab !== "Swap" && (
           <h5 className="text-sm text-[#116A7B]">
             User: <strong>{card.userDocID.username}</strong>
           </h5>
@@ -343,48 +217,46 @@ const OfferCard = ({ card, fetchData }) => {
             <h5 className="text-sm text-[#116A7B]">
               Shareholder: <strong>{card.userDocID.username}</strong>
             </h5>
-          )}
+          )} */}
         <h4 className="text-xl flex items-start text-[#116A7B]">
           <FiMapPin className="inline-flex mt-1 mr-1" />{" "}
-          {card.shareDocID.propertyDocID.addressOfProperty.city
-            ? card.shareDocID.propertyDocID.addressOfProperty.city
+          {card.propertyDocID.addressOfProperty.city
+            ? card.propertyDocID.addressOfProperty.city
             : ""}
           ,{" "}
-          {card.shareDocID.propertyDocID.addressOfProperty.country
+          {card.propertyDocID.addressOfProperty.country
             ? compCities.getCountryByShort(
-                card.shareDocID.propertyDocID.addressOfProperty.country
+                card.propertyDocID.addressOfProperty.country
               ).name
             : ""}
         </h4>
-        {activeOffersTab === "Sent" && (
-          <div className="flex flex-row items-center">
-            {card.status === "pending" && (
-              <>
-                <MdPending className="text-xl text-yellow-500" />{" "}
-                <p className="mx-2 text-yellow-500">Pending</p>
-              </>
-            )}
-            {card.status === "rejected" && (
-              <>
-                <IoMdCloseCircle className="text-xl text-red-500" />{" "}
-                <p className="mx-2 text-red-500">Rejected</p>
-              </>
-            )}
-            {card.status === "accepted" && (
-              <>
-                <FaCheckCircle className="text-xl text-green-500" />{" "}
-                <p className="mx-2 text-green-500">Accepted</p>
-              </>
-            )}
-            {card.status === "cancelled" && (
-              <>
-                <MdCancel className="text-xl text-gray-500" />{" "}
-                <p className="mx-2 text-gray-500">Cancelled</p>
-              </>
-            )}
-          </div>
-        )}
-        {activeOffersTab === "Sent" &&
+        <div className="flex flex-row items-center">
+          {card.status === "Pending Submission" && (
+            <>
+              <MdPending className="text-xl text-yellow-500" />{" "}
+              <p className="mx-2 text-yellow-500">{card.status}</p>
+            </>
+          )}
+          {card.status === "Pending Admin Approval" && (
+            <>
+              <MdPending className="text-xl text-yellow-500" />{" "}
+              <p className="mx-2 text-yellow-500">{card.status}</p>
+            </>
+          )}
+          {card.status === "Verified" && (
+            <>
+              <FaCheckCircle className="text-xl text-green-500" />{" "}
+              <p className="mx-2 text-green-500">{card.status}</p>
+            </>
+          )}
+          {card.status === "In Progress" && (
+            <>
+              <MdCancel className="text-xl text-gray-500" />{" "}
+              <p className="mx-2 text-gray-500">{card.status}</p>
+            </>
+          )}
+        </div>
+        {/* {activeOffersTab === "Sent" &&
           card.status !== "cancelled" &&
           card.status === "pending" && (
             <button
@@ -402,8 +274,8 @@ const OfferCard = ({ card, fetchData }) => {
             >
               <p className="mx-2 text-gray-500 underline">Cancel</p>
             </button>
-          )}
-        {activeOffersTab === "Received" && (
+          )} */}
+        {/* {activeOffersTab === "Received" && (
           <div className="flex flex-row items-center">
             {card.status === "pending" && (
               <div className="w-full flex flex-row items-center justify-around">
@@ -460,11 +332,11 @@ const OfferCard = ({ card, fetchData }) => {
               </>
             )}
           </div>
-        )}
+        )} */}
       </div>
     </div>
     // </Link>
   );
 };
 
-export default OfferCard;
+export default InspectionCard;
