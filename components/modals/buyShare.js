@@ -212,8 +212,16 @@ const BuyShareModal = ({
             >
               <option value="Select">Select</option>
               {propertyShares.map((share, index) => {
-                const startDate = new Date(share.availableInDuration.startDateString);
-                const endDate = new Date(share.availableInDuration.endDateString);
+                const startDate = new Date(
+                  share.availableInDuration.startDateString
+                    ? share.availableInDuration.startDateString
+                    : share.availableInDuration.startDate
+                );
+                const endDate = new Date(
+                  share.availableInDuration.endDateString
+                    ? share.availableInDuration.endDateString
+                    : share.availableInDuration.endDate
+                );
                 return (
                   share.utilisedStatus === "Listed" && (
                     <option key={index} value={share.shareID}>

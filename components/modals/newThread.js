@@ -52,15 +52,20 @@ const NewThread = ({
   }, [isOpen, propertyDocID]);
 
   const [selectedShareID, setSelectedShareID] = useState("");
+  const [price, setPrice] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
+      if (price.length === 0) {
+        throw new Error("price is required");
+      }
       const data = {
         username: JSON.parse(localStorage.getItem("userDetails")).username,
         shareID: selectedShareID,
         category: category,
+        price: price,
       };
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_SERVER_HOST}/share/open-share-by-category`,
@@ -151,8 +156,16 @@ const NewThread = ({
           >
             <option value="Select">Select Duration</option>
             {propertyShares.map((share, index) => {
-              const startDate = new Date(share.availableInDuration.startDateString);
-              const endDate = new Date(share.availableInDuration.endDateString);
+              const startDate = new Date(
+                share.availableInDuration.startDateString
+                  ? share.availableInDuration.startDateString
+                  : share.availableInDuration.startDate
+              );
+              const endDate = new Date(
+                share.availableInDuration.endDateString
+                  ? share.availableInDuration.endDateString
+                  : share.availableInDuration.endDate
+              );
               return (
                 share.currentOwnerDocID.username ===
                   JSON.parse(localStorage.getItem("userDetails")).username && (
@@ -164,6 +177,21 @@ const NewThread = ({
               );
             })}
           </select>
+        </div>
+        <div className="flex flex-col mt-5">
+          <label htmlFor="title" className="text-[#676767]">
+            Price
+          </label>
+          <input
+            type="number"
+            name="title"
+            value={price}
+            required={true}
+            onChange={({ target }) => {
+              setPrice(target.value);
+            }}
+            className="w-96 text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+          />
         </div>
         <div className="mt-5">
           <button

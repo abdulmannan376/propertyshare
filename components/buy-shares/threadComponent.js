@@ -580,6 +580,12 @@ const ThreadDisplay = ({ propertyID, propertyDocID, category }) => {
                   Share Owner:{" "}
                   <strong>{share.currentOwnerDocID.username}</strong>
                 </h2>
+                <h2 className="text-xl">
+                  Price:{" "}
+                  <strong>
+                    {share.priceByCategory ? `$${share.priceByCategory}` : "-"}
+                  </strong>
+                </h2>
                 <h1>
                   <strong
                     className={`text-2xl ${
@@ -589,7 +595,8 @@ const ThreadDisplay = ({ propertyID, propertyDocID, category }) => {
                     {" "}
                     Duration:
                   </strong>{" "}
-                  <br /> {processDate(
+                  <br />{" "}
+                  {processDate(
                     share.availableInDuration.startDateString
                   )} - {processDate(share.availableInDuration.endDateString)}
                 </h1>
@@ -617,7 +624,9 @@ const ThreadDisplay = ({ propertyID, propertyDocID, category }) => {
                         startDate={processDate(
                           share.availableInDuration.startDateString
                         )}
-                        endDate={processDate(share.availableInDuration.endDateString)}
+                        endDate={processDate(
+                          share.availableInDuration.endDateString
+                        )}
                         shareID={share.shareID}
                       />
                     </div>
