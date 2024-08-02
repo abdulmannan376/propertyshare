@@ -120,14 +120,8 @@ const InspectionCard = ({ card, fetchData }) => {
           width={1000}
           height={1000}
           src={
-            card.propertyDocID.imageCount > 0
-              ? `${process.env.NEXT_PUBLIC_SERVER_HOST}/uploads/${
-                  card.propertyDocID.propertyID
-                }/image-${
-                  card.propertyDocID.pinnedImageIndex === -1
-                    ? "1"
-                    : `${card.propertyDocID.pinnedImageIndex}`
-                }.png`
+            card.imageCount > 0
+              ? `${process.env.NEXT_PUBLIC_SERVER_HOST}/${card.imageDirURL}/image-1.png`
               : "/assets/user/property-management/no-image.jpg"
           }
           className={`w-[20rem] h-[19rem] object-cover object-center rounded-md overflow-hidden`}
@@ -173,7 +167,7 @@ const InspectionCard = ({ card, fetchData }) => {
           ba <strong>{card.propertyDocID.area}</strong> Sqft
         </h2>
         <h3 className="text-sm text-[#116A7B]">
-          Duration: <br/>
+          Duration: <br />
           {processDate(
             card.shareDocID?.availableInDuration?.startDateString
           )} -{" "}

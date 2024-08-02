@@ -233,7 +233,7 @@ const NewThread = ({
               className="text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mx-3 rounded-full"
             />
             <label htmlFor="title" className="text-[#676767]">
-              Sell to Property Owner
+              Buy Back Request
             </label>
           </div>
         )}
