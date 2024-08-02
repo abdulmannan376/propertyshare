@@ -223,9 +223,6 @@ const Thread = ({
             JSON.parse(localStorage.getItem("userDetails")).username ===
               shareOwner && (
               <div className="flex flex-row items-center space-x-3">
-                <button type="button" onClick={handleOpenMakeOfferModal}>
-                  <h2 className="underline text-[#A2B0B2]">Make an offer</h2>
-                </button>
                 <button type="button">
                   <MdOutlineMessage className="text-xl text-[#A2B0B2] " />
                 </button>
@@ -522,6 +519,113 @@ const ThreadDisplay = ({ propertyID, propertyDocID, category }) => {
     }
   };
 
+  const handleSubmit = async (e, shareID, price) => {
+    e.preventDefault();
+
+    try {
+      const data = {
+        username: JSON.parse(localStorage.getItem("userDetails")).username,
+        shareID: shareID,
+        category: category,
+        price: price,
+      };
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_HOST}/share/open-share-by-category`,
+        {
+          method: "POST",
+          headers: {
+            "Content-type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
+
+      const response = await res.json();
+
+      if (response.success) {
+        setNewThreadSubmitted(true);
+        toast.success(response.message, {
+          position: "bottom-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      } else {
+        throw new Error(response.message);
+      }
+    } catch (error) {
+      toast.error(error.message, {
+        position: "bottom-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  };
+
+  const handleMakeOffer = async (e, price, shareID) => {
+    e.preventDefault();
+    try {
+      if (price === 0) {
+        throw new Error("Price cannot be 0");
+      }
+      const username = JSON.parse(localStorage.getItem("userDetails")).username;
+      const data = {
+        username: username,
+        shareID: shareID,
+        price: price,
+        category: category,
+      };
+      console.log(data);
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_HOST}/share/gen-new-offer`,
+        {
+          method: "POST",
+          headers: {
+            "Content-type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
+
+      const response = await res.json();
+
+      if (response.success) {
+        toast.success(response.message, {
+          position: "bottom-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      } else {
+        throw new Error(response.message);
+      }
+    } catch (error) {
+      toast.error(error.message, {
+        position: "bottom-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  };
+
   return (
     <>
       {userRole === "shareholder" && (
@@ -570,36 +674,68 @@ const ThreadDisplay = ({ propertyID, propertyDocID, category }) => {
                     fetchThreads(share.shareID);
                   }
                 }}
-                className={`flex flex-col ${
+                className={`flex flex-row items-center justify-between ${
                   selectedThread === index
                     ? "bg-[#116A7B] text-white"
                     : "bg-[#FCFBF5] text-[#116A7B]"
-                } border border-[#D9D9D9] space-y-3 px-5 py-7 my-5 cursor-pointer`}
+                } border border-[#D9D9D9] px-5 py-7 my-5 cursor-pointer`}
               >
-                <h2 className="text-xl">
-                  Share Owner:{" "}
-                  <strong>{share.currentOwnerDocID.username}</strong>
-                </h2>
-                <h2 className="text-xl">
-                  Price:{" "}
-                  <strong>
-                    {share.priceByCategory ? `$${share.priceByCategory}` : "-"}
-                  </strong>
-                </h2>
-                <h1>
-                  <strong
-                    className={`text-2xl ${
-                      selectedThread === index ? "text-white" : "text-[#ABB5B7]"
-                    }  font-normal`}
+                <div>
+                  <h2 className="text-xl">
+                    Share Owner:{" "}
+                    <strong>{share.currentOwnerDocID.username}</strong>
+                  </h2>
+                  <h2 className="text-xl">
+                    Price:{" "}
+                    <strong>
+                      {share.priceByCategory
+                        ? `$${share.priceByCategory}`
+                        : "-"}
+                    </strong>
+                  </h2>
+                  <h1>
+                    <strong
+                      className={`text-2xl ${
+                        selectedThread === index
+                          ? "text-white"
+                          : "text-[#ABB5B7]"
+                      }  font-normal`}
+                    >
+                      {" "}
+                      Duration:
+                    </strong>{" "}
+                    <br />{" "}
+                    {processDate(
+                      share.availableInDuration.startDateString
+                    )} - {processDate(share.availableInDuration.endDateString)}
+                  </h1>
+                </div>
+                <div>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      const username = JSON.parse(
+                        localStorage.getItem("userDetails")
+                      ).username;
+                      if (share.currentOwnerDocID.username === username) {
+                        handleSubmit(e, share.shareID, share.priceByCategory);
+                      } else {
+                        handleMakeOffer(
+                          e,
+                          share.priceByCategory,
+                          share.shareID
+                        );
+                      }
+                    }}
+                    className={` text-xl font-semibold p-1 rounded-full cursor-pointer`}
                   >
-                    {" "}
-                    Duration:
-                  </strong>{" "}
-                  <br />{" "}
-                  {processDate(
-                    share.availableInDuration.startDateString
-                  )} - {processDate(share.availableInDuration.endDateString)}
-                </h1>
+                    {share.currentOwnerDocID.username ===
+                    JSON.parse(localStorage.getItem("userDetails")).username
+                      ? "CLOSE"
+                      : "REQUEST"}
+                  </button>
+                </div>
                 {/* <h2
                 className={`${
                   selectedThread === index ? "text-white" : "text-[#ABB5B7]"

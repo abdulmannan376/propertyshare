@@ -322,12 +322,7 @@ const OfferCard = ({ card, fetchData }) => {
             )}
           </h3>
         )}
-        {activeOffersTab === "Sent" && activeOfferCategoryTab !== "Swap" && (
-          <h5 className="text-sm text-[#116A7B]">
-            User: <strong>{card.userDocID.username}</strong>
-          </h5>
-        )}
-        {activeOffersTab === "Sent" && activeOfferCategoryTab === "Swap" && (
+        {activeOffersTab === "Sent" && (
           <h5 className="text-sm text-[#116A7B]">
             Shareholder: <strong>{card.shareholderDocID.username}</strong>
           </h5>
@@ -335,7 +330,7 @@ const OfferCard = ({ card, fetchData }) => {
         {activeOffersTab === "Received" &&
           activeOfferCategoryTab !== "Swap" && (
             <h5 className="text-sm text-[#116A7B]">
-              Shareholder: <strong>{card.shareholderDocID.username}</strong>
+              User: <strong>{card.userDocID.username}</strong>
             </h5>
           )}
         {activeOffersTab === "Received" &&

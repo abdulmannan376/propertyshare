@@ -378,16 +378,9 @@ const SwapShareComponent = ({ propertyID, propertyDocID, category }) => {
                         </strong>{" "}
                         <br />{" "}
                         {processDate(
-                          share.availableInDuration.startDate
-                            .toISOString()
-                            .split("T")[0]
+                          share.availableInDuration.startDateString
                         )}{" "}
-                        -{" "}
-                        {processDate(
-                          share.availableInDuration.endDate
-                            .toISOString()
-                            .split("T")[0]
-                        )}
+                        - {processDate(share.availableInDuration.endDateString)}
                       </h1>
                     </div>
                     {share.currentOwnerDocID.username !==

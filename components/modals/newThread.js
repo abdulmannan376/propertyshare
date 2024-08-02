@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
+import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
 Modal.setAppElement("#app-body");
@@ -13,6 +14,15 @@ const NewThread = ({
   setNewThreadSubmitted,
 }) => {
   const [propertyShares, setPropertyShares] = useState([]);
+
+  const activeNavBtnRentShare = useSelector(
+    (state) => state.propertyPageSliceReducer.navBtnRentShareActive
+  );
+
+  const activeNavBtnBuyShare = useSelector(
+    (state) => state.propertyPageSliceReducer.navBtnBuyShareActive
+  );
+
   useEffect(() => {
     if (!isOpen) return; // Only fetch shares if the modal is open
 
@@ -30,7 +40,18 @@ const NewThread = ({
         const response = await res.json();
         console.log("response: ", response);
         if (response.success) {
-          setPropertyShares(response.body);
+          if (response.body) setPropertyShares(response.body);
+          else
+            toast.success(response.message, {
+              position: "bottom-center",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+            });
         } else {
           throw new Error(response.message);
         }
@@ -53,19 +74,22 @@ const NewThread = ({
 
   const [selectedShareID, setSelectedShareID] = useState("");
   const [price, setPrice] = useState("");
+  const [isBuyBackChecked, setIsBuyBackChecked] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      if (price.length === 0) {
-        throw new Error("price is required");
+      console.log("price: ", price, "selectedShareId: ", selectedShareID);
+      if (price.length === 0 || selectedShareID.length === 0) {
+        throw new Error("Missing fields.");
       }
       const data = {
         username: JSON.parse(localStorage.getItem("userDetails")).username,
         shareID: selectedShareID,
         category: category,
         price: price,
+        action: isBuyBackChecked ? "Buy Back" : "",
       };
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_SERVER_HOST}/share/open-share-by-category`,
@@ -81,6 +105,9 @@ const NewThread = ({
       const response = await res.json();
 
       if (response.success) {
+        setSelectedShareID("")
+        setPrice("")
+        setIsBuyBackChecked(false)
         setNewThreadSubmitted(true);
         toast.success(response.message, {
           position: "bottom-center",
@@ -193,6 +220,40 @@ const NewThread = ({
             className="w-96 text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
           />
         </div>
+        {activeNavBtnBuyShare === "Sell" && (
+          <div className="flex flex-row mt-5 items-center justify-start">
+            <input
+              type="checkbox"
+              name="sellToOwner"
+              checked={isBuyBackChecked}
+              required={true}
+              onChange={({ target }) => {
+                setIsBuyBackChecked(target.checked);
+              }}
+              className="text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mx-3 rounded-full"
+            />
+            <label htmlFor="title" className="text-[#676767]">
+              Sell to Property Owner
+            </label>
+          </div>
+        )}
+        {activeNavBtnRentShare === "Sell" && (
+          <div className="flex flex-row mt-5 items-center justify-start">
+            <input
+              type="checkbox"
+              name="sellToOwner"
+              checked={isBuyBackChecked}
+              required={true}
+              onChange={({ target }) => {
+                setIsBuyBackChecked(target.checked);
+              }}
+              className="text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mx-3 rounded-full"
+            />
+            <label htmlFor="title" className="text-[#676767]">
+              Sell to Property Owner
+            </label>
+          </div>
+        )}
         <div className="mt-5">
           <button
             onClick={handleSubmit}
