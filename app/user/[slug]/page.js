@@ -96,7 +96,7 @@ const Page = () => {
   const options = [
     { name: "Statistics", roles: ["admin"] },
     { name: "Shares in Properties", roles: ["shareholder"] },
-    { name: "Offers", roles: ["shareholder", "user"] },
+    { name: "Offers", roles: ["admin", "shareholder", "user"] },
     { name: "Wishlist", roles: ["shareholder", "user"] },
     { name: "Favourites", roles: ["shareholder", "user"] },
     { name: "Inspections", roles: ["admin", "shareholder", "user"] },
