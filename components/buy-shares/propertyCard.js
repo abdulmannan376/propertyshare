@@ -124,9 +124,7 @@ const PropertyCard = ({ card }) => {
           height={1000}
           src={
             card.imageCount > 0
-              ? `${process.env.NEXT_PUBLIC_SERVER_HOST}/uploads/${
-                  card.propertyID
-                }image-${
+              ? `${process.env.NEXT_PUBLIC_SERVER_HOST}/${card.imageDirURL}image-${
                   card.pinnedImageIndex === -1
                     ? "1"
                     : `${card.pinnedImageIndex}`

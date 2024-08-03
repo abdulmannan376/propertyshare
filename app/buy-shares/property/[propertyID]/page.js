@@ -38,7 +38,10 @@ import BuyShareModal from "@/components/modals/buyShare";
 import ThreadDisplay from "@/components/buy-shares/threadComponent";
 import SwapShareComponent from "@/components/buy-shares/swapShareComponent";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
-import { updateFavoritesList, updateWishList } from "@/app/redux/features/userSlice";
+import {
+  updateFavoritesList,
+  updateWishList,
+} from "@/app/redux/features/userSlice";
 
 const Page = () => {
   const dispatch = useDispatch();
@@ -404,9 +407,9 @@ const Page = () => {
                   className="px-1 mx-2 text-2xl  font-semibold focus:outline-none cursor-pointer"
                 >
                   {wishList.includes(propertyID) ? (
-                    <MdPlaylistAddCheckCircle className="text-green-600"/>
+                    <MdPlaylistAddCheckCircle className="text-green-600" />
                   ) : (
-                    <MdPlaylistAddCircle className="text-gray-600"/>
+                    <MdPlaylistAddCircle className="text-gray-600" />
                   )}
                 </button>
               </div>
@@ -448,7 +451,7 @@ const Page = () => {
                         {property?.stakesOccupied}
                       </strong>
                       <text className="text-[#6E6E6E] mr-2">
-                        /{property?.totalStakes}
+                        /{property?.totalStakes - 1}
                       </text>
                     </div>
                     <div className="border border-[#116A7B] text-2xl  text-[#00262D] p-2 rounded-lg">
