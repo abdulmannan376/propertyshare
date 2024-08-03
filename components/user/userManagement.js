@@ -141,8 +141,8 @@ const UserManagement = () => {
               <textarea
                 rows="1"
                 value={
-                  myDetails?.userProfile?.dob.length > 0
-                    ? myDetails?.userProfile?.dob
+                  myDetails?.userProfile?.dobString.length > 0
+                    ? myDetails?.userProfile?.dobString
                     : "--"
                 }
                 className=""
