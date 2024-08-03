@@ -397,6 +397,9 @@ const Page = () => {
         body.nationality = userDetails.userProfile.nationality;
         body.religion = userDetails.userProfile.religion;
         body.bloodGroup = userDetails.userProfile.bloodGroup;
+      } else if(action === "Contact Details") {
+        body.contact = userDetails.contact,
+        body.permanentAddress = userDetails.userProfile.permanentAddress
       }
 
       const data = {
@@ -847,7 +850,75 @@ const Page = () => {
               </>
             )}
             {profileSettingActiveTab === "Contact Details" && (
-              <div>Contact Details</div>
+              <>
+                <div className="flex flex-row flex-wrap">
+                  <div className="mb-6 mr-6 flex flex-col">
+                    <label htmlFor="email" className="text-[#676767]">
+                      Email
+                    </label>
+                    <input
+                      type="email"
+                      name="email"
+                      value={userDetails?.email}
+                      required={true}
+                      readOnly={true}
+                      onChange={({ target }) =>
+                        handleUserProfileUpdates("email", target.value, false)
+                      }
+                      className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                    />
+                  </div>
+                  <div className="mb-6 mr-6 flex flex-col">
+                    <label htmlFor="contact" className="text-[#676767]">
+                      Contact
+                    </label>
+                    <input
+                      type="number"
+                      name="contact"
+                      value={userDetails?.contact}
+                      required={true}
+                      onChange={({ target }) =>
+                        handleUserProfileUpdates("contact", target.value, false)
+                      }
+                      className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                    />
+                  </div>
+                  <div className="mb-6 mr-6 flex flex-col">
+                    <label
+                      htmlFor="permanentAddress"
+                      className="text-[#676767]"
+                    >
+                      Permanent Address
+                    </label>
+                    <input
+                      type="number"
+                      name="permanentAddress"
+                      value={userDetails?.permanentAddress}
+                      required={true}
+                      onChange={({ target }) =>
+                        handleUserProfileUpdates(
+                          "permanentAddress",
+                          target.value,
+                          true
+                        )
+                      }
+                      className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                    />
+                  </div>
+                </div>
+                <div className="mt-5">
+                  <button
+                    type="button"
+                    onClick={(e) => handleUserProfileUpdate()}
+                    className="w-72 bg-[#116A7B] text-white text-2xl font-medium px-7 py-3 rounded-full"
+                  >
+                    {!isLoadingSubmission && `Save and next`}
+                    {isLoadingSubmission && (
+                      <div className="border-t-2 border-b-2 border-white bg-transparent h-3 p-2 animate-spin shadow-lg w-fit mx-auto rounded-full"></div>
+                    )}
+                  </button>
+                </div>
+              </>
             )}
             {profileSettingActiveTab === "Next of Kin" && (
               <div>Next of Kin Details</div>
