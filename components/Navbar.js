@@ -49,6 +49,9 @@ const Navbar = () => {
   );
 
   const userEmail = useSelector((state) => state.adminSliceReducer.userEmail);
+  const profilePicURL = useSelector(
+    (state) => state.adminSliceReducer.profilePicURL
+  );
 
   const [isMobView, setIsMobView] = useState(false);
 
@@ -115,6 +118,7 @@ const Navbar = () => {
             role: user.role,
             username: user.username,
             email: user.email,
+            profilePicURL: user.userProfile.profilePicURL,
           };
           dispatch(updateUserDetails(userDetails));
           userDetails.name = user.name;
@@ -469,7 +473,11 @@ const Navbar = () => {
                     <Image
                       width={500}
                       height={500}
-                      src={"/dummy-image.png"}
+                      src={
+                        profilePicURL.length > 0
+                          ? `${process.env.NEXT_PUBLIC_SERVER_HOST}/${profilePicURL}profile-pic.png`
+                          : "/dummy-image.png"
+                      }
                       alt={
                         JSON.parse(localStorage.getItem("userDetails"))
                           ?.username
@@ -494,7 +502,11 @@ const Navbar = () => {
                           <Image
                             width={500}
                             height={500}
-                            src={"/dummy-image.png"}
+                            src={
+                              profilePicURL.length > 0
+                                ? `${process.env.NEXT_PUBLIC_SERVER_HOST}/${profilePicURL}profile-pic.png`
+                                : "/dummy-image.png"
+                            }
                             className="w-8 h-8 object-scale-down object-center rounded-full"
                           />
                           <p className="text-base">

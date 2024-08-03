@@ -6,6 +6,7 @@ const initialState = {
   userRole: "",
   userName: "",
   userEmail: "",
+  profilePicURL: "",
   settingActiveTab: "Profile Setting",
   profileSettingActiveTab: "Primary Details",
   currentLocation: [],
@@ -22,6 +23,7 @@ export const adminSlice = createSlice({
         state.userRole = action.payload.role;
         state.userName = action.payload.name;
         state.userEmail = action.payload.email;
+        state.profilePicURL = action.payload.profilePicURL
       }
     },
     handleUserSettingNavigation: (state, action) => {
