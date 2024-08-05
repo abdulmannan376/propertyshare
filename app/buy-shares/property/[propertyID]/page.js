@@ -448,7 +448,7 @@ const Page = () => {
                       <IoIosPricetag className="inline-flex mx-2" />
                       <strong>Shares Sold:</strong>{" "}
                       <strong className="text-[#6E6E6E]">
-                        {property?.stakesOccupied}
+                        {property?.stakesOccupied -1}
                       </strong>
                       <text className="text-[#6E6E6E] mr-2">
                         /{property?.totalStakes - 1}
