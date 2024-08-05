@@ -22,11 +22,11 @@ const Modal = ({ isOpen, onClose, onSave, coordinates }) => {
     "Single family home",
   ];
 
-  const areaMin = ["MIN", "0", "50", "100", "150", "200", "250", "300"];
-  const areaMax = ["MAX", "50", "100", "150", "200", "250", "300", "Any"];
+  const areaMin = ["0", "50", "100", "150", "200", "250", "300"];
+  const areaMax = ["ANY", "50", "100", "150", "200", "250", "300"];
 
-  const priceMin = ["MIN", "0", "300", "600", "900"];
-  const priceMax = ["MAX", "300", "600", "900", "Any"];
+  const priceMin = ["0", "300", "600", "900"];
+  const priceMax = ["ANY", "300", "600", "900"];
 
   const handleSubmit = () => {
     onSave({

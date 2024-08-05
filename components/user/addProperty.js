@@ -1989,7 +1989,7 @@ const PropertyManagement = () => {
                         height={1000}
                         src={`${process.env.NEXT_PUBLIC_SERVER_HOST}/${
                           property.imageDirURL
-                        }/image-${
+                        }image-${
                           property.pinnedImage === -1
                             ? "1"
                             : `${property.pinnedImage}`

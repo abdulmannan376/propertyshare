@@ -44,6 +44,7 @@ const Page = () => {
   );
 
   const [userDetails, setUserDetails] = useState(null);
+  const [nextOfKinDetails, setNextOfKinDetails] = useState(null);
 
   const fetchUserDetails = async () => {
     try {
@@ -62,6 +63,18 @@ const Page = () => {
 
       if (response.success) {
         setUserDetails(response.body);
+        if (response.body.userProfile.nextOfKinDetails) {
+          setNextOfKinDetails(response.body.userProfile.nextOfKinDetails);
+        } else {
+          setNextOfKinDetails({
+            fullName: "",
+            relation: "",
+            email: "",
+            contact: "",
+            nicNumber: "",
+            dobString: "",
+          });
+        }
       } else {
         throw new Error(response.message);
       }
@@ -317,6 +330,24 @@ const Page = () => {
   ];
 
   const bloodGroupList = ["O+", "O-", "A+", "A-", "AB+", "AB-", "B+", "B-"];
+  const relationList = [
+    "Parent",
+    "Child",
+    "Sibling",
+    "Spouse",
+    "Partner",
+    "Grandparent",
+    "Grandchild",
+    "Aunt",
+    "Uncle",
+    "Cousin",
+    "Niece",
+    "Nephew",
+    "Friend",
+    "Colleague",
+    "Acquaintance",
+    "Other",
+  ];
 
   const [files, setFiles] = useState(null);
   const [isLoadingProfilePic, setIsLoadingProfilePic] = useState(false);
@@ -397,9 +428,9 @@ const Page = () => {
         body.nationality = userDetails.userProfile.nationality;
         body.religion = userDetails.userProfile.religion;
         body.bloodGroup = userDetails.userProfile.bloodGroup;
-      } else if(action === "Contact Details") {
-        body.contact = userDetails.contact,
-        body.permanentAddress = userDetails.userProfile.permanentAddress
+      } else if (action === "Contact Details") {
+        (body.contact = userDetails.contact),
+          (body.permanentAddress = userDetails.userProfile.permanentAddress);
       }
 
       const data = {
@@ -921,7 +952,71 @@ const Page = () => {
               </>
             )}
             {profileSettingActiveTab === "Next of Kin" && (
-              <div>Next of Kin Details</div>
+              <>
+                <div className="flex flex-row flex-wrap">
+                  <div className="mb-6 mr-6 flex flex-col">
+                    <label htmlFor="fullNameNOK" className="text-[#676767]">
+                      Fullname
+                    </label>
+                    <input
+                      type="fullNameNOK"
+                      name="fullNameNOK"
+                      value={nextOfKinDetails?.fullName}
+                      required={true}
+                      onChange={({ target }) =>
+                        setNextOfKinDetails((prevDetails) => {
+                          const newDetails = { ...prevDetails };
+                          newDetails["fullName"] = target.value;
+                          return newDetails;
+                        })
+                      }
+                      className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                    />
+                  </div>
+                  <div className="mb-6 mr-6 flex flex-col">
+                    <div>
+                      <label htmlFor="relationNOK" className="text-[#676767]">
+                        Relationship
+                      </label>
+                      <select
+                        name="relationNOK"
+                        value={nextOfKinDetails?.relation}
+                        onChange={({ target }) => {
+                          if (target.value !== "Select") {
+                            setNextOfKinDetails((prevDetails) => {
+                              const newDetails = { ...prevDetails };
+                              newDetails["relation"] = target.value;
+                              return newDetails;
+                            });
+                          } else {
+                            setNextOfKinDetails((prevDetails) => {
+                              const newDetails = { ...prevDetails };
+                              newDetails["relation"] = "";
+                              return newDetails;
+                            });
+                          }
+                        }}
+                        className="inline-flex mx-10 border border-[#116A7B30] rounded-full px-3 focus:border-[#116A7B] outline-none"
+                      >
+                        <option value="Select">Select</option>
+                        {relationList.map((relation, index) => (
+                          <option key={index} value={relation}>
+                            {relation}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <input
+                      type="text"
+                      name="relationNOK"
+                      value={nextOfKinDetails?.relation}
+                      required={true}
+                      readOnly={true}
+                      className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                    />
+                  </div>
+                </div>
+              </>
             )}
             {profileSettingActiveTab === "Payment Details" && (
               <div>Payment Details</div>

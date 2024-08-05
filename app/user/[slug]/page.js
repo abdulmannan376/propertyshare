@@ -22,6 +22,7 @@ import Offers from "@/components/user/offers";
 import Favourites from "@/components/user/favourites";
 import WishList from "@/components/user/wishlist";
 import Inspections from "@/components/user/inspections";
+import BuybackRequests from "@/components/user/buybackRequests";
 
 const Page = () => {
   const dispatch = useDispatch();
@@ -87,6 +88,9 @@ const Page = () => {
   const userRole = useSelector(
     (state) => state.userDashboardSliceReducer.userRole
   );
+  const profilePicURL = useSelector(
+    (state) => state.adminSliceReducer.profilePicURL
+  );
 
   const handleUpdateActiveTab = (e, tab) => {
     e.preventDefault();
@@ -108,7 +112,7 @@ const Page = () => {
     { name: "Bills and Payment", roles: ["admin", "shareholder", "user"] },
     { name: "Property Management", roles: ["admin", "shareholder", "user"] },
     { name: "Blocked Users", roles: ["shareholder", "user"] },
-    { name: "Buyback Requests", roles: ["admin"] },
+    { name: "Buyback Requests", roles: ["admin", "shareholder"] },
     { name: "Share Transfer", roles: ["admin"] },
     { name: "Restricted Users", roles: ["admin"] },
   ];
@@ -154,8 +158,12 @@ const Page = () => {
             <Image
               width={1000}
               height={1000}
-              src={"/dummy-image.png"}
-              className="w-12 h-12 object-contain object-center "
+              src={
+                profilePicURL.length > 0
+                  ? `${process.env.NEXT_PUBLIC_SERVER_HOST}/${profilePicURL}profile-pic.png`
+                  : "/dummy-image.png"
+              }
+              className="w-12 h-12 object-contain object-center rounded-full"
               alt="user profile pic"
             />
             <h1 className="text-white leading-5 pl-4">
@@ -188,7 +196,7 @@ const Page = () => {
                 option.roles.includes(userRole) && (
                   <li
                     key={index}
-                    className={`xl:text-xl lg:text-base text-white font-medium  ${
+                    className={`text-base text-white font-medium  ${
                       activeTab === option.name ? "bg-[#8E9B9D]" : ""
                     }`}
                   >
@@ -223,6 +231,7 @@ const Page = () => {
           {activeTab === "Favourites" && <Favourites />}
           {activeTab === "Wishlist" && <WishList />}
           {activeTab === "Inspections" && <Inspections />}
+          {activeTab === "Buyback Requests" && <BuybackRequests />}
         </div>
       </div>
     </div>

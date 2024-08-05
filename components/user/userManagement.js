@@ -3,6 +3,8 @@ import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { TiTick } from "react-icons/ti";
 import { MdClose } from "react-icons/md";
+import { useSelector } from "react-redux";
+import { useRouter } from "next/navigation";
 
 const UserManagement = () => {
   const [myDetails, setMyDetails] = useState({});
@@ -57,6 +59,12 @@ const UserManagement = () => {
     fetchMyData();
   }, []);
 
+  const profilePicURL = useSelector(
+    (state) => state.adminSliceReducer.profilePicURL
+  );
+
+  const router = useRouter();
+
   return (
     <>
       {!pageLoading ? (
@@ -66,7 +74,7 @@ const UserManagement = () => {
               {myDetails?.role?.toUpperCase()}
             </h1>
             <button
-              // onClick={(e) => handleClickToAdd(e, "new")}
+              onClick={(e) => router.push("/user/profile-setting")}
               type="button"
               className="bg-[#116A7B] text-white text-lg ml-auto mx-1 px-5 py-1 rounded-full"
             >
@@ -81,8 +89,12 @@ const UserManagement = () => {
               <Image
                 width={1000}
                 height={1000}
-                src={"/assets/user/profile/no-image.png"}
-                className="w-40 h-40 object-contain"
+                src={
+                  profilePicURL.length > 0
+                    ? `${process.env.NEXT_PUBLIC_SERVER_HOST}/${profilePicURL}profile-pic.png`
+                    : "/assets/user/profile/no-image.png"
+                }
+                className="w-40 h-40 object-contain rounded-full"
               />
             )}
           </div>
@@ -92,7 +104,8 @@ const UserManagement = () => {
               <textarea
                 rows="1"
                 value={myDetails?.name}
-                className=""
+                readOnly
+                className="w-80 outline-none"
                 style={{ resize: "none" }}
               ></textarea>
             </div>
@@ -101,7 +114,8 @@ const UserManagement = () => {
               <textarea
                 rows="1"
                 value={myDetails?.username}
-                className=""
+                readOnly
+                className="w-80 outline-none"
                 style={{ resize: "none" }}
               ></textarea>
             </div>
@@ -110,7 +124,8 @@ const UserManagement = () => {
               <textarea
                 rows="1"
                 value={myDetails?.email}
-                className=""
+                readOnly
+                className="w-80 outline-none"
                 style={{ resize: "none" }}
               ></textarea>
               {myDetails?.emailVerified ? (
@@ -132,7 +147,8 @@ const UserManagement = () => {
                     ? myDetails?.userProfile?.nicNumber
                     : "--"
                 }
-                className=""
+                readOnly
+                className="w-80 outline-none"
                 style={{ resize: "none" }}
               ></textarea>
             </div>
@@ -145,7 +161,8 @@ const UserManagement = () => {
                     ? myDetails?.userProfile?.dobString
                     : "--"
                 }
-                className=""
+                readOnly
+                className="w-80 outline-none"
                 style={{ resize: "none" }}
               ></textarea>
             </div>
@@ -158,7 +175,8 @@ const UserManagement = () => {
                     ? myDetails?.userProfile?.nationality
                     : "--"
                 }
-                className=""
+                readOnly
+                className="w-80 outline-none"
                 style={{ resize: "none" }}
               ></textarea>
             </div>
@@ -171,7 +189,8 @@ const UserManagement = () => {
                     ? myDetails?.userProfile?.gender
                     : "--"
                 }
-                className=""
+                readOnly
+                className="w-80 outline-none"
                 style={{ resize: "none" }}
               ></textarea>
             </div>

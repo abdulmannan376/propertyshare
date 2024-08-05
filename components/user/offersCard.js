@@ -156,12 +156,13 @@ const OfferCard = ({ card, fetchData }) => {
     }
   };
 
-  const handleSellOfferAction = async (action, offerID) => {
+  const handleSellOfferAction = async (action, offerID, isBuybackOffer) => {
     try {
       const data = {
         username: JSON.parse(localStorage.getItem("userDetails")).username,
         offerID: offerID,
         action: action,
+        isBuybackOffer: isBuybackOffer,
       };
 
       const res = await fetch(
@@ -310,6 +311,9 @@ const OfferCard = ({ card, fetchData }) => {
             {activeOfferCategoryTab}: ${card.price}
           </h5>
         )}
+        {card.offerToPropertyOwner && (
+          <h5 className="text-sm text-[#116A7B]">Buyback Request</h5>
+        )}
         {activeOfferCategoryTab === "Swap" && (
           <h3 className="text-sm text-[#116A7B]">
             Swap with:{" "}
@@ -322,13 +326,27 @@ const OfferCard = ({ card, fetchData }) => {
             )}
           </h3>
         )}
-        {activeOffersTab === "Sent" && (
+        {activeOffersTab === "Sent" && activeOfferCategoryTab !== "Sell" && (
           <h5 className="text-sm text-[#116A7B]">
             Shareholder: <strong>{card.shareholderDocID.username}</strong>
           </h5>
         )}
+        {activeOffersTab === "Sent" &&
+          activeOfferCategoryTab === "Sell" &&
+          card.offerToPropertyOwner && (
+            <h5 className="text-sm text-[#116A7B]">
+              Property Owner: <strong>{card.userDocID.username}</strong>
+            </h5>
+          )}
+        {activeOffersTab === "Sent" &&
+          activeOfferCategoryTab === "Sell" &&
+          !card.offerToPropertyOwner && (
+            <h5 className="text-sm text-[#116A7B]">
+              User: <strong>{card.userDocID.username}</strong>
+            </h5>
+          )}
         {activeOffersTab === "Received" &&
-          activeOfferCategoryTab !== "Swap" && (
+          activeOfferCategoryTab === "Rent" && (
             <h5 className="text-sm text-[#116A7B]">
               User: <strong>{card.userDocID.username}</strong>
             </h5>
@@ -337,6 +355,20 @@ const OfferCard = ({ card, fetchData }) => {
           activeOfferCategoryTab === "Swap" && (
             <h5 className="text-sm text-[#116A7B]">
               Shareholder: <strong>{card.userDocID.username}</strong>
+            </h5>
+          )}
+        {activeOffersTab === "Received" &&
+          activeOfferCategoryTab === "Buy" &&
+          !card.offerToPropertyOwner && (
+            <h5 className="text-sm text-[#116A7B]">
+              User: <strong>{card.userDocID.username}</strong>
+            </h5>
+          )}
+        {activeOffersTab === "Received" &&
+          activeOfferCategoryTab === "Buy" &&
+          card.offerToPropertyOwner && (
+            <h5 className="text-sm text-[#116A7B]">
+              Shareholder: <strong>{card.shareholderDocID.username}</strong>
             </h5>
           )}
         <h4 className="text-xl flex items-start text-[#116A7B]">
@@ -388,7 +420,11 @@ const OfferCard = ({ card, fetchData }) => {
                 if (activeOfferCategoryTab === "Rent") {
                   handleRentOfferAction("cancelled", card.shareOfferID);
                 } else if (activeOfferCategoryTab === "Sell") {
-                  handleSellOfferAction("cancelled", card.shareOfferID);
+                  handleSellOfferAction(
+                    "cancelled",
+                    card.shareOfferID,
+                    card.offerToPropertyOwner
+                  );
                 } else if (activeOfferCategoryTab === "Swap") {
                   handleSwapOfferAction("cancelled", card.shareOfferID);
                 }
@@ -408,7 +444,11 @@ const OfferCard = ({ card, fetchData }) => {
                     if (activeOfferCategoryTab === "Rent") {
                       handleRentOfferAction("rejected", card.shareOfferID);
                     } else if (activeOfferCategoryTab === "Buy") {
-                      handleSellOfferAction("rejected", card.shareOfferID);
+                      handleSellOfferAction(
+                        "rejected",
+                        card.shareOfferID,
+                        card.offerToPropertyOwner
+                      );
                     } else if (activeOfferCategoryTab === "Swap") {
                       handleSwapOfferAction("rejected", card.shareOfferID);
                     }
@@ -424,7 +464,11 @@ const OfferCard = ({ card, fetchData }) => {
                     if (activeOfferCategoryTab === "Rent") {
                       handleRentOfferAction("accepted", card.shareOfferID);
                     } else if (activeOfferCategoryTab === "Buy") {
-                      handleSellOfferAction("accepted", card.shareOfferID);
+                      handleSellOfferAction(
+                        "accepted",
+                        card.shareOfferID,
+                        card.offerToPropertyOwner
+                      );
                     } else if (activeOfferCategoryTab === "Swap") {
                       handleSwapOfferAction("accepted", card.shareOfferID);
                     }
