@@ -167,6 +167,12 @@ const InspectionCard = ({ card, fetchData }) => {
           ba <strong>{card.propertyDocID.area}</strong> Sqft
         </h2>
         <h3 className="text-sm text-[#116A7B]">
+          Shareholder:{" "}
+          <strong>
+            {card.shareholderDocID.username}
+          </strong>
+        </h3>
+        <h3 className="text-sm text-[#116A7B]">
           Duration: <br />
           {processDate(
             card.shareDocID?.availableInDuration?.startDateString

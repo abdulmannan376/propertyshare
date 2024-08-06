@@ -681,22 +681,27 @@ const Inspections = () => {
       )}
       {activeInspectionTab === "All Inspections" && (
         <div>
-          {!isLoading ? !selectedInspection &&(
-            <div className="mx-14 flex flex-row flex-wrap items-center">
-              {inspectionsList.length > 0 ? (
-                inspectionsList.map((inspection, index) => (
-                  <div
-                    key={index}
-                    className="cursor-pointer"
-                    onClick={() => setSelectedInspection(inspection)}
-                  >
-                    <InspectionCard card={inspection} />
-                  </div>
-                ))
-              ) : (
-                <div>No Inspections</div>
-              )}
-            </div>
+          {!isLoading ? (
+            !selectedInspection && (
+              <div className="mx-14 flex flex-row flex-wrap items-center">
+                {inspectionsList.length > 0 ? (
+                  inspectionsList.map((inspection, index) => (
+                    <div
+                      key={index}
+                      className="cursor-pointer"
+                      onClick={() => {
+                        if (inspection.status !== "Pending Submission")
+                          setSelectedInspection(inspection);
+                      }}
+                    >
+                      <InspectionCard card={inspection} />
+                    </div>
+                  ))
+                ) : (
+                  <div>No Inspections</div>
+                )}
+              </div>
+            )
           ) : (
             <div className="bg-white w-full my-6 h-[40rem] max-h-[44rem] overflow-y-auto flex flex-row items-center justify-center">
               <div className="border-t-4 border-b-4 border-[#116A7B] bg-transparent h-20 p-2 m-3 animate-spin duration-[2200] shadow-lg w-20 mx-auto rounded-full"></div>
