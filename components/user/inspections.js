@@ -5,6 +5,14 @@ import { toast } from "react-toastify";
 import InspectionCard from "./inspectionCard";
 import { MdClose } from "react-icons/md";
 import Image from "next/image";
+// Import Swiper React components and Swiper styles
+import { Swiper, SwiperSlide } from "swiper/react";
+import SwiperCore from "swiper";
+import { Pagination, Navigation } from "swiper/modules";
+
+import "swiper/css";
+import "swiper/css/pagination";
+import "swiper/css/navigation";
 
 const Inspections = () => {
   const dispatch = useDispatch();
@@ -144,6 +152,144 @@ const Inspections = () => {
       textRef.current.style.borderRadius = borderRadius;
     }
   }, [comment]); // Adjust height whenever text changes
+
+  const [sharesList, setSharesList] = useState([]);
+
+  const fetchInspectionDetail = async (inspectionID) => {
+    try {
+      console.log("in fetchInspectionDetail");
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_HOST}/property/get-inspection-detail/${inspectionID}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-type": "application/json",
+          },
+        }
+      );
+
+      const response = await res.json();
+      console.log(response);
+      if (response.success) {
+        // setSelectedInspection(response.body.inspection);
+        setSharesList(response.body.sharesList);
+      } else {
+        throw new Error(response.message);
+      }
+    } catch (error) {
+      toast.error(error.message, {
+        position: "bottom-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  };
+
+  useEffect(() => {
+    console.log("in useEffect");
+    if (selectedInspection) {
+      fetchInspectionDetail(selectedInspection.inspectionID);
+    }
+  }, [selectedInspection]);
+
+  function processApprovedPercentage() {
+    if (selectedInspection) {
+      const answer =
+        selectedInspection.approvedByUsersList.length / sharesList.length;
+      const percentage = Math.round(answer * 100);
+      return `${percentage}%`;
+    }
+    return "";
+  }
+
+  const [editAction, setEditAction] = useState(true);
+
+  const handleInspectionAction = async (inspectionID, username, action) => {
+    try {
+      const data = {
+        inspectionID: inspectionID,
+        username: username,
+        action: action,
+      };
+
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_HOST}/property/update-inspection-action`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
+
+      const response = await res.json();
+      if (response.success) {
+        setSelectedInspection(response.body);
+      } else {
+        throw new Error(response.message);
+      }
+    } catch (error) {
+      toast.error(error.message, {
+        position: "bottom-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  };
+
+  function processDate(dateString) {
+    if (dateString && dateString.length > 0) {
+      const date = new Date(dateString);
+
+      const months = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+      ];
+
+      const dateOfMonth = date.getDate();
+      const commutedDateString = `${getDaySuffix(dateOfMonth)} ${
+        months[date.getMonth()]
+      } ${date.getFullYear()}`;
+
+      return commutedDateString;
+    }
+  }
+
+  function getDaySuffix(dateOfMonth) {
+    const j = dateOfMonth % 10,
+      k = dateOfMonth % 100;
+    if (j === 1 && k !== 11) {
+      return `${dateOfMonth}st`;
+    }
+    if (j === 2 && k !== 12) {
+      return `${dateOfMonth}nd`;
+    }
+    if (j === 3 && k !== 13) {
+      return `${dateOfMonth}rd`;
+    }
+    return `${dateOfMonth}th`;
+  }
 
   return (
     <div className="bg-white w-full my-6 xxl:h-[85vh] md:h-[88vh] max-h-[88vh] overflow-y-auto">
@@ -356,25 +502,186 @@ const Inspections = () => {
               </div>
             </>
           )}
-          {selectedInspection?.status !== "Pending Submission" && selectedInspection && (
-            <>
-              <div className="w-full flex flex-row items-center pt-1 pb-7 px-14 mt-5">
-                <h1 className="text-2xl font-medium">Inspection Details</h1>
-                <button
-                  onClick={(e) => setSelectedInspection(null)}
-                  type="button"
-                  className="bg-[#116A7B] text-white text-lg ml-auto mx-1 px-5 py-1 rounded-full"
-                >
-                  Back
-                </button>
-              </div>
-            </>
-          )}
+          {selectedInspection?.status !== "Pending Submission" &&
+            selectedInspection && (
+              <>
+                <div className="w-full flex flex-row items-center pt-1 pb-7 px-14 mt-5">
+                  <h1 className="text-2xl font-medium">Inspection Details</h1>
+                  <button
+                    onClick={(e) => setSelectedInspection(null)}
+                    type="button"
+                    className="bg-[#116A7B] text-white text-lg ml-auto mx-1 px-5 py-1 rounded-full"
+                  >
+                    Back
+                  </button>
+                </div>
+                <div className="mx-14 ">
+                  {selectedInspection?.imageCount > 0 ? (
+                    <div className="swiper-container">
+                      {/* Swiper component */}
+                      <Swiper
+                        modules={[Pagination]}
+                        slidesPerView={1}
+                        // navigation={{
+                        //   nextEl: ".swiper-button-next", // Define next button class
+                        //   prevEl: ".swiper-button-prev", // Define prev button class
+                        // }}
+                        pagination={{
+                          clickable: true,
+                          el: "#swiper-pagination",
+                          type: "bullets",
+                          bulletActiveClass: "swiper-pagination-bullet-active",
+                          bulletClass: "swiper-pagination-bullet",
+                        }}
+                        style={{ width: "100%", height: "70%" }}
+                        className="mb-5"
+                      >
+                        {Array.from(
+                          { length: selectedInspection?.imageCount },
+                          (_, index) => (
+                            <SwiperSlide key={index}>
+                              <div>
+                                <Image
+                                  width={2000}
+                                  height={2000}
+                                  src={`${
+                                    process.env.NEXT_PUBLIC_SERVER_HOST
+                                  }/${selectedInspection.imageDirURL}/image-${
+                                    index + 1
+                                  }.png`}
+                                  className="w-full h-[22rem] object-contain object-center"
+                                  alt={`Image ${index + 1}`}
+                                />
+                              </div>
+                            </SwiperSlide>
+                          )
+                        )}
+                      </Swiper>
+
+                      {/* Custom navigation buttons */}
+                      {/* <div className="swiper-button-prev custom-prev"></div>
+                      <div className="swiper-button-next custom-next"></div> */}
+                      {/* Custom pagination */}
+                      <div
+                        id="swiper-pagination"
+                        className="flex flex-row justify-center "
+                      ></div>
+                    </div>
+                  ) : (
+                    <div className="h-[44rem]">
+                      <Image
+                        width={1000}
+                        height={1000}
+                        src={"/assets/user/property-management/no-image.jpg"}
+                        className="w-full h-full object-scale-down object-center"
+                        alt={`${property.slug}-noimage`}
+                      />
+                    </div>
+                  )}
+                  <h2 className="text-xl text-[#A2B0B2] ">
+                    {" "}
+                    <strong className="text-[#676767]">
+                      {" "}
+                      {selectedInspection?.shareholderDocID?.userID?.name}
+                    </strong>{" "}
+                    <br /> {selectedInspection?.commentsByShareholder}
+                  </h2>
+                  <div className="my-10">
+                    <h2 className="text-end p-5">
+                      {" "}
+                      <strong className="text-[#09363F]">
+                        {processApprovedPercentage()} Approved
+                      </strong>{" "}
+                      <br /> (need 80% or more to complete)
+                    </h2>
+                    <div className="bg-[#FCFBF5] border border-[#D9D9D9] divide-y-2 divide-[#D9D9D9]">
+                      {sharesList.map((share, index) => (
+                        <div
+                          key={index}
+                          className="flex flex-row items-center justify-between p-10"
+                        >
+                          <h3 className="text-xl text-[#09363F] font-semibold">
+                            {share.currentOwnerDocID.username}{" "}
+                            &nbsp;&nbsp;&nbsp;
+                            {share.currentOwnerDocID.username ===
+                              JSON.parse(localStorage.getItem("userDetails"))
+                                .username && "(You)"}
+                            <br />
+                            <p className="text-sm">
+                              {processDate(
+                                share.availableInDuration.startDateString
+                              )}{" "}
+                              -{" "}
+                              {processDate(
+                                share.availableInDuration.endDateString
+                              )}
+                            </p>
+                          </h3>
+                          {!selectedInspection?.approvedByUsersList?.includes(
+                            share.currentOwnerDocID.username
+                          ) &&
+                            !selectedInspection?.rejectedUsersList?.includes(
+                              share.currentOwnerDocID.username
+                            ) &&
+                            share.currentOwnerDocID.username ===
+                              JSON.parse(localStorage.getItem("userDetails"))
+                                .username && (
+                              <div className="flex flex-row items-center">
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    handleInspectionAction(
+                                      selectedInspection.inspectionID,
+                                      share.currentOwnerDocID.username,
+                                      "approved"
+                                    )
+                                  }
+                                  className="w-32 px-5 py-3 bg-[#116A7B] text-white rounded mx-2 font-semibold"
+                                >
+                                  Approve
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    handleInspectionAction(
+                                      selectedInspection.inspectionID,
+                                      share.currentOwnerDocID.username,
+                                      "rejected"
+                                    )
+                                  }
+                                  className="w-32 px-5 py-3 bg-[#116A7B] text-white rounded mx-2 font-semibold"
+                                >
+                                  Reject
+                                </button>
+                              </div>
+                            )}
+                          {!selectedInspection?.approvedByUsersList?.includes(
+                            share.currentOwnerDocID.username
+                          ) &&
+                            !selectedInspection?.rejectedUsersList?.includes(
+                              share.currentOwnerDocID.username
+                            ) &&
+                            share.currentOwnerDocID.username !==
+                              JSON.parse(localStorage.getItem("userDetails"))
+                                .username && <h4>Pending Response</h4>}
+                          {selectedInspection?.approvedByUsersList?.includes(
+                            share.currentOwnerDocID.username
+                          ) && <h4>Approved</h4>}
+                          {selectedInspection?.rejectedUsersList?.includes(
+                            share.currentOwnerDocID.username
+                          ) && <h4>Rejected</h4>}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </>
+            )}
         </div>
       )}
       {activeInspectionTab === "All Inspections" && (
         <div>
-          {!isLoading ? (
+          {!isLoading ? !selectedInspection &&(
             <div className="mx-14 flex flex-row flex-wrap items-center">
               {inspectionsList.length > 0 ? (
                 inspectionsList.map((inspection, index) => (
@@ -395,6 +702,181 @@ const Inspections = () => {
               <div className="border-t-4 border-b-4 border-[#116A7B] bg-transparent h-20 p-2 m-3 animate-spin duration-[2200] shadow-lg w-20 mx-auto rounded-full"></div>
             </div>
           )}
+          {selectedInspection?.status !== "Pending Submission" &&
+            selectedInspection && (
+              <>
+                <div className="w-full flex flex-row items-center pt-1 pb-7 px-14 mt-5">
+                  <h1 className="text-2xl font-medium">Inspection Details</h1>
+                  <button
+                    onClick={(e) => setSelectedInspection(null)}
+                    type="button"
+                    className="bg-[#116A7B] text-white text-lg ml-auto mx-1 px-5 py-1 rounded-full"
+                  >
+                    Back
+                  </button>
+                </div>
+                <div className="mx-14 ">
+                  {selectedInspection?.imageCount > 0 ? (
+                    <div className="swiper-container">
+                      {/* Swiper component */}
+                      <Swiper
+                        modules={[Pagination]}
+                        slidesPerView={1}
+                        // navigation={{
+                        //   nextEl: ".swiper-button-next", // Define next button class
+                        //   prevEl: ".swiper-button-prev", // Define prev button class
+                        // }}
+                        pagination={{
+                          clickable: true,
+                          el: "#swiper-pagination",
+                          type: "bullets",
+                          bulletActiveClass: "swiper-pagination-bullet-active",
+                          bulletClass: "swiper-pagination-bullet",
+                        }}
+                        style={{ width: "100%", height: "70%" }}
+                        className="mb-5"
+                      >
+                        {Array.from(
+                          { length: selectedInspection?.imageCount },
+                          (_, index) => (
+                            <SwiperSlide key={index}>
+                              <div>
+                                <Image
+                                  width={2000}
+                                  height={2000}
+                                  src={`${
+                                    process.env.NEXT_PUBLIC_SERVER_HOST
+                                  }/${selectedInspection.imageDirURL}/image-${
+                                    index + 1
+                                  }.png`}
+                                  className="w-full h-[22rem] object-contain object-center"
+                                  alt={`Image ${index + 1}`}
+                                />
+                              </div>
+                            </SwiperSlide>
+                          )
+                        )}
+                      </Swiper>
+
+                      {/* Custom navigation buttons */}
+                      {/* <div className="swiper-button-prev custom-prev"></div>
+                      <div className="swiper-button-next custom-next"></div> */}
+                      {/* Custom pagination */}
+                      <div
+                        id="swiper-pagination"
+                        className="flex flex-row justify-center "
+                      ></div>
+                    </div>
+                  ) : (
+                    <div className="h-[44rem]">
+                      <Image
+                        width={1000}
+                        height={1000}
+                        src={"/assets/user/property-management/no-image.jpg"}
+                        className="w-full h-full object-scale-down object-center"
+                        alt={`${property.slug}-noimage`}
+                      />
+                    </div>
+                  )}
+                  <h2 className="text-xl text-[#A2B0B2] ">
+                    {" "}
+                    <strong className="text-[#676767]">
+                      {" "}
+                      {selectedInspection?.shareholderDocID?.userID?.name}
+                    </strong>{" "}
+                    <br /> {selectedInspection?.commentsByShareholder}
+                  </h2>
+                  <div className="my-10">
+                    <h2 className="text-end p-5">
+                      {" "}
+                      <strong className="text-[#09363F]">
+                        {processApprovedPercentage()} Approved
+                      </strong>{" "}
+                      <br /> (need 80% or more to complete)
+                    </h2>
+                    <div className="bg-[#FCFBF5] border border-[#D9D9D9] divide-y-2 divide-[#D9D9D9]">
+                      {sharesList.map((share, index) => (
+                        <div
+                          key={index}
+                          className="flex flex-row items-center justify-between p-10"
+                        >
+                          <h3 className="text-xl text-[#09363F] font-semibold">
+                            {share.currentOwnerDocID.username}{" "}
+                            &nbsp;&nbsp;&nbsp;
+                            {share.currentOwnerDocID.username ===
+                              JSON.parse(localStorage.getItem("userDetails"))
+                                .username && "(You)"}
+                            <br />
+                            <p className="text-sm">
+                              {processDate(
+                                share.availableInDuration.startDateString
+                              )}{" "}
+                              -{" "}
+                              {processDate(
+                                share.availableInDuration.endDateString
+                              )}
+                            </p>
+                          </h3>
+                          {!selectedInspection?.approvedByUsersList?.includes(
+                            share.currentOwnerDocID.username
+                          ) &&
+                            !selectedInspection?.rejectedUsersList?.includes(
+                              share.currentOwnerDocID.username
+                            ) &&
+                            share.currentOwnerDocID.username ===
+                              JSON.parse(localStorage.getItem("userDetails"))
+                                .username && (
+                              <div className="flex flex-row items-center">
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    handleInspectionAction(
+                                      selectedInspection.inspectionID,
+                                      share.currentOwnerDocID.username,
+                                      "approved"
+                                    )
+                                  }
+                                  className="w-32 px-5 py-3 bg-[#116A7B] text-white rounded mx-2 font-semibold"
+                                >
+                                  Approve
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    handleInspectionAction(
+                                      selectedInspection.inspectionID,
+                                      share.currentOwnerDocID.username,
+                                      "rejected"
+                                    )
+                                  }
+                                  className="w-32 px-5 py-3 bg-[#116A7B] text-white rounded mx-2 font-semibold"
+                                >
+                                  Reject
+                                </button>
+                              </div>
+                            )}
+                          {!selectedInspection?.approvedByUsersList?.includes(
+                            share.currentOwnerDocID.username
+                          ) &&
+                            !selectedInspection?.rejectedUsersList?.includes(
+                              share.currentOwnerDocID.username
+                            ) &&
+                            share.currentOwnerDocID.username !==
+                              JSON.parse(localStorage.getItem("userDetails"))
+                                .username && <h4>Pending Response</h4>}
+                          {selectedInspection?.approvedByUsersList?.includes(
+                            share.currentOwnerDocID.username
+                          ) && <h4>Approved</h4>}
+                          {selectedInspection?.rejectedUsersList?.includes(
+                            share.currentOwnerDocID.username
+                          ) && <h4>Rejected</h4>}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </>
+            )}
         </div>
       )}
     </div>

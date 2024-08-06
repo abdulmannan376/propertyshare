@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import WishlistCard from "./wishlistCard";
 import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
 const WishList = () => {
   const [myWishlist, setMyWishlist] = useState([]);

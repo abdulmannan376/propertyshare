@@ -35,7 +35,6 @@ const SwapShareComponent = ({ propertyID, propertyDocID, category }) => {
 
       const response = await res.json();
       console.log(response);
-      console.log(response);
       if (response.success) {
         setIsLoading(false);
         setMyShareList(response.body);

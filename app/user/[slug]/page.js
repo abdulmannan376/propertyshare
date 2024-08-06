@@ -118,7 +118,7 @@ const Page = () => {
   ];
 
   const panelRef = useRef();
-  const [panelIsOpen, setPanelIsOpen] = useState(true);
+  const [panelIsOpen, setPanelIsOpen] = useState(false);
 
   const handleDashPanel = (e) => {
     e.preventDefault();
