@@ -64,6 +64,8 @@ const Inspections = () => {
       fetchInspections("my");
     } else if (activeInspectionTab === "All Inspections") {
       fetchInspections("all");
+    } else if (activeInspectionTab === "Pending Approvals") {
+      fetchInspections("pending_approvals");
     } else {
       setInspectionsList([]);
     }
@@ -451,6 +453,22 @@ const Inspections = () => {
             All Inspections
           </h2>
         </button>
+        <button
+          onClick={() => {
+            dispatch(updateActiveInspectionTab("Pending Approvals"));
+            setSelectedInspection(null);
+          }}
+        >
+          <h2
+            className={`flex ${
+              activeInspectionTab === "Pending Approvals"
+                ? "underline-text"
+                : "hover-underline-animation"
+            } `}
+          >
+            Pending Approvals
+          </h2>
+        </button>
 
         {/* </Link> */}
       </div>
@@ -467,8 +485,8 @@ const Inspections = () => {
           {!isLoading ? (
             !selectedInspection && (
               <div className="mx-14 flex flex-row flex-wrap items-center">
-                {inspectionsList.length > 0 ? (
-                  inspectionsList.map((inspection, index) => (
+                {inspectionsList?.length > 0 ? (
+                  inspectionsList?.map((inspection, index) => (
                     <div
                       key={index}
                       className="cursor-pointer"
@@ -910,8 +928,8 @@ const Inspections = () => {
           {!isLoading ? (
             !selectedInspection && (
               <div className="mx-14 flex flex-row flex-wrap items-center">
-                {inspectionsList.length > 0 ? (
-                  inspectionsList.map((inspection, index) => (
+                {inspectionsList?.length > 0 ? (
+                  inspectionsList?.map((inspection, index) => (
                     <div
                       key={index}
                       className="cursor-pointer"
@@ -925,6 +943,308 @@ const Inspections = () => {
                   ))
                 ) : (
                   <div>No Inspections</div>
+                )}
+              </div>
+            )
+          ) : (
+            <div className="bg-white w-full my-6 h-[40rem] max-h-[44rem] overflow-y-auto flex flex-row items-center justify-center">
+              <div className="border-t-4 border-b-4 border-[#116A7B] bg-transparent h-20 p-2 m-3 animate-spin duration-[2200] shadow-lg w-20 mx-auto rounded-full"></div>
+            </div>
+          )}
+          {selectedInspection?.status !== "Pending Submission" &&
+            selectedInspection && (
+              <>
+                <div className="w-full flex flex-row items-center pt-1 pb-7 px-14 mt-5">
+                  <h1 className="text-2xl font-medium">Inspection Details</h1>
+                  <button
+                    onClick={(e) => setSelectedInspection(null)}
+                    type="button"
+                    className="bg-[#116A7B] text-white text-lg ml-auto mx-1 px-5 py-1 rounded-full"
+                  >
+                    Back
+                  </button>
+                </div>
+                <div className="mx-14 ">
+                  {selectedInspection?.imageCount > 0 ? (
+                    <div className="swiper-container">
+                      {/* Swiper component */}
+                      <Swiper
+                        modules={[Pagination]}
+                        slidesPerView={1}
+                        // navigation={{
+                        //   nextEl: ".swiper-button-next", // Define next button class
+                        //   prevEl: ".swiper-button-prev", // Define prev button class
+                        // }}
+                        pagination={{
+                          clickable: true,
+                          el: "#swiper-pagination",
+                          type: "bullets",
+                          bulletActiveClass: "swiper-pagination-bullet-active",
+                          bulletClass: "swiper-pagination-bullet",
+                        }}
+                        style={{ width: "100%", height: "70%" }}
+                        className="mb-5"
+                      >
+                        {Array.from(
+                          { length: selectedInspection?.imageCount },
+                          (_, index) => (
+                            <SwiperSlide key={index}>
+                              <div>
+                                <Image
+                                  width={2000}
+                                  height={2000}
+                                  src={`${
+                                    process.env.NEXT_PUBLIC_SERVER_HOST
+                                  }/${selectedInspection.imageDirURL}/image-${
+                                    index + 1
+                                  }.png`}
+                                  className="w-full h-[22rem] object-contain object-center"
+                                  alt={`Image ${index + 1}`}
+                                />
+                              </div>
+                            </SwiperSlide>
+                          )
+                        )}
+                      </Swiper>
+
+                      {/* Custom navigation buttons */}
+                      {/* <div className="swiper-button-prev custom-prev"></div>
+                      <div className="swiper-button-next custom-next"></div> */}
+                      {/* Custom pagination */}
+                      <div
+                        id="swiper-pagination"
+                        className="flex flex-row justify-center "
+                      ></div>
+                    </div>
+                  ) : (
+                    <div className="h-[44rem]">
+                      <Image
+                        width={1000}
+                        height={1000}
+                        src={"/assets/user/property-management/no-image.jpg"}
+                        className="w-full h-full object-scale-down object-center"
+                        alt={`${property.slug}-noimage`}
+                      />
+                    </div>
+                  )}
+                  <h2 className="text-xl text-[#A2B0B2] ">
+                    {" "}
+                    <strong className="text-[#676767]">
+                      {" "}
+                      {selectedInspection?.shareholderDocID?.userID?.name}
+                    </strong>{" "}
+                    <br /> {selectedInspection?.commentsByShareholder}
+                  </h2>
+                  <div className="my-10">
+                    <h2 className="text-end p-5">
+                      {" "}
+                      <strong className="text-[#09363F]">
+                        {processApprovedPercentage()} Approved
+                      </strong>{" "}
+                      <br /> (need 80% or more to complete)
+                    </h2>
+                    <div className="bg-[#FCFBF5] border border-[#D9D9D9] divide-y-2 divide-[#D9D9D9]">
+                      {sharesList.map((share, index) => (
+                        <div key={index}>
+                          <div className="flex flex-row items-center justify-between p-10">
+                            <h3 className="text-xl text-[#09363F] font-semibold">
+                              {share.currentOwnerDocID.username}{" "}
+                              &nbsp;&nbsp;&nbsp;
+                              {share.currentOwnerDocID.username ===
+                                JSON.parse(localStorage.getItem("userDetails"))
+                                  .username && "(You)"}
+                              <br />
+                              <p className="text-sm">
+                                {processDate(
+                                  share.availableInDuration.startDateString
+                                )}{" "}
+                                -{" "}
+                                {processDate(
+                                  share.availableInDuration.endDateString
+                                )}
+                              </p>
+                            </h3>
+                            <div className="flex flex-row items-center justify-center space-x-5">
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setThreadBody("");
+                                  if (showThreadsByShare === share.shareID)
+                                    setShowThreadsByShare("");
+                                  else {
+                                    fetchThreads(share.shareID, "Inspection");
+                                    setShowThreadsByShare(share.shareID);
+                                  }
+                                }}
+                                className="p-1"
+                              >
+                                <AiFillMessage className="text-[#116A7B] text-2xl" />
+                              </button>
+                              {!selectedInspection?.approvedByUsersList?.includes(
+                                share.currentOwnerDocID.username
+                              ) &&
+                                !selectedInspection?.rejectedUsersList?.includes(
+                                  share.currentOwnerDocID.username
+                                ) &&
+                                share.currentOwnerDocID.username ===
+                                  JSON.parse(
+                                    localStorage.getItem("userDetails")
+                                  ).username && (
+                                  <div className="flex flex-row items-center">
+                                    <button
+                                      type="button"
+                                      onClick={() =>
+                                        handleInspectionAction(
+                                          selectedInspection.inspectionID,
+                                          share.currentOwnerDocID.username,
+                                          "approved"
+                                        )
+                                      }
+                                      className="w-32 px-5 py-3 bg-[#116A7B] text-white rounded mx-2 font-semibold"
+                                    >
+                                      Approve
+                                    </button>
+                                    <button
+                                      type="button"
+                                      onClick={() => {
+                                        setSelectedShareID(share.shareID);
+                                        setInspectionActionBody({
+                                          inspectionID:
+                                            selectedInspection.inspectionID,
+                                          ownerUsername:
+                                            share.currentOwnerDocID.username,
+                                          action: "rejected",
+                                          occurence: checkUseNumOfShares(
+                                            share.currentOwnerDocID.username
+                                          ),
+                                        });
+                                        handleRejectionModalOpen();
+                                      }}
+                                      className="w-32 px-5 py-3 bg-[#116A7B] text-white rounded mx-2 font-semibold"
+                                    >
+                                      Reject
+                                    </button>
+                                  </div>
+                                )}
+                              {!selectedInspection?.approvedByUsersList?.includes(
+                                share.currentOwnerDocID.username
+                              ) &&
+                                !selectedInspection?.rejectedUsersList?.includes(
+                                  share.currentOwnerDocID.username
+                                ) &&
+                                share.currentOwnerDocID.username !==
+                                  JSON.parse(
+                                    localStorage.getItem("userDetails")
+                                  ).username && <h4>Pending Response</h4>}
+                              {selectedInspection?.approvedByUsersList?.includes(
+                                share.currentOwnerDocID.username
+                              ) && <h4>Approved</h4>}
+                              {selectedInspection?.rejectedUsersList?.includes(
+                                share.currentOwnerDocID.username
+                              ) && <h4>Rejected</h4>}
+                            </div>
+                          </div>
+                          {showThreadsByShare === share.shareID &&
+                          threads.length > 0
+                            ? threads.map((thread) => (
+                                <div key={thread.threadID} className="">
+                                  <Thread
+                                    key={thread.threadID}
+                                    shareOwner={
+                                      share.currentOwnerDocID.username
+                                    }
+                                    thread={thread}
+                                    isFirstLevel={true}
+                                    threadIndex={index}
+                                    // handleFetchChildren={handleFetchChildren}
+                                    threadCategory={thread.category}
+                                    threadLevel={parseInt(thread.threadLevel)}
+                                    // propertyID={propertyID}
+                                    startDate={processDate(
+                                      share.availableInDuration.startDateString
+                                    )}
+                                    endDate={processDate(
+                                      share.availableInDuration.endDateString
+                                    )}
+                                    shareID={share.shareID}
+                                  />
+                                </div>
+                              ))
+                            : showThreadsByShare === share.shareID && (
+                                <div className="text-[20px] font-semibold text-[#116A7B]">
+                                  <h1 className="text-center">
+                                    No Threads Yet.
+                                  </h1>
+                                </div>
+                              )}
+                          {showThreadsByShare === share.shareID && (
+                            <div className="bg-[#FCFBF5] flex flex-row border border-[#D9D9D9] px-5 py-3 mx-10 my-5 rounded-full">
+                              <textarea
+                                ref={threadBodyRef}
+                                rows="1"
+                                className="w-full p-1 outline-none text-lg"
+                                style={{
+                                  backgroundColor: "transparent",
+                                  resize: "none",
+                                }}
+                                value={threadBody}
+                                required={true}
+                                onChange={({ target }) =>
+                                  setThreadBody(target.value)
+                                }
+                                onKeyDown={(event) => {
+                                  if (threadBody.length > 0) {
+                                    if (
+                                      event.ctrlKey &&
+                                      event.key === "Enter"
+                                    ) {
+                                      handleThreadSubmit(share.shareID);
+                                      event.preventDefault();
+                                    }
+                                  }
+                                }}
+                              ></textarea>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  handleThreadSubmit(share.shareID);
+                                }}
+                                disabled={threadBody.length === 0}
+                                className="disabled:opacity-35 text-lg font-semibold text-[#116A7B] p-1"
+                              >
+                                POST
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </>
+            )}
+        </div>
+      )}
+      {activeInspectionTab === "Pending Approvals" && (
+        <div>
+          {!isLoading ? (
+            !selectedInspection && (
+              <div className="mx-14 flex flex-row flex-wrap items-center">
+                {inspectionsList?.length > 0 ? (
+                  inspectionsList?.map((inspection, index) => (
+                    <div
+                      key={index}
+                      className="cursor-pointer"
+                      onClick={() => {
+                        if (inspection.status !== "Pending Submission")
+                          setSelectedInspection(inspection);
+                      }}
+                    >
+                      <InspectionCard card={inspection} sharesList={sharesList} fetchInspections={fetchInspections}/>
+                    </div>
+                  ))
+                ) : (
+                  <div>No Inspections for approval</div>
                 )}
               </div>
             )

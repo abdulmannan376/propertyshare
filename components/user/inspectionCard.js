@@ -10,7 +10,7 @@ import { IoMdCloseCircle } from "react-icons/io";
 import { FaCheckCircle } from "react-icons/fa";
 import { toast } from "react-toastify";
 
-const InspectionCard = ({ card, fetchData }) => {
+const InspectionCard = ({ card, fetchData, sharesList, fetchInspections }) => {
   const TruncatingH1 = ({ text }) => {
     const h1Ref = useRef(null);
     const [displayText, setDisplayText] = useState(text);
@@ -66,6 +66,10 @@ const InspectionCard = ({ card, fetchData }) => {
     );
   };
 
+  const activeInspectionTab = useSelector(
+    (state) => state.userDashboardSliceReducer.activeInspectionTab
+  );
+
   function processDate(dateString) {
     if (dateString && dateString.length > 0) {
       const date = new Date(dateString);
@@ -108,6 +112,63 @@ const InspectionCard = ({ card, fetchData }) => {
     }
     return `${dateOfMonth}th`;
   }
+
+  const handleInspectionApproveByPropertyOwner = async () => {
+    try {
+      const usernameList = [];
+      sharesList.map((share) => {
+        if (!usernameList.includes(share.currentOwnerDocID.username)) {
+          usernameList.push(share.currentOwnerDocID.username);
+        }
+      });
+
+      const data = {
+        inspectionID: card.inspectionID,
+        usernameList: usernameList,
+        username: JSON.parse(localStorage.getItem("userDetails")).username,
+      };
+
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_HOST}/property/update-inspection-action-by-PO`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
+
+      const response = await res.json();
+
+      if (response.success) {
+        fetchInspections("pending_approval")
+        toast.success(response.message, {
+          position: "bottom-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      } else {
+        throw new Error(response.message)
+      }
+    } catch (error) {
+      toast.error(error.message, {
+        position: "bottom-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  };
 
   return (
     // <Link
@@ -167,10 +228,7 @@ const InspectionCard = ({ card, fetchData }) => {
           ba <strong>{card.propertyDocID.area}</strong> Sqft
         </h2>
         <h3 className="text-sm text-[#116A7B]">
-          Shareholder:{" "}
-          <strong>
-            {card.shareholderDocID.username}
-          </strong>
+          Shareholder: <strong>{card.shareholderDocID.username}</strong>
         </h3>
         <h3 className="text-sm text-[#116A7B]">
           Duration: <br />
@@ -256,6 +314,20 @@ const InspectionCard = ({ card, fetchData }) => {
             </>
           )}
         </div>
+        {activeInspectionTab === "Pending Approvals" &&
+          card.status !== "Verified" && (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation()
+                handleInspectionApproveByPropertyOwner()
+              }}
+              className="flex flex-row items-center justify-center"
+            >
+              <FaCheckCircle className="text-xl text-[#116A7B]" />{" "}
+              <p className="mx-2 text-[#116A7B] underline">Approve</p>
+            </button>
+          )}
         {/* {activeOffersTab === "Sent" &&
           card.status !== "cancelled" &&
           card.status === "pending" && (
