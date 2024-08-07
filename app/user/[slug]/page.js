@@ -217,7 +217,7 @@ const Page = () => {
         </div>
         <div
           className={`${
-            panelIsOpen ? "xl:w-[20%] lg:w-[23%]" : "0"
+            panelIsOpen ? "xl:w-[20%] lg:w-[23%]" : "w-0"
           } xxl:h-[90vh] xl:h-[93vh] lg:h-[93vh] lg:block hidden duration-700 ease-in-out`}
         ></div>
         <div

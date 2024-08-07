@@ -294,7 +294,7 @@ const ThreadDisplay = ({ propertyID, propertyDocID, category }) => {
     console.log(shareID);
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_SERVER_HOST}/thread/get-root-threads/${shareID}`,
+        `${process.env.NEXT_PUBLIC_SERVER_HOST}/thread/get-root-threads/${shareID}/${category}`,
         {
           method: "GET",
         }
