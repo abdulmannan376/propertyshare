@@ -15,6 +15,7 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import Thread from "./threadComponent";
+import RejectionModal from "../modals/inspectionRejectionModal";
 
 const Inspections = () => {
   const dispatch = useDispatch();
@@ -223,6 +224,15 @@ const Inspections = () => {
     return count;
   }
 
+  const [isRejectionModalOpen, setIsRejectionModalOpen] = useState(false);
+
+  const handleRejectionModalOpen = () => setIsRejectionModalOpen(true);
+  const handleRejectionModalClose = () => {
+    setSelectedShareID("");
+    setIsRejectionModalOpen(false);
+    setInspectionActionBody(null);
+  };
+
   const handleInspectionAction = async (inspectionID, username, action) => {
     try {
       const data = {
@@ -398,6 +408,9 @@ const Inspections = () => {
     }
   };
 
+  const [selectedShareID, setSelectedShareID] = useState("");
+  const [inspectionActionBody, setInspectionActionBody] = useState(null);
+
   return (
     <div className="bg-white w-full my-6 xxl:h-[85vh] md:h-[88vh] max-h-[88vh] overflow-y-auto">
       <div className="w-full flex flex-row items-center border-b border-b-[#D9D9D9] pt-1 pb-7 px-14">
@@ -408,7 +421,7 @@ const Inspections = () => {
         <button
           onClick={() => {
             dispatch(updateActiveInspectionTab("My Inspections"));
-            setSelectedInspection(null)
+            setSelectedInspection(null);
           }}
         >
           <h1
@@ -425,7 +438,7 @@ const Inspections = () => {
         <button
           onClick={() => {
             dispatch(updateActiveInspectionTab("All Inspections"));
-            setSelectedInspection(null)
+            setSelectedInspection(null);
           }}
         >
           <h2
@@ -441,7 +454,14 @@ const Inspections = () => {
 
         {/* </Link> */}
       </div>
-
+      <RejectionModal
+        isOpen={isRejectionModalOpen}
+        onClose={handleRejectionModalClose}
+        shareID={selectedShareID}
+        fetchThreads={fetchThreads}
+        inspectionActionBody={inspectionActionBody}
+        setSelectedInspection={setSelectedInspection}
+      />
       {activeInspectionTab === "My Inspections" && (
         <div>
           {!isLoading ? (
@@ -766,13 +786,20 @@ const Inspections = () => {
                                     </button>
                                     <button
                                       type="button"
-                                      onClick={() =>
-                                        handleInspectionAction(
-                                          selectedInspection.inspectionID,
-                                          share.currentOwnerDocID.username,
-                                          "rejected"
-                                        )
-                                      }
+                                      onClick={() => {
+                                        setSelectedShareID(share.shareID);
+                                        setInspectionActionBody({
+                                          inspectionID:
+                                            selectedInspection.inspectionID,
+                                          ownerUsername:
+                                            share.currentOwnerDocID.username,
+                                          action: "rejected",
+                                          occurence: checkUseNumOfShares(
+                                            share.currentOwnerDocID.username
+                                          ),
+                                        });
+                                        handleRejectionModalOpen();
+                                      }}
                                       className="w-32 px-5 py-3 bg-[#116A7B] text-white rounded mx-2 font-semibold"
                                     >
                                       Reject
@@ -1061,13 +1088,20 @@ const Inspections = () => {
                                     </button>
                                     <button
                                       type="button"
-                                      onClick={() =>
-                                        handleInspectionAction(
-                                          selectedInspection.inspectionID,
-                                          share.currentOwnerDocID.username,
-                                          "rejected"
-                                        )
-                                      }
+                                      onClick={() => {
+                                        setSelectedShareID(share.shareID);
+                                        setInspectionActionBody({
+                                          inspectionID:
+                                            selectedInspection.inspectionID,
+                                          ownerUsername:
+                                            share.currentOwnerDocID.username,
+                                          action: "rejected",
+                                          occurence: checkUseNumOfShares(
+                                            share.currentOwnerDocID.username
+                                          ),
+                                        });
+                                        handleRejectionModalOpen();
+                                      }}
                                       className="w-32 px-5 py-3 bg-[#116A7B] text-white rounded mx-2 font-semibold"
                                     >
                                       Reject

@@ -164,11 +164,11 @@ const Thread = ({
               width={500}
               height={500}
               src={
-                profilePicURL.length > 0
-                  ? `${process.env.NEXT_PUBLIC_SERVER_HOST}/${profilePicURL}profile-pic.png`
+                thread.author.userProfile.profilePicURL.length > 0
+                  ? `${process.env.NEXT_PUBLIC_SERVER_HOST}/${thread.author.userProfile.profilePicURL}profile-pic.png`
                   : "/assets/user/profile/no-image.png"
               }
-              className="w-10 h-10"
+              className="w-10 h-10 rounded-full"
               alt="profile picture"
             />
             <div className="my-2">
