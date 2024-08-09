@@ -14,6 +14,7 @@ import Image from "next/image";
 import React, { act, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import { FaCcVisa, FaCcMastercard } from "react-icons/fa6";
 
 const Page = () => {
   const dispatch = useDispatch();
@@ -45,6 +46,8 @@ const Page = () => {
 
   const [userDetails, setUserDetails] = useState(null);
   const [nextOfKinDetails, setNextOfKinDetails] = useState(null);
+  const [paymentDetails, setPaymentDetails] = useState(null);
+  const [withdrawalDetails, setWithdrawalDetails] = useState(null);
 
   const fetchUserDetails = async () => {
     try {
@@ -73,6 +76,28 @@ const Page = () => {
             contact: "",
             nicNumber: "",
             dobString: "",
+          });
+        }
+        if (response.body.userProfile.paymentDetails) {
+          setPaymentDetails(response.body.userProfile.paymentDetails);
+          handleCardInput(response.body.userProfile.paymentDetails.cardNumber);
+        } else {
+          setPaymentDetails({
+            nameOnCard: "",
+            cardNumber: "",
+            cardExpiryMonth: "",
+            cardExpiryYear: "",
+            cardCVV: "",
+          });
+        }
+        if (response.body.userProfile.withdrawalDetails) {
+          setWithdrawalDetails(response.body.userProfile.withdrawalDetails);
+        } else {
+          setWithdrawalDetails({
+            accountTitle: "",
+            ibanNumber: "",
+            branchCode: "",
+            swiftCode: "",
           });
         }
       } else {
@@ -431,6 +456,38 @@ const Page = () => {
       } else if (action === "Contact Details") {
         (body.contact = userDetails.contact),
           (body.permanentAddress = userDetails.userProfile.permanentAddress);
+      } else if (action === "Next of Kin") {
+        body.nextOfKinDetails = {
+          fullName: nextOfKinDetails.fullName,
+          relation: nextOfKinDetails.relation,
+          email: nextOfKinDetails.email,
+          contact: nextOfKinDetails.contact,
+          nicNumber: nextOfKinDetails.nicNumber,
+          dobString: nextOfKinDetails.dobString,
+        };
+      } else if (action === "Payment Details") {
+        console.log("paymentDetails: ", paymentDetails);
+        if (
+          paymentDetails.nameOnCard &&
+          paymentDetails.cardNumber &&
+          paymentDetails.cardExpiryMonth &&
+          paymentDetails.cardExpiryYear &&
+          paymentDetails.cardCVV
+        )
+          body.paymentDetails = paymentDetails;
+        else throw new Error("missing fields.");
+      } else if (action === "Withdrawal Details") {
+        console.log("paymentDetails: ", paymentDetails);
+        if (
+          withdrawalDetails.accountTitle &&
+          withdrawalDetails.ibanNumber &&
+          withdrawalDetails.branchCode &&
+          withdrawalDetails.swiftCode
+        )
+          body.withdrawalDetails = withdrawalDetails;
+        else throw new Error("missing fields.");
+      } else {
+        throw new Error("wrong action");
       }
 
       const data = {
@@ -456,6 +513,14 @@ const Page = () => {
 
         if (action === "Primary Details") {
           dispatch(handleUserProfileSettingNavigation("Contact Details"));
+        } else if (action === "Contact Details") {
+          dispatch(handleUserProfileSettingNavigation("Next of Kin"));
+        } else if (action === "Next of Kin") {
+          dispatch(handleUserProfileSettingNavigation("Payment Details"));
+        } else if (action === "Payment Details") {
+          dispatch(handleUserProfileSettingNavigation("Withdrawal Details"));
+        } else if (action === "Withdrawal Details") {
+          dispatch(handleUserProfileSettingNavigation("Primary Details"));
         }
 
         fetchUserDetails();
@@ -486,6 +551,39 @@ const Page = () => {
       });
     }
   };
+
+  const [cardIcon, setCardIcon] = useState(null);
+
+  // Function to format card number and set card type
+  const handleCardInput = (value) => {
+    const formattedValue = formatCardNumber(value);
+    setPaymentDetails((prevDetails) => ({
+      ...prevDetails,
+      cardNumber: formattedValue,
+    }));
+    detectCardType(formattedValue);
+  };
+
+  // Function to format card number
+  function formatCardNumber(value) {
+    return value
+      .replace(/\D/g, "") // Remove any non-numeric characters
+      .replace(/(.{4})/g, "$1 ") // Add space every four digits
+      .trim() // Remove trailing space
+      .substring(0, 19); // Limit to 19 characters (16 digits + 3 spaces)
+  }
+
+  // Function to detect card type
+  function detectCardType(number) {
+    const num = number.replace(/\s+/g, ""); // Remove spaces
+    if (num.startsWith("4")) {
+      setCardIcon(<FaCcVisa className="text-blue-600 text-2xl" />);
+    } else if (/^5[1-5]/.test(num) || /^2[2-7]/.test(num)) {
+      setCardIcon(<FaCcMastercard className="text-red-600 text-2xl" />);
+    } else {
+      setCardIcon(null);
+    }
+  }
 
   return (
     <div
@@ -959,7 +1057,7 @@ const Page = () => {
                       Fullname
                     </label>
                     <input
-                      type="fullNameNOK"
+                      type="text"
                       name="fullNameNOK"
                       value={nextOfKinDetails?.fullName}
                       required={true}
@@ -1015,14 +1113,362 @@ const Page = () => {
                       className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                     />
                   </div>
+                  <div className="mb-6 mr-6 flex flex-col">
+                    <label htmlFor="emailNOK" className="text-[#676767]">
+                      Email
+                    </label>
+                    <input
+                      type="email"
+                      name="fullNameNOK"
+                      value={nextOfKinDetails?.email}
+                      required={true}
+                      onChange={({ target }) =>
+                        setNextOfKinDetails((prevDetails) => {
+                          const newDetails = { ...prevDetails };
+                          newDetails["email"] = target.value;
+                          return newDetails;
+                        })
+                      }
+                      className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                    />
+                  </div>
+                  <div className="mb-6 mr-6 flex flex-col">
+                    <label htmlFor="contactNOK" className="text-[#676767]">
+                      Contact
+                    </label>
+                    <input
+                      type="number"
+                      name="contactNOK"
+                      value={nextOfKinDetails?.contact}
+                      required={true}
+                      onChange={({ target }) =>
+                        setNextOfKinDetails((prevDetails) => {
+                          const newDetails = { ...prevDetails };
+                          newDetails["contact"] = target.value;
+                          return newDetails;
+                        })
+                      }
+                      className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                    />
+                  </div>
+                  <div className="mb-6 mr-6 flex flex-col">
+                    <label htmlFor="nicNumberNOK" className="text-[#676767]">
+                      NIC Number
+                    </label>
+                    <input
+                      type="number"
+                      name="nicNumberNOK"
+                      value={nextOfKinDetails?.nicNumber}
+                      required={true}
+                      onChange={({ target }) =>
+                        setNextOfKinDetails((prevDetails) => {
+                          const newDetails = { ...prevDetails };
+                          newDetails["nicNumber"] = target.value;
+                          return newDetails;
+                        })
+                      }
+                      className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                    />
+                  </div>
+                  <div className="mb-6 mr-6 flex flex-col">
+                    <label htmlFor="dobNOK" className="text-[#676767]">
+                      Date of Birth
+                    </label>
+                    <input
+                      type="date"
+                      name="dobNOK"
+                      value={nextOfKinDetails?.dobString}
+                      required={true}
+                      onChange={({ target }) => {
+                        const date = new Date(target.value);
+                        setNextOfKinDetails((prevDetails) => {
+                          const newDetails = { ...prevDetails };
+                          newDetails["dobString"] = date
+                            .toISOString()
+                            .split("T")[0];
+                          return newDetails;
+                        });
+                      }}
+                      className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                    />
+                  </div>
+                </div>
+                <div className="mt-5">
+                  <button
+                    type="button"
+                    onClick={(e) => handleUserProfileUpdate()}
+                    className="w-72 bg-[#116A7B] text-white text-2xl font-medium px-7 py-3 rounded-full"
+                  >
+                    {!isLoadingSubmission && `Save and next`}
+                    {isLoadingSubmission && (
+                      <div className="border-t-2 border-b-2 border-white bg-transparent h-3 p-2 animate-spin shadow-lg w-fit mx-auto rounded-full"></div>
+                    )}
+                  </button>
                 </div>
               </>
             )}
             {profileSettingActiveTab === "Payment Details" && (
-              <div>Payment Details</div>
+              <>
+                <div className="flex flex-row flex-wrap">
+                  <div className="mb-6 mr-6 flex flex-col">
+                    <label htmlFor="fullNamePD" className="text-[#676767]">
+                      Name on Card
+                    </label>
+                    <input
+                      type="text"
+                      name="fullNamePD"
+                      value={paymentDetails?.nameOnCard}
+                      required={true}
+                      onChange={({ target }) =>
+                        setPaymentDetails((prevDetails) => {
+                          const newDetails = { ...prevDetails };
+                          newDetails["nameOnCard"] = target.value;
+                          return newDetails;
+                        })
+                      }
+                      className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                    />
+                  </div>
+                  <div className="flex flex-col">
+                    <label htmlFor="cardNumberPD" className="text-[#676767]">
+                      Card Number
+                    </label>
+                    <div className="w-[620px] flex items-center border border-[#116A7B30] focus-within:border-[#116A7B] rounded-full px-5 py-2 mt-3 outline-none">
+                      <input
+                        type="text"
+                        name="cardNumberPD"
+                        inputMode="numeric"
+                        maxLength="19"
+                        value={paymentDetails?.cardNumber}
+                        required={true}
+                        onChange={({ target }) => handleCardInput(target.value)}
+                        className="flex-grow text-xl text-[#676767] font-normal outline-none bg-transparent"
+                      />
+                      {cardIcon}
+                    </div>
+                  </div>
+                  {/* Card Expiry Date - Month and Year */}
+                  <div className="flex flex-col mb-6 mr-6">
+                    <label htmlFor="expiryYear" className="text-[#676767]">
+                      Card Expiry
+                    </label>
+                    <div className="flex flex-row w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full">
+                      <input
+                        type="text"
+                        name="expiryMonth"
+                        inputMode="numeric"
+                        maxLength="2" // Length for MM
+                        placeholder="MM"
+                        value={paymentDetails?.cardExpiryMonth}
+                        required={true}
+                        onKeyDown={(event) => {
+                          if (event.key === "Backspace")
+                            setPaymentDetails((prevDetails) => {
+                              const newDetails = { ...prevDetails };
+                              newDetails["cardExpiryMonth"] = "";
+                              return newDetails;
+                            });
+                        }}
+                        onChange={({ target }) => {
+                          const value = target.value;
+                          if (value <= 12 && value >= 1)
+                            setPaymentDetails((prevDetails) => {
+                              const newDetails = { ...prevDetails };
+                              newDetails["cardExpiryMonth"] = value;
+                              return newDetails;
+                            });
+                        }}
+                        onBlur={() => {
+                          // Format the month when focus is lost
+                          setPaymentDetails((prevDetails) => {
+                            const newDetails = { ...prevDetails };
+                            let month = newDetails["cardExpiryMonth"];
+                            // Pad the month value with zero if it's a single digit
+                            newDetails["cardExpiryMonth"] = month.padStart(
+                              2,
+                              "0"
+                            );
+                            return newDetails;
+                          });
+                        }}
+                        className="w-20 text-xl text-[#676767] font-normal outline-none rounded-full"
+                      />
+                      <input
+                        type="text"
+                        name="expiryYear"
+                        inputMode="numeric"
+                        maxLength="4" // Length for YYYY
+                        placeholder="YYYY"
+                        value={paymentDetails?.cardExpiryYear}
+                        required={true}
+                        onKeyDown={(event) => {
+                          if (event.key === "Backspace")
+                            setPaymentDetails((prevDetails) => {
+                              const newDetails = { ...prevDetails };
+                              newDetails["cardExpiryYear"] = "";
+                              return newDetails;
+                            });
+                        }}
+                        onChange={({ target }) => {
+                          const value = target.value;
+                          const date = new Date();
+                          const dateYearString = `${date.getFullYear()}`;
+                          if (value[0] >= dateYearString[0])
+                            setPaymentDetails((prevDetails) => {
+                              const newDetails = { ...prevDetails };
+                              newDetails["cardExpiryYear"] = value;
+                              return newDetails;
+                            });
+                        }}
+                        className="w-32 text-xl text-[#676767] font-normal outline-none rounded-full"
+                      />
+                    </div>
+                  </div>
+                  <div className="mb-6 mr-6 flex flex-col">
+                    <label htmlFor="cardCVVPD" className="text-[#676767]">
+                      CVV
+                    </label>
+                    <input
+                      type="number"
+                      inputMode="numeric"
+                      maxLength={3}
+                      name="cardCVVPD"
+                      value={paymentDetails?.cardCVV}
+                      required={true}
+                      onKeyDown={(event) => {
+                        // Prevent non-numeric characters
+                        if (event.key === "Backspace") {
+                          setPaymentDetails((prevDetails) => {
+                            const newDetails = { ...prevDetails };
+                            newDetails["cardCVV"] = "";
+                            return newDetails;
+                          });
+                        } else if (!/[0-9]/.test(event.key)) {
+                          event.preventDefault();
+                        }
+                      }}
+                      onChange={({ target }) => {
+                        setPaymentDetails((prevDetails) => {
+                          const newDetails = { ...prevDetails };
+                          newDetails["cardCVV"] = target.value.slice(0, 3);
+                          return newDetails;
+                        });
+                      }}
+                      className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                    />
+                  </div>
+                </div>
+                <div className="mt-5">
+                  <button
+                    type="button"
+                    onClick={(e) => handleUserProfileUpdate()}
+                    className="w-72 bg-[#116A7B] text-white text-2xl font-medium px-7 py-3 rounded-full"
+                  >
+                    {!isLoadingSubmission && `Save and next`}
+                    {isLoadingSubmission && (
+                      <div className="border-t-2 border-b-2 border-white bg-transparent h-3 p-2 animate-spin shadow-lg w-fit mx-auto rounded-full"></div>
+                    )}
+                  </button>
+                </div>
+              </>
             )}
             {profileSettingActiveTab === "Withdrawal Details" && (
-              <div>Withdrawal Details</div>
+              <>
+                <div className="flex flex-row flex-wrap">
+                  <div className="mb-6 mr-6 flex flex-col">
+                    <label htmlFor="fullNameWD" className="text-[#676767]">
+                      Account Title
+                    </label>
+                    <input
+                      type="text"
+                      name="fullNameWD"
+                      value={withdrawalDetails?.accountTitle}
+                      required={true}
+                      placeholder="Required"
+                      onChange={({ target }) =>
+                        setWithdrawalDetails((prevDetails) => {
+                          const newDetails = { ...prevDetails };
+                          newDetails["accountTitle"] = target.value;
+                          return newDetails;
+                        })
+                      }
+                      className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                    />
+                  </div>
+                  <div className="mb-6 mr-6 flex flex-col">
+                    <label htmlFor="ibanNumberWD" className="text-[#676767]">
+                      IBAN Number
+                    </label>
+                    <input
+                      type="text"
+                      name="ibanNumberWD"
+                      value={withdrawalDetails?.ibanNumber}
+                      required={true}
+                      placeholder="Required"
+                      onChange={({ target }) =>
+                        setWithdrawalDetails((prevDetails) => {
+                          const newDetails = { ...prevDetails };
+                          newDetails["ibanNumber"] = target.value;
+                          return newDetails;
+                        })
+                      }
+                      className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                    />
+                  </div>
+                  <div className="mb-6 mr-6 flex flex-col">
+                    <label htmlFor="branchCodeWD" className="text-[#676767]">
+                      Branch Code
+                    </label>
+                    <input
+                      type="text"
+                      name="branchCodeWD"
+                      value={withdrawalDetails?.branchCode}
+                      required={true}
+                      placeholder="Required"
+                      onChange={({ target }) =>
+                        setWithdrawalDetails((prevDetails) => {
+                          const newDetails = { ...prevDetails };
+                          newDetails["branchCode"] = target.value;
+                          return newDetails;
+                        })
+                      }
+                      className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                    />
+                  </div>
+                  <div className="mb-6 mr-6 flex flex-col">
+                    <label htmlFor="swiftCodeWD" className="text-[#676767]">
+                      Swift Code
+                    </label>
+                    <input
+                      type="text"
+                      name="swiftCodeWD"
+                      value={withdrawalDetails?.swiftCode}
+                      required={true}
+                      placeholder="Required"
+                      onChange={({ target }) =>
+                        setWithdrawalDetails((prevDetails) => {
+                          const newDetails = { ...prevDetails };
+                          newDetails["swiftCode"] = target.value;
+                          return newDetails;
+                        })
+                      }
+                      className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                    />
+                  </div>
+                </div>
+                  <div className="mt-5">
+                    <button
+                      type="button"
+                      onClick={(e) => handleUserProfileUpdate()}
+                      className="w-72 bg-[#116A7B] text-white text-2xl font-medium px-7 py-3 rounded-full"
+                    >
+                      {!isLoadingSubmission && `Save and next`}
+                      {isLoadingSubmission && (
+                        <div className="border-t-2 border-b-2 border-white bg-transparent h-3 p-2 animate-spin shadow-lg w-fit mx-auto rounded-full"></div>
+                      )}
+                    </button>
+                  </div>
+              </>
             )}
           </div>
         </>
