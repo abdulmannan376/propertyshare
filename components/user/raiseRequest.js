@@ -813,8 +813,8 @@ const RaiseRequest = () => {
                     </h2>
                     {selectedRequest.attachedURLsList.length > 0 && (
                       <ul className="my-5 w-fit">
-                        {selectedRequest.attachedURLsList.map((url) => (
-                          <Link href={url}>
+                        {selectedRequest.attachedURLsList.map((url, i) => (
+                          <Link href={url} key={i}>
                             <li>
                               <h5 className="text-blue-400 hover:text-blue-600 underline">
                                 {url}
@@ -1130,8 +1130,8 @@ const RaiseRequest = () => {
                     </h2>
                     {selectedRequest.attachedURLsList.length > 0 && (
                       <ul className="my-5 w-fit">
-                        {selectedRequest.attachedURLsList.map((url) => (
-                          <Link href={url}>
+                        {selectedRequest.attachedURLsList.map((url, i) => (
+                          <Link href={url} key={i}>
                             <li>
                               <h5 className="text-blue-400 hover:text-blue-600 underline">
                                 {url}
@@ -1447,8 +1447,8 @@ const RaiseRequest = () => {
                     </h2>
                     {selectedRequest.attachedURLsList.length > 0 && (
                       <ul className="my-5 w-fit">
-                        {selectedRequest.attachedURLsList.map((url) => (
-                          <Link href={url}>
+                        {selectedRequest.attachedURLsList.map((url, i) => (
+                          <Link href={url} key={i}>
                             <li>
                               <h5 className="text-blue-400 hover:text-blue-600 underline">
                                 {url}
