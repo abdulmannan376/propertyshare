@@ -24,6 +24,8 @@ import WishList from "@/components/user/wishlist";
 import Inspections from "@/components/user/inspections";
 import BuybackRequests from "@/components/user/buybackRequests";
 import RaiseRequest from "@/components/user/raiseRequest";
+import Purchases from "@/components/user/purchases";
+import Reservations from "@/components/user/reservations";
 
 const Page = () => {
   const dispatch = useDispatch();
@@ -233,7 +235,9 @@ const Page = () => {
           {activeTab === "Wishlist" && <WishList />}
           {activeTab === "Inspections" && <Inspections />}
           {activeTab === "Buyback Requests" && <BuybackRequests />}
-          {activeTab === "Modification & Maintenance" && <RaiseRequest/>}
+          {activeTab === "Modification & Maintenance" && <RaiseRequest />}
+          {activeTab === "Shares in Properties" && <Purchases />}
+          {activeTab === "Reservations" && <Reservations />}
         </div>
       </div>
     </div>

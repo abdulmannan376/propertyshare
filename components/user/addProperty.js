@@ -521,7 +521,7 @@ const PropertyManagement = () => {
           formData.append("userRole", userDetails.role);
           formData.append(
             "pinnedImage",
-            pinnedImage === -1 ? pinnedImage : pinnedImage + 1
+            pinnedImage === -1 ? pinnedImage : pinnedImage
           );
           // formData.append("deleteImageList", deleteImageList);
 
@@ -1780,11 +1780,11 @@ const PropertyManagement = () => {
                           key={index}
                           type="button"
                           onClick={() => {
-                            if (pinnedImage === index) {
+                            if (pinnedImage === index+1) {
                               setPinnedImage(-1);
                             } else {
                               if (!deleteImageList.includes(index))
-                                setPinnedImage(index);
+                                setPinnedImage(index+1);
                             }
                           }}
                           className="relative h-40"
@@ -1824,7 +1824,7 @@ const PropertyManagement = () => {
                                   const newList = [...deleteImageList];
                                   newList.push(index);
                                   setDeleteImageList(newList);
-                                  if (pinnedImage === index) setPinnedImage(-1);
+                                  if (pinnedImage === index+1) setPinnedImage(-1);
                                 }
                               }}
                               className="bg-[#116A7B] rounded-full text-xl p-[2px]"
@@ -2066,7 +2066,7 @@ const PropertyManagement = () => {
                       <Image
                         width={1000}
                         height={1000}
-                        src={`${process.env.NEXT_PUBLIC_SERVER_HOST}/${share.propertyDetails.imageDirURL}/image-1.png`}
+                        src={`${process.env.NEXT_PUBLIC_SERVER_HOST}/${share.propertyDetails.imageDirURL}image-1.png`}
                         className="xl:w-64 lg:w-52 md:w-52 md:h-60 xl:h-60 lg:h-56 object-cover object-center"
                       />
                     )}

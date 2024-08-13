@@ -10,12 +10,7 @@ import { IoMdCloseCircle } from "react-icons/io";
 import { FaCheckCircle } from "react-icons/fa";
 import { toast } from "react-toastify";
 
-const RaiseRequestCard = ({
-  card,
-  fetchData,
-  sharesList,
-  fetchRequests,
-}) => {
+const RaiseRequestCard = ({ card, fetchData, sharesList, fetchRequests }) => {
   const TruncatingH1 = ({ text }) => {
     const h1Ref = useRef(null);
     const [displayText, setDisplayText] = useState(text);
@@ -183,11 +178,11 @@ const RaiseRequestCard = ({
     else if (card.status === "Payment Pending")
       return <p className=" text-2xl mx-2 text-green-500">{card.status}</p>;
     else if (card.status === "Successfull")
-        return <p className=" text-2xl mx-2 text-green-500">{card.status}</p>;
+      return <p className=" text-2xl mx-2 text-green-500">{card.status}</p>;
     else if (card.status === "Property Owner Rejected")
-        return <p className=" text-2xl mx-2 text-red-500">{card.status}</p>;
+      return <p className=" text-2xl mx-2 text-red-500">{card.status}</p>;
     else if (card.status === "Expired")
-        return <p className=" text-2xl mx-2 text-gray-500">{card.status}</p>;
+      return <p className=" text-2xl mx-2 text-gray-500">{card.status}</p>;
   }
 
   function processUserResponse() {
@@ -448,10 +443,10 @@ const RaiseRequestCard = ({
           card.status !== "Payment Pending" && (
             <button
               type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleRaiseRequestApproveByPropertyOwner();
-                }}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleRaiseRequestApproveByPropertyOwner();
+              }}
               className="flex flex-row items-center justify-center"
             >
               <FaCheckCircle className="text-xl text-[#116A7B]" />{" "}
