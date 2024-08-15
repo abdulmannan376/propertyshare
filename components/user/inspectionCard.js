@@ -211,12 +211,12 @@ const InspectionCard = ({ card, fetchData, sharesList, fetchInspections }) => {
         </span> */}
       </div>
       <div className="p-2 space-y-2">
-        <TruncatingH1 text={card.propertyDocID.title} />
+        <TruncatingH1 text={card?.propertyDocID?.title} />
         {/* <h3 className="text-[#116A7B] font-semibold">{card.propertyType}</h3> */}
         <h2 className="text-sm text-[#116A7B]">
           <strong>
-            {card?.propertyDocID.amenities?.roomDetails?.inputs?.beds
-              ? card?.propertyDocID.amenities?.roomDetails?.inputs?.beds
+            {card?.propertyDocID?.amenities?.roomDetails?.inputs?.beds
+              ? card?.propertyDocID?.amenities?.roomDetails?.inputs?.beds
               : "-"}
           </strong>{" "}
           bd{" "}
@@ -225,7 +225,7 @@ const InspectionCard = ({ card, fetchData, sharesList, fetchInspections }) => {
               ? card?.propertyDocID?.amenities?.roomDetails?.inputs?.baths
               : "-"}
           </strong>{" "}
-          ba <strong>{card.propertyDocID.area}</strong> Sqft
+          ba <strong>{card?.propertyDocID?.area}</strong> Sqft
         </h2>
         <h3 className="text-sm text-[#116A7B]">
           Shareholder: <strong>{card.shareholderDocID.username}</strong>
@@ -278,13 +278,13 @@ const InspectionCard = ({ card, fetchData, sharesList, fetchInspections }) => {
           )} */}
         <h4 className="text-xl flex items-start text-[#116A7B]">
           <FiMapPin className="inline-flex mt-1 mr-1" />{" "}
-          {card.propertyDocID.addressOfProperty.city
-            ? card.propertyDocID.addressOfProperty.city
+          {card.propertyDocID?.addressOfProperty.city
+            ? card.propertyDocID?.addressOfProperty.city
             : ""}
           ,{" "}
-          {card.propertyDocID.addressOfProperty.country
+          {card.propertyDocID?.addressOfProperty.country
             ? compCities.getCountryByShort(
-                card.propertyDocID.addressOfProperty.country
+                card.propertyDocID?.addressOfProperty.country
               ).name
             : ""}
         </h4>

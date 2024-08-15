@@ -1804,7 +1804,7 @@ const PropertyManagement = () => {
                           {deleteImageList.includes(index) && (
                             <div className="absolute inset-y-4 w-60 h-32 bg-gray-700 opacity-60 rounded-xl"></div>
                           )}
-                          {pinnedImage === index && (
+                          {pinnedImage === index+1 && (
                             <span className="absolute inset-y-2 left-0 px-1 text-red-700 font-semibold focus:outline-none cursor-pointer">
                               {" "}
                               <SiPinboard className="text-xl" />
