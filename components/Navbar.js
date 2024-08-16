@@ -1,6 +1,10 @@
 "use client";
 import {
+  addNewNotification,
+  handleNotificationRead,
   updateFavoritesList,
+  updateNewNotificationFlag,
+  updateNotificationsList,
   updateUserDetails,
   updateWishList,
 } from "@/app/redux/features/userSlice";
@@ -18,11 +22,27 @@ import { useRouter } from "next/navigation";
 import { FaAngleLeft } from "react-icons/fa6";
 import { TiThMenu } from "react-icons/ti";
 import { updateDropdrownStatus } from "@/app/redux/features/navbarSlice";
+import { useSocket } from "@/hooks/useSocket";
 
 const Navbar = () => {
   const pathname = usePathname();
   const dispatch = useDispatch();
   const router = useRouter();
+
+  const socket = useSocket();
+
+  useEffect(() => {
+    if (socket) {
+      socket.on("getNewNotification", (message) => {
+        console.log("message: ", message)
+        dispatch(addNewNotification(message));
+        dispatch(updateNewNotificationFlag(true));
+      });
+      return () => {
+        socket.off("getNewNotification");
+      };
+    }
+  }, [socket]);
 
   const textColor = useSelector((state) => state.navbarSliceReducer.textColor);
   const hoverTextColor = useSelector(
@@ -63,8 +83,16 @@ const Navbar = () => {
     }
   }, []);
 
-  const [notificationsCount, setNotificationsCount] = useState(0);
-  const [notificationsList, setNotificationsList] = useState([]);
+  // const [notificationsCount, setNotificationsCount] = useState(0);
+  // const [notificationsList, setNotificationsList] = useState([]);
+
+  const notificationsList = useSelector(
+    (state) => state.adminSliceReducer.notificationsList
+  );
+
+  const isNewNotificationAdded = useSelector(
+    (state) => state.adminSliceReducer.isNewNotificationAdded
+  );
 
   const fetchNotifications = async () => {
     try {
@@ -85,8 +113,12 @@ const Navbar = () => {
       const response = await res.json();
 
       if (response.success) {
-        setNotificationsList(response.body.notificationList);
-        setNotificationsCount(response.body.notificationsCount);
+        dispatch(updateNotificationsList(response.body.notificationList));
+        if (response.body.notificationsCount > 0) {
+          dispatch(updateNewNotificationFlag(true));
+        } else {
+          dispatch(updateNewNotificationFlag(false));
+        }
       } else {
         throw new Error(response.message);
       }
@@ -237,11 +269,7 @@ const Navbar = () => {
       console.log(response);
       if (response.success) {
         setSelectedNotification(notificationsList[index]);
-        setNotificationsList((prevDetails) => {
-          const newDetails = [...prevDetails];
-          newDetails[index].inAppStatus = "read";
-          return newDetails;
-        });
+        dispatch(handleNotificationRead(index));
       } else {
         setSelectedNotification(null);
         throw new Error(response.message);
@@ -394,16 +422,15 @@ const Navbar = () => {
                         "notification",
                         !showDropDowns["notification"]
                       );
+                      dispatch(updateNewNotificationFlag(false))
                     }}
                     className="relative"
                   >
                     <FaBell
                       className={`sm:text-3xl xs:text-2xl text-xl ${notificationIconColor}`}
                     />
-                    {notificationsCount > 0 && (
-                      <span className="absolute w-5 h-5 -inset-y-2 right-0 px-0 bg-red-400 text-white text-sm text-center font-semibold focus:outline-none cursor-pointer rounded-full">
-                        {notificationsCount}
-                      </span>
+                    {isNewNotificationAdded && (
+                      <span className="absolute w-5 h-5 -inset-y-2 right-0 px-0 bg-red-400 text-white text-sm text-center font-semibold focus:outline-none cursor-pointer rounded-full"></span>
                     )}
                   </button>
                   {showDropDowns["notification"] && !selectedNotification && (

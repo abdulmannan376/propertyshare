@@ -12,6 +12,9 @@ const initialState = {
   currentLocation: [],
   favouriteList: [],
   wishList: [],
+  socket: null,
+  notificationsList: [],
+  isNewNotificationAdded: false,
 };
 
 export const adminSlice = createSlice({
@@ -23,7 +26,7 @@ export const adminSlice = createSlice({
         state.userRole = action.payload.role;
         state.userName = action.payload.name;
         state.userEmail = action.payload.email;
-        state.profilePicURL = action.payload.profilePicURL
+        state.profilePicURL = action.payload.profilePicURL;
       }
     },
     handleUserSettingNavigation: (state, action) => {
@@ -65,6 +68,24 @@ export const adminSlice = createSlice({
         });
       }
     },
+    setSocket: (state, action) => {
+      // if(action.payload)
+      state.socket = action.payload;
+    },
+    updateNotificationsList: (state, action) => {
+      state.notificationsList = action.payload;
+    },
+    addNewNotification: (state, action) => {
+      console.log("addNewNotification payload: ", action.payload)
+      state.notificationsList.unshift(action.payload);
+      state.isNewNotificationAdded = true;
+    },
+    handleNotificationRead: (state, action) => {
+      state.notificationsList[action.payload].inAppStatus = "read";
+    },
+    updateNewNotificationFlag: (state, action) => {
+      state.isNewNotificationAdded = action.payload;
+    },
   },
 });
 
@@ -75,5 +96,10 @@ export const {
   updateCurrentLocation,
   updateFavoritesList,
   updateWishList,
+  setSocket,
+  updateNotificationsList,
+  addNewNotification,
+  handleNotificationRead,
+  updateNewNotificationFlag,
 } = adminSlice.actions;
 export default adminSlice.reducer;
