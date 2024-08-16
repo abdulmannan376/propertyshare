@@ -15,7 +15,7 @@ export const SocketProvider = ({ children }) => {
       const userDetails = JSON.parse(localStorage.getItem("userDetails"));
       console.log(userDetails)
       if (userDetails && !socket) {
-        const newSocket = io("ws://localhost:9000", {
+        const newSocket = io(process.env.NEXT_PUBLIC_WEBSOCKET_HOST, {
           transports: ["websocket"],
           query: { username: userDetails.username },
           reconnection: true,
