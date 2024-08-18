@@ -8,6 +8,8 @@ import { MdClose } from "react-icons/md";
 import { SiPinboard } from "react-icons/si";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import PropertyRejectionModal from "../modals/propertyRejectionModal";
+import { useRouter } from "next/navigation";
 const MapArea = dynamic(() => import("./mapArea"), { ssr: false });
 const compCities = require("countrycitystatejson");
 
@@ -845,6 +847,90 @@ const PropertyManagement = () => {
       const response = await res.json();
       if (response.success) {
         setMyShareRentals(response.body);
+      } else {
+        throw new Error(response.message);
+      }
+    } catch (error) {
+      toast.error(error.message, {
+        position: "bottom-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  };
+
+  const router = useRouter();
+  const [myPendingApprovals, setMyPendingApprovals] = useState([]);
+  const [isRejectionModalOpen, setIsRejectionModalOpen] = useState(false);
+
+  const handleModalOpen = () => setIsRejectionModalOpen(true);
+  const handleModalClose = () => setIsRejectionModalOpen(false);
+  const [selectedPropertyID, setSelectedPropertyID] = useState("");
+
+  const fetchMyPendingApprovals = async () => {
+    try {
+      const username = JSON.parse(localStorage.getItem("userDetails")).username;
+      const token = localStorage.getItem("token");
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_HOST}/property/get-pending-approval-properties/${username}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const response = await res.json();
+      if (response.success) {
+        setMyPendingApprovals(response.body);
+      } else {
+        throw new Error(response.message);
+      }
+    } catch (error) {
+      toast.error(error.message, {
+        position: "bottom-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  };
+
+  const handlePropertyApproval = async (action, propertyID, comment) => {
+    try {
+      const username = JSON.parse(localStorage.getItem("userDetails")).username;
+
+      const data = {
+        action,
+        propertyID,
+        comment: comment || "",
+        username: username,
+      };
+
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_HOST}/property/update-property-approval-action`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
+
+      const response = await res.json();
+      if (response.success) {
+        fetchMyPendingApprovals();
       } else {
         throw new Error(response.message);
       }
@@ -1780,11 +1866,11 @@ const PropertyManagement = () => {
                           key={index}
                           type="button"
                           onClick={() => {
-                            if (pinnedImage === index+1) {
+                            if (pinnedImage === index + 1) {
                               setPinnedImage(-1);
                             } else {
                               if (!deleteImageList.includes(index))
-                                setPinnedImage(index+1);
+                                setPinnedImage(index + 1);
                             }
                           }}
                           className="relative h-40"
@@ -1804,7 +1890,7 @@ const PropertyManagement = () => {
                           {deleteImageList.includes(index) && (
                             <div className="absolute inset-y-4 w-60 h-32 bg-gray-700 opacity-60 rounded-xl"></div>
                           )}
-                          {pinnedImage === index+1 && (
+                          {pinnedImage === index + 1 && (
                             <span className="absolute inset-y-2 left-0 px-1 text-red-700 font-semibold focus:outline-none cursor-pointer">
                               {" "}
                               <SiPinboard className="text-xl" />
@@ -1824,7 +1910,8 @@ const PropertyManagement = () => {
                                   const newList = [...deleteImageList];
                                   newList.push(index);
                                   setDeleteImageList(newList);
-                                  if (pinnedImage === index+1) setPinnedImage(-1);
+                                  if (pinnedImage === index + 1)
+                                    setPinnedImage(-1);
                                 }
                               }}
                               className="bg-[#116A7B] rounded-full text-xl p-[2px]"
@@ -1854,7 +1941,7 @@ const PropertyManagement = () => {
               </div> */}
             </>
           )}
-          <div className="mb-6 ml-6 flex flex-row space-x-3">
+          <div className="submit-button mb-6 ml-6 flex flex-row space-x-3">
             {formPhase < 3 && (
               <button
                 type="button"
@@ -1962,6 +2049,27 @@ const PropertyManagement = () => {
                 Rentals
               </h2>
             </button>
+            {JSON.parse(localStorage.getItem("userDetails")).role ===
+              "admin" && (
+              <button
+                onClick={() => {
+                  dispatch(
+                    updateActivePropertyManagementTab("Pending Approvals")
+                  );
+                  fetchMyPendingApprovals();
+                }}
+              >
+                <h2
+                  className={`flex ${
+                    activeNavBtn === "Pending Approvals"
+                      ? "underline-text"
+                      : "hover-underline-animation"
+                  } `}
+                >
+                  Pending Approvals
+                </h2>
+              </button>
+            )}
 
             {/* </Link> */}
           </div>
@@ -2264,6 +2372,106 @@ const PropertyManagement = () => {
               ) : (
                 <h1 className="text-2xl text-[#116A7B] font-semibold px-14">
                   No Rentals Yet.
+                </h1>
+              )}
+            </div>
+          )}
+          {activeNavBtn === "Pending Approvals" && (
+            <div>
+              <PropertyRejectionModal
+                isOpen={isRejectionModalOpen}
+                onClose={handleModalClose}
+                propertyID={selectedPropertyID}
+                setPropertyID={setSelectedPropertyID}
+                fetchProperties={fetchMyPendingApprovals}
+              />
+              {myPendingApprovals.length > 0 ? (
+                myPendingApprovals.map((property, index) => (
+                  <button
+                    key={index}
+                    onClick={() =>
+                      router.push(`/buy-shares/property/${property.propertyID}`)
+                    }
+                    className="w-full flex flex-row flex-wrap border border-[#D9D9D9] px-14 mb-5 cursor-pointer"
+                  >
+                    {property.imageCount === 0 ? (
+                      <Image
+                        width={1000}
+                        height={1000}
+                        src={"/assets/user/property-management/no-image.jpg"}
+                        className="xl:w-64 lg:w-52 md:w-52 xl:h-60 lg:h-56 md:h-60 object-cover object-center"
+                      />
+                    ) : (
+                      <Image
+                        width={1000}
+                        height={1000}
+                        src={`${process.env.NEXT_PUBLIC_SERVER_HOST}/${property.imageDirURL}/image-1.png`}
+                        className="xl:w-64 lg:w-52 md:w-52 xl:h-60 lg:h-56 md:h-60 object-cover object-center"
+                      />
+                    )}
+                    <div className="ml-10 space-y-5 my-5">
+                      <div className="flex flex-row text-2xl text-[#09363F]">
+                        <h1 className="xl:w-80 lg:w-60 md:w-60 text-2xl font-medium">
+                          Property Title:{" "}
+                        </h1>
+                        <p className="xl:ml-44 lg:ml-20">{property.title}</p>
+                      </div>
+                      <div className="flex flex-row text-2xl text-[#09363F]">
+                        <h1 className="xl:w-80 lg:w-60 md:w-60 text-2xl font-medium">
+                          Property Owner
+                        </h1>
+                        <p className="xl:ml-44 lg:ml-20">
+                          {property.publishedBy}
+                        </p>
+                      </div>
+                      <div className="flex flex-row text-2xl text-[#09363F]">
+                        <h1 className="xl:w-80 lg:w-60 md:w-60 text-2xl font-medium">
+                          Total Shares:{" "}
+                        </h1>
+                        <p className="xl:ml-44 lg:ml-20">
+                          {property.totalStakes}
+                        </p>
+                      </div>
+                      <div className="flex flex-row text-2xl text-[#09363F]">
+                        <h1 className="xl:w-80 lg:w-60 md:w-60 text-2xl font-medium">
+                          Available Shares:{" "}
+                        </h1>
+                        <p className="xl:ml-44 lg:ml-20">
+                          {property.totalStakes - property.stakesOccupied}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="w-full flex flex-row items-start justify-center space-x-10 mx-auto mb-3">
+                      <button
+                        type="button"
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          handlePropertyApproval(
+                            "approved",
+                            property.propertyID
+                          );
+                        }}
+                        className="text-lg text-[#116A7B] font-semibold uppercase"
+                      >
+                        Approve
+                      </button>
+                      <button
+                        type="button"
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          handleModalOpen();
+                          setSelectedPropertyID(property.propertyID);
+                        }}
+                        className="text-lg text-[#116A7B] font-semibold uppercase"
+                      >
+                        Reject
+                      </button>
+                    </div>
+                  </button>
+                ))
+              ) : (
+                <h1 className="text-2xl text-[#116A7B] font-semibold px-14">
+                  No Pending Approvals Yet.
                 </h1>
               )}
             </div>
