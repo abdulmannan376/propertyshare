@@ -34,7 +34,7 @@ const Navbar = () => {
   useEffect(() => {
     if (socket) {
       socket.on("getNewNotification", (message) => {
-        console.log("message: ", message)
+        console.log("message: ", message);
         dispatch(addNewNotification(message));
         dispatch(updateNewNotificationFlag(true));
       });
@@ -155,6 +155,7 @@ const Navbar = () => {
           dispatch(updateUserDetails(userDetails));
           userDetails.name = user.name;
           localStorage.setItem("userDetails", JSON.stringify(userDetails));
+          socket.emit("login", { username: user.username });
           dispatch(
             updateFavoritesList({
               action: "all",
@@ -194,8 +195,8 @@ const Navbar = () => {
   };
 
   useEffect(() => {
+    console.log(pathname, typeof pathname);
     if (pathname != "/login" && pathname != "/signup") {
-      console.log(pathname, typeof pathname);
       fetchUserDetails();
     }
   }, [pathname]);
@@ -216,6 +217,10 @@ const Navbar = () => {
 
       const response = await res.json();
       if (response.success) {
+        const username = JSON.parse(
+          localStorage.getItem("userDetails")
+        ).username;
+        socket.emit("logout", { username: username });
         console.log("reponse: ", response);
         toast.success(response.message, {
           position: "bottom-center",
@@ -422,7 +427,7 @@ const Navbar = () => {
                         "notification",
                         !showDropDowns["notification"]
                       );
-                      dispatch(updateNewNotificationFlag(false))
+                      dispatch(updateNewNotificationFlag(false));
                     }}
                     className="relative"
                   >

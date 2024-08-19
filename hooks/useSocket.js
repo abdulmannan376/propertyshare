@@ -12,31 +12,32 @@ export const SocketProvider = ({ children }) => {
 
   useEffect(() => {
     // if (!socket) {
-      const userDetails = JSON.parse(localStorage.getItem("userDetails"));
-      console.log(userDetails)
-      if (userDetails && !socket) {
-        const newSocket = io(process.env.NEXT_PUBLIC_WEBSOCKET_HOST, {
-          transports: ["websocket"],
-          query: { username: userDetails.username },
-          reconnection: true,
-          reconnectionDelay: 500,
-          reconnectionAttempts: 10,
-        });
+    console.log("in useSocket, socket: ", socket)
+    const userDetails = JSON.parse(localStorage.getItem("userDetails"));
+    // console.log(userDetails);
+    if (userDetails && !socket) {
+      const newSocket = io(process.env.NEXT_PUBLIC_WEBSOCKET_HOST, {
+        transports: ["websocket"],
+        query: { username: userDetails.username },
+        reconnection: true,
+        reconnectionDelay: 500,
+        reconnectionAttempts: 10,
+      });
 
-        newSocket.on("connect", () => {
-          console.log("connection made");
-        });
+      newSocket.on("connect", () => {
+        console.log("connection made");
+      });
 
-        newSocket.on("connect_error", (error) => {
-          console.error("Connection Error:", error);
-        });
+      newSocket.on("connect_error", (error) => {
+        console.error("Connection Error:", error);
+      });
 
-        setSocket(newSocket);
-        return () => {
-          newSocket.close();
-        };
-      }
-    // }
+      
+      setSocket(newSocket);
+      return () => {
+        newSocket.close();
+      };
+    }
   }, []);
 
   return (
