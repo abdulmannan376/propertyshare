@@ -3,6 +3,7 @@ import {
   addNewNotification,
   handleNotificationRead,
   updateFavoritesList,
+  updateNewMessageFlag,
   updateNewNotificationFlag,
   updateNotificationsList,
   updateUserDetails,
@@ -21,6 +22,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from "next/navigation";
 import { FaAngleLeft } from "react-icons/fa6";
 import { TiThMenu } from "react-icons/ti";
+import { MdMessage } from "react-icons/md";
 import { updateDropdrownStatus } from "@/app/redux/features/navbarSlice";
 import { useSocket } from "@/hooks/useSocket";
 
@@ -37,6 +39,11 @@ const Navbar = () => {
         console.log("message: ", message);
         dispatch(addNewNotification(message));
         dispatch(updateNewNotificationFlag(true));
+      });
+
+      socket.on("newMessage", (message) => {
+        console.log("new message: ", message);
+        dispatch(updateNewMessageFlag(true));
       });
       return () => {
         socket.off("getNewNotification");
@@ -92,6 +99,10 @@ const Navbar = () => {
 
   const isNewNotificationAdded = useSelector(
     (state) => state.adminSliceReducer.isNewNotificationAdded
+  );
+
+  const isNewMessageRecieved = useSelector(
+    (state) => state.adminSliceReducer.isNewMessageRecieved
   );
 
   const fetchNotifications = async () => {
@@ -155,7 +166,7 @@ const Navbar = () => {
           dispatch(updateUserDetails(userDetails));
           userDetails.name = user.name;
           localStorage.setItem("userDetails", JSON.stringify(userDetails));
-          socket.emit("login", { username: user.username });
+          socket?.emit("login", { username: user.username });
           dispatch(
             updateFavoritesList({
               action: "all",
@@ -418,6 +429,27 @@ const Navbar = () => {
           <div className="flex flex-row items-center">
             {loggedIn ? (
               <div className="flex flex-row items-start">
+                <div className="relative mr-5 mt-1">
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      // handleShowDropdown(
+                      //   "notification",
+                      //   !showDropDowns["notification"]
+                      // );
+                      dispatch(updateNewMessageFlag(false));
+                    }}
+                    className="relative"
+                  >
+                    <MdMessage
+                      className={`sm:text-3xl xs:text-2xl text-xl ${notificationIconColor}`}
+                    />
+                    {isNewMessageRecieved && (
+                      <span className="absolute w-5 h-5 -inset-y-2 right-0 px-0 bg-red-400 text-white text-sm text-center font-semibold focus:outline-none cursor-pointer rounded-full"></span>
+                    )}
+                  </button>
+                </div>
                 <div className="relative mr-5 mt-1">
                   <button
                     type="button"

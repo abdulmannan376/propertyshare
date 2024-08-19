@@ -15,6 +15,7 @@ const initialState = {
   socket: null,
   notificationsList: [],
   isNewNotificationAdded: false,
+  isNewMessageRecieved: false,
 };
 
 export const adminSlice = createSlice({
@@ -76,7 +77,7 @@ export const adminSlice = createSlice({
       state.notificationsList = action.payload;
     },
     addNewNotification: (state, action) => {
-      console.log("addNewNotification payload: ", action.payload)
+      console.log("addNewNotification payload: ", action.payload);
       state.notificationsList.unshift(action.payload);
       state.isNewNotificationAdded = true;
     },
@@ -85,6 +86,9 @@ export const adminSlice = createSlice({
     },
     updateNewNotificationFlag: (state, action) => {
       state.isNewNotificationAdded = action.payload;
+    },
+    updateNewMessageFlag: (state, action) => {
+      state.isNewMessageRecieved = action.payload;
     },
   },
 });
@@ -101,5 +105,6 @@ export const {
   addNewNotification,
   handleNotificationRead,
   updateNewNotificationFlag,
+  updateNewMessageFlag,
 } = adminSlice.actions;
 export default adminSlice.reducer;
