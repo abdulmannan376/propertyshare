@@ -628,6 +628,9 @@ const RaiseRequest = () => {
                 onClick={() => {
                   dispatch(updateActiveRaiseRequestTab("My Requests"));
                   // setSelectedInspection(null);
+                  setSelectedRequest(null);
+                  setThreads([]);
+                  setThreadBody("");
                 }}
               >
                 <h1
@@ -645,6 +648,9 @@ const RaiseRequest = () => {
                 onClick={() => {
                   dispatch(updateActiveRaiseRequestTab("All Requests"));
                   // setSelectedInspection(null);
+                  setSelectedRequest(null);
+                  setThreads([]);
+                  setThreadBody("");
                 }}
               >
                 <h2
@@ -661,6 +667,9 @@ const RaiseRequest = () => {
                 onClick={() => {
                   dispatch(updateActiveRaiseRequestTab("Pending Approvals"));
                   // setSelectedInspection(null);
+                  setSelectedRequest(null);
+                  setThreads([]);
+                  setThreadBody("");
                 }}
               >
                 <h2
@@ -995,7 +1004,10 @@ const RaiseRequest = () => {
                                         event.ctrlKey &&
                                         event.key === "Enter"
                                       ) {
-                                        handleThreadSubmit(share.shareID, selectedRequest.raisedRequestID);
+                                        handleThreadSubmit(
+                                          share.shareID,
+                                          selectedRequest.raisedRequestID
+                                        );
                                         event.preventDefault();
                                       }
                                     }
@@ -1185,7 +1197,11 @@ const RaiseRequest = () => {
                                     if (showThreadsByShare === share.shareID)
                                       setShowThreadsByShare("");
                                     else {
-                                      fetchThreads(share.shareID, requestType, selectedRequest.raisedRequestID);
+                                      fetchThreads(
+                                        share.shareID,
+                                        requestType,
+                                        selectedRequest.raisedRequestID
+                                      );
                                       setShowThreadsByShare(share.shareID);
                                     }
                                   }}
@@ -1312,7 +1328,10 @@ const RaiseRequest = () => {
                                         event.ctrlKey &&
                                         event.key === "Enter"
                                       ) {
-                                        handleThreadSubmit(share.shareID, selectedRequest.raisedRequestID)
+                                        handleThreadSubmit(
+                                          share.shareID,
+                                          selectedRequest.raisedRequestID
+                                        );
                                         event.preventDefault();
                                       }
                                     }
@@ -1321,7 +1340,10 @@ const RaiseRequest = () => {
                                 <button
                                   type="button"
                                   onClick={() => {
-                                    handleThreadSubmit(share.shareID, selectedRequest.raisedRequestID)
+                                    handleThreadSubmit(
+                                      share.shareID,
+                                      selectedRequest.raisedRequestID
+                                    );
                                   }}
                                   disabled={threadBody.length === 0}
                                   className="disabled:opacity-35 text-lg font-semibold text-[#116A7B] p-1"
@@ -1506,7 +1528,11 @@ const RaiseRequest = () => {
                                     if (showThreadsByShare === share.shareID)
                                       setShowThreadsByShare("");
                                     else {
-                                      fetchThreads(share.shareID, requestType, selectedRequest.raisedRequestID);
+                                      fetchThreads(
+                                        share.shareID,
+                                        requestType,
+                                        selectedRequest.raisedRequestID
+                                      );
                                       setShowThreadsByShare(share.shareID);
                                     }
                                   }}
@@ -1633,7 +1659,10 @@ const RaiseRequest = () => {
                                         event.ctrlKey &&
                                         event.key === "Enter"
                                       ) {
-                                        handleThreadSubmit(share.shareID, selectedRequest.raisedRequestID);
+                                        handleThreadSubmit(
+                                          share.shareID,
+                                          selectedRequest.raisedRequestID
+                                        );
                                         event.preventDefault();
                                       }
                                     }
@@ -1642,7 +1671,10 @@ const RaiseRequest = () => {
                                 <button
                                   type="button"
                                   onClick={() => {
-                                    handleThreadSubmit(share.shareID, selectedRequest.raisedRequestID);
+                                    handleThreadSubmit(
+                                      share.shareID,
+                                      selectedRequest.raisedRequestID
+                                    );
                                   }}
                                   disabled={threadBody.length === 0}
                                   className="disabled:opacity-35 text-lg font-semibold text-[#116A7B] p-1"

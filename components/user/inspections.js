@@ -218,7 +218,7 @@ const Inspections = () => {
     let count = 0;
 
     sharesList.map((share) => {
-      if (share.currentOwnerDocID.username === username) {
+      if (share.currentOwnerDocID?.username === username) {
         count += 1;
       }
     });
@@ -746,9 +746,9 @@ const Inspections = () => {
                         <div key={index}>
                           <div className="flex flex-row items-center justify-between p-10">
                             <h3 className="text-xl text-[#09363F] font-semibold">
-                              {share.currentOwnerDocID.username}{" "}
+                              {share.currentOwnerDocID?.username}{" "}
                               &nbsp;&nbsp;&nbsp;
-                              {share.currentOwnerDocID.username ===
+                              {share.currentOwnerDocID?.username ===
                                 JSON.parse(localStorage.getItem("userDetails"))
                                   .username && "(You)"}
                               <br />
@@ -779,12 +779,12 @@ const Inspections = () => {
                                 <AiFillMessage className="text-[#116A7B] text-2xl" />
                               </button>
                               {!selectedInspection?.approvedByUsersList?.includes(
-                                share.currentOwnerDocID.username
+                                share.currentOwnerDocID?.username
                               ) &&
                                 !selectedInspection?.rejectedUsersList?.includes(
-                                  share.currentOwnerDocID.username
+                                  share.currentOwnerDocID?.username
                                 ) &&
-                                share.currentOwnerDocID.username ===
+                                share.currentOwnerDocID?.username ===
                                   JSON.parse(
                                     localStorage.getItem("userDetails")
                                   ).username && (
@@ -794,7 +794,7 @@ const Inspections = () => {
                                       onClick={() =>
                                         handleInspectionAction(
                                           selectedInspection.inspectionID,
-                                          share.currentOwnerDocID.username,
+                                          share.currentOwnerDocID?.username,
                                           "approved"
                                         )
                                       }
@@ -810,10 +810,10 @@ const Inspections = () => {
                                           inspectionID:
                                             selectedInspection.inspectionID,
                                           ownerUsername:
-                                            share.currentOwnerDocID.username,
+                                            share.currentOwnerDocID?.username,
                                           action: "rejected",
                                           occurence: checkUseNumOfShares(
-                                            share.currentOwnerDocID.username
+                                            share.currentOwnerDocID?.username
                                           ),
                                         });
                                         handleRejectionModalOpen();
@@ -825,20 +825,20 @@ const Inspections = () => {
                                   </div>
                                 )}
                               {!selectedInspection?.approvedByUsersList?.includes(
-                                share.currentOwnerDocID.username
+                                share.currentOwnerDocID?.username
                               ) &&
                                 !selectedInspection?.rejectedUsersList?.includes(
-                                  share.currentOwnerDocID.username
+                                  share.currentOwnerDocID?.username
                                 ) &&
-                                share.currentOwnerDocID.username !==
+                                share.currentOwnerDocID?.username !==
                                   JSON.parse(
                                     localStorage.getItem("userDetails")
                                   ).username && <h4>Pending Response</h4>}
                               {selectedInspection?.approvedByUsersList?.includes(
-                                share.currentOwnerDocID.username
+                                share.currentOwnerDocID?.username
                               ) && <h4>Approved</h4>}
                               {selectedInspection?.rejectedUsersList?.includes(
-                                share.currentOwnerDocID.username
+                                share.currentOwnerDocID?.username
                               ) && <h4>Rejected</h4>}
                             </div>
                           </div>
@@ -849,7 +849,7 @@ const Inspections = () => {
                                   <Thread
                                     key={thread.threadID}
                                     shareOwner={
-                                      share.currentOwnerDocID.username
+                                      share.currentOwnerDocID?.username
                                     }
                                     thread={thread}
                                     isFirstLevel={true}
@@ -1048,9 +1048,9 @@ const Inspections = () => {
                         <div key={index}>
                           <div className="flex flex-row items-center justify-between p-10">
                             <h3 className="text-xl text-[#09363F] font-semibold">
-                              {share.currentOwnerDocID.username}{" "}
+                              {share.currentOwnerDocID?.username}{" "}
                               &nbsp;&nbsp;&nbsp;
-                              {share.currentOwnerDocID.username ===
+                              {share.currentOwnerDocID?.username ===
                                 JSON.parse(localStorage.getItem("userDetails"))
                                   .username && "(You)"}
                               <br />
@@ -1081,12 +1081,12 @@ const Inspections = () => {
                                 <AiFillMessage className="text-[#116A7B] text-2xl" />
                               </button>
                               {!selectedInspection?.approvedByUsersList?.includes(
-                                share.currentOwnerDocID.username
+                                share.currentOwnerDocID?.username
                               ) &&
                                 !selectedInspection?.rejectedUsersList?.includes(
-                                  share.currentOwnerDocID.username
+                                  share.currentOwnerDocID?.username
                                 ) &&
-                                share.currentOwnerDocID.username ===
+                                share.currentOwnerDocID?.username ===
                                   JSON.parse(
                                     localStorage.getItem("userDetails")
                                   ).username && (
@@ -1096,7 +1096,7 @@ const Inspections = () => {
                                       onClick={() =>
                                         handleInspectionAction(
                                           selectedInspection.inspectionID,
-                                          share.currentOwnerDocID.username,
+                                          share.currentOwnerDocID?.username,
                                           "approved"
                                         )
                                       }
@@ -1112,10 +1112,10 @@ const Inspections = () => {
                                           inspectionID:
                                             selectedInspection.inspectionID,
                                           ownerUsername:
-                                            share.currentOwnerDocID.username,
+                                            share.currentOwnerDocID?.username,
                                           action: "rejected",
                                           occurence: checkUseNumOfShares(
-                                            share.currentOwnerDocID.username
+                                            share.currentOwnerDocID?.username
                                           ),
                                         });
                                         handleRejectionModalOpen();
@@ -1127,20 +1127,20 @@ const Inspections = () => {
                                   </div>
                                 )}
                               {!selectedInspection?.approvedByUsersList?.includes(
-                                share.currentOwnerDocID.username
+                                share.currentOwnerDocID?.username
                               ) &&
                                 !selectedInspection?.rejectedUsersList?.includes(
-                                  share.currentOwnerDocID.username
+                                  share.currentOwnerDocID?.username
                                 ) &&
-                                share.currentOwnerDocID.username !==
+                                share.currentOwnerDocID?.username !==
                                   JSON.parse(
                                     localStorage.getItem("userDetails")
                                   ).username && <h4>Pending Response</h4>}
                               {selectedInspection?.approvedByUsersList?.includes(
-                                share.currentOwnerDocID.username
+                                share.currentOwnerDocID?.username
                               ) && <h4>Approved</h4>}
                               {selectedInspection?.rejectedUsersList?.includes(
-                                share.currentOwnerDocID.username
+                                share.currentOwnerDocID?.username
                               ) && <h4>Rejected</h4>}
                             </div>
                           </div>
@@ -1151,7 +1151,7 @@ const Inspections = () => {
                                   <Thread
                                     key={thread.threadID}
                                     shareOwner={
-                                      share.currentOwnerDocID.username
+                                      share.currentOwnerDocID?.username
                                     }
                                     thread={thread}
                                     isFirstLevel={true}
@@ -1350,9 +1350,9 @@ const Inspections = () => {
                         <div key={index}>
                           <div className="flex flex-row items-center justify-between p-10">
                             <h3 className="text-xl text-[#09363F] font-semibold">
-                              {share.currentOwnerDocID.username}{" "}
+                              {share.currentOwnerDocID?.username}{" "}
                               &nbsp;&nbsp;&nbsp;
-                              {share.currentOwnerDocID.username ===
+                              {share.currentOwnerDocID?.username ===
                                 JSON.parse(localStorage.getItem("userDetails"))
                                   .username && "(You)"}
                               <br />
@@ -1383,12 +1383,12 @@ const Inspections = () => {
                                 <AiFillMessage className="text-[#116A7B] text-2xl" />
                               </button>
                               {!selectedInspection?.approvedByUsersList?.includes(
-                                share.currentOwnerDocID.username
+                                share.currentOwnerDocID?.username
                               ) &&
                                 !selectedInspection?.rejectedUsersList?.includes(
-                                  share.currentOwnerDocID.username
+                                  share.currentOwnerDocID?.username
                                 ) &&
-                                share.currentOwnerDocID.username ===
+                                share.currentOwnerDocID?.username ===
                                   JSON.parse(
                                     localStorage.getItem("userDetails")
                                   ).username && (
@@ -1398,7 +1398,7 @@ const Inspections = () => {
                                       onClick={() =>
                                         handleInspectionAction(
                                           selectedInspection.inspectionID,
-                                          share.currentOwnerDocID.username,
+                                          share.currentOwnerDocID?.username,
                                           "approved"
                                         )
                                       }
@@ -1414,10 +1414,10 @@ const Inspections = () => {
                                           inspectionID:
                                             selectedInspection.inspectionID,
                                           ownerUsername:
-                                            share.currentOwnerDocID.username,
+                                            share.currentOwnerDocID?.username,
                                           action: "rejected",
                                           occurence: checkUseNumOfShares(
-                                            share.currentOwnerDocID.username
+                                            share.currentOwnerDocID?.username
                                           ),
                                         });
                                         handleRejectionModalOpen();
@@ -1429,20 +1429,20 @@ const Inspections = () => {
                                   </div>
                                 )}
                               {!selectedInspection?.approvedByUsersList?.includes(
-                                share.currentOwnerDocID.username
+                                share.currentOwnerDocID?.username
                               ) &&
                                 !selectedInspection?.rejectedUsersList?.includes(
-                                  share.currentOwnerDocID.username
+                                  share.currentOwnerDocID?.username
                                 ) &&
-                                share.currentOwnerDocID.username !==
+                                share.currentOwnerDocID?.username !==
                                   JSON.parse(
                                     localStorage.getItem("userDetails")
                                   ).username && <h4>Pending Response</h4>}
                               {selectedInspection?.approvedByUsersList?.includes(
-                                share.currentOwnerDocID.username
+                                share.currentOwnerDocID?.username
                               ) && <h4>Approved</h4>}
                               {selectedInspection?.rejectedUsersList?.includes(
-                                share.currentOwnerDocID.username
+                                share.currentOwnerDocID?.username
                               ) && <h4>Rejected</h4>}
                             </div>
                           </div>
@@ -1453,7 +1453,7 @@ const Inspections = () => {
                                   <Thread
                                     key={thread.threadID}
                                     shareOwner={
-                                      share.currentOwnerDocID.username
+                                      share.currentOwnerDocID?.username
                                     }
                                     thread={thread}
                                     isFirstLevel={true}
