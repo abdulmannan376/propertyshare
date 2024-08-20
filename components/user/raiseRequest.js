@@ -183,16 +183,16 @@ const RaiseRequest = () => {
         setUrlsList("");
         setFiles(null);
         fetchRaiseRequests();
-        toast.success(response.message, {
-          position: "bottom-center",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        // toast.success(response.message, {
+        //   position: "bottom-center",
+        //   autoClose: 5000,
+        //   hideProgressBar: false,
+        //   closeOnClick: true,
+        //   pauseOnHover: true,
+        //   draggable: true,
+        //   progress: undefined,
+        //   theme: "light",
+        // });
       } else {
         throw new Error(response.message);
       }
@@ -351,11 +351,11 @@ const RaiseRequest = () => {
   const [showThreadsByShare, setShowThreadsByShare] = useState("");
   const [threads, setThreads] = useState([]);
 
-  const fetchThreads = async (shareID, category) => {
-    console.log(shareID, category);
+  const fetchThreads = async (shareID, category, requestID) => {
+    console.log(shareID, category, requestID);
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_SERVER_HOST}/thread/get-root-threads/${shareID}/${category}`,
+        `${process.env.NEXT_PUBLIC_SERVER_HOST}/thread/get-root-threads/${shareID}/${category}/${requestID}`,
         {
           method: "GET",
         }
@@ -391,13 +391,14 @@ const RaiseRequest = () => {
     }
   }, [threadBody]); // Adjust height whenever text changes
 
-  const handleThreadSubmit = async (shareID) => {
+  const handleThreadSubmit = async (shareID, requestID) => {
     try {
       const data = {
         shareID: shareID,
         username: JSON.parse(localStorage.getItem("userDetails")).username,
         body: threadBody,
-        category: "Inspection",
+        category: requestType,
+        requestID: requestID,
         threadLevel: "0",
       };
       const res = await fetch(
@@ -413,18 +414,18 @@ const RaiseRequest = () => {
 
       const response = await res.json();
       if (response.success) {
-        toast.success(response.message, {
-          position: "bottom-center",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        // toast.success(response.message, {
+        //   position: "bottom-center",
+        //   autoClose: 5000,
+        //   hideProgressBar: false,
+        //   closeOnClick: true,
+        //   pauseOnHover: true,
+        //   draggable: true,
+        //   progress: undefined,
+        //   theme: "light",
+        // });
         setThreadBody("");
-        fetchThreads(shareID, "Inspection");
+        fetchThreads(shareID, requestType, requestID);
       }
     } catch (error) {
       toast.error(error.message, {
@@ -696,6 +697,7 @@ const RaiseRequest = () => {
             onClose={handleRejectionModalClose}
             shareID={selectedShareID}
             fetchThreads={fetchThreads}
+            category={requestType}
             actionBody={raiseRequestActionBody}
             setSelection={setSelectedRequest}
           />
@@ -862,7 +864,11 @@ const RaiseRequest = () => {
                                     if (showThreadsByShare === share.shareID)
                                       setShowThreadsByShare("");
                                     else {
-                                      fetchThreads(share.shareID, "Inspection");
+                                      fetchThreads(
+                                        share.shareID,
+                                        requestType,
+                                        selectedRequest.raisedRequestID
+                                      );
                                       setShowThreadsByShare(share.shareID);
                                     }
                                   }}
@@ -989,7 +995,7 @@ const RaiseRequest = () => {
                                         event.ctrlKey &&
                                         event.key === "Enter"
                                       ) {
-                                        handleThreadSubmit(share.shareID);
+                                        handleThreadSubmit(share.shareID, selectedRequest.raisedRequestID);
                                         event.preventDefault();
                                       }
                                     }
@@ -1179,7 +1185,7 @@ const RaiseRequest = () => {
                                     if (showThreadsByShare === share.shareID)
                                       setShowThreadsByShare("");
                                     else {
-                                      fetchThreads(share.shareID, "Inspection");
+                                      fetchThreads(share.shareID, requestType, selectedRequest.raisedRequestID);
                                       setShowThreadsByShare(share.shareID);
                                     }
                                   }}
@@ -1306,7 +1312,7 @@ const RaiseRequest = () => {
                                         event.ctrlKey &&
                                         event.key === "Enter"
                                       ) {
-                                        handleThreadSubmit(share.shareID);
+                                        handleThreadSubmit(share.shareID, selectedRequest.raisedRequestID)
                                         event.preventDefault();
                                       }
                                     }
@@ -1315,7 +1321,7 @@ const RaiseRequest = () => {
                                 <button
                                   type="button"
                                   onClick={() => {
-                                    handleThreadSubmit(share.shareID);
+                                    handleThreadSubmit(share.shareID, selectedRequest.raisedRequestID)
                                   }}
                                   disabled={threadBody.length === 0}
                                   className="disabled:opacity-35 text-lg font-semibold text-[#116A7B] p-1"
@@ -1348,7 +1354,11 @@ const RaiseRequest = () => {
                             setSelectedRequest(request);
                           }}
                         >
-                          <RaiseRequestCard card={request} fetchRequests={fetchRaiseRequests} sharesList={sharesList}/>
+                          <RaiseRequestCard
+                            card={request}
+                            fetchRequests={fetchRaiseRequests}
+                            sharesList={sharesList}
+                          />
                         </div>
                       ))
                     ) : (
@@ -1496,7 +1506,7 @@ const RaiseRequest = () => {
                                     if (showThreadsByShare === share.shareID)
                                       setShowThreadsByShare("");
                                     else {
-                                      fetchThreads(share.shareID, "Inspection");
+                                      fetchThreads(share.shareID, requestType, selectedRequest.raisedRequestID);
                                       setShowThreadsByShare(share.shareID);
                                     }
                                   }}
@@ -1623,7 +1633,7 @@ const RaiseRequest = () => {
                                         event.ctrlKey &&
                                         event.key === "Enter"
                                       ) {
-                                        handleThreadSubmit(share.shareID);
+                                        handleThreadSubmit(share.shareID, selectedRequest.raisedRequestID);
                                         event.preventDefault();
                                       }
                                     }
@@ -1632,7 +1642,7 @@ const RaiseRequest = () => {
                                 <button
                                   type="button"
                                   onClick={() => {
-                                    handleThreadSubmit(share.shareID);
+                                    handleThreadSubmit(share.shareID, selectedRequest.raisedRequestID);
                                   }}
                                   disabled={threadBody.length === 0}
                                   className="disabled:opacity-35 text-lg font-semibold text-[#116A7B] p-1"

@@ -127,35 +127,36 @@ const RaiseRequestCard = ({ card, fetchData, sharesList, fetchRequests }) => {
         usernameList: usernameList,
         username: JSON.parse(localStorage.getItem("userDetails")).username,
       };
+      console.log("sharesList: ", sharesList)
+      console.log("usernameList: ", usernameList)
+      // const res = await fetch(
+      //   `${process.env.NEXT_PUBLIC_SERVER_HOST}/property/update-raise-request-action-by-PO`,
+      //   {
+      //     method: "PUT",
+      //     headers: {
+      //       "Content-type": "application/json",
+      //     },
+      //     body: JSON.stringify(data),
+      //   }
+      // );
 
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_SERVER_HOST}/property/update-raise-request-action-by-PO`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-type": "application/json",
-          },
-          body: JSON.stringify(data),
-        }
-      );
+      // const response = await res.json();
 
-      const response = await res.json();
-
-      if (response.success) {
-        fetchRequests("pending_approval");
-        toast.success(response.message, {
-          position: "bottom-center",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-      } else {
-        throw new Error(response.message);
-      }
+      // if (response.success) {
+      //   fetchRequests("pending_approval");
+      //   toast.success(response.message, {
+      //     position: "bottom-center",
+      //     autoClose: 5000,
+      //     hideProgressBar: false,
+      //     closeOnClick: true,
+      //     pauseOnHover: true,
+      //     draggable: true,
+      //     progress: undefined,
+      //     theme: "light",
+      //   });
+      // } else {
+      //   throw new Error(response.message);
+      // }
     } catch (error) {
       toast.error(error.message, {
         position: "bottom-center",

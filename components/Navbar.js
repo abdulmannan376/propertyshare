@@ -438,6 +438,10 @@ const Navbar = () => {
                       //   "notification",
                       //   !showDropDowns["notification"]
                       // );
+                      const username = JSON.parse(
+                        localStorage.getItem("userDetails")
+                      ).username;
+                      router.push(`/messages/${username}`);
                       dispatch(updateNewMessageFlag(false));
                     }}
                     className="relative"

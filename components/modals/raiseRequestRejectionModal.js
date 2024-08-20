@@ -8,6 +8,7 @@ const RejectionModal = ({
   isOpen,
   onClose,
   fetchThreads,
+  category,
   shareID,
   actionBody,
   setSelection,
@@ -33,7 +34,8 @@ const RejectionModal = ({
         shareID: shareID,
         username: JSON.parse(localStorage.getItem("userDetails")).username,
         body: comment,
-        category: "Inspection",
+        requestID: actionBody.requestID,
+        category: category,
         threadLevel: "0",
       };
       const res = await fetch(
@@ -49,18 +51,18 @@ const RejectionModal = ({
 
       const response = await res.json();
       if (response.success) {
-        toast.success(response.message, {
-          position: "bottom-center",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        // toast.success(response.message, {
+        //   position: "bottom-center",
+        //   autoClose: 5000,
+        //   hideProgressBar: false,
+        //   closeOnClick: true,
+        //   pauseOnHover: true,
+        //   draggable: true,
+        //   progress: undefined,
+        //   theme: "light",
+        // });
         setComment("");
-        fetchThreads(shareID, "Inspection");
+        fetchThreads(shareID, category, actionBody.requestID);
       }
     } catch (error) {
       toast.error(error.message, {
