@@ -948,6 +948,68 @@ const PropertyManagement = () => {
     }
   };
 
+  const handlePropertyStatus = async (propertyID, action) => {
+    try {
+      const username = JSON.parse(localStorage.getItem("userDetails")).username;
+      const data = {
+        propertyID: propertyID,
+        action: action,
+        username: username,
+      };
+
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_HOST}/property/update-property-status`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
+
+      const response = await res.json();
+      if (response.success) {
+        setMyProperties((prevDetails) => {
+          const newDetails = prevDetails.map((property) => {
+            if (property.propertyID === propertyID) {
+              if (action === "Feature") {
+                return {
+                  ...property,
+                  status:
+                    property.status === "Featured"
+                      ? "Non-Featured"
+                      : "Featured",
+                };
+              } else if (action === "Hide") {
+                return {
+                  ...property,
+                  listingStatus:
+                    property.listingStatus === "hidden" ? "live" : "hidden",
+                };
+              }
+            }
+            return property; // Ensure the property is returned even if no changes are made
+          });
+          return newDetails;
+        });
+      } else {
+        throw new Error(response.message);
+      }
+    } catch (error) {
+      toast.error(error.message, {
+        position: "bottom-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  };
+
   return (
     <div className="bg-white w-full my-6 lg:h-[85vh] md:h-[89vh] lg:max-h-[85vh] max-h-[93vh] overflow-y-auto">
       {isAddPropertyClicked ? (
@@ -2076,7 +2138,7 @@ const PropertyManagement = () => {
           {activeNavBtn === "Listings" && (
             <div className="py-10">
               {myProperties.length > 0 ? (
-                myProperties.map((property, index) => (
+                myProperties?.map((property, index) => (
                   <div
                     key={index}
                     onClick={(e) =>
@@ -2084,67 +2146,137 @@ const PropertyManagement = () => {
                     }
                     className="w-full flex flex-row flex-wrap border border-[#D9D9D9] px-14 mb-5 cursor-pointer"
                   >
-                    {property.imageCount === 0 ? (
+                    {property?.imageCount > 0 ? (
                       <Image
                         width={1000}
                         height={1000}
-                        src={"/assets/user/property-management/no-image.jpg"}
+                        src={`${process.env.NEXT_PUBLIC_SERVER_HOST}/${
+                          property?.imageDirURL
+                        }image-${
+                          property?.pinnedImage === -1
+                            ? "1"
+                            : `${property?.pinnedImage}`
+                        }.png`}
                         className="w-64 h-60 object-cover object-center"
                       />
                     ) : (
                       <Image
                         width={1000}
                         height={1000}
-                        src={`${process.env.NEXT_PUBLIC_SERVER_HOST}/${
-                          property.imageDirURL
-                        }image-${
-                          property.pinnedImage === -1
-                            ? "1"
-                            : `${property.pinnedImage}`
-                        }.png`}
+                        src={"/assets/user/property-management/no-image.jpg"}
                         className="w-64 h-60 object-cover object-center"
                       />
                     )}
-                    <div className="ml-10 space-y-5 my-5">
-                      <div className="flex flex-row text-2xl text-[#09363F]">
-                        <h1 className="w-80 text-2xl font-medium">
+                    <div className="ml-10 space-y-4 mt-5">
+                      <div className="flex flex-row text-xl text-[#09363F]">
+                        <h1 className="w-80 text-xl font-medium">
                           Property Title:{" "}
                         </h1>
-                        <p className="ml-44">{property.title}</p>
+                        <p className="ml-44">{property?.title}</p>
                       </div>
-                      <div className="flex flex-row text-2xl text-[#09363F]">
-                        <h1 className="w-80 text-2xl font-medium">
+                      <div className="flex flex-row text-xl text-[#09363F]">
+                        <h1 className="w-80 text-xl font-medium">
+                          PropertyID:{" "}
+                        </h1>
+                        <p className="ml-44">{property?.propertyID}</p>
+                      </div>
+                      <div className="flex flex-row text-xl text-[#09363F]">
+                        <h1 className="w-80 text-xl font-medium">
                           Property Status:{" "}
                         </h1>
                         <p
                           className={`ml-44 ${
-                            property.listingStatus === "live"
+                            property?.listingStatus === "live"
                               ? "text-[#36FE62]"
-                              : property.listingStatus === "pending approval"
+                              : property?.listingStatus === "pending approval"
                               ? "text-[#FF9900]"
-                              : property.listingStatus === "draft"
+                              : property?.listingStatus === "draft"
                               ? "text-gray-700"
                               : "text-[#FF0000]"
                           }`}
                         >
-                          {property.listingStatus}
+                          {property?.listingStatus}
                         </p>
                       </div>
-                      <div className="flex flex-row text-2xl text-[#09363F]">
-                        <h1 className="w-80 text-2xl font-medium">
+                      <div className="flex flex-row text-xl text-[#09363F]">
+                        <h1 className="w-80 text-xl font-medium">
                           Total Shares:{" "}
                         </h1>
-                        <p className="ml-44">{property.totalStakes}</p>
+                        <p className="ml-44">{property?.totalStakes}</p>
                       </div>
-                      <div className="flex flex-row text-2xl text-[#09363F]">
-                        <h1 className="w-80 text-2xl font-medium">
+                      <div className="flex flex-row text-xl text-[#09363F]">
+                        <h1 className="w-80 text-xl font-medium">
                           Available Shares:{" "}
                         </h1>
                         <p className="ml-44">
-                          {property.totalStakes - property.stakesOccupied}
+                          {property?.totalStakes - property?.stakesOccupied}
                         </p>
                       </div>
                     </div>
+                    {JSON.parse(localStorage.getItem("userDetails")).role &&
+                      property.listingStatus !== "pending approval" &&
+                      property.listingStatus !== "draft" && (
+                        <div className=" mx-auto">
+                          <div className="flex flex-row space-x-4 space-y-4 items-center justify-center">
+                            <h1 className="w-20 text-xl font-medium mt-3">Feature: </h1>
+                            <div>
+                              <button
+                                type="button"
+                                onClick={(event) => {
+                                  event.stopPropagation();
+                                  handlePropertyStatus(
+                                    property?.propertyID,
+                                    "Feature"
+                                  );
+                                }}
+                                className={`w-[3.5rem] h-7 ${
+                                  property?.status === "Featured"
+                                    ? "bg-[#116A7B]"
+                                    : "bg-[#D9D9D9]"
+                                } p-1 rounded-full cursor-pointer`}
+                              >
+                                <div
+                                  className={`w-5 h-5 bg-white rounded-full transition-transform duration-700 ease-in-out ${
+                                    property?.status === "Featured"
+                                      ? "translate-x-7"
+                                      : "translate-x-0"
+                                  }`}
+                                ></div>
+                              </button>
+                            </div>
+                          </div>
+                          {
+                            <div className="flex flex-row space-x-4 space-y-4 items-center justify-center">
+                              <h1 className="w-20 text-xl font-medium mt-3">Hide: </h1>
+                              <div>
+                                <button
+                                  type="button"
+                                  onClick={(event) => {
+                                    event.stopPropagation();
+                                    handlePropertyStatus(
+                                      property?.propertyID,
+                                      "Hide"
+                                    );
+                                  }}
+                                  className={`w-[3.5rem] h-7 ${
+                                    property?.listingStatus === "hidden"
+                                      ? "bg-[#116A7B]"
+                                      : "bg-[#D9D9D9]"
+                                  } p-1 rounded-full cursor-pointer`}
+                                >
+                                  <div
+                                    className={`w-5 h-5 bg-white rounded-full transition-transform duration-700 ease-in-out ${
+                                      property?.listingStatus === "hidden"
+                                        ? "translate-x-7"
+                                        : "translate-x-0"
+                                    }`}
+                                  ></div>
+                                </button>
+                              </div>
+                            </div>
+                          }
+                        </div>
+                      )}
                   </div>
                 ))
               ) : (
