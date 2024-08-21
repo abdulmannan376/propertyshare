@@ -15,11 +15,12 @@ import {
   updateNavbarLogo,
   updateNavbarTextColor,
 } from "@/app/redux/features/navbarSlice";
+import ChatComponent from "@/components/messages/chatComponent";
 import { useSocket } from "@/hooks/useSocket";
 import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
-import { IoCheckmark, IoCheckmarkDone } from "react-icons/io5";
+import { IoCheckmark, IoCheckmarkDone, IoSend } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
 
@@ -148,6 +149,17 @@ const Page = () => {
     console.log("selectedConversation: ", conversationRef.current);
     const currentConversation = conversationRef.current;
     if (currentConversation.conversationID === id) {
+      const username = JSON.parse(localStorage.getItem("userDetails")).username;
+
+      const reciever =
+        currentConversation.participants[0].username === username
+          ? currentConversation.participants[1].username
+          : currentConversation.participants[0].username;
+      socket?.emit("seenMessage", {
+        id: msg.messageID,
+        reciever: reciever,
+        conversationID: id,
+      });
       console.log("in handleAddNewMessage", msg, id);
       dispatch(addNewMessage(msg));
     }
@@ -276,7 +288,16 @@ const Page = () => {
 
     return isViewer ? 1 : 0;
   }
-  
+
+  // const lastMessageRef = useRef();
+
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     lastMessageRef.current.scrollIntoView({ behaviour: "smooth" });
+  //   }, 100);
+  // }, [selectedConversation?.messages]);
+
+  const [message, setMessage] = useState("");
 
   return (
     <div
@@ -414,100 +435,113 @@ const Page = () => {
           {!isConversationLoading ? (
             <div>
               {selectedConversation && (
-                <div className="bg-white w-full my-6 lg:h-[85vh] md:h-[89vh] lg:max-h-[85vh] max-h-[93vh] overflow-y-auto">
-                  <div className="w-full flex flex-row items-center border-b border-b-[#D9D9D9] pb-5 px-14">
-                    <h1 className="text-2xl font-medium">
-                      {selectedConversation?.participants?.length > 0
-                        ? selectedConversation?.participants[handleViewer()]
-                            ?.name
-                        : ""}
-                    </h1>
-                  </div>
-                  <div className="px-14 py-5">
-                    {selectedConversation.messages?.map((message, index) => (
-                      <div
-                        key={index}
-                        className={`message flex flex-row items-center ${
-                          message?.sender?.username ===
-                          selectedConversation.participants[handleViewer()]
-                            ?.username
-                            ? "self-start text-left justify-start"
-                            : "self-end text-right justify-end"
-                        } mb-4`}
-                      >
-                        {message?.sender?.username ===
-                          selectedConversation.participants[handleViewer()]
-                            ?.username && (
-                          <Image
-                            width={1000}
-                            height={1000}
-                            src={
-                              selectedConversation.participants[handleViewer()]
-                                .userProfile.profilePicURL.length > 0
-                                ? `${process.env.NEXT_PUBLIC_SERVER_HOST}/${
-                                    selectedConversation.participants[
-                                      handleViewer()
-                                    ].userProfile.profilePicURL
-                                  }profile-pic.png`
-                                : "/dummy-image.png"
-                            }
-                            className="w-10 h-10 object-contain object-center rounded-full mr-3"
-                            alt="user profile pic"
-                          />
-                        )}
-                        <div
-                          className={`inline-flex px-4 py-2 rounded-lg max-w-xs lg:max-w-md ${
-                            message?.sender?.username ===
-                            selectedConversation.participants[handleViewer()]
-                              ?.username
-                              ? "bg-gray-200 text-black"
-                              : "bg-blue-500 text-white"
-                          }`}
-                        >
-                          {message.text}
-                          <div className="w-4 flex flex-col justify-end">
-                            {message?.sender?.username ===
-                              selectedConversation.participants[
-                                handleViewer() === 1 ? 0 : 1
-                              ]?.username &&
-                              !message.isOpened && (
-                                <IoCheckmark className="text-sm mt-2 ml-2" />
-                              )}
-                            {message?.sender?.username ===
-                              selectedConversation.participants[
-                                handleViewer() === 1 ? 0 : 1
-                              ]?.username &&
-                              message.isOpened && (
-                                <IoCheckmarkDone className="text-sm mt-2 ml-2" />
-                              )}
-                          </div>
-                        </div>
-                        {message?.sender?.username ===
-                          selectedConversation.participants[
-                            handleViewer() === 1 ? 0 : 1
-                          ]?.username && (
-                          <Image
-                            width={1000}
-                            height={1000}
-                            src={
-                              selectedConversation.participants[
-                                handleViewer() === 1 ? 0 : 1
-                              ].userProfile.profilePicURL.length > 0
-                                ? `${process.env.NEXT_PUBLIC_SERVER_HOST}/${
-                                    selectedConversation.participants[
-                                      handleViewer() === 1 ? 0 : 1
-                                    ].userProfile.profilePicURL
-                                  }profile-pic.png`
-                                : "/dummy-image.png"
-                            }
-                            className="w-10 h-10 object-contain object-center rounded-full ml-3"
-                            alt="user profile pic"
-                          />
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                </div>
+                <ChatComponent selectedConversation={selectedConversation} />
+                // <div className="bg-white relative w-full my-6 lg:h-[85vh] md:h-[89vh] lg:max-h-[85vh] max-h-[93vh]">
+                //   <div className="w-full flex flex-row items-center border-b border-b-[#D9D9D9] pb-5 px-14">
+                //     <h1 className="text-2xl font-medium">
+                //       {selectedConversation?.participants?.length > 0
+                //         ? selectedConversation?.participants[handleViewer()]
+                //             ?.name
+                //         : ""}
+                //     </h1>
+                //   </div>
+                //   <div className="px-14 py-5 max-h-[73vh] overflow-y-auto">
+                //     {selectedConversation.messages?.map((message, index) => (
+                //       <div
+                //         key={index}
+                //         // ref={lastMessageRef}
+                //         className={`message flex flex-row items-center ${
+                //           message?.sender?.username ===
+                //           selectedConversation.participants[handleViewer()]
+                //             ?.username
+                //             ? "self-start text-left justify-start"
+                //             : "self-end text-right justify-end"
+                //         } mb-4`}
+                //       >
+                //         {message?.sender?.username ===
+                //           selectedConversation.participants[handleViewer()]
+                //             ?.username && (
+                //           <Image
+                //             width={1000}
+                //             height={1000}
+                //             src={
+                //               selectedConversation.participants[handleViewer()]
+                //                 .userProfile.profilePicURL.length > 0
+                //                 ? `${process.env.NEXT_PUBLIC_SERVER_HOST}/${
+                //                     selectedConversation.participants[
+                //                       handleViewer()
+                //                     ].userProfile.profilePicURL
+                //                   }profile-pic.png`
+                //                 : "/dummy-image.png"
+                //             }
+                //             className="w-10 h-10 object-contain object-center rounded-full mr-3"
+                //             alt="user profile pic"
+                //           />
+                //         )}
+                //         <div
+                //           className={`inline-flex px-4 py-2 rounded-lg max-w-xs lg:max-w-md ${
+                //             message?.sender?.username ===
+                //             selectedConversation.participants[handleViewer()]
+                //               ?.username
+                //               ? "bg-gray-200 text-black"
+                //               : "bg-blue-500 text-white"
+                //           }`}
+                //         >
+                //           {message.text}
+                //           <div className="w-4 flex flex-col justify-end">
+                //             {message?.sender?.username ===
+                //               selectedConversation.participants[
+                //                 handleViewer() === 1 ? 0 : 1
+                //               ]?.username &&
+                //               !message.isOpened && (
+                //                 <IoCheckmark className="text-sm mt-2 ml-2" />
+                //               )}
+                //             {message?.sender?.username ===
+                //               selectedConversation.participants[
+                //                 handleViewer() === 1 ? 0 : 1
+                //               ]?.username &&
+                //               message.isOpened && (
+                //                 <IoCheckmarkDone className="text-sm mt-2 ml-2" />
+                //               )}
+                //           </div>
+                //         </div>
+                //         {message?.sender?.username ===
+                //           selectedConversation.participants[
+                //             handleViewer() === 1 ? 0 : 1
+                //           ]?.username && (
+                //           <Image
+                //             width={1000}
+                //             height={1000}
+                //             src={
+                //               selectedConversation.participants[
+                //                 handleViewer() === 1 ? 0 : 1
+                //               ].userProfile.profilePicURL.length > 0
+                //                 ? `${process.env.NEXT_PUBLIC_SERVER_HOST}/${
+                //                     selectedConversation.participants[
+                //                       handleViewer() === 1 ? 0 : 1
+                //                     ].userProfile.profilePicURL
+                //                   }profile-pic.png`
+                //                 : "/dummy-image.png"
+                //             }
+                //             className="w-10 h-10 object-contain object-center rounded-full ml-3"
+                //             alt="user profile pic"
+                //           />
+                //         )}
+                //       </div>
+                //     ))}
+                //   </div>
+                //   <div className="absolute bottom-0 px-5 w-full">
+                //     <div className="w-full flex flex-row items-center px-4 py-2 bg-white shadow-md border border-[#116A7B] rounded-full focus:outline-none focus:ring focus:border-blue-300">
+                //       <input
+                //         type="text"
+                //         placeholder="Type your message..."
+                //         className="w-full outline-none"
+                //         // onKeyPress={handleSendMessage} // Handle message sending
+                //       />
+                //       <IoSend />
+                //     </div>
+                //   </div>
+                // </div>
               )}
             </div>
           ) : (
