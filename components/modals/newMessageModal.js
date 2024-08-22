@@ -1,27 +1,11 @@
-import { addNewMessage } from "@/app/redux/features/conversationSlice";
-import Image from "next/image";
-import { useRef, useEffect, useState } from "react";
-import {
-  IoSend,
-  IoCheckmark,
-  IoCheckmarkDone,
-  IoAttach,
-  IoHappy,
-  IoMic,
-} from "react-icons/io5";
-import { useDispatch } from "react-redux";
+import React, { useEffect, useRef, useState } from "react";
+import { IoSend } from "react-icons/io5";
+import Modal from "react-modal";
 import { toast } from "react-toastify";
-import MessageComponent from "./messageComponent";
 
-export default function ChatComponent({ selectedConversation }) {
-  const dispatch = useDispatch();
+Modal.setAppElement("#app-body");
+const NewMessageModal = ({ isOpen, onClose, recipient }) => {
   const [text, setText] = useState("");
-  const messagesEndRef = useRef(null);
-
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [selectedConversation?.messages]);
-
   const textRef = useRef(null);
   useEffect(() => {
     if (textRef.current) {
@@ -40,25 +24,15 @@ export default function ChatComponent({ selectedConversation }) {
     }
   }, [text]); // Adjust height whenever text changes
 
-  function handleViewer() {
-    const username = JSON.parse(localStorage.getItem("userDetails")).username;
-    const isViewer = selectedConversation.participants[0].username === username;
-
-    return isViewer ? 1 : 0;
-  }
-
   const handleSendNewMessage = async () => {
     try {
       const username = JSON.parse(localStorage.getItem("userDetails")).username;
 
       const data = {
-        conversationID: selectedConversation.conversationID,
+        // conversationID: selectedConversation.conversationID,
         text: text,
         sender: username,
-        reciever:
-          selectedConversation.participants[0].username === username
-            ? selectedConversation.participants[1].username
-            : selectedConversation.participants[0].username,
+        reciever: recipient,
       };
 
       const res = await fetch(
@@ -75,7 +49,17 @@ export default function ChatComponent({ selectedConversation }) {
       const response = await res.json();
       setText("");
       if (response.success) {
-        dispatch(addNewMessage(response.body));
+        onClose()
+        toast.success("Message Sent", {
+          position: "bottom-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
       } else {
         throw new Error(response.message);
       }
@@ -92,33 +76,37 @@ export default function ChatComponent({ selectedConversation }) {
       });
     }
   };
-
   return (
-    <div className="flex flex-col h-full">
-      <div className="bg-gradient-to-b from-green-200 to-white w-full mt-6 lg:h-[85vh] md:h-[89vh] lg:max-h-[85vh] max-h-[93vh] rounded-lg shadow-lg">
-        {/* Header */}
-        <div className="flex flex-row items-center border-b border-b-[#D9D9D9] pb-5 px-14 bg-white">
-          <h1 className="text-2xl font-semibold text-green-800">
-            {selectedConversation?.participants?.length > 0
-              ? selectedConversation?.participants[handleViewer()]?.name
-              : ""}
-          </h1>
-        </div>
-
-        {/* Messages */}
-        <div className="px-14 py-5 h-[75dvh] max-h-[75dvh] overflow-y-auto">
-          {selectedConversation.messages?.map((message, index) => (
-            <MessageComponent
-              key={index}
-              message={message}
-              participants={selectedConversation.participants}
-            />
-          ))}
-          <div ref={messagesEndRef} />
-        </div>
-
-        {/* Input Field */}
-        <div className="fixed bottom-0 w-full px-5 py-2 bg-white border-t border-[#D9D9D9] flex items-center">
+    <Modal
+      isOpen={isOpen}
+      onRequestClose={onClose}
+      className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center"
+      overlayClassName="fixed inset-0 bg-black bg-opacity-75"
+      style={{
+        content: {
+          top: "50%",
+          left: "50%",
+          right: "auto",
+          bottom: "auto",
+          marginRight: "-50%",
+          transform: "translate(-50%, -50%)",
+          border: "1px solid #ccc",
+          background: "#fff",
+          overflow: "auto",
+          WebkitOverflowScrolling: "touch",
+          borderRadius: "15px",
+          outline: "none",
+          padding: "5px",
+          width: "fit",
+          maxHeight: "80vh",
+        },
+      }}
+    >
+      <div className="py-10 px-5">
+        <h1 className="text-2xl text-center text-[#116A7B] font-semibold mb-5">
+          New Message to <strong>{recipient}</strong>
+        </h1>
+        <div className="px-5 py-2 bg-white border-t border-[#D9D9D9] flex items-center">
           {/* <IoAttach className="text-gray-500 mx-2 cursor-pointer" size={24} /> */}
           {/* <IoHappy className="text-gray-500 mx-2 cursor-pointer" size={24} /> */}
           <textarea
@@ -155,6 +143,8 @@ export default function ChatComponent({ selectedConversation }) {
           </button>
         </div>
       </div>
-    </div>
+    </Modal>
   );
-}
+};
+
+export default NewMessageModal;

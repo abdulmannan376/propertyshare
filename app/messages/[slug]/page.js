@@ -16,6 +16,7 @@ import {
   updateNavbarLogo,
   updateNavbarTextColor,
 } from "@/app/redux/features/navbarSlice";
+import { updateNewMessageFlag } from "@/app/redux/features/userSlice";
 import ChatComponent from "@/components/messages/chatComponent";
 import { useSocket } from "@/hooks/useSocket";
 import Image from "next/image";
@@ -149,7 +150,7 @@ const Page = () => {
   function handleAddNewMessage(msg, id) {
     console.log("selectedConversation: ", conversationRef.current);
     const currentConversation = conversationRef.current;
-    if (currentConversation.conversationID === id) {
+    if (currentConversation && currentConversation?.conversationID === id) {
       const username = JSON.parse(localStorage.getItem("userDetails")).username;
 
       const reciever =
@@ -181,7 +182,12 @@ const Page = () => {
         currentConversation &&
         currentConversation.conversationID === message.conversationID
       ) {
-        dispatch(handleMessagesOpenStatus({ messageIDs: message.messageIDs }));
+        dispatch(updateNewMessageFlag(false));
+        setTimeout(() => {
+          dispatch(
+            handleMessagesOpenStatus({ messageIDs: message.messageIDs })
+          );
+        }, 500);
       }
       // setConversations((prevDetails) => {
       //   return prevDetails.map((convo) => {
@@ -200,8 +206,8 @@ const Page = () => {
     });
 
     socket?.on("messageUpdate", (update) => {
-      dispatch(updateMessageByActions(update))
-    })
+      dispatch(updateMessageByActions(update));
+    });
     return () => {
       socket?.off("newMessage");
       socket?.off("seenMessages");

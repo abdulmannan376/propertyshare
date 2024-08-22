@@ -2,6 +2,8 @@ import Image from "next/image";
 import React, { useState } from "react";
 import { IoCheckmark, IoCheckmarkDone } from "react-icons/io5";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
+import { TiCancel } from "react-icons/ti";
+import { MdDelete } from "react-icons/md";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { updateMessageByActions } from "@/app/redux/features/conversationSlice";
@@ -65,7 +67,7 @@ const MessageComponent = ({ message, participants }) => {
           ? "self-start text-left justify-start"
           : "self-end text-right justify-end"
       } mb-4`}
-      onMouseOver={() => setShowActions(true)}
+      onMouseOver={() => setShowActions(!message?.isDeleted ? true : false)}
       onMouseLeave={() => setShowActions(false)}
     >
       {message?.sender?.username === participants[handleViewer()]?.username && (
@@ -85,7 +87,25 @@ const MessageComponent = ({ message, participants }) => {
       )}
       {message?.sender?.username ===
         participants[handleViewer() === 1 ? 0 : 1]?.username &&
-        message?.isLiked && <FaHeart className="text-red-300 mx-3" />}
+        showActions &&
+        !message?.isDeleted && (
+          <button
+            type="button"
+            onClick={() =>
+              handleMessageActions(
+                "Delete",
+                message?.messageID,
+                participants[handleViewer()]?.username
+              )
+            }
+          >
+            <MdDelete className="text-gray-300 hover:text-gray-500 mx-3" />
+          </button>
+        )}
+      {message?.sender?.username ===
+        participants[handleViewer() === 1 ? 0 : 1]?.username &&
+        message?.isLiked &&
+        !message?.isDeleted && <FaHeart className="text-red-500 mx-3" />}
       <div
         className={`inline-flex px-4 py-2 rounded-xl ${
           message?.sender?.username === participants[handleViewer()]?.username
@@ -93,7 +113,14 @@ const MessageComponent = ({ message, participants }) => {
             : "bg-green-500 text-white rounded-br-none"
         }`}
       >
-        {message.text}
+        {!message?.isDeleted ? (
+          message.text
+        ) : (
+          <i className="text-gray-500 font-semibold">
+            <TiCancel className="inline-flex text-lg mb-[2px]" />
+            deleted message
+          </i>
+        )}
         <div className="w-4 flex flex-col justify-end">
           {message?.sender?.username ===
             participants[handleViewer() === 1 ? 0 : 1]?.username &&
@@ -108,7 +135,8 @@ const MessageComponent = ({ message, participants }) => {
         </div>
       </div>
       {message?.sender?.username === participants[handleViewer()]?.username &&
-        message?.isLiked && (
+        message?.isLiked &&
+        !message?.isDeleted && (
           <button
             type="button"
             onClick={() =>
@@ -120,9 +148,10 @@ const MessageComponent = ({ message, participants }) => {
             }
           >
             {" "}
-            <FaHeart className="text-red-300 mx-3" />
+            <FaHeart className="text-red-500 mx-3" />
           </button>
         )}
+
       {message?.sender?.username === participants[handleViewer()]?.username &&
         showActions &&
         !message?.isLiked && (
@@ -137,7 +166,7 @@ const MessageComponent = ({ message, participants }) => {
             }
           >
             {" "}
-            <FaRegHeart className="text-red-300 mx-3" />
+            <FaRegHeart className="text-red-300 hover:text-red-500 mx-3" />
           </button>
         )}
       {message?.sender?.username ===

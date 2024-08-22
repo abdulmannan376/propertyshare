@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import Image from "next/image";
 import { MdOutlineMessage } from "react-icons/md";
 import MakeOffer from "../modals/makeOffer";
+import NewMessageModal from "../modals/newMessageModal";
 
 const Thread = ({
   thread,
@@ -143,6 +144,12 @@ const Thread = ({
       });
     }
   };
+
+  const [isNewMessageModalOpen, setIsNewMessageModalOpen] = useState(false);
+
+  const handleNewMessageModalOpen = () => setIsNewMessageModalOpen(true);
+  const handleNewMessageModalClose = () => setIsNewMessageModalOpen(false);
+
   return (
     <div
       className={`${isFirstLevel ? "" : "pl-4 border-l border-gray-600 ml-0"}`}
@@ -156,6 +163,11 @@ const Thread = ({
         startDate={startDate}
         endDate={endDate}
         shareID={shareID}
+      />
+      <NewMessageModal
+        isOpen={isNewMessageModalOpen}
+        onClose={handleNewMessageModalClose}
+        recipient={thread?.author?.username}
       />
       <div className="my-2 mx-5">
         <div className="flex flex-row items-start justify-between">
@@ -219,15 +231,14 @@ const Thread = ({
               )}
             </div>
           </div>
-          {thread?.author?.username !== shareOwner &&
-            JSON.parse(localStorage.getItem("userDetails")).username ===
-              shareOwner && (
-              <div className="flex flex-row items-center space-x-3">
-                <button type="button">
-                  <MdOutlineMessage className="text-xl text-[#A2B0B2] " />
-                </button>
-              </div>
-            )}
+          {thread?.author?.username !==
+            JSON.parse(localStorage.getItem("userDetails")).username && (
+            <div className="flex flex-row items-center space-x-3">
+              <button type="button" onClick={handleNewMessageModalOpen}>
+                <MdOutlineMessage className="text-xl text-[#A2B0B2] " />
+              </button>
+            </div>
+          )}
         </div>
         {replyForThreadID === thread.threadID && (
           <div className="bg-[#FCFBF5] flex flex-row border border-[#D9D9D9] px-5 py-3 mb-5 rounded-full">

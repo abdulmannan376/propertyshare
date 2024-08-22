@@ -17,14 +17,6 @@ export const ConversationSlice = createSlice({
     },
     updateSelectedConversationID: (state, action) => {
       state.selectedConversationID = action.payload;
-      const newDetails = [...state.conversationList];
-      newDetails.map((convo) => {
-        if (convo.conversationID === action.payload) {
-          convo.lastMessage.isOpened = true;
-        }
-      });
-
-      state.conversationList = newDetails;
     },
     updateSelectedConversation: (state, action) => {
       state.selectedConversation = action.payload;
@@ -59,6 +51,8 @@ export const ConversationSlice = createSlice({
           if (action.payload.messageID === msg.messageID) {
             if (action.payload.action === "Like") {
               return { ...msg, isLiked: action.payload.value };
+            } else if (action.payload.action === "Delete") {
+              return { ...msg, isDeleted: action.payload.value };
             }
           }
           return msg;
