@@ -11,10 +11,10 @@ import {
 } from "react-icons/io5";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
+import MessageComponent from "./messageComponent";
 
 export default function ChatComponent({ selectedConversation }) {
-
-    const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const [text, setText] = useState("");
   const messagesEndRef = useRef(null);
 
@@ -61,19 +61,22 @@ export default function ChatComponent({ selectedConversation }) {
             : selectedConversation.participants[0].username,
       };
 
-      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_HOST}/conversation/add-new-message`, {
-        method: "POST",
-        headers: {
-            "Content-type": "application/json"
-        },
-        body: JSON.stringify(data)
-      })
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_HOST}/conversation/add-new-message`,
+        {
+          method: "POST",
+          headers: {
+            "Content-type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
 
-      const response = await res.json()
-      if(response.success) {
-        dispatch(addNewMessage(response.body))
+      const response = await res.json();
+      if (response.success) {
+        dispatch(addNewMessage(response.body));
       } else {
-        throw new Error(response.message)
+        throw new Error(response.message);
       }
     } catch (error) {
       toast.error(error.message, {
@@ -104,82 +107,11 @@ export default function ChatComponent({ selectedConversation }) {
         {/* Messages */}
         <div className="px-14 py-5 h-[75dvh] max-h-[75dvh] overflow-y-auto">
           {selectedConversation.messages?.map((message, index) => (
-            <div
+            <MessageComponent
               key={index}
-              className={`message flex flex-row items-center ${
-                message?.sender?.username ===
-                selectedConversation.participants[handleViewer()]?.username
-                  ? "self-start text-left justify-start"
-                  : "self-end text-right justify-end"
-              } mb-4`}
-            >
-              {message?.sender?.username ===
-                selectedConversation.participants[handleViewer()]?.username && (
-                <Image
-                  width={1000}
-                  height={1000}
-                  src={
-                    selectedConversation.participants[handleViewer()]
-                      .userProfile.profilePicURL.length > 0
-                      ? `${process.env.NEXT_PUBLIC_SERVER_HOST}/${
-                          selectedConversation.participants[handleViewer()]
-                            .userProfile.profilePicURL
-                        }profile-pic.png`
-                      : "/dummy-image.png"
-                  }
-                  className="w-10 h-10 object-contain object-center rounded-full mr-3"
-                  alt="user profile pic"
-                />
-              )}
-
-              <div
-                className={`inline-flex px-4 py-2 rounded-xl ${
-                  message?.sender?.username ===
-                  selectedConversation.participants[handleViewer()]?.username
-                    ? "bg-gray-200 text-black rounded-bl-none"
-                    : "bg-green-500 text-white rounded-br-none"
-                }`}
-              >
-                {message.text}
-                <div className="w-4 flex flex-col justify-end">
-                  {message?.sender?.username ===
-                    selectedConversation.participants[
-                      handleViewer() === 1 ? 0 : 1
-                    ]?.username &&
-                    !message.isOpened && (
-                      <IoCheckmark className="text-sm mt-2 ml-2 text-gray-600" />
-                    )}
-                  {message?.sender?.username ===
-                    selectedConversation.participants[
-                      handleViewer() === 1 ? 0 : 1
-                    ]?.username &&
-                    message.isOpened && (
-                      <IoCheckmarkDone className="text-sm mt-2 ml-2 text-blue-600" />
-                    )}
-                </div>
-              </div>
-              {message?.sender?.username ===
-                selectedConversation.participants[handleViewer() === 1 ? 0 : 1]
-                  ?.username && (
-                <Image
-                  width={1000}
-                  height={1000}
-                  src={
-                    selectedConversation.participants[
-                      handleViewer() === 1 ? 0 : 1
-                    ].userProfile.profilePicURL.length > 0
-                      ? `${process.env.NEXT_PUBLIC_SERVER_HOST}/${
-                          selectedConversation.participants[
-                            handleViewer() === 1 ? 0 : 1
-                          ].userProfile.profilePicURL
-                        }profile-pic.png`
-                      : "/dummy-image.png"
-                  }
-                  className="w-10 h-10 object-contain object-center rounded-full ml-3"
-                  alt="user profile pic"
-                />
-              )}
-            </div>
+              message={message}
+              participants={selectedConversation.participants}
+            />
           ))}
           <div ref={messagesEndRef} />
         </div>

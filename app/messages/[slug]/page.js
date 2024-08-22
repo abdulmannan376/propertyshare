@@ -3,6 +3,7 @@ import {
   addConversationList,
   addNewMessage,
   handleMessagesOpenStatus,
+  updateMessageByActions,
   updateMessagesForSelectedConversation,
   updateSelectedConversation,
   updateSelectedConversationID,
@@ -198,6 +199,9 @@ const Page = () => {
       // });
     });
 
+    socket?.on("messageUpdate", (update) => {
+      dispatch(updateMessageByActions(update))
+    })
     return () => {
       socket?.off("newMessage");
       socket?.off("seenMessages");

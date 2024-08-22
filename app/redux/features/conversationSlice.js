@@ -51,6 +51,20 @@ export const ConversationSlice = createSlice({
         }),
       };
     },
+    updateMessageByActions: (state, action) => {
+      const prevDetails = state.selectedConversation;
+      state.selectedConversation = {
+        ...prevDetails,
+        messages: prevDetails.messages.map((msg) => {
+          if (action.payload.messageID === msg.messageID) {
+            if (action.payload.action === "Like") {
+              return { ...msg, isLiked: action.payload.value };
+            }
+          }
+          return msg;
+        }),
+      };
+    },
   },
 });
 
@@ -61,6 +75,7 @@ export const {
   addNewMessage,
   updateMessagesForSelectedConversation,
   handleMessagesOpenStatus,
+  updateMessageByActions,
 } = ConversationSlice.actions;
 
 export default ConversationSlice.reducer;
