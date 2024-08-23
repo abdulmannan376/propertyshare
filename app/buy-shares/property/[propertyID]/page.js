@@ -37,11 +37,12 @@ import BuyShare from "@/components/modals/buyShare";
 import BuyShareModal from "@/components/modals/buyShare";
 import ThreadDisplay from "@/components/buy-shares/threadComponent";
 import SwapShareComponent from "@/components/buy-shares/swapShareComponent";
-import { FaHeart, FaRegHeart } from "react-icons/fa";
+import { FaHeart, FaRegHeart, FaCalendarAlt } from "react-icons/fa";
 import {
   updateFavoritesList,
   updateWishList,
 } from "@/app/redux/features/userSlice";
+import CalendarModal from "@/components/modals/calendarModal";
 
 const Page = () => {
   const dispatch = useDispatch();
@@ -219,6 +220,11 @@ const Page = () => {
     }
   };
 
+  const [isCalendarModalOpen, setIsCalendarModalOpen] = useState(false);
+
+  const handleOpenCalendarModal = () => setIsCalendarModalOpen(true);
+  const handleCloseCalendarModal = () => setIsCalendarModalOpen(false);
+
   return (
     <>
       <ToastContainer
@@ -234,6 +240,11 @@ const Page = () => {
         theme="light"
       />
       <div className="w-full h-20 bg-white"></div>
+      <CalendarModal
+        isOpen={isCalendarModalOpen}
+        onClose={handleCloseCalendarModal}
+        propertyID={propertyID}
+      />
       {propertyFetched && (
         <div
           className="xl:mx-24 mx-16 "
@@ -380,6 +391,7 @@ const Page = () => {
               <div className="flex items-center">
                 <button
                   type="button"
+                  title="Add to Favourites"
                   onClick={() => {
                     if (favouriteList.includes(propertyID)) {
                       handleFavouriteListRequest("remove");
@@ -397,6 +409,7 @@ const Page = () => {
                 </button>
                 <button
                   type="button"
+                  title="Add to Wishlist"
                   onClick={() => {
                     if (wishList.includes(propertyID)) {
                       handleWishListRequest("remove");
@@ -411,6 +424,16 @@ const Page = () => {
                   ) : (
                     <MdPlaylistAddCircle className="text-gray-600" />
                   )}
+                </button>
+                <button
+                  type="button"
+                  title="View Calendar"
+                  onClick={() => {
+                    handleOpenCalendarModal();
+                  }}
+                  className="px-1 mx-2 text-xl font-semibold focus:outline-none cursor-pointer"
+                >
+                  <FaCalendarAlt className="text-[#116A7B]" />
                 </button>
               </div>
             </div>
@@ -448,7 +471,7 @@ const Page = () => {
                       <IoIosPricetag className="inline-flex mx-2" />
                       <strong>Shares Sold:</strong>{" "}
                       <strong className="text-[#6E6E6E]">
-                        {property?.stakesOccupied -1}
+                        {property?.stakesOccupied - 1}
                       </strong>
                       <text className="text-[#6E6E6E] mr-2">
                         /{property?.totalStakes - 1}
