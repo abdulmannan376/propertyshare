@@ -43,8 +43,19 @@ import {
   updateWishList,
 } from "@/app/redux/features/userSlice";
 import CalendarModal from "@/components/modals/calendarModal";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 const Page = () => {
+  var settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+  };
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -254,27 +265,28 @@ const Page = () => {
         >
           <div className="my-10">
             {property.imageCount > 0 ? (
-              <div className="swiper-container">
+              <div >
                 {/* Swiper component */}
-                <Swiper
-                  modules={[Pagination, Navigation]}
-                  slidesPerView={1}
-                  navigation={{
-                    nextEl: ".swiper-button-next", // Define next button class
-                    prevEl: ".swiper-button-prev", // Define prev button class
-                  }}
-                  pagination={{
-                    clickable: true,
-                    el: "#swiper-pagination",
-                    type: "bullets",
-                    bulletActiveClass: "swiper-pagination-bullet-active",
-                    bulletClass: "swiper-pagination-bullet",
-                  }}
+                <Slider
+                  {...settings}
+                  // modules={[Pagination, Navigation]}
+                  // slidesPerView={1}
+                  // navigation={{
+                  //   nextEl: ".swiper-button-next", // Define next button class
+                  //   prevEl: ".swiper-button-prev", // Define prev button class
+                  // }}
+                  // pagination={{
+                  //   clickable: true,
+                  //   el: "#swiper-pagination",
+                  //   type: "bullets",
+                  //   bulletActiveClass: "swiper-pagination-bullet-active",
+                  //   bulletClass: "swiper-pagination-bullet",
+                  // }}
                   style={{ width: "100%", height: "70%" }}
                   className="mb-5"
                 >
                   {Array.from({ length: property.imageCount }, (_, index) => (
-                    <SwiperSlide key={index}>
+                    <React.Fragment key={index}>
                       <div>
                         <Image
                           width={2000}
@@ -286,18 +298,18 @@ const Page = () => {
                           alt={`Image ${index + 1}`}
                         />
                       </div>
-                    </SwiperSlide>
+                    </React.Fragment>
                   ))}
-                </Swiper>
+                </Slider>
 
                 {/* Custom navigation buttons */}
-                <div className="swiper-button-prev custom-prev"></div>
+                {/* <div className="swiper-button-prev custom-prev"></div>
                 <div className="swiper-button-next custom-next"></div>
-                {/* Custom pagination */}
+                {/* Custom pagination 
                 <div
                   id="swiper-pagination"
                   className="flex flex-row justify-center "
-                ></div>
+                ></div> */}
               </div>
             ) : (
               <div className="h-[44rem]">
