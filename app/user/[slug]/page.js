@@ -101,7 +101,7 @@ const Page = () => {
   };
 
   const options = [
-    { name: "Statistics", roles: ["admin"] },
+    { name: "Statistics", roles: ["admin", "super admin"] },
     { name: "Shares in Properties", roles: ["shareholder"] },
     { name: "Offers", roles: ["admin", "shareholder", "user"] },
     { name: "Wishlist", roles: ["shareholder", "user"] },
@@ -112,12 +112,20 @@ const Page = () => {
       roles: ["admin", "shareholder", "user"],
     },
     { name: "Reservations", roles: ["shareholder", "user"] },
-    { name: "Bills and Payment", roles: ["admin", "shareholder", "user"] },
-    { name: "Property Management", roles: ["admin", "shareholder", "user"] },
+    {
+      name: "Bills and Payment",
+      roles: ["admin", "shareholder", "user", "super admin"],
+    },
+    {
+      name: "Property Management",
+      roles: ["admin", "shareholder", "user", "super admin"],
+    },
+    { name: "Featured Management", roles: ["admin"] },
     { name: "Blocked Users", roles: ["shareholder", "user"] },
     { name: "Buyback Requests", roles: ["admin", "shareholder"] },
     { name: "Share Transfer", roles: ["admin"] },
-    { name: "Restricted Users", roles: ["admin"] },
+    { name: "Restricted Users", roles: ["admin", "super admin"] },
+    { name: "Admin Management", roles: ["super admin"] },
   ];
 
   const panelRef = useRef();

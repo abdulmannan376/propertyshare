@@ -125,7 +125,7 @@ const UserManagement = () => {
                 rows="1"
                 value={myDetails?.email}
                 readOnly
-                className="w-80 outline-none"
+                className="w-96 outline-none"
                 style={{ resize: "none" }}
               ></textarea>
               {myDetails?.emailVerified ? (

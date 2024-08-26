@@ -345,6 +345,24 @@ const PropertyManagement = () => {
     try {
       const userDetails = JSON.parse(localStorage.getItem("userDetails"));
 
+      if (
+        title.length === 0 ||
+        !coordinates ||
+        overview.length === 0 ||
+        totalPrize === 0 ||
+        areaSize === 0 ||
+        !startDate ||
+        selectedPropertyType === "" ||
+        houseNumber === "" ||
+        streetNumber === "" ||
+        zipCode === "" ||
+        !selectedCountry ||
+        selectedCity === "" ||
+        selectedState === ""
+      ) {
+        throw new Error(" missing fields ");
+      }
+
       const data = {
         title: title,
         coordinates: coordinates,
@@ -1044,7 +1062,7 @@ const PropertyManagement = () => {
         <form className="flex flex-row flex-wrap gap-x-[90px] px-14 py-5">
           {formPhase === 1 && (
             <>
-              <div className="mb-6 ml-6 flex flex-col">
+              <div className="relative mb-6 ml-6 flex flex-col">
                 <label htmlFor="title" className="text-[#676767]">
                   Property Title
                 </label>
@@ -1056,8 +1074,11 @@ const PropertyManagement = () => {
                   onChange={({ target }) => setTitle(target.value)}
                   className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                 />
+                <span className="absolute inset-y-12 right-0 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer">
+                  *
+                </span>
               </div>
-              <div className="mb-6 ml-6 flex flex-col">
+              <div className="relative mb-6 ml-6 flex flex-col">
                 <label htmlFor="title" className="text-[#676767]">
                   Property Overview
                 </label>
@@ -1071,6 +1092,9 @@ const PropertyManagement = () => {
                   style={{ height: "46px" }}
                   className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 resize-none rounded-full"
                 />
+                <span className="absolute inset-y-12 right-0 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer">
+                  *
+                </span>
               </div>
               <div className="mb-6 ml-6 flex flex-col">
                 <label htmlFor="shares-slider" className="text-gray-600">
@@ -1097,7 +1121,7 @@ const PropertyManagement = () => {
                   }}
                 />
               </div>
-              <div className="mb-6 ml-6 flex flex-col">
+              <div className="relative mb-6 ml-6 flex flex-col">
                 <label htmlFor="totalPrize" className="text-[#676767]">
                   Total Price {`($)`}
                 </label>
@@ -1109,8 +1133,11 @@ const PropertyManagement = () => {
                   onChange={({ target }) => setTotalPrize(target.value)}
                   className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                 />
+                <span className="absolute inset-y-12 right-0 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer">
+                  *
+                </span>
               </div>
-              <div className="mb-6 ml-6 flex flex-col">
+              <div className="relative mb-6 ml-6 flex flex-col">
                 <label htmlFor="areaSize" className="text-[#676767]">
                   Area Size{" "}
                   {`(${
@@ -1125,8 +1152,11 @@ const PropertyManagement = () => {
                   onChange={({ target }) => setAreaSize(target.value)}
                   className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                 />
+                <span className="absolute inset-y-12 right-0 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer">
+                  *
+                </span>
               </div>
-              <div className="mb-6 ml-6 flex flex-col">
+              <div className="relative mb-6 ml-6 flex flex-col">
                 <label htmlFor="title" className="text-[#676767]">
                   Duration
                   {startDate && endDate ? `: ${startDate} to ${endDate}` : ""}
@@ -1142,9 +1172,12 @@ const PropertyManagement = () => {
                   }}
                   className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                 />
+                <span className="absolute inset-y-12 right-0 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer">
+                  *
+                </span>
               </div>
 
-              <div className="mb-6 ml-6 flex flex-col">
+              <div className="relative mb-6 ml-6 flex flex-col">
                 <div>
                   <label htmlFor="propertyType" className="text-[#676767]">
                     Property Type
@@ -1176,6 +1209,9 @@ const PropertyManagement = () => {
                   readOnly={true}
                   className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                 />
+                <span className="absolute inset-y-12 right-0 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer">
+                  *
+                </span>
               </div>
               <div className="mb-6 ml-6 flex flex-col">
                 <input
@@ -1187,7 +1223,7 @@ const PropertyManagement = () => {
               <div className="w-full flex flex-row items-center pb-8">
                 <h1 className="text-2xl font-medium">Address</h1>
               </div>
-              <div className="mb-6 ml-6 flex flex-col">
+              <div className="relative mb-6 ml-6 flex flex-col">
                 <label htmlFor="houseNumber" className="text-[#676767]">
                   House Number
                 </label>
@@ -1199,8 +1235,11 @@ const PropertyManagement = () => {
                   onChange={({ target }) => setHouseNumber(target.value)}
                   className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                 />
+                <span className="absolute inset-y-12 right-0 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer">
+                  *
+                </span>
               </div>
-              <div className="mb-6 ml-6 flex flex-col">
+              <div className="relative mb-6 ml-6 flex flex-col">
                 <label htmlFor="streetNumber" className="text-[#676767]">
                   Street Number
                 </label>
@@ -1212,8 +1251,11 @@ const PropertyManagement = () => {
                   onChange={({ target }) => setStreetNumber(target.value)}
                   className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                 />
+                <span className="absolute inset-y-12 right-0 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer">
+                  *
+                </span>
               </div>
-              <div className="mb-6 ml-6 flex flex-col">
+              <div className="relative mb-6 ml-6 flex flex-col">
                 <label htmlFor="zipCode" className="text-[#676767]">
                   Zip Code
                 </label>
@@ -1225,8 +1267,11 @@ const PropertyManagement = () => {
                   onChange={({ target }) => setZipCode(target.value)}
                   className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                 />
+                <span className="absolute inset-y-12 right-0 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer">
+                  *
+                </span>
               </div>
-              <div className="mb-6 ml-6 flex flex-col">
+              <div className="relative mb-6 ml-6 flex flex-col">
                 <div>
                   <label htmlFor="country" className="text-[#676767]">
                     Country
@@ -1263,8 +1308,11 @@ const PropertyManagement = () => {
                   readOnly={true}
                   className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                 />
+                <span className="absolute inset-y-12 right-0 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer">
+                  *
+                </span>
               </div>
-              <div className="mb-6 ml-6 flex flex-col">
+              <div className="relative mb-6 ml-6 flex flex-col">
                 <div>
                   <label htmlFor="state" className="text-[#676767]">
                     State/Province
@@ -1297,8 +1345,11 @@ const PropertyManagement = () => {
                   readOnly={true}
                   className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                 />
+                <span className="absolute inset-y-12 right-0 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer">
+                  *
+                </span>
               </div>
-              <div className="mb-6 ml-6 flex flex-col">
+              <div className="relative mb-6 ml-6 flex flex-col">
                 <div>
                   <label htmlFor="City" className="text-[#676767]">
                     City
@@ -1331,6 +1382,9 @@ const PropertyManagement = () => {
                   readOnly={true}
                   className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                 />
+                <span className="absolute inset-y-12 right-0 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer">
+                  *
+                </span>
               </div>
               <div className="mb-6 ml-6 flex flex-col">
                 <label htmlFor="fullAddress" className="text-[#676767]">
@@ -1388,7 +1442,7 @@ const PropertyManagement = () => {
                 handleCoordinates={handleLocation}
                 marker={coordinates}
               />
-              <div className="mb-6 ml-6 flex flex-col">
+              <div className="relative mb-6 ml-6 flex flex-col">
                 <label htmlFor="fullAddress" className="text-[#676767]">
                   Latitude
                 </label>
@@ -1409,9 +1463,12 @@ const PropertyManagement = () => {
                   placeholder="Click on the map..."
                   className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                 />
+                <span className="absolute inset-y-12 right-0 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer">
+                  *
+                </span>
               </div>
 
-              <div className="mb-6 ml-6 flex flex-col">
+              <div className="relative mb-6 ml-6 flex flex-col">
                 <label htmlFor="fullAddress" className="text-[#676767]">
                   Longitude
                 </label>
@@ -1432,6 +1489,9 @@ const PropertyManagement = () => {
                   placeholder="Click on the map..."
                   className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                 />
+                <span className="absolute inset-y-12 right-0 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer">
+                  *
+                </span>
               </div>
             </>
           )}
@@ -2218,7 +2278,9 @@ const PropertyManagement = () => {
                       property.listingStatus !== "draft" && (
                         <div className=" mx-auto">
                           <div className="flex flex-row space-x-4 space-y-4 items-center justify-center">
-                            <h1 className="w-20 text-xl font-medium mt-3">Feature: </h1>
+                            <h1 className="w-20 text-xl font-medium mt-3">
+                              Feature:{" "}
+                            </h1>
                             <div>
                               <button
                                 type="button"
@@ -2247,7 +2309,9 @@ const PropertyManagement = () => {
                           </div>
                           {
                             <div className="flex flex-row space-x-4 space-y-4 items-center justify-center">
-                              <h1 className="w-20 text-xl font-medium mt-3">Hide: </h1>
+                              <h1 className="w-20 text-xl font-medium mt-3">
+                                Hide:{" "}
+                              </h1>
                               <div>
                                 <button
                                   type="button"
@@ -2310,20 +2374,24 @@ const PropertyManagement = () => {
                         className="xl:w-64 lg:w-52 md:w-52 md:h-60 xl:h-60 lg:h-56 object-cover object-center"
                       />
                     )}
-                    <div className="ml-10 space-y-5 my-5">
-                      <div className="flex flex-row text-2xl text-[#09363F]">
-                        <h1 className="xl:w-80 lg:w-60 md:w-60 text-2xl font-medium">
+                    <div className="ml-10 space-y-4 my-5">
+                      <div className="flex flex-row text-xl text-start text-[#09363F]">
+                        <h1 className="xl:w-80 lg:w-60 md:w-60 text-xl text-start font-medium">
                           Property Title:{" "}
                         </h1>
-                        <p className="xl:hare. lg:ml-20">
-                          {share.propertyDetails.title}
-                        </p>
+                        <p className="">{share.propertyDetails.title}</p>
                       </div>
-                      <div className="flex flex-row text-2xl text-[#09363F]">
-                        <h1 className="xl:w-80 lg:w-60 md:w-60 text-2xl font-medium">
+                      <div className="flex flex-row text-xl text-[#09363F]">
+                        <h1 className="w-80 text-xl font-medium">
+                          PropertyID:{" "}
+                        </h1>
+                        <p className="">{share.propertyDetails.propertyID}</p>
+                      </div>
+                      <div className="flex flex-row text-xl text-start text-[#09363F]">
+                        <h1 className="xl:w-80 lg:w-60 md:w-60 text-xl text-start font-medium">
                           My Shares:{" "}
                         </h1>
-                        <p className="xl:ml-44 lg:ml-20">
+                        <p className="">
                           {
                             sharesCountByProperty.filter(
                               (entry) =>
@@ -2333,19 +2401,18 @@ const PropertyManagement = () => {
                           }
                         </p>
                       </div>
-                      <div className="flex flex-row text-2xl text-[#09363F]">
-                        <h1 className="xl:w-80 lg:w-60 md:w-60 text-2xl font-medium">
+                      <div className="flex flex-row text-xl text-start text-[#09363F]">
+                        <h1 className="xl:w-80 lg:w-60 md:w-60 text-xl text-start font-medium">
                           Total Shares:{" "}
                         </h1>
-                        <p className="xl:ml-44 lg:ml-20">
-                          {share.propertyDetails.totalStakes}
-                        </p>
+                        <p className="">{share.propertyDetails.totalStakes}</p>
                       </div>
-                      <div className="flex flex-row text-2xl text-[#09363F]">
-                        <h1 className="xl:w-80 lg:w-60 md:w-60 text-2xl font-medium">
+
+                      <div className="flex flex-row text-xl text-start text-[#09363F]">
+                        <h1 className="xl:w-80 lg:w-60 md:w-60 text-xl text-start font-medium">
                           Available Shares:{" "}
                         </h1>
-                        <p className="xl:ml-44 lg:ml-20">
+                        <p className="">
                           {share.propertyDetails.totalStakes -
                             share.propertyDetails.stakesOccupied}
                         </p>
@@ -2384,17 +2451,23 @@ const PropertyManagement = () => {
                         className="xl:w-64 lg:w-52 md:w-52 xl:h-60 lg:h-56 md:h-60 object-cover object-center"
                       />
                     )}
-                    <div className="ml-10 space-y-5 my-5">
-                      <div className="flex flex-row text-2xl text-[#09363F]">
-                        <h1 className="xl:w-80 lg:w-60 md:w-60 text-2xl font-medium">
+                    <div className="ml-10 space-y-4 my-5">
+                      <div className="flex flex-row text-xl text-[#09363F]">
+                        <h1 className="xl:w-80 lg:w-60 md:w-60 text-xl font-medium">
                           Property Title:{" "}
                         </h1>
                         <p className="xl:ml-44 lg:ml-20">
                           {share.propertyDetails.title}
                         </p>
                       </div>
-                      <div className="flex flex-row text-2xl text-[#09363F]">
-                        <h1 className="xl:w-80 lg:w-60 md:w-60 text-2xl font-medium">
+                      <div className="flex flex-row text-xl text-[#09363F]">
+                        <h1 className="w-80 text-xl font-medium">
+                          PropertyID:{" "}
+                        </h1>
+                        <p className="">{share.propertyDetails.propertyID}</p>
+                      </div>
+                      <div className="flex flex-row text-xl text-[#09363F]">
+                        <h1 className="xl:w-80 lg:w-60 md:w-60 text-xl font-medium">
                           My Reservations:{" "}
                         </h1>
                         <p className="xl:ml-44 lg:ml-20">
@@ -2407,16 +2480,16 @@ const PropertyManagement = () => {
                           }
                         </p>
                       </div>
-                      <div className="flex flex-row text-2xl text-[#09363F]">
-                        <h1 className="xl:w-80 lg:w-60 md:w-60 text-2xl font-medium">
+                      <div className="flex flex-row text-xl text-[#09363F]">
+                        <h1 className="xl:w-80 lg:w-60 md:w-60 text-xl font-medium">
                           Total Shares:{" "}
                         </h1>
                         <p className="xl:ml-44 lg:ml-20">
                           {share.propertyDetails.totalStakes}
                         </p>
                       </div>
-                      <div className="flex flex-row text-2xl text-[#09363F]">
-                        <h1 className="xl:w-80 lg:w-60 md:w-60 text-2xl font-medium">
+                      <div className="flex flex-row text-xl text-[#09363F]">
+                        <h1 className="xl:w-80 lg:w-60 md:w-60 text-xl font-medium">
                           Available Shares:{" "}
                         </h1>
                         <p className="xl:ml-44 lg:ml-20">
@@ -2458,17 +2531,17 @@ const PropertyManagement = () => {
                         className="xl:w-64 lg:w-52 md:w-52 xl:h-60 lg:h-56 md:h-60 object-cover object-center"
                       />
                     )}
-                    <div className="ml-10 space-y-5 my-5">
-                      <div className="flex flex-row text-2xl text-[#09363F]">
-                        <h1 className="xl:w-80 lg:w-60 md:w-60 text-2xl font-medium">
+                    <div className="ml-10 space-y-4 my-5">
+                      <div className="flex flex-row text-xl text-[#09363F]">
+                        <h1 className="xl:w-80 lg:w-60 md:w-60 text-xl font-medium">
                           Property Title:{" "}
                         </h1>
                         <p className="xl:ml-44 lg:ml-20">
                           {share.propertyDetails.title}
                         </p>
                       </div>
-                      <div className="flex flex-row text-2xl text-[#09363F]">
-                        <h1 className="xl:w-80 lg:w-60 md:w-60 text-2xl font-medium">
+                      <div className="flex flex-row text-xl text-[#09363F]">
+                        <h1 className="xl:w-80 lg:w-60 md:w-60 text-xl font-medium">
                           My Rentals:{" "}
                         </h1>
                         <p className="xl:ml-44 lg:ml-20">
@@ -2481,16 +2554,16 @@ const PropertyManagement = () => {
                           }
                         </p>
                       </div>
-                      <div className="flex flex-row text-2xl text-[#09363F]">
-                        <h1 className="xl:w-80 lg:w-60 md:w-60 text-2xl font-medium">
+                      <div className="flex flex-row text-xl text-[#09363F]">
+                        <h1 className="xl:w-80 lg:w-60 md:w-60 text-xl font-medium">
                           Total Shares:{" "}
                         </h1>
                         <p className="xl:ml-44 lg:ml-20">
                           {share.propertyDetails.totalStakes}
                         </p>
                       </div>
-                      <div className="flex flex-row text-2xl text-[#09363F]">
-                        <h1 className="xl:w-80 lg:w-60 md:w-60 text-2xl font-medium">
+                      <div className="flex flex-row text-xl text-[#09363F]">
+                        <h1 className="xl:w-80 lg:w-60 md:w-60 text-xl font-medium">
                           Available Shares:{" "}
                         </h1>
                         <p className="xl:ml-44 lg:ml-20">
@@ -2541,31 +2614,31 @@ const PropertyManagement = () => {
                         className="xl:w-64 lg:w-52 md:w-52 xl:h-60 lg:h-56 md:h-60 object-cover object-center"
                       />
                     )}
-                    <div className="ml-10 space-y-5 my-5">
-                      <div className="flex flex-row text-2xl text-[#09363F]">
-                        <h1 className="xl:w-80 lg:w-60 md:w-60 text-2xl font-medium">
+                    <div className="ml-10 space-y-4 my-5">
+                      <div className="flex flex-row text-xl text-[#09363F]">
+                        <h1 className="xl:w-80 lg:w-60 md:w-60 text-xl font-medium">
                           Property Title:{" "}
                         </h1>
                         <p className="xl:ml-44 lg:ml-20">{property.title}</p>
                       </div>
-                      <div className="flex flex-row text-2xl text-[#09363F]">
-                        <h1 className="xl:w-80 lg:w-60 md:w-60 text-2xl font-medium">
+                      <div className="flex flex-row text-xl text-[#09363F]">
+                        <h1 className="xl:w-80 lg:w-60 md:w-60 text-xl font-medium">
                           Property Owner
                         </h1>
                         <p className="xl:ml-44 lg:ml-20">
                           {property.publishedBy}
                         </p>
                       </div>
-                      <div className="flex flex-row text-2xl text-[#09363F]">
-                        <h1 className="xl:w-80 lg:w-60 md:w-60 text-2xl font-medium">
+                      <div className="flex flex-row text-xl text-[#09363F]">
+                        <h1 className="xl:w-80 lg:w-60 md:w-60 text-xl font-medium">
                           Total Shares:{" "}
                         </h1>
                         <p className="xl:ml-44 lg:ml-20">
                           {property.totalStakes}
                         </p>
                       </div>
-                      <div className="flex flex-row text-2xl text-[#09363F]">
-                        <h1 className="xl:w-80 lg:w-60 md:w-60 text-2xl font-medium">
+                      <div className="flex flex-row text-xl text-[#09363F]">
+                        <h1 className="xl:w-80 lg:w-60 md:w-60 text-xl font-medium">
                           Available Shares:{" "}
                         </h1>
                         <p className="xl:ml-44 lg:ml-20">

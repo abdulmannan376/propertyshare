@@ -16,8 +16,51 @@ import Image from "next/image";
 import Thread from "./threadComponent";
 import RejectionModal from "../modals/raiseRequestRejectionModal";
 import Link from "next/link";
+import Slider from "react-slick";
+import { TiArrowRightThick } from "react-icons/ti";
+import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
+
+const NextArrow = ({ className, style, onClick }) => {
+  return (
+    <FaArrowRight
+      className={`${className} text-white bg-blue-500 hover:bg-blue-600 p-2 rounded-full`}
+      style={{
+        ...style,
+        display: "block",
+        color: "white",
+        backgroundColor: "#116A7B",
+      }}
+      onClick={onClick}
+    />
+  );
+};
+
+const PrevArrow = ({ className, style, onClick }) => {
+  return (
+    <FaArrowLeft
+      className={`${className} text-white bg-blue-500 hover:bg-blue-600 p-2 rounded-full`}
+      style={{
+        ...style,
+        display: "block",
+        color: "white",
+        backgroundColor: "#116A7B",
+      }}
+      onClick={onClick}
+    />
+  );
+};
 
 const RaiseRequest = () => {
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    nextArrow: <NextArrow />,
+    prevArrow: <PrevArrow />,
+  };
+
   const dispatch = useDispatch();
 
   const activeRaiseRequestTab = useSelector(
@@ -355,7 +398,7 @@ const RaiseRequest = () => {
     console.log(shareID, category, requestID);
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_SERVER_HOST}/thread/get-root-threads/${shareID}/${category}/${requestID}`,
+        `${process.env.NEXT_PUBLIC_SERVER_HOST}/thread/get-root-threads/${shareID}/${category}/?requestID=${requestID}`,
         {
           method: "GET",
         }
@@ -450,6 +493,64 @@ const RaiseRequest = () => {
     setSelectedShareID("");
     setIsRejectionModalOpen(false);
     setRaiseRequestActionBody(null);
+  };
+
+  const handleRaiseRequestApproveByPropertyOwner = async () => {
+    try {
+      const usernameList = [];
+      sharesList.map((share) => {
+        if (!usernameList.includes(share.currentOwnerDocID.username)) {
+          usernameList.push(share.currentOwnerDocID.username);
+        }
+      });
+
+      const data = {
+        requestID: selectedRequest.raisedRequestID,
+        usernameList: usernameList,
+        username: JSON.parse(localStorage.getItem("userDetails")).username,
+      };
+      // console.log("sharesList: ", sharesList);
+      // console.log("usernameList: ", usernameList);
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_HOST}/property/update-raise-request-action-by-PO`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
+
+      const response = await res.json();
+
+      if (response.success) {
+        fetchRequests("pending_approval");
+        toast.success(response.message, {
+          position: "bottom-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      } else {
+        throw new Error(response.message);
+      }
+    } catch (error) {
+      toast.error(error.message, {
+        position: "bottom-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
   };
 
   return (
@@ -752,31 +853,32 @@ const RaiseRequest = () => {
                   </div>
                   <div className="mx-14 ">
                     {selectedRequest?.imageCount > 0 ? (
-                      <div className="swiper-container">
+                      <div>
                         {/* Swiper component */}
-                        <Swiper
-                          modules={[Pagination]}
-                          slidesPerView={1}
-                          // navigation={{
-                          //   nextEl: ".swiper-button-next", // Define next button class
-                          //   prevEl: ".swiper-button-prev", // Define prev button class
-                          // }}
-                          pagination={{
-                            clickable: true,
-                            el: "#swiper-pagination",
-                            type: "bullets",
-                            bulletActiveClass:
-                              "swiper-pagination-bullet-active",
-                            bulletClass: "swiper-pagination-bullet",
-                          }}
-                          style={{ width: "100%", height: "70%" }}
-                          className="mb-5"
-                        >
-                          {Array.from(
-                            { length: selectedRequest?.imageCount },
-                            (_, index) => (
-                              <SwiperSlide key={index}>
-                                <div>
+                        {selectedRequest?.imageCount > 1 ? (
+                          <Slider
+                            {...settings}
+                            // modules={[Pagination]}
+                            // slidesPerView={1}
+                            // // navigation={{
+                            // //   nextEl: ".swiper-button-next", // Define next button class
+                            // //   prevEl: ".swiper-button-prev", // Define prev button class
+                            // // }}
+                            // pagination={{
+                            //   clickable: true,
+                            //   el: "#swiper-pagination",
+                            //   type: "bullets",
+                            //   bulletActiveClass:
+                            //     "swiper-pagination-bullet-active",
+                            //   bulletClass: "swiper-pagination-bullet",
+                            // }}
+                            style={{ width: "100%", height: "70%" }}
+                            className="mb-5"
+                          >
+                            {Array.from(
+                              { length: selectedRequest?.imageCount },
+                              (_, index) => (
+                                <div key={index}>
                                   <Image
                                     width={2000}
                                     height={2000}
@@ -789,19 +891,29 @@ const RaiseRequest = () => {
                                     alt={`Image ${index + 1}`}
                                   />
                                 </div>
-                              </SwiperSlide>
-                            )
-                          )}
-                        </Swiper>
+                              )
+                            )}
+                          </Slider>
+                        ) : (
+                          <div>
+                            <Image
+                              width={2000}
+                              height={2000}
+                              src={`${process.env.NEXT_PUBLIC_SERVER_HOST}/${selectedRequest.imageDir}/image-1.png`}
+                              className="w-full h-[22rem] object-contain object-center"
+                              alt={`Image 1`}
+                            />
+                          </div>
+                        )}
 
                         {/* Custom navigation buttons */}
                         {/* <div className="swiper-button-prev custom-prev"></div>
                       <div className="swiper-button-next custom-next"></div> */}
                         {/* Custom pagination */}
-                        <div
+                        {/* <div
                           id="swiper-pagination"
                           className="flex flex-row justify-center "
-                        ></div>
+                        ></div> */}
                       </div>
                     ) : (
                       <div className="h-[44rem]">
@@ -1045,8 +1157,10 @@ const RaiseRequest = () => {
                           key={index}
                           className="cursor-pointer"
                           onClick={() => {
-                            fetchRaiseRequestDetail(request.raisedRequestID);
-                            setSelectedRequest(request);
+                            if (request.status !== "Expired") {
+                              fetchRaiseRequestDetail(request.raisedRequestID);
+                              setSelectedRequest(request);
+                            }
                           }}
                         >
                           <RaiseRequestCard card={request} />
@@ -1076,31 +1190,31 @@ const RaiseRequest = () => {
                   </div>
                   <div className="mx-14 ">
                     {selectedRequest?.imageCount > 0 ? (
-                      <div className="swiper-container">
+                      <div>
                         {/* Swiper component */}
-                        <Swiper
-                          modules={[Pagination]}
-                          slidesPerView={1}
-                          // navigation={{
-                          //   nextEl: ".swiper-button-next", // Define next button class
-                          //   prevEl: ".swiper-button-prev", // Define prev button class
-                          // }}
-                          pagination={{
-                            clickable: true,
-                            el: "#swiper-pagination",
-                            type: "bullets",
-                            bulletActiveClass:
-                              "swiper-pagination-bullet-active",
-                            bulletClass: "swiper-pagination-bullet",
-                          }}
-                          style={{ width: "100%", height: "70%" }}
-                          className="mb-5"
-                        >
-                          {Array.from(
-                            { length: selectedRequest?.imageCount },
-                            (_, index) => (
-                              <SwiperSlide key={index}>
-                                <div>
+                        {selectedRequest?.imageCount > 1 ? (
+                          <Slider
+                            // modules={[Pagination]}
+                            // slidesPerView={1}
+                            // // navigation={{
+                            // //   nextEl: ".swiper-button-next", // Define next button class
+                            // //   prevEl: ".swiper-button-prev", // Define prev button class
+                            // // }}
+                            // pagination={{
+                            //   clickable: true,
+                            //   el: "#swiper-pagination",
+                            //   type: "bullets",
+                            //   bulletActiveClass:
+                            //     "swiper-pagination-bullet-active",
+                            //   bulletClass: "swiper-pagination-bullet",
+                            // }}
+                            style={{ width: "100%", height: "70%" }}
+                            className="mb-5"
+                          >
+                            {Array.from(
+                              { length: selectedRequest?.imageCount },
+                              (_, index) => (
+                                <div key={index}>
                                   <Image
                                     width={2000}
                                     height={2000}
@@ -1113,19 +1227,29 @@ const RaiseRequest = () => {
                                     alt={`Image ${index + 1}`}
                                   />
                                 </div>
-                              </SwiperSlide>
-                            )
-                          )}
-                        </Swiper>
+                              )
+                            )}
+                          </Slider>
+                        ) : (
+                          <div>
+                            <Image
+                              width={2000}
+                              height={2000}
+                              src={`${process.env.NEXT_PUBLIC_SERVER_HOST}/${selectedRequest.imageDir}/image-1.png`}
+                              className="w-full h-[22rem] object-contain object-center"
+                              alt={`Image 1`}
+                            />
+                          </div>
+                        )}
 
                         {/* Custom navigation buttons */}
                         {/* <div className="swiper-button-prev custom-prev"></div>
                       <div className="swiper-button-next custom-next"></div> */}
                         {/* Custom pagination */}
-                        <div
+                        {/* <div
                           id="swiper-pagination"
                           className="flex flex-row justify-center "
-                        ></div>
+                        ></div> */}
                       </div>
                     ) : (
                       <div className="h-[44rem]">
@@ -1372,8 +1496,10 @@ const RaiseRequest = () => {
                           key={index}
                           className="cursor-pointer"
                           onClick={() => {
-                            fetchRaiseRequestDetail(request.raisedRequestID);
-                            setSelectedRequest(request);
+                            if (request.status !== "Expired") {
+                              fetchRaiseRequestDetail(request.raisedRequestID);
+                              setSelectedRequest(request);
+                            }
                           }}
                         >
                           <RaiseRequestCard
@@ -1407,31 +1533,32 @@ const RaiseRequest = () => {
                   </div>
                   <div className="mx-14 ">
                     {selectedRequest?.imageCount > 0 ? (
-                      <div className="swiper-container">
+                      <div>
                         {/* Swiper component */}
-                        <Swiper
-                          modules={[Pagination]}
-                          slidesPerView={1}
-                          // navigation={{
-                          //   nextEl: ".swiper-button-next", // Define next button class
-                          //   prevEl: ".swiper-button-prev", // Define prev button class
-                          // }}
-                          pagination={{
-                            clickable: true,
-                            el: "#swiper-pagination",
-                            type: "bullets",
-                            bulletActiveClass:
-                              "swiper-pagination-bullet-active",
-                            bulletClass: "swiper-pagination-bullet",
-                          }}
-                          style={{ width: "100%", height: "70%" }}
-                          className="mb-5"
-                        >
-                          {Array.from(
-                            { length: selectedRequest?.imageCount },
-                            (_, index) => (
-                              <SwiperSlide key={index}>
-                                <div>
+                        {selectedRequest?.imageCount > 1 ? (
+                          <Slider
+                            {...settings}
+                            // modules={[Pagination]}
+                            // slidesPerView={1}
+                            // // navigation={{
+                            // //   nextEl: ".swiper-button-next", // Define next button class
+                            // //   prevEl: ".swiper-button-prev", // Define prev button class
+                            // // }}
+                            // pagination={{
+                            //   clickable: true,
+                            //   el: "#swiper-pagination",
+                            //   type: "bullets",
+                            //   bulletActiveClass:
+                            //     "swiper-pagination-bullet-active",
+                            //   bulletClass: "swiper-pagination-bullet",
+                            // }}
+                            style={{ width: "100%", height: "70%" }}
+                            className="mb-5"
+                          >
+                            {Array.from(
+                              { length: selectedRequest?.imageCount },
+                              (_, index) => (
+                                <div key={index}>
                                   <Image
                                     width={2000}
                                     height={2000}
@@ -1444,19 +1571,29 @@ const RaiseRequest = () => {
                                     alt={`Image ${index + 1}`}
                                   />
                                 </div>
-                              </SwiperSlide>
-                            )
-                          )}
-                        </Swiper>
+                              )
+                            )}
+                          </Slider>
+                        ) : (
+                          <div>
+                            <Image
+                              width={2000}
+                              height={2000}
+                              src={`${process.env.NEXT_PUBLIC_SERVER_HOST}/${selectedRequest.imageDir}/image-1.png`}
+                              className="w-full h-[22rem] object-contain object-center"
+                              alt={`Image 1`}
+                            />
+                          </div>
+                        )}
 
                         {/* Custom navigation buttons */}
                         {/* <div className="swiper-button-prev custom-prev"></div>
                       <div className="swiper-button-next custom-next"></div> */}
                         {/* Custom pagination */}
-                        <div
+                        {/* <div
                           id="swiper-pagination"
                           className="flex flex-row justify-center "
-                        ></div>
+                        ></div> */}
                       </div>
                     ) : (
                       <div className="h-[44rem]">
@@ -1491,13 +1628,48 @@ const RaiseRequest = () => {
                       </ul>
                     )}
                     <div className="my-10">
-                      <h2 className="text-end p-5">
-                        {" "}
-                        <strong className="text-[#09363F]">
-                          {processApprovedPercentage()} Approved
-                        </strong>{" "}
-                        <br /> (need 80% or more to complete)
-                      </h2>
+                      <div
+                        className={`flex flex-row items-center ${
+                          selectedRequest?.status ===
+                            "Property Owner Approval Pending" ||
+                          selectedRequest?.status === "Decision Pending"
+                            ? "justify-between"
+                            : "justify-end"
+                        } `}
+                      >
+                        {selectedRequest?.status ===
+                          "Property Owner Approval Pending" && (
+                          <button
+                            type="button"
+                            onClick={() =>
+                              handleRaiseRequestApproveByPropertyOwner()
+                            }
+                            className="w-32 px-5 py-3 bg-[#116A7B] text-white rounded font-semibold"
+                          >
+                            Approve
+                          </button>
+                        )}
+                        {selectedRequest?.status === "Decision Pending" && (
+                          <button
+                            type="button"
+                            onClick={() =>
+                              handleRaiseRequestApproveByPropertyOwner()
+                            }
+                            className="w-32 px-5 py-3 bg-[#116A7B] text-white rounded font-semibold"
+                          >
+                            Approve
+                          </button>
+                        )}
+                        <div>
+                          <h2 className="text-end p-5">
+                            {" "}
+                            <strong className="text-[#09363F]">
+                              {processApprovedPercentage()} Approved
+                            </strong>{" "}
+                            <br /> (need 80% or more to complete)
+                          </h2>
+                        </div>
+                      </div>
                       <div className="bg-[#FCFBF5] border border-[#D9D9D9] divide-y-2 divide-[#D9D9D9]">
                         {sharesList.map((share, index) => (
                           <div key={index}>
@@ -1523,6 +1695,7 @@ const RaiseRequest = () => {
                               <div className="flex flex-row items-center justify-center space-x-5">
                                 <button
                                   type="button"
+                                  title="View Threads"
                                   onClick={() => {
                                     setThreadBody("");
                                     if (showThreadsByShare === share.shareID)

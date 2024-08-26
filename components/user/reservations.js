@@ -77,22 +77,24 @@ const Reservations = () => {
                     className="xl:w-64 lg:w-52 md:w-52 xl:h-60 lg:h-56 md:h-60 object-cover object-center"
                   />
                 )}
-                <div className="ml-10 space-y-5 my-5">
-                  <div className="flex flex-row text-2xl text-[#09363F]">
-                    <h1 className="xl:w-80 lg:w-60 md:w-60 text-2xl font-medium">
+                <div className="ml-10 space-y-4 my-5">
+                  <div className="flex flex-row text-xl text-start text-[#09363F]">
+                    <h1 className="xl:w-80 lg:w-60 md:w-60 text-xl text-start font-medium">
                       Property Title:{" "}
                     </h1>
-                    <p className="xl:ml-44 lg:ml-20">
-                      {share.propertyDetails.title}
-                    </p>
+                    <p className="">{share.propertyDetails.title}</p>
                   </div>
-                  <div className="flex flex-row text-2xl text-[#09363F]">
-                    <h1 className="xl:w-80 lg:w-60 md:w-60 text-2xl font-medium">
-                      My Reservations:{" "}
+                  <div className="flex flex-row text-xl text-[#09363F]">
+                    <h1 className="w-80 text-xl font-medium">PropertyID: </h1>
+                    <p className="">{share.propertyDetails.propertyID}</p>
+                  </div>
+                  <div className="flex flex-row text-xl text-start text-[#09363F]">
+                    <h1 className="xl:w-80 lg:w-60 md:w-60 text-xl text-start font-medium">
+                      My Shares:{" "}
                     </h1>
-                    <p className="xl:ml-44 lg:ml-20">
+                    <p className="">
                       {
-                        myShareReservations.filter(
+                        sharesCountByProperty.filter(
                           (entry) =>
                             entry.propertyID ===
                             share.propertyDetails.propertyID
@@ -100,19 +102,18 @@ const Reservations = () => {
                       }
                     </p>
                   </div>
-                  <div className="flex flex-row text-2xl text-[#09363F]">
-                    <h1 className="xl:w-80 lg:w-60 md:w-60 text-2xl font-medium">
+                  <div className="flex flex-row text-xl text-start text-[#09363F]">
+                    <h1 className="xl:w-80 lg:w-60 md:w-60 text-xl text-start font-medium">
                       Total Shares:{" "}
                     </h1>
-                    <p className="xl:ml-44 lg:ml-20">
-                      {share.propertyDetails.totalStakes}
-                    </p>
+                    <p className="">{share.propertyDetails.totalStakes}</p>
                   </div>
-                  <div className="flex flex-row text-2xl text-[#09363F]">
-                    <h1 className="xl:w-80 lg:w-60 md:w-60 text-2xl font-medium">
+                  
+                  <div className="flex flex-row text-xl text-start text-[#09363F]">
+                    <h1 className="xl:w-80 lg:w-60 md:w-60 text-xl text-start font-medium">
                       Available Shares:{" "}
                     </h1>
-                    <p className="xl:ml-44 lg:ml-20">
+                    <p className="">
                       {share.propertyDetails.totalStakes -
                         share.propertyDetails.stakesOccupied}
                     </p>

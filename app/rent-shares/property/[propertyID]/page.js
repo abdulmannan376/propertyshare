@@ -35,8 +35,51 @@ import "swiper/css/navigation";
 import BuyShare from "@/components/modals/buyShare";
 import BuyShareModal from "@/components/modals/buyShare";
 import ThreadDisplay from "@/components/buy-shares/threadComponent";
+import Slider from "react-slick";
+import { TiArrowRightThick } from "react-icons/ti";
+import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
+
+const NextArrow = ({ className, style, onClick }) => {
+  return (
+    <FaArrowRight
+      className={`${className} text-white bg-blue-500 hover:bg-blue-600 p-2 rounded-full`}
+      style={{
+        ...style,
+        display: "block",
+        color: "white",
+        backgroundColor: "#116A7B",
+      }}
+      onClick={onClick}
+    />
+  );
+};
+
+const PrevArrow = ({ className, style, onClick }) => {
+  return (
+    <FaArrowLeft
+      className={`${className} text-white bg-blue-500 hover:bg-blue-600 p-2 rounded-full`}
+      style={{
+        ...style,
+        display: "block",
+        color: "white",
+        backgroundColor: "#116A7B",
+      }}
+      onClick={onClick}
+    />
+  );
+};
 
 const Page = () => {
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    nextArrow: <NextArrow />,
+    prevArrow: <PrevArrow />,
+  };
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -140,53 +183,57 @@ const Page = () => {
       />
       <div className="w-full h-20 bg-white"></div>
       {propertyFetched && (
-        <div className="xl:mx-24 mx-16 " onClick={() => dispatch(updateDropdrownStatus({ field: "close all" }))}>
+        <div
+          className="xl:mx-24 mx-16 "
+          onClick={() =>
+            dispatch(updateDropdrownStatus({ field: "close all" }))
+          }
+        >
           <div className="my-10">
             {property.imageCount > 0 ? (
-              <div className="swiper-container">
+              <div>
                 {/* Swiper component */}
-                <Swiper
-                  modules={[Pagination, Navigation]}
-                  slidesPerView={1}
-                  navigation={{
-                    nextEl: ".swiper-button-next", // Define next button class
-                    prevEl: ".swiper-button-prev", // Define prev button class
-                  }}
-                  pagination={{
-                    clickable: true,
-                    el: "#swiper-pagination",
-                    type: "bullets",
-                    bulletActiveClass: "swiper-pagination-bullet-active",
-                    bulletClass: "swiper-pagination-bullet",
-                  }}
+                <Slider
+                {...settings}
+                  // modules={[Pagination, Navigation]}
+                  // slidesPerView={1}
+                  // navigation={{
+                  //   nextEl: ".swiper-button-next", // Define next button class
+                  //   prevEl: ".swiper-button-prev", // Define prev button class
+                  // }}
+                  // pagination={{
+                  //   clickable: true,
+                  //   el: "#swiper-pagination",
+                  //   type: "bullets",
+                  //   bulletActiveClass: "swiper-pagination-bullet-active",
+                  //   bulletClass: "swiper-pagination-bullet",
+                  // }}
                   style={{ width: "100%", height: "70%" }}
                   className="mb-5"
                 >
                   {Array.from({ length: property.imageCount }, (_, index) => (
-                    <SwiperSlide key={index}>
-                      <div>
-                        <Image
-                          width={2000}
-                          height={2000}
-                          src={`${process.env.NEXT_PUBLIC_SERVER_HOST}/${
-                            property.imageDirURL
-                          }/image-${index + 1}.png`}
-                          className="w-full h-[44rem] object-contain object-center"
-                          alt={`Image ${index + 1}`}
-                        />
-                      </div>
-                    </SwiperSlide>
+                    <div key={index}>
+                      <Image
+                        width={2000}
+                        height={2000}
+                        src={`${process.env.NEXT_PUBLIC_SERVER_HOST}/${
+                          property.imageDirURL
+                        }image-${index + 1}.png`}
+                        className="w-full h-[44rem] object-contain object-center"
+                        alt={`Image ${index + 1}`}
+                      />
+                    </div>
                   ))}
-                </Swiper>
-
-                {/* Custom navigation buttons */}
+                </Slider>
+{/* 
+                {/* Custom navigation buttons 
                 <div className="swiper-button-prev custom-prev"></div>
                 <div className="swiper-button-next custom-next"></div>
-                {/* Custom pagination */}
+                {/* Custom pagination 
                 <div
                   id="swiper-pagination"
                   className="flex flex-row justify-center "
-                ></div>
+                ></div> */}
               </div>
             ) : (
               <div className="h-[44rem]">
@@ -202,7 +249,9 @@ const Page = () => {
 
             <div className="w-screen flex items-center justify-start md:space-x-20 space-x-14 my-3 text-white text-2xl font-semibold">
               <button
-                onClick={() => dispatch(updateActiveRentShareNavBtn("Property Details"))}
+                onClick={() =>
+                  dispatch(updateActiveRentShareNavBtn("Property Details"))
+                }
               >
                 <h1
                   className={`flex ${
@@ -215,7 +264,9 @@ const Page = () => {
                 </h1>
               </button>
               {/* <Link href={`${process.env.NEXT_PUBLIC_HOST}/chef`}> */}
-              <button onClick={() => dispatch(updateActiveRentShareNavBtn("Rent"))}>
+              <button
+                onClick={() => dispatch(updateActiveRentShareNavBtn("Rent"))}
+              >
                 <h2
                   className={`flex ${
                     activeNavBtn === "Rent"
@@ -226,7 +277,9 @@ const Page = () => {
                   Rent
                 </h2>
               </button>
-              <button onClick={() => dispatch(updateActiveRentShareNavBtn("Sell"))}>
+              <button
+                onClick={() => dispatch(updateActiveRentShareNavBtn("Sell"))}
+              >
                 <h2
                   className={`flex ${
                     activeNavBtn === "Sell"
@@ -237,7 +290,9 @@ const Page = () => {
                   Sell
                 </h2>
               </button>
-              <button onClick={() => dispatch(updateActiveRentShareNavBtn("Swap"))}>
+              <button
+                onClick={() => dispatch(updateActiveRentShareNavBtn("Swap"))}
+              >
                 <h2
                   className={`flex ${
                     activeNavBtn === "Swap"

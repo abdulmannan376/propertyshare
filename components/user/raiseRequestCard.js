@@ -129,34 +129,34 @@ const RaiseRequestCard = ({ card, fetchData, sharesList, fetchRequests }) => {
       };
       console.log("sharesList: ", sharesList)
       console.log("usernameList: ", usernameList)
-      // const res = await fetch(
-      //   `${process.env.NEXT_PUBLIC_SERVER_HOST}/property/update-raise-request-action-by-PO`,
-      //   {
-      //     method: "PUT",
-      //     headers: {
-      //       "Content-type": "application/json",
-      //     },
-      //     body: JSON.stringify(data),
-      //   }
-      // );
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_HOST}/property/update-raise-request-action-by-PO`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
 
-      // const response = await res.json();
+      const response = await res.json();
 
-      // if (response.success) {
-      //   fetchRequests("pending_approval");
-      //   toast.success(response.message, {
-      //     position: "bottom-center",
-      //     autoClose: 5000,
-      //     hideProgressBar: false,
-      //     closeOnClick: true,
-      //     pauseOnHover: true,
-      //     draggable: true,
-      //     progress: undefined,
-      //     theme: "light",
-      //   });
-      // } else {
-      //   throw new Error(response.message);
-      // }
+      if (response.success) {
+        fetchRequests("pending_approval");
+        toast.success(response.message, {
+          position: "bottom-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      } else {
+        throw new Error(response.message);
+      }
     } catch (error) {
       toast.error(error.message, {
         position: "bottom-center",
@@ -207,8 +207,8 @@ const RaiseRequestCard = ({ card, fetchData, sharesList, fetchRequests }) => {
             width={1000}
             height={1000}
             src={
-              card.imageCount > 0
-                ? `${process.env.NEXT_PUBLIC_SERVER_HOST}/${card.imageDir}/image-1.png`
+              card.propertyDocID?.imageCount > 0
+                ? `${process.env.NEXT_PUBLIC_SERVER_HOST}/${card?.propertyDocID?.imageDirURL}image-1.png`
                 : "/assets/user/property-management/no-image.jpg"
             }
             className={`w-[13rem] h-[6rem] object-cover object-center rounded-md overflow-hidden`}
@@ -440,7 +440,7 @@ const RaiseRequestCard = ({ card, fetchData, sharesList, fetchRequests }) => {
             processUserResponse()}
           {processStatus()}
         </div>
-        {activeRaiseRequestTab === "Pending Approvals" &&
+        {/* {activeRaiseRequestTab === "Pending Approvals" &&
           card.status !== "Payment Pending" && (
             <button
               type="button"
@@ -453,7 +453,7 @@ const RaiseRequestCard = ({ card, fetchData, sharesList, fetchRequests }) => {
               <FaCheckCircle className="text-xl text-[#116A7B]" />{" "}
               <p className="mx-2 text-[#116A7B] underline">Approve</p>
             </button>
-          )}
+          )} */}
       </div>
       <div className="w-1/6 mt-5 flex flex-col">
         <h2 className="text-base text-[#A2B0B2]">

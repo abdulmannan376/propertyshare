@@ -465,28 +465,30 @@ const Page = () => {
           nicNumber: nextOfKinDetails.nicNumber,
           dobString: nextOfKinDetails.dobString,
         };
-      } else if (action === "Payment Details") {
-        console.log("paymentDetails: ", paymentDetails);
-        if (
-          paymentDetails.nameOnCard &&
-          paymentDetails.cardNumber &&
-          paymentDetails.cardExpiryMonth &&
-          paymentDetails.cardExpiryYear &&
-          paymentDetails.cardCVV
-        )
-          body.paymentDetails = paymentDetails;
-        else throw new Error("missing fields.");
-      } else if (action === "Withdrawal Details") {
-        console.log("paymentDetails: ", paymentDetails);
-        if (
-          withdrawalDetails.accountTitle &&
-          withdrawalDetails.ibanNumber &&
-          withdrawalDetails.branchCode &&
-          withdrawalDetails.swiftCode
-        )
-          body.withdrawalDetails = withdrawalDetails;
-        else throw new Error("missing fields.");
-      } else {
+      }
+      // } else if (action === "Payment Details") {
+      //   console.log("paymentDetails: ", paymentDetails);
+      //   if (
+      //     paymentDetails.nameOnCard &&
+      //     paymentDetails.cardNumber &&
+      //     paymentDetails.cardExpiryMonth &&
+      //     paymentDetails.cardExpiryYear &&
+      //     paymentDetails.cardCVV
+      //   )
+      //     body.paymentDetails = paymentDetails;
+      //   else throw new Error("missing fields.");
+      // } else if (action === "Withdrawal Details") {
+      //   console.log("paymentDetails: ", paymentDetails);
+      //   if (
+      //     withdrawalDetails.accountTitle &&
+      //     withdrawalDetails.ibanNumber &&
+      //     withdrawalDetails.branchCode &&
+      //     withdrawalDetails.swiftCode
+      //   )
+      //     body.withdrawalDetails = withdrawalDetails;
+      //   else throw new Error("missing fields.");
+      // }
+      else {
         throw new Error("wrong action");
       }
 
@@ -516,12 +518,14 @@ const Page = () => {
         } else if (action === "Contact Details") {
           dispatch(handleUserProfileSettingNavigation("Next of Kin"));
         } else if (action === "Next of Kin") {
-          dispatch(handleUserProfileSettingNavigation("Payment Details"));
-        } else if (action === "Payment Details") {
-          dispatch(handleUserProfileSettingNavigation("Withdrawal Details"));
-        } else if (action === "Withdrawal Details") {
           dispatch(handleUserProfileSettingNavigation("Primary Details"));
+          // dispatch(handleUserProfileSettingNavigation("Payment Details"));
         }
+        // } else if (action === "Payment Details") {
+        //   dispatch(handleUserProfileSettingNavigation("Withdrawal Details"));
+        // } else if (action === "Withdrawal Details") {
+        //   dispatch(handleUserProfileSettingNavigation("Primary Details"));
+        // }
 
         fetchUserDetails();
         // toast.success(response.message, {
@@ -666,7 +670,7 @@ const Page = () => {
             >
               Next of Kin
             </button>
-            <button
+            {/* <button
               type="button"
               onClick={() =>
                 dispatch(handleUserProfileSettingNavigation("Payment Details"))
@@ -693,7 +697,7 @@ const Page = () => {
               } text-[#09363F] font-semibold`}
             >
               Withdrawal Details
-            </button>
+            </button> */}
           </div>
           <div className="xxl:mx-24 xl:mx-16 lg:mx-10 md:mx-5 my-16">
             {profileSettingActiveTab === "Primary Details" && (
@@ -1456,18 +1460,18 @@ const Page = () => {
                     />
                   </div>
                 </div>
-                  <div className="mt-5">
-                    <button
-                      type="button"
-                      onClick={(e) => handleUserProfileUpdate()}
-                      className="w-72 bg-[#116A7B] text-white text-2xl font-medium px-7 py-3 rounded-full"
-                    >
-                      {!isLoadingSubmission && `Save and next`}
-                      {isLoadingSubmission && (
-                        <div className="border-t-2 border-b-2 border-white bg-transparent h-3 p-2 animate-spin shadow-lg w-fit mx-auto rounded-full"></div>
-                      )}
-                    </button>
-                  </div>
+                <div className="mt-5">
+                  <button
+                    type="button"
+                    onClick={(e) => handleUserProfileUpdate()}
+                    className="w-72 bg-[#116A7B] text-white text-2xl font-medium px-7 py-3 rounded-full"
+                  >
+                    {!isLoadingSubmission && `Save and next`}
+                    {isLoadingSubmission && (
+                      <div className="border-t-2 border-b-2 border-white bg-transparent h-3 p-2 animate-spin shadow-lg w-fit mx-auto rounded-full"></div>
+                    )}
+                  </button>
+                </div>
               </>
             )}
           </div>

@@ -350,12 +350,12 @@ const AccountSetting = () => {
                 isOpen={modalOpen}
                 onClose={() => setModalOpen(false)}
               />
-              <button
+              {/* <button
                 type="button"
                 className="text-xl text-[#A2B0B2] underline"
               >
                 Delete Account
-              </button>
+              </button> */}
             </div>
 
             <button

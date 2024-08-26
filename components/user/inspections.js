@@ -721,7 +721,7 @@ const Inspections = () => {
                         height={1000}
                         src={"/assets/user/property-management/no-image.jpg"}
                         className="w-full h-full object-scale-down object-center"
-                        alt={`${property.slug}-noimage`}
+                        alt={`Inspection-noimage`}
                       />
                     </div>
                   )}

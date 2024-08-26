@@ -37,23 +37,60 @@ import BuyShare from "@/components/modals/buyShare";
 import BuyShareModal from "@/components/modals/buyShare";
 import ThreadDisplay from "@/components/buy-shares/threadComponent";
 import SwapShareComponent from "@/components/buy-shares/swapShareComponent";
-import { FaHeart, FaRegHeart, FaCalendarAlt } from "react-icons/fa";
+import {
+  FaHeart,
+  FaRegHeart,
+  FaCalendarAlt,
+  FaArrowRight,
+  FaArrowLeft,
+} from "react-icons/fa";
 import {
   updateFavoritesList,
   updateWishList,
 } from "@/app/redux/features/userSlice";
 import CalendarModal from "@/components/modals/calendarModal";
 import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
+import { TiArrowRightThick } from "react-icons/ti";
+
+const NextArrow = ({ className, style, onClick }) => {
+  return (
+    <FaArrowRight
+      className={`${className} text-white bg-blue-500 hover:bg-blue-600 p-2 rounded-full`}
+      style={{
+        ...style,
+        display: "block",
+        color: "white",
+        backgroundColor: "#116A7B",
+      }}
+      onClick={onClick}
+    />
+  );
+};
+
+const PrevArrow = ({ className, style, onClick }) => {
+  return (
+    <FaArrowLeft
+      className={`${className} text-white bg-blue-500 hover:bg-blue-600 p-2 rounded-full`}
+      style={{
+        ...style,
+        display: "block",
+        color: "white",
+        backgroundColor: "#116A7B",
+      }}
+      onClick={onClick}
+    />
+  );
+};
 
 const Page = () => {
-  var settings = {
+  const settings = {
     dots: true,
     infinite: true,
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
+    nextArrow: <NextArrow />,
+    prevArrow: <PrevArrow />,
   };
 
   const dispatch = useDispatch();
@@ -265,7 +302,7 @@ const Page = () => {
         >
           <div className="my-10">
             {property.imageCount > 0 ? (
-              <div >
+              <div>
                 {/* Swiper component */}
                 <Slider
                   {...settings}
@@ -286,19 +323,17 @@ const Page = () => {
                   className="mb-5"
                 >
                   {Array.from({ length: property.imageCount }, (_, index) => (
-                    <React.Fragment key={index}>
-                      <div>
-                        <Image
-                          width={2000}
-                          height={2000}
-                          src={`${process.env.NEXT_PUBLIC_SERVER_HOST}/${
-                            property.imageDirURL
-                          }/image-${index + 1}.png`}
-                          className="w-full h-[44rem] object-contain object-center"
-                          alt={`Image ${index + 1}`}
-                        />
-                      </div>
-                    </React.Fragment>
+                    <div key={index} className="outline-none">
+                      <Image
+                        width={2000}
+                        height={2000}
+                        src={`${process.env.NEXT_PUBLIC_SERVER_HOST}/${
+                          property.imageDirURL
+                        }image-${index + 1}.png`}
+                        className="w-full h-[44rem] object-contain object-center"
+                        alt={`Image ${index + 1}`}
+                      />
+                    </div>
                   ))}
                 </Slider>
 
