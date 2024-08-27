@@ -138,7 +138,7 @@ export default function ChatComponent({ selectedConversation }) {
             onKeyDown={(event) => {
               console.log(event.key);
               console.log(event.ctrlKey && event.key === "ENTER");
-              if (event.ctrlKey && event.key === "Enter") {
+              if (event.ctrlKey && event.key === "Enter" && text.length > 0) {
                 handleSendNewMessage();
               }
             }}
