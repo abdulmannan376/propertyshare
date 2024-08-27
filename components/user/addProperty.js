@@ -2209,9 +2209,9 @@ const PropertyManagement = () => {
                         src={`${process.env.NEXT_PUBLIC_SERVER_HOST}/${
                           property?.imageDirURL
                         }image-${
-                          property?.pinnedImage === -1
+                          property?.pinnedImageIndex === -1
                             ? "1"
-                            : `${property?.pinnedImage}`
+                            : `${property?.pinnedImageIndex}`
                         }.png`}
                         className="w-64 h-60 object-cover object-center"
                       />
