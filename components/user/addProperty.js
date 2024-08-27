@@ -357,7 +357,6 @@ const PropertyManagement = () => {
         streetNumber === "" ||
         zipCode === "" ||
         !selectedCountry ||
-        selectedCity === "" ||
         selectedState === ""
       ) {
         throw new Error(" missing fields ");
@@ -1382,9 +1381,6 @@ const PropertyManagement = () => {
                   readOnly={true}
                   className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                 />
-                <span className="absolute inset-y-12 right-0 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer">
-                  *
-                </span>
               </div>
               <div className="mb-6 ml-6 flex flex-col">
                 <label htmlFor="fullAddress" className="text-[#676767]">

@@ -275,7 +275,7 @@ const Navbar = () => {
     console.log("in function : handleUnreadNotificationSelect");
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_SERVER_HOST}/notification/mark-notification-read/${notificationsList[index]?.notificationID}`,
+        `${process.env.NEXT_PUBLIC_SERVER_HOST}/notification/mark-notification-read/?key=${notificationsList[index]?.notificationID}&all=${false}`,
         {
           method: "PUT",
         }
@@ -475,7 +475,12 @@ const Navbar = () => {
                     )}
                   </button>
                   {showDropDowns["notification"] && !selectedNotification && (
-                    <ul className="absolute w-96 -right-0 text-gray-800 bg-white border border-[#116A7B] mt-0 max-h-[34rem] overflow-y-auto">
+                    <ul className="absolute w-96 -right-0 text-gray-800 bg-white border border-[#116A7B] mt-0 h-[34rem] max-h-[34rem] overflow-y-auto">
+                      <li>
+                        <button type="button" className="m-2 px-2 py-1 text-xs rounded bg-gray-300 text-gray-800 font-bold">
+                          Read all
+                        </button>
+                      </li>
                       {notificationsList.map((notification, index) => (
                         <li key={index}>
                           <button
@@ -495,7 +500,7 @@ const Navbar = () => {
                                 {notification.subject}
                               </h2>
                               {notification.inAppStatus === "unread" && (
-                                <span className="inline-flex w-3 h-3 bg-[#116A7B] rounded-full mr-5 mb-2"></span>
+                                <span className="w-3 h-3 bg-[#116A7B] rounded-full mr-5 mb-2"></span>
                               )}
                             </div>
                             <p>Date: {notification.createdAt.split("T")[0]}</p>
