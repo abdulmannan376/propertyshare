@@ -61,7 +61,7 @@ const Calendar = ({ propertyDuration, isShareholder, shareList }) => {
   useEffect(() => {
     if (hoveredOwner) {
       window.addEventListener("mousemove", handleMouseMove);
-    //   console.log("in useEffect: ", hoveredOwner);
+      //   console.log("in useEffect: ", hoveredOwner);
     } else {
       window.removeEventListener("mousemove", handleMouseMove);
     }
