@@ -42,26 +42,26 @@ const Calendar = ({ propertyDuration, isShareholder, shareList }) => {
     setCursorPosition({ x: e.clientX, y: e.clientY });
   };
 
-  const [hoveredOwner, setHoveredOwner] = useState("");
+  const [hoveredOwner, setHoveredOwner] = useState(null);
 
   const handleMouseEnter = (dayDetails, e) => {
+    // handleBgColor(dayDetails);
     if (dayDetails) {
-      const owner = shareList.filter((share) => {
-        if (share.shareID === dayDetails.shareID) {
-          return share;
-        }
-      });
+      const owner = shareList.find(
+        (share) => share.shareID === dayDetails.shareID
+      );
       console.log("owner: ", owner);
       setHoveredOwner(owner);
       handleMouseMove(e); // Update cursor position when hovering starts
     } else {
-      setHoveredOwner("");
+      setHoveredOwner(null);
     }
   };
 
   useEffect(() => {
-    if (hoveredOwner.length > 0) {
+    if (hoveredOwner) {
       window.addEventListener("mousemove", handleMouseMove);
+    //   console.log("in useEffect: ", hoveredOwner);
     } else {
       window.removeEventListener("mousemove", handleMouseMove);
     }
@@ -69,6 +69,42 @@ const Calendar = ({ propertyDuration, isShareholder, shareList }) => {
       window.removeEventListener("mousemove", handleMouseMove);
     };
   }, [hoveredOwner]);
+
+  const [bgColor, setBgColor] = useState("bg-white");
+  const [lightBgColor, setLightBgColor] = useState("bg-opacity-10");
+
+  const handleBgColor = (details) => {
+    if (!details || !details.shareID) {
+      setHoveredShareID("");
+      setBgColor("bg-white");
+      setLightBgColor("bg-opacity-10"); // Default light background when not hovered
+      return;
+    }
+
+    // console.log("in handleBgColor: ", isShareholder, details);
+
+    const owner = shareList.find((share) => share.shareID === details.shareID);
+
+    if (isShareholder) {
+      setHoveredShareID(details.shareID);
+      if (owner && owner.currentOwnerDocID) {
+        setBgColor(details.color);
+        setLightBgColor(`${details.color} bg-opacity-50`); // Light version of the background
+      } else {
+        setBgColor("bg-gray-500");
+        setLightBgColor("bg-gray-500 bg-opacity-50"); // Light gray for non-owners
+      }
+    } else {
+      setHoveredShareID(details.shareID);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    setHoveredOwner(null);
+    setHoveredShareID("");
+    setBgColor("bg-white");
+    setLightBgColor("bg-opacity-10"); // Revert to default light background
+  };
   return (
     <div className="flex">
       <div className="px-20 py-4 max-h-[50vh] overflow-y-auto">
@@ -108,14 +144,32 @@ const Calendar = ({ propertyDuration, isShareholder, shareList }) => {
                         (day) => day.date === dayIndex + 1
                       );
 
+                      let owner;
+                      let permanentBgColor = "bg-white";
+                      if (dayDetails) {
+                        owner = shareList.find(
+                          (share) => share.shareID === dayDetails.shareID
+                        );
+                        if (owner) {
+                          permanentBgColor = owner.currentOwnerDocID
+                            ? dayDetails.color
+                            : "bg-gray-500";
+                        }
+                      }
+
                       return (
                         <div
                           key={dayIndex + 1}
                           className={`w-10 h-10 flex items-center justify-center border cursor-pointer rounded-full ${
-                            dayDetails ? dayDetails.color : "bg-white"
+                            hoveredShareID === dayDetails?.shareID
+                              ? bgColor
+                              : `${permanentBgColor} bg-opacity-30`
                           }`}
-                          onMouseEnter={(e) => handleMouseEnter(dayDetails, e)}
-                          onMouseLeave={() => setHoveredOwner("")}
+                          onMouseEnter={(e) => {
+                            handleBgColor(dayDetails);
+                            handleMouseEnter(dayDetails, e);
+                          }}
+                          onMouseLeave={handleMouseLeave}
                         >
                           {dayIndex + 1}
                         </div>
@@ -166,7 +220,7 @@ const Calendar = ({ propertyDuration, isShareholder, shareList }) => {
         })}
       </div>
       {/* Floating Owner Details */}
-      {hoveredOwner.length > 0 && (
+      {hoveredOwner && (
         <div
           className="absolute pointer-events-none bg-white text-gray-700 p-2 border rounded shadow-lg"
           style={{
@@ -176,7 +230,9 @@ const Calendar = ({ propertyDuration, isShareholder, shareList }) => {
             zIndex: 1000,
           }}
         >
-          {hoveredOwner[0]?.currentOwnerDocID ? `Owner: ${hoveredOwner[0]?.currentOwnerDocID?.username}` : "Available for sale"}
+          {hoveredOwner?.currentOwnerDocID
+            ? `Owner: ${hoveredOwner?.currentOwnerDocID?.username}`
+            : "Available for sale"}
         </div>
       )}
     </div>

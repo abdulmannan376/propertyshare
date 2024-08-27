@@ -409,6 +409,12 @@ const OfferCard = ({ card, fetchData }) => {
                 <p className="mx-2 text-gray-500">Cancelled</p>
               </>
             )}
+            {card.status === "expired" && (
+              <>
+                <MdCancel className="text-xl text-gray-500" />{" "}
+                <p className="mx-2 text-gray-500">Expired</p>
+              </>
+            )}
           </div>
         )}
         {activeOffersTab === "Sent" &&
