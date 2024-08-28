@@ -10,7 +10,6 @@ import OfferCard from "./offersCard";
 import NewSwapOfferModal from "../modals/newSwapOffer";
 
 const Offers = () => {
-
   const [mySentOffers, setMySentOffers] = useState([]);
   const [myReceivedOffers, setMyReceivedOffers] = useState([]);
 
@@ -22,13 +21,14 @@ const Offers = () => {
   );
 
   const [isSentOffersLoading, setIsSentOffersLoading] = useState(false);
+  const [showHistory, setShowHistory] = useState(false);
 
   const fetchMySentOffers = async () => {
     try {
       setIsSentOffersLoading(true);
       const username = JSON.parse(localStorage.getItem("userDetails")).username;
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_SERVER_HOST}/share/get-sent-offers-by-category/${username}/${activeOfferCategoryTab}`,
+        `${process.env.NEXT_PUBLIC_SERVER_HOST}/share/get-sent-offers-by-category/${username}/${activeOfferCategoryTab}/?showHistory=${showHistory}`,
         {
           method: "GET",
         }
@@ -67,7 +67,7 @@ const Offers = () => {
           process.env.NEXT_PUBLIC_SERVER_HOST
         }/share/get-received-offers-by-category/${username}/${
           activeOfferCategoryTab === "Buy" ? "Sell" : activeOfferCategoryTab
-        }`,
+        }/?showHistory=${showHistory}`,
         {
           method: "GET",
         }
@@ -106,7 +106,7 @@ const Offers = () => {
   };
   useEffect(() => {
     fetchData();
-  }, [activeOffersTab, activeOfferCategoryTab]);
+  }, [activeOffersTab, activeOfferCategoryTab, showHistory]);
 
   return (
     <div className="bg-white w-full my-6 xxl:h-[85vh] md:h-[88vh] max-h-[88vh] overflow-y-auto">
@@ -154,69 +154,82 @@ const Offers = () => {
 
         {/* </Link> */}
       </div>
-      <div className="flex items-center justify-start md:space-x-20 space-x-14 my-3 px-14 text-white text-xl font-semibold mt-5">
-        <button onClick={() => dispatch(updateOfferCategoryTab("Rent"))}>
-          <h1
-            className={`flex ${
-              activeOfferCategoryTab === "Rent"
-                ? "underline-text"
-                : "hover-underline-animation"
-            } `}
-          >
-            Rent
-          </h1>
-        </button>
-        {/* <Link href={`${process.env.NEXT_PUBLIC_HOST}/chef`}> */}
-        {activeOffersTab === "Sent" ? (
-          <button
-            onClick={() => {
-              dispatch(updateOfferCategoryTab("Sell"));
-            }}
-          >
-            <h2
+      <div className="flex flex-row items-center justify-between mr-2">
+        <div className="flex items-center justify-start md:space-x-20 space-x-14 my-3 px-14 text-white text-xl font-semibold mt-5">
+          <button onClick={() => dispatch(updateOfferCategoryTab("Rent"))}>
+            <h1
               className={`flex ${
-                activeOfferCategoryTab === "Sell"
+                activeOfferCategoryTab === "Rent"
                   ? "underline-text"
                   : "hover-underline-animation"
               } `}
             >
-              Sell
-            </h2>
+              Rent
+            </h1>
           </button>
-        ) : (
-          <button
-            onClick={() => {
-              dispatch(updateOfferCategoryTab("Buy"));
-            }}
-          >
-            <h2
-              className={`flex ${
-                activeOfferCategoryTab === "Buy"
-                  ? "underline-text"
-                  : "hover-underline-animation"
-              } `}
+          {/* <Link href={`${process.env.NEXT_PUBLIC_HOST}/chef`}> */}
+          {activeOffersTab === "Sent" ? (
+            <button
+              onClick={() => {
+                dispatch(updateOfferCategoryTab("Sell"));
+              }}
             >
-              Buy
-            </h2>
-          </button>
-        )}
+              <h2
+                className={`flex ${
+                  activeOfferCategoryTab === "Sell"
+                    ? "underline-text"
+                    : "hover-underline-animation"
+                } `}
+              >
+                Sell
+              </h2>
+            </button>
+          ) : (
+            <button
+              onClick={() => {
+                dispatch(updateOfferCategoryTab("Buy"));
+              }}
+            >
+              <h2
+                className={`flex ${
+                  activeOfferCategoryTab === "Buy"
+                    ? "underline-text"
+                    : "hover-underline-animation"
+                } `}
+              >
+                Buy
+              </h2>
+            </button>
+          )}
 
-        {/* </Link> */}
-        <button
-          onClick={() => {
-            dispatch(updateOfferCategoryTab("Swap"));
-          }}
-        >
-          <h2
-            className={`flex ${
-              activeOfferCategoryTab === "Swap"
-                ? "underline-text"
-                : "hover-underline-animation"
-            } `}
+          {/* </Link> */}
+          <button
+            onClick={() => {
+              dispatch(updateOfferCategoryTab("Swap"));
+            }}
           >
-            Swap
-          </h2>
-        </button>
+            <h2
+              className={`flex ${
+                activeOfferCategoryTab === "Swap"
+                  ? "underline-text"
+                  : "hover-underline-animation"
+              } `}
+            >
+              Swap
+            </h2>
+          </button>
+        </div>
+        <div className="flex flex-row space-x-3">
+          <input
+            type="checkbox"
+            name="showHistory"
+            checked={showHistory}
+            onChange={({ target }) => {
+              setShowHistory(target.checked);
+            }}
+          />
+          <h2>Show History</h2>
+        </div>
       </div>
       {activeOffersTab === "Sent" && (
         <div>

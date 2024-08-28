@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import { MdClose } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import { updateWishList } from "@/app/redux/features/userSlice";
+import { errorAlert, successAlert } from "@/utils/alert";
 
 // Set the app element for accessibility reasons
 Modal.setAppElement("#app-body");
@@ -81,31 +82,13 @@ const BuyShareModal = ({
 
       const response = await res.json();
       if (response.success) {
-        // toast.success(response.message, {
-        //   position: "bottom-center",
-        //   autoClose: 5000,
-        //   hideProgressBar: false,
-        //   closeOnClick: true,
-        //   pauseOnHover: true,
-        //   draggable: true,
-        //   progress: undefined,
-        //   theme: "light",
-        // });
+        successAlert("Success", response.message);
         onClose(); // Close modal on success
       } else {
         throw new Error(response.message);
       }
     } catch (error) {
-      toast.error(error.message, {
-        position: "bottom-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      errorAlert("Error", error.message);
     }
   };
 
@@ -133,31 +116,13 @@ const BuyShareModal = ({
 
       const response = await res.json();
       if (response.success) {
-        // toast.success(response.message, {
-        //   position: "bottom-center",
-        //   autoClose: 5000,
-        //   hideProgressBar: false,
-        //   closeOnClick: true,
-        //   pauseOnHover: true,
-        //   draggable: true,
-        //   progress: undefined,
-        //   theme: "light",
-        // });
+        successAlert("Success", response.message);
         onClose(); // Close modal on success
       } else {
         throw new Error(response.message);
       }
     } catch (error) {
-      toast.error(error.message, {
-        position: "bottom-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      errorAlert("Error", error.message);
     }
   };
 

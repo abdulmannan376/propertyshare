@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import NewSwapOfferModal from "../modals/newSwapOffer";
+import { errorAlert, successAlert } from "@/utils/alert";
 
 const SwapShareComponent = ({ propertyID, propertyDocID, category }) => {
   const [isModalOpen, setModalOpen] = useState(false);
@@ -159,30 +160,12 @@ const SwapShareComponent = ({ propertyID, propertyDocID, category }) => {
       const response = await res.json();
       if (response.success) {
         fetchMyShares();
-        toast.success(response.message, {
-          position: "bottom-center",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        successAlert("Success", response.message);
       } else {
         throw new Error(response.message);
       }
     } catch (error) {
-      toast.error(error.message, {
-        position: "bottom-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      errorAlert("Error", error.message);
     }
   };
 
@@ -207,30 +190,12 @@ const SwapShareComponent = ({ propertyID, propertyDocID, category }) => {
       const response = await res.json();
 
       if (response.success) {
-        toast.success(response.message, {
-          position: "bottom-center",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        successAlert("Success", response.message)
       } else {
         throw new Error(response.message);
       }
     } catch (error) {
-      toast.error(error.message, {
-        position: "bottom-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      errorAlert("Error", error.message)
     }
   };
 

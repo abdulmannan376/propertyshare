@@ -16,6 +16,7 @@ import "swiper/css/pagination";
 import "swiper/css/navigation";
 import Thread from "./threadComponent";
 import RejectionModal from "../modals/inspectionRejectionModal";
+import { errorAlert, successAlert } from "@/utils/alert";
 
 const Inspections = () => {
   const dispatch = useDispatch();
@@ -383,30 +384,12 @@ const Inspections = () => {
 
       const response = await res.json();
       if (response.success) {
-        toast.success(response.message, {
-          position: "bottom-center",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        successAlert("Success", response.message)
         setThreadBody("");
         fetchThreads(shareID, "Inspection");
       }
     } catch (error) {
-      toast.error(error.message, {
-        position: "bottom-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      errorAlert("Error", error.message)
     }
   };
 

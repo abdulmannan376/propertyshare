@@ -1,3 +1,4 @@
+import { errorAlert, successAlert } from "@/utils/alert";
 import React, { useEffect, useRef, useState } from "react";
 import Modal from "react-modal";
 import { toast } from "react-toastify";
@@ -49,30 +50,12 @@ const RejectionModal = ({
 
       const response = await res.json();
       if (response.success) {
-        toast.success(response.message, {
-          position: "bottom-center",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        successAlert("Success", response.message)
         setComment("");
         fetchThreads(shareID, "Inspection");
       }
     } catch (error) {
-      toast.error(error.message, {
-        position: "bottom-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      errorAlert("Error", error.message)
     }
   };
 

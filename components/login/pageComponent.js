@@ -15,6 +15,7 @@ import {
   updateDropdrownStatus,
   updateNavbarTextColor,
 } from "@/app/redux/features/navbarSlice";
+import { errorAlert, successAlert } from "@/utils/alert";
 
 const LoginPageComponent = () => {
   const [username, setUsername] = useState("");
@@ -73,16 +74,7 @@ const LoginPageComponent = () => {
       const response = await res.json();
       setIsLoading(false);
       if (response.success) {
-        // toast.success(response.message, {
-        //   position: "bottom-center",
-        //   autoClose: 5000,
-        //   hideProgressBar: false,
-        //   closeOnClick: true,
-        //   pauseOnHover: true,
-        //   draggable: true,
-        //   progress: undefined,
-        //   theme: "light",
-        // });
+        successAlert("Success", "Logged In")
         localStorage.setItem("token", response.token);
         localStorage.setItem("userDetails", JSON.stringify(response.body));
         setTimeout(() => {
@@ -94,16 +86,7 @@ const LoginPageComponent = () => {
       }
     } catch (error) {
       setIsLoading(false);
-      toast.error(error.message, {
-        position: "bottom-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      errorAlert("Error", error.message)
     }
   };
   return (

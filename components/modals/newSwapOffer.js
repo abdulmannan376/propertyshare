@@ -1,3 +1,4 @@
+import { errorAlert, successAlert } from "@/utils/alert";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { MdClose } from "react-icons/md";
@@ -58,18 +59,18 @@ const NewSwapOfferModal = ({
   }, []);
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     try {
       if (!selectedShareID) {
         throw new Error("no share selected");
       }
 
       const data = {
-          shareID: shareID,
-          username: JSON.parse(localStorage.getItem("userDetails")).username,
-          offeredShareID: selectedShareID,
-        };
-        console.log(data)
+        shareID: shareID,
+        username: JSON.parse(localStorage.getItem("userDetails")).username,
+        offeredShareID: selectedShareID,
+      };
+      console.log(data);
 
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_SERVER_HOST}/share/gen-share-swap-offer`,
@@ -85,30 +86,12 @@ const NewSwapOfferModal = ({
       const response = await res.json();
 
       if (response.success) {
-        toast.success(response.message, {
-          position: "bottom-center",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        successAlert("Success", response.message);
       } else {
         throw new Error(response.message);
       }
     } catch (error) {
-      toast.error(error.message, {
-        position: "bottom-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      errorAlert("Error", error.message);
     }
   };
 
@@ -164,8 +147,12 @@ const NewSwapOfferModal = ({
             >
               <option value="Select">Select</option>
               {myPropertyShares.map((share, index) => {
-                const startDate = new Date(share.availableInDuration.startDateString);
-                const endDate = new Date(share.availableInDuration.endDateString);
+                const startDate = new Date(
+                  share.availableInDuration.startDateString
+                );
+                const endDate = new Date(
+                  share.availableInDuration.endDateString
+                );
                 return (
                   <option key={index} value={share.shareID}>
                     {index + 1}: {startDate.toISOString().split("T")[0]} -{" "}

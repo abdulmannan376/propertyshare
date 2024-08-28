@@ -13,6 +13,7 @@ import {
   updateDropdrownStatus,
   updateNavbarTextColor,
 } from "../redux/features/navbarSlice";
+import { errorAlert, successAlert } from "@/utils/alert";
 
 const Page = () => {
   const dispatch = useDispatch();
@@ -82,16 +83,7 @@ const Page = () => {
       const response = await res.json();
       setIsLoading(false);
       if (response.success) {
-        // toast.success(response.message, {
-        //   position: "bottom-center",
-        //   autoClose: 5000,
-        //   hideProgressBar: false,
-        //   closeOnClick: true,
-        //   pauseOnHover: true,
-        //   draggable: true,
-        //   progress: undefined,
-        //   theme: "light",
-        // });
+        successAlert("Success", response.message);
         setPhase(2);
         setName("");
         setUsername("");
@@ -104,16 +96,7 @@ const Page = () => {
       // throw new Error("new error")
     } catch (error) {
       setIsLoading(false);
-      toast.error(error.message, {
-        position: "bottom-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      errorAlert("Error", error.message);
     }
   };
   return (

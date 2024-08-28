@@ -1,4 +1,5 @@
 "use client";
+import { errorAlert, successAlert } from "@/utils/alert";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 
@@ -32,30 +33,12 @@ const SectionContact = () => {
         setName("");
         setEmail("");
         setMessage("");
-        toast.success(response.message, {
-          position: "bottom-center",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        successAlert("Success", response.message)
       } else {
         throw new Error(response.message);
       }
     } catch (error) {
-      toast.error(error.message, {
-        position: "bottom-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      errorAlert("Error", error.message)
     }
   };
   return (

@@ -25,6 +25,7 @@ import { TiThMenu } from "react-icons/ti";
 import { MdMessage } from "react-icons/md";
 import { updateDropdrownStatus } from "@/app/redux/features/navbarSlice";
 import { useSocket } from "@/hooks/useSocket";
+import { errorAlert, successAlert } from "@/utils/alert";
 
 const Navbar = () => {
   const pathname = usePathname();
@@ -233,16 +234,7 @@ const Navbar = () => {
         ).username;
         socket.emit("logout", { username: username });
         console.log("reponse: ", response);
-        toast.success(response.message, {
-          position: "bottom-center",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        successAlert("Success", response.message);
         setLoggedIn(false);
         localStorage.removeItem("token");
         localStorage.removeItem("userDetails");
@@ -252,16 +244,7 @@ const Navbar = () => {
         }, 2000);
       }
     } catch (error) {
-      toast.error(error.message, {
-        position: "bottom-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      errorAlert("Error", error.message);
     }
   };
 
@@ -275,7 +258,11 @@ const Navbar = () => {
     console.log("in function : handleUnreadNotificationSelect");
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_SERVER_HOST}/notification/mark-notification-read/?key=${notificationsList[index]?.notificationID}&all=${false}`,
+        `${
+          process.env.NEXT_PUBLIC_SERVER_HOST
+        }/notification/mark-notification-read/?key=${
+          notificationsList[index]?.notificationID
+        }&all=${false}`,
         {
           method: "PUT",
         }
@@ -477,7 +464,10 @@ const Navbar = () => {
                   {showDropDowns["notification"] && !selectedNotification && (
                     <ul className="absolute w-96 -right-0 text-gray-800 bg-white border border-[#116A7B] mt-0 h-[34rem] max-h-[34rem] overflow-y-auto">
                       <li>
-                        <button type="button" className="m-2 px-2 py-1 text-xs rounded bg-gray-300 text-gray-800 font-bold">
+                        <button
+                          type="button"
+                          className="m-2 px-2 py-1 text-xs rounded bg-gray-300 text-gray-800 font-bold"
+                        >
                           Read all
                         </button>
                       </li>

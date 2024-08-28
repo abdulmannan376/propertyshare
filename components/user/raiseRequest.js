@@ -19,6 +19,7 @@ import Link from "next/link";
 import Slider from "react-slick";
 import { TiArrowRightThick } from "react-icons/ti";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
+import { errorAlert, successAlert } from "@/utils/alert";
 
 const NextArrow = ({ className, style, onClick }) => {
   return (
@@ -226,30 +227,12 @@ const RaiseRequest = () => {
         setUrlsList("");
         setFiles(null);
         fetchRaiseRequests();
-        // toast.success(response.message, {
-        //   position: "bottom-center",
-        //   autoClose: 5000,
-        //   hideProgressBar: false,
-        //   closeOnClick: true,
-        //   pauseOnHover: true,
-        //   draggable: true,
-        //   progress: undefined,
-        //   theme: "light",
-        // });
+        successAlert("Success", response.message)
       } else {
         throw new Error(response.message);
       }
     } catch (error) {
-      toast.error(error.message, {
-        position: "bottom-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      errorAlert("Error", error.message)
     }
   };
 
@@ -457,30 +440,12 @@ const RaiseRequest = () => {
 
       const response = await res.json();
       if (response.success) {
-        // toast.success(response.message, {
-        //   position: "bottom-center",
-        //   autoClose: 5000,
-        //   hideProgressBar: false,
-        //   closeOnClick: true,
-        //   pauseOnHover: true,
-        //   draggable: true,
-        //   progress: undefined,
-        //   theme: "light",
-        // });
+        successAlert("Success", response.message)
         setThreadBody("");
         fetchThreads(shareID, requestType, requestID);
       }
     } catch (error) {
-      toast.error(error.message, {
-        position: "bottom-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      errorAlert("Error", error.message)
     }
   };
 
@@ -526,30 +491,12 @@ const RaiseRequest = () => {
 
       if (response.success) {
         fetchRequests("pending_approval");
-        toast.success(response.message, {
-          position: "bottom-center",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        successAlert("Success", response.message)
       } else {
         throw new Error(response.message);
       }
     } catch (error) {
-      toast.error(error.message, {
-        position: "bottom-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      errorAlert("Error", error.message)
     }
   };
 

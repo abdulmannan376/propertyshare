@@ -205,7 +205,7 @@ const SectionFeaturedProperty = () => {
                       <strong className="text-gray-900">
                         {card.totalStakes - card.stakesOccupied}
                       </strong>{" "}
-                      of {card.totalStakes} shares avi.
+                      of {card.totalStakes - 1} shares avi.
                     </h3>
                     <h4 className="text-xl flex items-start text-[#116A7B]">
                       <FiMapPin className="inline-flex mt-1 mr-1" />{" "}

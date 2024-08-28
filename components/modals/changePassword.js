@@ -1,5 +1,6 @@
 "use client";
 
+import { errorAlert, successAlert } from "@/utils/alert";
 import { useState } from "react";
 import { toast } from "react-toastify";
 
@@ -14,7 +15,6 @@ const ChangePasswordModal = ({ isOpen, onClose }) => {
     try {
       if (newPassword !== confirmPassword) {
         throw new Error("New passwords do not match!");
-        
       }
       const data = {
         currentPassword: currentPassword,
@@ -36,34 +36,16 @@ const ChangePasswordModal = ({ isOpen, onClose }) => {
       const response = await res.json();
 
       if (response.success) {
-        toast.success(response.message, {
-          position: "bottom-center",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-        setCurrentPassword("")
-        setNewPassword("")
-        setConfirmPassword("")
+        successAlert("Success", response.message);
+        setCurrentPassword("");
+        setNewPassword("");
+        setConfirmPassword("");
         onClose();
       } else {
         throw new Error(response.message);
       }
     } catch (error) {
-      toast.error(error.message, {
-        position: "bottom-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      errorAlert("Error", error.message);
     }
 
     // Here, you would typically handle the password change logic or call an API

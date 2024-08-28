@@ -9,6 +9,7 @@ import { MdCancel, MdOutlinePending, MdPending } from "react-icons/md";
 import { IoMdCloseCircle } from "react-icons/io";
 import { FaCheckCircle } from "react-icons/fa";
 import { toast } from "react-toastify";
+import { errorAlert, successAlert } from "@/utils/alert";
 
 const RaiseRequestCard = ({ card, fetchData, sharesList, fetchRequests }) => {
   const TruncatingH1 = ({ text }) => {
@@ -144,30 +145,12 @@ const RaiseRequestCard = ({ card, fetchData, sharesList, fetchRequests }) => {
 
       if (response.success) {
         fetchRequests("pending_approval");
-        toast.success(response.message, {
-          position: "bottom-center",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        successAlert("Success", response.message)
       } else {
         throw new Error(response.message);
       }
     } catch (error) {
-      toast.error(error.message, {
-        position: "bottom-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      errorAlert("Error", error.message)
     }
   };
 

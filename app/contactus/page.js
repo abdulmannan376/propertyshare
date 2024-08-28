@@ -11,6 +11,7 @@ import {
   updateNotificationIconColor,
 } from "../redux/features/navbarSlice";
 import { toast } from "react-toastify";
+import { errorAlert, successAlert } from "@/utils/alert";
 
 const Page = () => {
   const [name, setName] = useState("");
@@ -60,30 +61,12 @@ const Page = () => {
 
       const response = await res.json();
       if (response.success) {
-        // toast.success(response.message, {
-        //   position: "bottom-center",
-        //   autoClose: 5000,
-        //   hideProgressBar: false,
-        //   closeOnClick: true,
-        //   pauseOnHover: true,
-        //   draggable: true,
-        //   progress: undefined,
-        //   theme: "light",
-        // });
+        successAlert("Success", response.message);
       } else {
         throw new Error(response.message);
       }
     } catch (error) {
-      toast.error(error.message, {
-        position: "bottom-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      errorAlert("Error", error.message);
     }
   };
   return (

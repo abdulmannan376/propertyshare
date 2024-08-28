@@ -1,3 +1,4 @@
+import { errorAlert, successAlert } from "@/utils/alert";
 import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
 import { useSelector } from "react-redux";
@@ -41,31 +42,12 @@ const NewThread = ({
         console.log("response: ", response);
         if (response.success) {
           if (response.body) setPropertyShares(response.body);
-          else
-            toast.success(response.message, {
-              position: "bottom-center",
-              autoClose: 5000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "light",
-            });
+          else successAlert("Success", response.message);
         } else {
           throw new Error(response.message);
         }
       } catch (error) {
-        toast.error(error.message, {
-          position: "bottom-center",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        errorAlert("Error", error.message);
       }
     };
 
@@ -105,35 +87,17 @@ const NewThread = ({
       const response = await res.json();
 
       if (response.success) {
-        setSelectedShareID("")
-        setPrice("")
-        setIsBuyBackChecked(false)
+        setSelectedShareID("");
+        setPrice("");
+        setIsBuyBackChecked(false);
         setNewThreadSubmitted(true);
-        toast.success(response.message, {
-          position: "bottom-center",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        successAlert("Success", response.message);
         onClose();
       } else {
         throw new Error(response.message);
       }
     } catch (error) {
-      toast.error(error.message, {
-        position: "bottom-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      errorAlert("Error", error.message);
     }
   };
   return (

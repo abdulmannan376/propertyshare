@@ -1,4 +1,5 @@
 "use client";
+import { errorAlert, successAlert } from "@/utils/alert";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
@@ -64,16 +65,7 @@ const CodeVerificationInput = (userEmail) => {
       const response = await res.json();
 
       if (response.success) {
-        // toast.success(response.message, {
-        //   position: "bottom-center",
-        //   autoClose: 5000,
-        //   hideProgressBar: false,
-        //   closeOnClick: true,
-        //   pauseOnHover: true,
-        //   draggable: true,
-        //   progress: undefined,
-        //   theme: "light",
-        // });
+        successAlert("Success", response.message);
         setTimeout(() => {
           router.push("/login");
         }, 5100);
@@ -81,23 +73,14 @@ const CodeVerificationInput = (userEmail) => {
         throw new Error(response.message);
       }
     } catch (error) {
-      toast.error(error.message, {
-        position: "bottom-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      errorAlert("Error", error.message);
     }
   };
 
   const handleGenNewVerificationCode = async (e) => {
     e.preventDefault();
     try {
-        console.log(userEmail)
+      console.log(userEmail);
       const data = {
         email: userEmail.userEmail,
       };
@@ -108,36 +91,18 @@ const CodeVerificationInput = (userEmail) => {
           headers: {
             "Content-type": "application/json",
           },
-          body: JSON.stringify(data)
+          body: JSON.stringify(data),
         }
       );
 
       const response = await res.json();
       if (response.success) {
-        // toast.success(response.message, {
-        //   position: "bottom-center",
-        //   autoClose: 5000,
-        //   hideProgressBar: false,
-        //   closeOnClick: true,
-        //   pauseOnHover: true,
-        //   draggable: true,
-        //   progress: undefined,
-        //   theme: "light",
-        // });
+        successAlert("Success", response.message);
       } else {
         throw new Error(response.message);
       }
     } catch (error) {
-      toast.error(error.message, {
-        position: "bottom-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      errorAlert("Error", error.message);
     }
   };
 

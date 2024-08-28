@@ -230,9 +230,16 @@ const Calendar = ({ propertyDuration, isShareholder, shareList }) => {
             zIndex: 1000,
           }}
         >
-          {hoveredOwner?.currentOwnerDocID
-            ? `Owner: ${hoveredOwner?.currentOwnerDocID?.username}`
-            : "Available for sale"}
+          {hoveredOwner?.currentOwnerDocID ? (
+            <h1>
+              {`Owner: ${hoveredOwner?.currentOwnerDocID?.username}`} <br />
+              {hoveredOwner?.onRent && "Available for Rent"}
+              {hoveredOwner?.onSwap && "Available for Swap"}
+              {hoveredOwner?.onSale && "Available for Sale"}
+            </h1>
+          ) : (
+            "Available for sale"
+          )}
         </div>
       )}
     </div>

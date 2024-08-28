@@ -1,3 +1,4 @@
+import { errorAlert, successAlert } from "@/utils/alert";
 import Image from "next/image";
 import React, { useState } from "react";
 import { MdClose } from "react-icons/md";
@@ -20,7 +21,7 @@ const MakeOffer = ({
 
   const handleSubmit = async (e) => {
     try {
-      if (price=== 0) {
+      if (price === 0) {
         throw new Error("Price cannot be 0");
       }
       const data = {
@@ -44,30 +45,12 @@ const MakeOffer = ({
       const response = await res.json();
 
       if (response.success) {
-        toast.success(response.message, {
-          position: "bottom-center",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        successAlert("Success", response.message);
       } else {
         throw new Error(response.message);
       }
     } catch (error) {
-      toast.error(error.message, {
-        position: "bottom-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      errorAlert("Error", error.message);
     }
   };
   return (

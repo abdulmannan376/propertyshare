@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import PropertyRejectionModal from "../modals/propertyRejectionModal";
 import { useRouter } from "next/navigation";
+import { errorAlert, successAlert } from "@/utils/alert";
 const MapArea = dynamic(() => import("./mapArea"), { ssr: false });
 const compCities = require("countrycitystatejson");
 
@@ -403,16 +404,7 @@ const PropertyManagement = () => {
         const response = await res.json();
         setIsLoading(false);
         if (response.success) {
-          toast.success(response.message, {
-            position: "bottom-center",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-          });
+          successAlert("Success", response.message)
           setListingStatus("draft");
           changeFormPhase(formPhase + 1);
           setMyProperties((prevData) => {
@@ -450,16 +442,7 @@ const PropertyManagement = () => {
           setIsLoading(false);
           if (response.success) {
             changeFormPhase(formPhase + 1);
-            toast.success(response.message, {
-              position: "bottom-center",
-              autoClose: 5000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "light",
-            });
+            successAlert("Success", response.message)
           } else {
             throw new Error(response.message);
           }
@@ -516,16 +499,7 @@ const PropertyManagement = () => {
           setIsLoading(false);
           if (response.success) {
             changeFormPhase(formPhase + 1);
-            toast.success(response.message, {
-              position: "bottom-center",
-              autoClose: 5000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "light",
-            });
+            successAlert("Success", response.message)
           } else {
             throw new Error(response.message);
           }
@@ -578,16 +552,7 @@ const PropertyManagement = () => {
 
           const response = await res.json();
           if (response.success) {
-            toast.success(response.message, {
-              position: "bottom-center",
-              autoClose: 5000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "light",
-            });
+            successAlert("Success", response.message)
             setIsLoading(false);
             setIsAddPropertyClicked(false);
           } else {
@@ -597,16 +562,7 @@ const PropertyManagement = () => {
       }
     } catch (error) {
       setIsLoading(false);
-      toast.error(error.message, {
-        position: "bottom-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      errorAlert("Error", error.message)
     }
   };
 
