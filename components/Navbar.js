@@ -254,15 +254,13 @@ const Navbar = () => {
 
   const [selectedNotification, setSelectedNotification] = useState(null);
 
-  const handleUnreadNotificationSelect = async (index) => {
-    console.log("in function : handleUnreadNotificationSelect");
+  const handleUnreadNotificationSelect = async (index, all) => {
+    console.log("in function handleUnreadNotificationSelect: ", index, all);
     try {
+
+      const username = JSON.parse(localStorage.getItem("userDetails"))?.username
       const res = await fetch(
-        `${
-          process.env.NEXT_PUBLIC_SERVER_HOST
-        }/notification/mark-notification-read/?key=${
-          notificationsList[index]?.notificationID
-        }&all=${false}`,
+        `${process.env.NEXT_PUBLIC_SERVER_HOST}/notification/mark-notification-read/?key=${notificationsList[index]?.notificationID}&all=${all}&username=${username}`,
         {
           method: "PUT",
         }
@@ -271,8 +269,12 @@ const Navbar = () => {
       const response = await res.json();
       console.log(response);
       if (response.success) {
-        setSelectedNotification(notificationsList[index]);
-        dispatch(handleNotificationRead(index));
+        if (all) {
+          fetchNotifications();
+        } else {
+          setSelectedNotification(notificationsList[index]);
+          dispatch(handleNotificationRead(index));
+        }
       } else {
         setSelectedNotification(null);
         throw new Error(response.message);
@@ -466,6 +468,9 @@ const Navbar = () => {
                       <li>
                         <button
                           type="button"
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            handleUnreadNotificationSelect(0, true)}}
                           className="m-2 px-2 py-1 text-xs rounded bg-gray-300 text-gray-800 font-bold"
                         >
                           Read all
