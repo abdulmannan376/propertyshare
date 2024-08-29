@@ -150,9 +150,35 @@ const SectionFour = () => {
       <h1 className="text-4xl text-[#116A7B] text-center font-semibold uppercase">
         our investors
       </h1>
+      <div className="flex flex-row flex-wrap items-center justify-center mt-10">
+        <Image
+          width={500}
+          height={500}
+          src={"/assets/about-us/rapidsai.png"}
+          className="w-40 h-auto mx-10"
+        />
+        <Image
+          width={500}
+          height={500}
+          src={"/logo-bbh.png"}
+          className="w-40 h-auto mx-10"
+        />
+        <Image
+          width={500}
+          height={500}
+          src={"/icon-bbh.png"}
+          className="w-40 h-auto mx-10"
+        />
+        <Image
+          width={500}
+          height={500}
+          src={"/assets/about-us/rapidsai.png"}
+          className="w-40 h-auto mx-10"
+        />
+      </div>
     </div>
-  )
-}
+  );
+};
 const Page = () => {
   const dispatch = useDispatch();
 
@@ -180,7 +206,7 @@ const Page = () => {
       <SectionOne />
       <SectionTwo />
       <SectionThree />
-      <SectionFour/>
+      <SectionFour />
     </div>
   );
 };
