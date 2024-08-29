@@ -393,7 +393,7 @@ const Navbar = () => {
               Contact
             </Link>
             <Link
-              href={"/under-development"}
+              href={"/aboutus"}
               className={`lg:mr-12 mr-5 hover:${hoverTextColor} ${
                 currentPage.tag === "About"
                   ? `${currentPage.bgColor} ${currentPage.textColor}`
