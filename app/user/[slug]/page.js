@@ -124,8 +124,8 @@ const Page = () => {
     { name: "Featured Management", roles: ["admin"] },
     // { name: "Blocked Users", roles: ["shareholder", "user"] },
     // { name: "Buyback Requests", roles: ["admin", "shareholder"] },
-    { name: "Share Transfer", roles: ["admin"] },
-    { name: "Restricted Users", roles: ["admin", "super admin"] },
+    // { name: "Share Transfer", roles: ["admin"] },
+    // { name: "Restricted Users", roles: ["admin", "super admin"] },
     { name: "Admin Management", roles: ["super admin"] },
   ];
 
