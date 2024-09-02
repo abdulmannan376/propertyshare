@@ -26,6 +26,7 @@ import BuybackRequests from "@/components/user/buybackRequests";
 import RaiseRequest from "@/components/user/raiseRequest";
 import Purchases from "@/components/user/purchases";
 import Reservations from "@/components/user/reservations";
+import Payments from "@/components/user/payments";
 
 const Page = () => {
   const dispatch = useDispatch();
@@ -246,6 +247,7 @@ const Page = () => {
           {activeTab === "Modification & Maintenance" && <RaiseRequest />}
           {activeTab === "Shares in Properties" && <Purchases />}
           {activeTab === "Reservations" && <Reservations />}
+          {activeTab === "Bills and Payment" && <Payments/>}
         </div>
       </div>
     </div>

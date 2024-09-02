@@ -11,6 +11,7 @@ const initialState = {
   activeOfferCategoryTab: "Rent",
   activeInspectionTab: "My Inspections",
   activeRaiseRequestTab: "My Requests",
+  activePaymentsTab: "My Payments",
 };
 
 export const userDashboardSlice = createSlice({
@@ -38,6 +39,9 @@ export const userDashboardSlice = createSlice({
     updateActiveRaiseRequestTab: (state, action) => {
       state.activeRaiseRequestTab = action.payload;
     },
+    updateActivePaymentTab: (state, action) => {
+      state.activePaymentsTab = action.payload
+    }
   },
 });
 
@@ -48,6 +52,7 @@ export const {
   updateOffersTab,
   updateOfferCategoryTab,
   updateActiveInspectionTab,
-  updateActiveRaiseRequestTab
+  updateActiveRaiseRequestTab,
+  updateActivePaymentTab,
 } = userDashboardSlice.actions;
 export default userDashboardSlice.reducer;
