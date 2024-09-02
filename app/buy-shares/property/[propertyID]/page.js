@@ -51,6 +51,8 @@ import {
 import CalendarModal from "@/components/modals/calendarModal";
 import Slider from "react-slick";
 import { TiArrowRightThick } from "react-icons/ti";
+import { errorAlert } from "@/utils/alert";
+
 
 const NextArrow = ({ className, style, onClick }) => {
   return (
@@ -161,16 +163,7 @@ const Page = () => {
         throw new Error(response.message);
       }
     } catch (error) {
-      toast.error(error.message, {
-        position: "bottom-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      errorAlert("Error", error.message);
     }
   };
 
@@ -212,16 +205,7 @@ const Page = () => {
         throw new Error(response.message);
       }
     } catch (error) {
-      toast.error(error.message, {
-        position: "bottom-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      errorAlert("Error", error.message);
     }
   };
 
@@ -255,16 +239,7 @@ const Page = () => {
         throw new Error(response.message);
       }
     } catch (error) {
-      toast.error(error.message, {
-        position: "bottom-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      errorAlert("Error", error.message);
     }
   };
 
@@ -272,6 +247,8 @@ const Page = () => {
 
   const handleOpenCalendarModal = () => setIsCalendarModalOpen(true);
   const handleCloseCalendarModal = () => setIsCalendarModalOpen(false);
+
+  
 
   return (
     <>

@@ -19,6 +19,7 @@ import {
 import { updateNewMessageFlag } from "@/app/redux/features/userSlice";
 import ChatComponent from "@/components/messages/chatComponent";
 import { useSocket } from "@/hooks/useSocket";
+import { errorAlert } from "@/utils/alert";
 import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
@@ -74,16 +75,7 @@ const Page = () => {
         throw new Error(response.body);
       }
     } catch (error) {
-      toast.error(error.message, {
-        position: "bottom-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      errorAlert("Error", error.message)
     }
   };
 
@@ -279,16 +271,7 @@ const Page = () => {
       }
     } catch (error) {
       setIsConversationLoading(false);
-      toast.error(error.message, {
-        position: "bottom-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      errorAlert("Error", error.message)
     }
   };
 

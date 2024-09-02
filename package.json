@@ -11,6 +11,7 @@
   "dependencies": {
     "@react-leaflet/core": "^2.1.0",
     "@reduxjs/toolkit": "^2.2.3",
+    "braintree-web-drop-in": "^1.43.0",
     "countrycitystatejson": "^21.3.2702",
     "currency-list": "^1.0.8",
     "dayjs": "^1.11.13",

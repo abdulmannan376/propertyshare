@@ -13,6 +13,7 @@ import { ToastContainer, toast } from "react-toastify";
 import PropertyCard from "@/components/rent-shares/propertyCard";
 import SearchBar from "@/components/buy-shares/searchBar";
 import { handleAllDropdownsActivity } from "../redux/features/buyShareSlice";
+import { errorAlert } from "@/utils/alert";
 
 const Page = () => {
   const dispatch = useDispatch();
@@ -90,16 +91,7 @@ const Page = () => {
     } catch (error) {
       setIsFeaturedPropertyLoading(false);
 
-      toast.error(error.message, {
-        position: "bottom-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      errorAlert("Error", error.message);
     }
   };
 
@@ -138,16 +130,7 @@ const Page = () => {
       }
     } catch (error) {
       setIsMostViewedLoading(false);
-      toast.error(error.message, {
-        position: "bottom-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      errorAlert("Error", error.message);
     }
   };
 
@@ -186,16 +169,7 @@ const Page = () => {
       }
     } catch (error) {
       setIsRecentlyAddedLoading(false);
-      toast.error(error.message, {
-        position: "bottom-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      errorAlert("Error", error.message);
     }
   };
 

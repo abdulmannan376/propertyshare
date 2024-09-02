@@ -1,4 +1,5 @@
 import { updateFavoritesList } from "@/app/redux/features/userSlice";
+import { errorAlert } from "@/utils/alert";
 import compCities from "countrycitystatejson";
 import Image from "next/image";
 import Link from "next/link";
@@ -46,16 +47,7 @@ const PropertyCard = ({ card }) => {
         throw new Error(response.message);
       }
     } catch (error) {
-      toast.error(error.message, {
-        position: "bottom-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      errorAlert("Error", error.message)
     }
   };
 

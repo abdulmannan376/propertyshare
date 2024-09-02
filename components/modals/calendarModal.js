@@ -193,19 +193,32 @@ const Calendar = ({ propertyDuration, isShareholder, shareList }) => {
                         (day) => day.date === dayIndex + 1
                       );
 
+                      let owner;
+                      let occupied = false;
+                      if (dayDetails) {
+                        owner = shareList.find(
+                          (share) => share.shareID === dayDetails.shareID
+                        );
+                        if (owner) {
+                          occupied = owner.currentOwnerDocID ? true : false;
+                        }
+                      }
                       return (
                         <div
                           key={dayIndex + 1}
                           className={`w-10 h-10 flex items-center justify-center border rounded-full cursor-pointer ${
                             hoveredShareID === dayDetails?.shareID
                               ? "bg-gray-500"
+                              : occupied
+                              ? "bg-gray-500 bg-opacity-50"
                               : "bg-white"
                           }`}
-                          onMouseOver={() =>
+                          onMouseOver={(e) => {
+                            handleMouseEnter(dayDetails, e);
                             setHoveredShareID(
                               dayDetails ? dayDetails.shareID : ""
-                            )
-                          }
+                            );
+                          }}
                           onMouseOut={() => setHoveredShareID("")}
                         >
                           {dayIndex + 1}
@@ -220,7 +233,7 @@ const Calendar = ({ propertyDuration, isShareholder, shareList }) => {
         })}
       </div>
       {/* Floating Owner Details */}
-      {hoveredOwner && (
+      {hoveredOwner && isShareholder && (
         <div
           className="absolute pointer-events-none bg-white text-gray-700 p-2 border rounded shadow-lg"
           style={{
@@ -239,6 +252,23 @@ const Calendar = ({ propertyDuration, isShareholder, shareList }) => {
             </h1>
           ) : (
             "Available for sale"
+          )}
+        </div>
+      )}
+      {hoveredOwner && !isShareholder && (
+        <div
+          className="absolute pointer-events-none bg-white text-gray-700 p-2 border rounded shadow-lg"
+          style={{
+            top: cursorPosition.y - 200,
+            left: cursorPosition.x - 600,
+            whiteSpace: "nowrap",
+            zIndex: 1000,
+          }}
+        >
+          {hoveredOwner?.currentOwnerDocID ? (
+            <h1>Occupied</h1>
+          ) : (
+            <h1>Purchase now</h1>
           )}
         </div>
       )}

@@ -192,16 +192,7 @@ const Navbar = () => {
           throw new Error(response.message);
         }
       } catch (error) {
-        toast.error(error.message, {
-          position: "bottom-center",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        errorAlert("Error", error.message);
       }
     }
   };
@@ -257,8 +248,9 @@ const Navbar = () => {
   const handleUnreadNotificationSelect = async (index, all) => {
     console.log("in function handleUnreadNotificationSelect: ", index, all);
     try {
-
-      const username = JSON.parse(localStorage.getItem("userDetails"))?.username
+      const username = JSON.parse(
+        localStorage.getItem("userDetails")
+      )?.username;
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_SERVER_HOST}/notification/mark-notification-read/?key=${notificationsList[index]?.notificationID}&all=${all}&username=${username}`,
         {
@@ -280,16 +272,7 @@ const Navbar = () => {
         throw new Error(response.message);
       }
     } catch (error) {
-      toast.error(error.message, {
-        position: "bottom-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      errorAlert("Error", error.message);
     }
   };
 
@@ -464,45 +447,50 @@ const Navbar = () => {
                     )}
                   </button>
                   {showDropDowns["notification"] && !selectedNotification && (
-                    <ul className="absolute w-96 -right-0 text-gray-800 bg-white border border-[#116A7B] mt-0 h-[34rem] max-h-[34rem] overflow-y-auto">
-                      <li>
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            handleUnreadNotificationSelect(0, true)}}
-                          className="m-2 px-2 py-1 text-xs rounded bg-gray-300 text-gray-800 font-bold"
-                        >
-                          Read all
-                        </button>
-                      </li>
-                      {notificationsList.map((notification, index) => (
-                        <li key={index}>
+                    <div className="absolute w-96 -right-0 rounded-xl bg-white border border-[#116A7B] p-2">
+                      <ul className=" text-gray-800  h-[34rem] max-h-[34rem] overflow-y-auto ">
+                        <li>
                           <button
                             type="button"
                             onClick={(e) => {
                               e.stopPropagation();
-                              if (notification.inAppStatus === "unread") {
-                                handleUnreadNotificationSelect(index);
-                              } else {
-                                setSelectedNotification(notification);
-                              }
+                              handleUnreadNotificationSelect(0, true);
                             }}
-                            className="w-full text-start px-3 py-5 hover:bg-[#116A7B20] "
+                            className="m-2 px-2 py-1 text-xs rounded bg-gray-300 text-gray-800 font-bold"
                           >
-                            <div className="flex flex-row items-center justify-between">
-                              <h2 className={`font-semibold`}>
-                                {notification.subject}
-                              </h2>
-                              {notification.inAppStatus === "unread" && (
-                                <span className="w-3 h-3 bg-[#116A7B] rounded-full mr-5 mb-2"></span>
-                              )}
-                            </div>
-                            <p>Date: {notification.createdAt.split("T")[0]}</p>
+                            Read all
                           </button>
                         </li>
-                      ))}
-                    </ul>
+                        {notificationsList.map((notification, index) => (
+                          <li key={index}>
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                if (notification.inAppStatus === "unread") {
+                                  handleUnreadNotificationSelect(index);
+                                } else {
+                                  setSelectedNotification(notification);
+                                }
+                              }}
+                              className="w-full text-start px-3 py-5 hover:bg-[#116A7B20] "
+                            >
+                              <div className="flex flex-row items-center justify-between">
+                                <h2 className={`font-semibold`}>
+                                  {notification.subject}
+                                </h2>
+                                {notification.inAppStatus === "unread" && (
+                                  <span className="w-3 h-3 bg-[#116A7B] rounded-full mr-5 mb-2"></span>
+                                )}
+                              </div>
+                              <p>
+                                Date: {notification.createdAt.split("T")[0]}
+                              </p>
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   )}
                   {showDropDowns["notification"] && selectedNotification && (
                     <div className="absolute w-96 -right-0 bg-white text-gray-800 border border-[#116A7B] mt-0 p-5 space-y-5 h-[34rem] max-h-[34rem] overflow-y-auto">

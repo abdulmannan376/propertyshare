@@ -6,9 +6,9 @@ import {
   updateNavbarTextColor,
   updateNotificationIconColor,
 } from "@/app/redux/features/navbarSlice";
-import { updateActiveRentShareNavBtn } from "@/app/redux/features/propertyPageSlice";
+import { updateActiveBuyShareNavBtn } from "@/app/redux/features/propertyPageSlice";
 import Image from "next/image";
-import { useParams, useSearchParams } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import React, { Suspense, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
@@ -20,7 +20,8 @@ import { IoCalendar } from "react-icons/io5";
 import { FaStairs, FaPlane } from "react-icons/fa6";
 import { TbParkingCircle, TbBath } from "react-icons/tb";
 import { PiElevatorDuotone } from "react-icons/pi";
-import { MdOutlineMeetingRoom } from "react-icons/md";
+import { MdOutlineMeetingRoom, MdPlaylistAddCheckCircle } from "react-icons/md";
+import { MdPlaylistAddCircle } from "react-icons/md";
 import compCities from "countrycitystatejson";
 import GetPropertyID from "@/components/buy-shares/getPropertyID";
 
@@ -35,9 +36,22 @@ import "swiper/css/navigation";
 import BuyShare from "@/components/modals/buyShare";
 import BuyShareModal from "@/components/modals/buyShare";
 import ThreadDisplay from "@/components/buy-shares/threadComponent";
+import SwapShareComponent from "@/components/buy-shares/swapShareComponent";
+import {
+  FaHeart,
+  FaRegHeart,
+  FaCalendarAlt,
+  FaArrowRight,
+  FaArrowLeft,
+} from "react-icons/fa";
+import {
+  updateFavoritesList,
+  updateWishList,
+} from "@/app/redux/features/userSlice";
+import CalendarModal from "@/components/modals/calendarModal";
 import Slider from "react-slick";
 import { TiArrowRightThick } from "react-icons/ti";
-import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
+import { errorAlert } from "@/utils/alert";
 
 const NextArrow = ({ className, style, onClick }) => {
   return (
@@ -94,7 +108,7 @@ const Page = () => {
     dispatch(updateBgColor("bg-[#116A7B]"));
     dispatch(
       updateCurrentPageValue({
-        tag: "Rent Shares",
+        tag: "Buy Shares",
         bgColor: "bg-white",
         textColor: "text-[#116A7B]",
       })
@@ -102,7 +116,7 @@ const Page = () => {
   }, []);
 
   const activeNavBtn = useSelector(
-    (state) => state.propertyPageSliceReducer.navBtnRentShareActive
+    (state) => state.propertyPageSliceReducer.navBtnBuyShareActive
   );
 
   const [isModalOpen, setModalOpen] = useState(false);
@@ -126,11 +140,20 @@ const Page = () => {
   const [property, setProperty] = useState({});
   const [propertyFetched, setPropertyFetched] = useState(false);
   const [idProvided, setIdProvided] = useState(true);
+  const router = useRouter();
 
   const fetchData = async () => {
     try {
+      const role = JSON.parse(localStorage.getItem("userDetails")).role;
+      console.log(role);
+      if (role !== "admin" && role !== "super admin") {
+        setTimeout(() => {
+          router.push("/");
+        }, 2000);
+        throw new Error("Unauthorized");
+      }
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_SERVER_HOST}/property/get-property-by-id/${propertyID}`,
+        `${process.env.NEXT_PUBLIC_SERVER_HOST}/property/get-property-by-id/${propertyID}/?role=${role}`,
         {
           method: "GET",
           headers: {
@@ -148,7 +171,7 @@ const Page = () => {
         throw new Error(response.message);
       }
     } catch (error) {
-      errorAlert("Error", error.message)
+      errorAlert("Error", error.message);
     }
   };
 
@@ -157,6 +180,11 @@ const Page = () => {
       fetchData();
     }
   }, [propertyID]);
+
+  const [isCalendarModalOpen, setIsCalendarModalOpen] = useState(false);
+
+  const handleOpenCalendarModal = () => setIsCalendarModalOpen(true);
+  const handleCloseCalendarModal = () => setIsCalendarModalOpen(false);
 
   return (
     <>
@@ -173,6 +201,11 @@ const Page = () => {
         theme="light"
       />
       <div className="w-full h-20 bg-white"></div>
+      <CalendarModal
+        isOpen={isCalendarModalOpen}
+        onClose={handleCloseCalendarModal}
+        propertyID={propertyID}
+      />
       {propertyFetched && (
         <div
           className="xl:mx-24 mx-16 "
@@ -185,7 +218,7 @@ const Page = () => {
               <div>
                 {/* Swiper component */}
                 <Slider
-                {...settings}
+                  {...settings}
                   // modules={[Pagination, Navigation]}
                   // slidesPerView={1}
                   // navigation={{
@@ -203,7 +236,7 @@ const Page = () => {
                   className="mb-5"
                 >
                   {Array.from({ length: property.imageCount }, (_, index) => (
-                    <div key={index}>
+                    <div key={index} className="outline-none">
                       <Image
                         width={2000}
                         height={2000}
@@ -216,9 +249,9 @@ const Page = () => {
                     </div>
                   ))}
                 </Slider>
-{/* 
-                {/* Custom navigation buttons 
-                <div className="swiper-button-prev custom-prev"></div>
+
+                {/* Custom navigation buttons */}
+                {/* <div className="swiper-button-prev custom-prev"></div>
                 <div className="swiper-button-next custom-next"></div>
                 {/* Custom pagination 
                 <div
@@ -237,64 +270,39 @@ const Page = () => {
                 />
               </div>
             )}
+            <div className="flex items-center justify-between">
+              <div className="w-full flex items-center justify-start md:space-x-20 space-x-14 my-3 text-white text-2xl font-semibold">
+                <button
+                  onClick={() =>
+                    dispatch(updateActiveBuyShareNavBtn("Property Details"))
+                  }
+                >
+                  <h1
+                    className={`flex ${
+                      activeNavBtn === "Property Details"
+                        ? "underline-text"
+                        : "hover-underline-animation"
+                    } `}
+                  >
+                    Property Details
+                  </h1>
+                </button>
+                {/* <Link href={`${process.env.NEXT_PUBLIC_HOST}/chef`}> */}
 
-            <div className="w-screen flex items-center justify-start md:space-x-20 space-x-14 my-3 text-white text-2xl font-semibold">
-              <button
-                onClick={() =>
-                  dispatch(updateActiveRentShareNavBtn("Property Details"))
-                }
-              >
-                <h1
-                  className={`flex ${
-                    activeNavBtn === "Property Details"
-                      ? "underline-text"
-                      : "hover-underline-animation"
-                  } `}
+                {/* </Link> */}
+              </div>
+              <div className="flex items-center">
+                <button
+                  type="button"
+                  title="View Calendar"
+                  onClick={() => {
+                    handleOpenCalendarModal();
+                  }}
+                  className="px-1 mx-2 text-xl font-semibold focus:outline-none cursor-pointer"
                 >
-                  Property Details
-                </h1>
-              </button>
-              {/* <Link href={`${process.env.NEXT_PUBLIC_HOST}/chef`}> */}
-              <button
-                onClick={() => dispatch(updateActiveRentShareNavBtn("Rent"))}
-              >
-                <h2
-                  className={`flex ${
-                    activeNavBtn === "Rent"
-                      ? "underline-text"
-                      : "hover-underline-animation"
-                  } `}
-                >
-                  Rent
-                </h2>
-              </button>
-              <button
-                onClick={() => dispatch(updateActiveRentShareNavBtn("Sell"))}
-              >
-                <h2
-                  className={`flex ${
-                    activeNavBtn === "Sell"
-                      ? "underline-text"
-                      : "hover-underline-animation"
-                  } `}
-                >
-                  Sell
-                </h2>
-              </button>
-              <button
-                onClick={() => dispatch(updateActiveRentShareNavBtn("Swap"))}
-              >
-                <h2
-                  className={`flex ${
-                    activeNavBtn === "Swap"
-                      ? "underline-text"
-                      : "hover-underline-animation"
-                  } `}
-                >
-                  Swap
-                </h2>
-              </button>
-              {/* </Link> */}
+                  <FaCalendarAlt className="text-[#116A7B]" />
+                </button>
+              </div>
             </div>
             {activeNavBtn === "Property Details" && (
               <>
@@ -330,10 +338,10 @@ const Page = () => {
                       <IoIosPricetag className="inline-flex mx-2" />
                       <strong>Shares Sold:</strong>{" "}
                       <strong className="text-[#6E6E6E]">
-                        {property?.stakesOccupied}
+                        {property?.stakesOccupied - 1}
                       </strong>
                       <text className="text-[#6E6E6E] mr-2">
-                        /{property?.totalStakes}
+                        /{property?.totalStakes - 1}
                       </text>
                     </div>
                     <div className="border border-[#116A7B] text-2xl  text-[#00262D] p-2 rounded-lg">
@@ -609,44 +617,7 @@ const Page = () => {
                     )}
                   </div>
                 </div>
-                <div className="my-16">
-                  <button
-                    type="button"
-                    onClick={handleOpenModal}
-                    className="bg-[#116A7B] text-2xl text-white font-semibold px-5 py-3 rounded-xl"
-                  >
-                    Buy Share: $
-                    {Math.round(
-                      Math.round(
-                        property.valueOfProperty / property.totalStakes
-                      )
-                    )}
-                  </button>
-                </div>
-                <BuyShareModal
-                  isOpen={isModalOpen}
-                  onClose={handleCloseModal}
-                  propertyDocID={property._id}
-                  propertyID={property.propertyID}
-                  price={Math.round(
-                    property.valueOfProperty / property.totalStakes
-                  )}
-                />
               </>
-            )}
-            {activeNavBtn === "Rent" && (
-              <ThreadDisplay
-                propertyID={propertyID}
-                propertyDocID={property._id}
-                category={"Rent"}
-              />
-            )}
-            {activeNavBtn === "Sell" && (
-              <ThreadDisplay
-                propertyID={propertyID}
-                propertyDocID={property._id}
-                category={"Sell"}
-              />
             )}
           </div>
         </div>

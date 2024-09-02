@@ -67,7 +67,7 @@ const Footer = () => {
               </ul>
             </div>
             <div>
-              <h1 className="text-2xl font-semibold text-white uppercase">
+              <h1 className="w-36 text-2xl font-semibold text-white uppercase">
                 Follow Us
               </h1>
               <ul className="space-y-4 mt-4">
@@ -105,20 +105,23 @@ const Footer = () => {
                 </li>
               </ul>
             </div>
-          </div>
-          <div className="mt-10 space-y-2">
-            <h1 className="text-white">
-              <IoPinSharp className="inline-flex text-xl mb-1" />
-              office number, street number, state, city
-            </h1>
-            <h1 className="text-white">
-              <MdOutlinePhoneIphone className="inline-flex text-xl mb-1" />
-              +1 (XXX) XXX XXXX
-            </h1>
-            {/* <h1 className="text-white">
+            <div className="space-y-4">
+              <h1 className="text-2xl font-semibold text-white uppercase">
+                Contact
+              </h1>
+              <h1 className="text-white">
+                <IoPinSharp className="inline-flex text-xl mb-1" />
+                office number, street number, state, city
+              </h1>
+              <h1 className="text-white">
+                <MdOutlinePhoneIphone className="inline-flex text-xl mb-1" />
+                +1 (XXX) XXX XXXX
+              </h1>
+              {/* <h1 className="text-white">
               <IoPinSharp className="inline-flex text-xl mb-1" />
               office number, street number, state, city
             </h1> */}
+            </div>
           </div>
         </div>
       </div>

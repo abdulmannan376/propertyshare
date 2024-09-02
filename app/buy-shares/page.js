@@ -103,16 +103,7 @@ const Page = () => {
     } catch (error) {
       setIsFeaturedPropertyLoading(false);
 
-      toast.error(error.message, {
-        position: "bottom-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      errorAlert("Error", error.message)
     }
   };
 
@@ -155,16 +146,7 @@ const Page = () => {
       }
     } catch (error) {
       setIsMostViewedLoading(false);
-      toast.error(error.message, {
-        position: "bottom-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      errorAlert("Error", error.message)
     }
   };
 

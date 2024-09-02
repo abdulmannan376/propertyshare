@@ -2547,7 +2547,7 @@ const PropertyManagement = () => {
                   <button
                     key={index}
                     onClick={() =>
-                      router.push(`/buy-shares/property/${property.propertyID}`)
+                      router.push(`/property-preview/${property.propertyID}`)
                     }
                     className="w-full flex flex-row flex-wrap border border-[#D9D9D9] px-14 mb-5 cursor-pointer"
                   >

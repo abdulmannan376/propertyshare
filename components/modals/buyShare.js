@@ -7,6 +7,7 @@ import { MdClose } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import { updateWishList } from "@/app/redux/features/userSlice";
 import { errorAlert, successAlert } from "@/utils/alert";
+import DropIn from "braintree-web-drop-in";
 
 // Set the app element for accessibility reasons
 Modal.setAppElement("#app-body");
@@ -128,6 +129,98 @@ const BuyShareModal = ({
 
   const dispatch = useDispatch();
 
+  const [clientToken, setClientToken] = useState(null);
+  const [instance, setInstance] = useState(null);
+
+  useEffect(() => {
+    const fetchClientToken = async () => {
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_SERVER_HOST}/payment/client-token`,
+          {
+            method: "GET",
+            headers: {
+              "Content-type": "application/json",
+            },
+          }
+        );
+        const { token } = await res.json();
+        setClientToken(token);
+      } catch (error) {
+        errorAlert("Error", error.message);
+      }
+    };
+
+    fetchClientToken();
+  }, []);
+
+  useEffect(() => {
+    if (clientToken && isOpen) {
+      DropIn.create(
+        {
+          authorization: clientToken,
+          container: "#dropin-container",
+        },
+        (error, dropinInstance) => {
+          if (error) errorAlert("Error", error);
+          else setInstance(dropinInstance);
+        }
+      );
+    }
+
+    console.log(instance);
+  }, [clientToken, isOpen]);
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Handle payment submission
+  const handlePayment = async () => {
+    try {
+      setIsLoading(true)
+      if (!localStorage.getItem("userDetails")) {
+        throw new Error("Login first.");
+      }
+
+      const { nonce } = await instance.requestPaymentMethod();
+      const username = JSON.parse(localStorage.getItem("userDetails")).username;
+      const purpose = `Buy Share of Property: ${propertyID}`;
+
+      const request = {
+        payment: { nonce, amount: price, username, purpose },
+        data: {
+          username,
+          shareID: selectedShareID,
+          price: price,
+        },
+      };
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_HOST}/payment/buy-share-transaction`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(request),
+        }
+      );
+
+      const response = await res.json();
+
+      setIsLoading(false)
+      if (response.success) {
+        successAlert("Success", response.message);
+        setSelectedShareID("");
+        onClose();
+      } else {
+        throw new Error(response.message);
+      }
+    } catch (error) {
+      setSelectedShareID("");
+      onClose();
+      errorAlert("Error", error.message);
+    }
+  };
+
   return (
     <Modal
       isOpen={isOpen}
@@ -157,7 +250,7 @@ const BuyShareModal = ({
       {/* Modal Content */}
 
       <div className="relative flex flex-row items-stretch bg-white border border-[#116A7B] py-5 px-10 rounded-xl shadow-lg max-w-5xl w-full">
-        <div className="w-1/2 flex flex-col justify-between items-start">
+        <div className="w-1/2 flex flex-col justify-between items-start mr-5">
           <div className="flex justify-between items-center mb-3">
             <h4 className="text-4xl text-[#09363F] font-medium">Buy shares</h4>
           </div>
@@ -198,12 +291,16 @@ const BuyShareModal = ({
               })}
             </select>
           </div>
+          <div id="dropin-container"></div>
           <div className="mt-4">
             <button
-              onClick={handleSubmit}
-              className="bg-[#116A7B] text-white py-2 px-4 rounded  transition duration-150"
+              onClick={handlePayment}
+              className="w-32 bg-[#116A7B] text-white py-2 px-4 rounded  transition duration-150"
             >
-              Pay Now
+              {!isLoading && "Pay Now"}
+              {isLoading && (
+                <div className="border-t-2 border-b-2 border-white bg-transparent h-3 p-2 animate-spin shadow-lg w-fit mx-auto rounded-full"></div>
+              )}
             </button>
             <button
               onClick={handlePayLaterSubmit}
@@ -213,7 +310,7 @@ const BuyShareModal = ({
             </button>
           </div>
         </div>
-        <div className="1/2">
+        <div className="w-1/2">
           <Image
             width={2000}
             height={2000}
