@@ -160,6 +160,16 @@ const BuyShareModal = ({
         {
           authorization: clientToken,
           container: "#dropin-container",
+          paypal: {
+            flow: "vault", // Options are 'vault' or 'checkout'
+            amount: "10.00", // You can specify an amount or leave this empty
+            currency: "USD", // Specify currency
+            buttonStyle: {
+              color: "blue", // Options are 'blue', 'gold', 'silver', 'white', 'black'
+              shape: "rect", // Options are 'rect', 'pill'
+              size: "medium", // Options are 'small', 'medium', 'large', 'responsive'
+            },
+          },
         },
         (error, dropinInstance) => {
           if (error) errorAlert("Error", error);
@@ -176,7 +186,7 @@ const BuyShareModal = ({
   // Handle payment submission
   const handlePayment = async () => {
     try {
-      setIsLoading(true)
+      setIsLoading(true);
       if (!localStorage.getItem("userDetails")) {
         throw new Error("Login first.");
       }
@@ -206,7 +216,7 @@ const BuyShareModal = ({
 
       const response = await res.json();
 
-      setIsLoading(false)
+      setIsLoading(false);
       if (response.success) {
         successAlert("Success", response.message);
         setSelectedShareID("");

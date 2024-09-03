@@ -1,4 +1,5 @@
 import { updateActivePaymentTab } from "@/app/redux/features/dashboardSlice";
+import { errorAlert, successAlert } from "@/utils/alert";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -57,6 +58,95 @@ const Payments = () => {
   useEffect(() => {
     searchUsers();
   }, [query]);
+
+  const [recipient, setRecipient] = useState("");
+
+  const [totalAmount, setTotalAmount] = useState(0);
+  const [selectedDiscountType, setSelectedDiscountType] =
+    useState("no discount");
+
+  const discountTypes = ["no discount", "percentage", "currency"];
+
+  const [discountAmount, setDiscountAmount] = useState(0);
+  const [discountValue, setDiscountValue] = useState(0);
+  const [subtotal, setSubtotal] = useState(0);
+
+  const [purpose, setPurpose] = useState("");
+
+  // Function to calculate discount by percentage
+  function calDiscountByPercentage() {
+    const discount = (totalAmount * discountValue) / 100;
+    setDiscountAmount(discount);
+    setSubtotal(totalAmount - discount);
+  }
+
+  // Function to calculate discount by currency value
+  function calDiscountByCurrency() {
+    setDiscountAmount(discountValue);
+    setSubtotal(totalAmount - discountValue);
+  }
+
+  useEffect(() => {
+    if (selectedDiscountType !== "no discount" && totalAmount > 0) {
+      if (selectedDiscountType === "percentage") {
+        calDiscountByPercentage();
+      } else if (selectedDiscountType === "currency") {
+        calDiscountByCurrency();
+      }
+    } else {
+      setDiscountAmount(0);
+      setDiscountValue(0);
+      setSubtotal(totalAmount);
+    }
+  }, [selectedDiscountType, totalAmount, discountValue]);
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleGenPayment = async () => {
+    try {
+      setIsLoading(true);
+      const data = {
+        recipient,
+        username: JSON.parse(localStorage.getItem("userDetails")).username,
+        purpose,
+        amount: totalAmount,
+        discountType: selectedDiscountType,
+        discountValue,
+      };
+
+      console.log(data)
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_HOST}/payment/generate-payment`,
+        {
+          method: "POST",
+          headers: {
+            "Content-type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
+
+      const response = await res.json();
+      setIsLoading(false);
+      if (response.success) {
+        successAlert("Success", "Payment sent to user.");
+        setRecipient("");
+        setQuery("");
+        setTotalAmount(0);
+        setSubtotal(0);
+        setSelectedDiscountType("no discount");
+        setDiscountValue(0);
+        setDiscountAmount(0);
+        setPurpose("")
+        setIsGenPayment(false);
+      } else {
+        throw new Error(response.message);
+      }
+    } catch (error) {
+      setIsLoading(false);
+      errorAlert("Error", error.message);
+    }
+  };
 
   return (
     <div className="bg-white w-full my-6 xxl:h-[85vh] md:h-[88vh] max-h-[88vh] overflow-y-auto">
@@ -138,11 +228,23 @@ const Payments = () => {
                         <th className="border border-gray-300 px-4 py-2 text-left">
                           Username
                         </th>
-                        <th className="border border-gray-300 px-4 py-2 text-left">
+                        {/* <th className="border border-gray-300 px-4 py-2 text-left">
                           Name
-                        </th>
+                        </th> */}
                         <th className="border border-gray-300 px-4 py-2 text-left">
                           Payment For
+                        </th>
+                        <th className="border border-gray-300 px-4 py-2 text-left">
+                          Total Amount
+                        </th>
+                        <th className="border border-gray-300 px-4 py-2 text-left">
+                          Discount type
+                        </th>
+                        <th className="border border-gray-300 px-4 py-2 text-left">
+                          Discount
+                        </th>
+                        <th className="border border-gray-300 px-4 py-2 text-left">
+                          Subtotal Amount
                         </th>
                         <th className="border border-gray-300 px-4 py-2 text-left">
                           Date
@@ -157,18 +259,30 @@ const Payments = () => {
                     </thead>
                     <tbody>
                       {payments.map((payment) => (
-                        <tr key={payment.paymentID}>
+                        <tr key={payment.paymentID} className="text-sm">
                           <td className="border border-gray-300 px-4 py-2">
                             {payment.paymentID}
                           </td>
                           <td className="border border-gray-300 px-4 py-2">
                             {payment.userDocID.username}
                           </td>
-                          <td className="border border-gray-300 px-4 py-2">
+                          {/* <td className="border border-gray-300 px-4 py-2">
                             {payment.userDocID.name}
-                          </td>
+                          </td> */}
                           <td className="border border-gray-300 px-4 py-2">
                             {payment.purpose}
+                          </td>
+                          <td className="border border-gray-300 px-4 py-2">
+                            {payment.totalAmount}
+                          </td>
+                          <td className="border border-gray-300 px-4 py-2">
+                            {payment.discountType}
+                          </td>
+                          <td className="border border-gray-300 px-4 py-2">
+                            {payment.discountAmount}
+                          </td>
+                          <td className="border border-gray-300 px-4 py-2">
+                            {payment.payingAmount}
                           </td>
                           <td className="border border-gray-300 px-4 py-2">
                             {new Date(payment.createdAt).toLocaleDateString()}
@@ -194,33 +308,152 @@ const Payments = () => {
         </>
       )}
       {isGenPayment && (
-        <div className="w-full my-6 xxl:h-[85vh] md:h-[88vh] max-h-[88vh] overflow-y-auto">
-          {/* Input field for username query */}
-          <div className="flex flex-row items-center pt-1 px-14">
-            <input
-              type="text"
-              placeholder="Search for a username..."
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
-            />
-          </div>
-
-          {/* Dropdown to show results from usersList */}
-          {usersList.length > 0 && (
-            <div className="absolute z-10 w-[620px] bg-white border border-gray-300 rounded-md mt-1 mx-14">
-              {usersList.map((user) => (
-                <div
-                  key={user._id}
-                  //   onClick={() => handleUserSelect(user.username)}
-                  className="px-4 py-2 cursor-pointer hover:bg-gray-100"
-                >
-                  {user.username}
+        <>
+          <div className="w-full flex flex-row flex-wrap my-6 px-14">
+            {/* Input field for username query */}
+            <div className="relative mx-6  ">
+              <div
+                onBlur={() => setTimeout(() => setUsersList([]), 200)}
+                className="flex flex-col pt-1 "
+              >
+                <label htmlFor="recipient" className="text-[#676767]">
+                  Recipient Username
+                </label>
+                <input
+                  type="text"
+                  placeholder="Required"
+                  value={query}
+                  onChange={(e) => {
+                    setRecipient("");
+                    setQuery(e.target.value);
+                  }}
+                  className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                />
+              </div>
+              {/* Dropdown to show results from usersList */}
+              {usersList.length > 0 && (
+                <div className="absolute z-10 w-[620px] max-h-[44rem] overflow-y-auto bg-white border border-gray-300 rounded-md mt-1">
+                  {usersList.map((user) => (
+                    <button
+                      key={user._id}
+                      onMouseDown={(e) => {
+                        e.stopPropagation();
+                        console.log("onclick");
+                        setQuery(user.username);
+                        setRecipient(user.username);
+                      }}
+                      className="w-full text-start px-4 py-2 cursor-pointer hover:bg-gray-100"
+                    >
+                      {user.username}
+                    </button>
+                  ))}
                 </div>
-              ))}
+              )}
             </div>
-          )}
-        </div>
+            <div className="flex flex-col mx-6  mb-5">
+              <label htmlFor="propertyImages" className="text-[#676767]">
+                Total Amount
+              </label>
+              <input
+                type="number"
+                placeholder="Required"
+                inputMode="numeric"
+                value={totalAmount}
+                onChange={(e) => setTotalAmount(e.target.value)}
+                className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+              />
+            </div>
+            <div className="flex flex-col mx-6 mb-5">
+              <label htmlFor="propertyImages" className="text-[#676767]">
+                Purpose Of Payment (min 20 characters)
+              </label>
+              <textarea
+                type="text"
+                rows={5}
+                placeholder="Required"
+                style={{ resize: "none", overflow: "hidden" }}
+                value={purpose}
+                onChange={(e) => setPurpose(e.target.value)}
+                className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-xl"
+              />
+            </div>
+            <div className="relative mb-6 ml-6 flex flex-col">
+              <div>
+                <label htmlFor="discountType" className="text-[#676767]">
+                  Discount Type
+                </label>
+                <select
+                  name="discountType"
+                  value={selectedDiscountType}
+                  onChange={({ target }) => {
+                    setSelectedDiscountType(target.value);
+                    if (target.value === "no discount") {
+                      setDiscountValue("");
+                    }
+                  }}
+                  className="inline-flex mx-10 border border-[#116A7B30] rounded-full px-3 focus:border-[#116A7B] outline-none"
+                >
+                  {discountTypes.map((type, index) => (
+                    <option key={index} value={type}>
+                      {type}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <input
+                type="text"
+                name="discountType"
+                value={selectedDiscountType}
+                required={true}
+                readOnly={true}
+                className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+              />
+              {/* <span className="absolute inset-y-12 right-0 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer">
+              *
+            </span>  */}
+            </div>
+            {selectedDiscountType !== "no discount" && (
+              <div className="flex flex-col mx-6  mb-5">
+                <label htmlFor="propertyImages" className="text-[#676767]">
+                  Discount
+                </label>
+                <input
+                  type="number"
+                  inputMode="numeric"
+                  value={discountValue}
+                  readOnly={selectedDiscountType === "no discount"}
+                  onChange={(e) => setDiscountValue(e.target.value)}
+                  className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                />
+              </div>
+            )}
+          </div>
+          <div className="px-20 my-5 space-y-5 text-[#116A7B]">
+            <h2 className="text-2xl">
+              <strong> Discount: {discountAmount}</strong>{" "}
+            </h2>
+            <h2 className="text-2xl">
+              <strong> Subtotal: {subtotal}</strong>{" "}
+            </h2>
+          </div>
+          <div className="mt-5 mx-20">
+            <button
+              onClick={handleGenPayment}
+              disabled={
+                recipient.length === 0 ||
+                totalAmount === 0 ||
+                purpose.length < 20 ||
+                subtotal < 0
+              }
+              className="w-40 disabled:bg-opacity-30 bg-[#116A7B] text-white py-2 px-4 rounded  transition duration-150"
+            >
+              {!isLoading && "Generate"}
+              {isLoading && (
+                <div className="border-t-2 border-b-2 border-white bg-transparent h-3 p-2 animate-spin shadow-lg w-fit mx-auto rounded-full"></div>
+              )}
+            </button>
+          </div>
+        </>
       )}
     </div>
   );
