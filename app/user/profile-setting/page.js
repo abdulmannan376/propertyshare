@@ -980,7 +980,7 @@ const Page = () => {
                       Permanent Address
                     </label>
                     <input
-                      type="number"
+                      type="text"
                       name="permanentAddress"
                       value={userDetails?.permanentAddress}
                       required={true}

@@ -2,6 +2,7 @@ import { updateActivePaymentTab } from "@/app/redux/features/dashboardSlice";
 import { errorAlert, successAlert } from "@/utils/alert";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import PaymentModal from "../modals/paymentModal";
 
 const Payments = () => {
   const dispatch = useDispatch();
@@ -148,6 +149,13 @@ const Payments = () => {
       errorAlert("Error", error.message);
     }
   };
+
+  const [selectedPaymentID, setSelectedPaymentID] = useState("");
+  const [payingAmount, setPayingAmount] = useState(0)
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleOpenPaymentModal = async () => setIsModalOpen(true);
+  const handleClosePaymentModal = async () => setIsModalOpen(false);
 
   return (
     <div className="bg-white w-full my-6 xxl:h-[85vh] md:h-[88vh] max-h-[88vh] overflow-y-auto">
@@ -314,6 +322,12 @@ const Payments = () => {
           )}
           {activePaymentsTab === "Pending Payments" && (
             <div>
+              <PaymentModal
+                isOpen={isModalOpen}
+                onClose={handleClosePaymentModal}
+                paymentID={selectedPaymentID}
+                amount={payingAmount}
+              />
               {!isPaymentsLoading ? (
                 <div className="px-14 py-6">
                   <table className="min-w-full table-auto border-collapse border border-gray-300">
@@ -388,7 +402,19 @@ const Payments = () => {
                             <td className="border border-gray-300 px-4 py-2">
                               {new Date(payment.createdAt).toLocaleTimeString()}
                             </td>
-                            <td className="border border-gray-300 px-4 py-2"></td>
+                            <td className="border border-gray-300 px-4 py-2">
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setSelectedPaymentID(payment.paymentID);
+                                  setPayingAmount(payment.payingAmount)
+                                  handleOpenPaymentModal();
+                                }}
+                                className="text-[#116A7B] underline uppercase"
+                              >
+                                Pay
+                              </button>
+                            </td>
                           </tr>
                         ))}
                       </tbody>

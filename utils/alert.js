@@ -11,6 +11,7 @@ export const successAlert = (title = "Success", message = "Operation completed s
     showConfirmButton: false,
     timerProgressBar: true,
     toast: true,
+    position: "top-right"
   });
 };
 
@@ -24,5 +25,6 @@ export const errorAlert = (title = "Error", message = "Something went wrong") =>
     showConfirmButton: false,
     timerProgressBar: true,
     toast: true,
+    position: "top-end"
   });
 };

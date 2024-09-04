@@ -13,15 +13,15 @@ const Footer = () => {
   );
 
   const socialIconStyles = {
-    width: "30px",
-    height: "30px",
+    width: "20px",
+    height: "20px",
   };
   return (
     <>
       <div
         className={`bg-[#116A7B] w-full ${
           currentPage.tag === "Messages" ? "hidden" : "flex"
-        } flex-row items-start justify-between xxl:px-24 xl:px-16 lg:px-10 sm:px-5 py-20`}
+        } flex-row items-start justify-between xxl:px-24 xl:px-16 lg:px-10 sm:px-5 pt-5`}
       >
         <div className="w-1/2">
           <Image
@@ -33,45 +33,45 @@ const Footer = () => {
           />
         </div>
         <div className="w-1/2">
-          <div className=" flex flex-row items-start justify-start space-x-20">
+          <div className="flex flex-row items-start justify-start space-x-20">
             <div>
-              <h1 className="text-2xl font-semibold text-white uppercase">
+              <h1 className="text-xl font-semibold text-white uppercase">
                 Connect
               </h1>
-              <ul className="space-y-4 mt-4">
-                <li className="text-lg font-normal text-white">
+              <ul className="space-y-1 mt-1">
+                <li className=" font-normal text-white">
                   <Link href={"/map"}>Map</Link>
                 </li>
-                <li className="text-lg font-normal text-white">
+                <li className=" font-normal text-white">
                   <Link href={"/buy-share"}>Buy Share</Link>
                 </li>
-                <li className="text-lg font-normal text-white">
+                <li className=" font-normal text-white">
                   <Link href={"/rent-share"}>Rent Share</Link>
                 </li>
-                <li className="text-lg font-normal text-white">
+                <li className=" font-normal text-white">
                   <Link href={"/login"}>Login</Link>
                 </li>
               </ul>
             </div>
             <div>
-              <h1 className="text-2xl font-semibold text-white uppercase">
+              <h1 className="text-xl font-semibold text-white uppercase">
                 Company
               </h1>
-              <ul className="space-y-4 mt-4">
-                <li className="text-lg font-normal text-white">
+              <ul className="space-y-1 mt-1">
+                <li className="font-normal text-white">
                   <Link href={"/about-us"}>About Us</Link>
                 </li>
-                <li className="text-lg font-normal text-white">
+                <li className="font-normal text-white">
                   <Link href={"/privacy-policy"}>Privacy Policy</Link>
                 </li>
               </ul>
             </div>
             <div>
-              <h1 className="w-36 text-2xl font-semibold text-white uppercase">
+              <h1 className="w-36 text-xl font-semibold text-white uppercase">
                 Follow Us
               </h1>
-              <ul className="space-y-4 mt-4">
-                <li className="text-lg font-normal text-white">
+              <ul className="space-y-1 mt-2">
+                <li className="font-normal text-white">
                   <SocialIcon
                     url={"https://facebook.com"}
                     fgColor="#116A7B"
@@ -79,7 +79,7 @@ const Footer = () => {
                     style={socialIconStyles}
                   />
                 </li>
-                <li className="text-lg font-normal text-white">
+                <li className="font-normal text-white">
                   <SocialIcon
                     url={"https://instagram.com"}
                     fgColor="#116A7B"
@@ -87,7 +87,7 @@ const Footer = () => {
                     style={socialIconStyles}
                   />
                 </li>
-                <li className="text-lg font-normal text-white">
+                <li className="font-normal text-white">
                   <SocialIcon
                     url={"https://x.com"}
                     fgColor="#116A7B"
@@ -95,7 +95,7 @@ const Footer = () => {
                     style={socialIconStyles}
                   />
                 </li>
-                <li className="text-lg font-normal text-white">
+                <li className="font-normal text-white">
                   <SocialIcon
                     url={"https://youtube.com"}
                     fgColor="#116A7B"
@@ -105,16 +105,16 @@ const Footer = () => {
                 </li>
               </ul>
             </div>
-            <div className="space-y-4">
-              <h1 className="text-2xl font-semibold text-white uppercase">
+            <div className="space-y-1">
+              <h1 className="text-xl font-semibold text-white uppercase">
                 Contact
               </h1>
-              <h1 className="text-white">
-                <IoPinSharp className="inline-flex text-xl mb-1" />
+              <h1 className="text-sm text-white">
+                <IoPinSharp className="inline-flex text-lg mb-1" />
                 office number, street number, state, city
               </h1>
-              <h1 className="text-white">
-                <MdOutlinePhoneIphone className="inline-flex text-xl mb-1" />
+              <h1 className="text-sm text-white">
+                <MdOutlinePhoneIphone className="inline-flex text-lg mb-1" />
                 +1 (XXX) XXX XXXX
               </h1>
               {/* <h1 className="text-white">
@@ -128,7 +128,7 @@ const Footer = () => {
       <div
         className={`bg-[#116A7B] text-white text-center w-full ${
           currentPage.tag === "Messages" ? "hidden" : "flex"
-        } flex-row items-center justify-center xxl:px-24 xl:px-16 lg:px-10 sm:px-5 py-2`}
+        } flex-row items-center justify-center xxl:px-24 xl:px-16 lg:px-10 sm:px-5 pb-2`}
       >
         <h1 className="text-center">
           &copy; Copyright Beach Bunny House. All rights reserved.

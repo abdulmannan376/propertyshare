@@ -40,6 +40,7 @@ const Navbar = () => {
         console.log("message: ", message);
         dispatch(addNewNotification(message));
         dispatch(updateNewNotificationFlag(true));
+        successAlert(message.subject, "")
       });
 
       socket.on("newMessage", (message) => {
