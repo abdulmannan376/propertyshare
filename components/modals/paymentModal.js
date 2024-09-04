@@ -5,7 +5,7 @@ import { errorAlert, successAlert } from "@/utils/alert";
 
 Modal.setAppElement("#app-body");
 
-const PaymentModal = ({ isOpen, onClose, paymentID, amount }) => {
+const PaymentModal = ({ isOpen, onClose, payment, amount }) => {
   const [clientToken, setClientToken] = useState(null);
   const [instance, setInstance] = useState(null);
 
@@ -69,7 +69,20 @@ const PaymentModal = ({ isOpen, onClose, paymentID, amount }) => {
       //   const purpose = `Buy Share of Property: ${propertyID}`;
 
       const request = {
-        payment: { nonce, username, amount, paymentID },
+        payment: {
+          nonce,
+          username,
+          amount: payment.payingAmount,
+          paymentID: payment.paymentID,
+        },
+        data: {
+          shareID: payment.shareDocID?.shareID,
+          recipient: payment.userDocID?.username,
+          username: payment.initiatedBy?.username,
+          shareOfferID: payment.shareOfferDocID?.shareOfferID,
+          isBuybackOffer: payment.shareOfferDocID?.offerToPropertyOwner
+        },
+        category: payment.category,
       };
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_SERVER_HOST}/payment/pending-payment-transaction`,
@@ -125,19 +138,23 @@ const PaymentModal = ({ isOpen, onClose, paymentID, amount }) => {
       }}
     >
       <div className="p-10 ">
-        <h1 className="text-2xl font-semibold text-[#116A7B] text-center">Payment Action</h1>
+        <h1 className="text-2xl font-semibold text-[#116A7B] text-center">
+          Payment Action
+        </h1>
         <div id="dropin-container"></div>
-        {instance && <div className="mt-4">
-          <button
-            onClick={handlePayment}
-            className="w-32 bg-[#116A7B] text-white py-2 px-4 rounded  transition duration-150"
-          >
-            {!isLoading && "Pay Now"}
-            {isLoading && (
-              <div className="border-t-2 border-b-2 border-white bg-transparent h-3 p-2 animate-spin shadow-lg w-fit mx-auto rounded-full"></div>
-            )}
-          </button>
-        </div>}
+        {instance && (
+          <div className="mt-4">
+            <button
+              onClick={handlePayment}
+              className="w-32 bg-[#116A7B] text-white py-2 px-4 rounded  transition duration-150"
+            >
+              {!isLoading && "Pay Now"}
+              {isLoading && (
+                <div className="border-t-2 border-b-2 border-white bg-transparent h-3 p-2 animate-spin shadow-lg w-fit mx-auto rounded-full"></div>
+              )}
+            </button>
+          </div>
+        )}
       </div>
     </Modal>
   );

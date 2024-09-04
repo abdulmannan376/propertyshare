@@ -150,7 +150,7 @@ const Payments = () => {
     }
   };
 
-  const [selectedPaymentID, setSelectedPaymentID] = useState("");
+  const [selectedPayment, setSelectedPayment] = useState({});
   const [payingAmount, setPayingAmount] = useState(0)
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -325,8 +325,7 @@ const Payments = () => {
               <PaymentModal
                 isOpen={isModalOpen}
                 onClose={handleClosePaymentModal}
-                paymentID={selectedPaymentID}
-                amount={payingAmount}
+                payment={selectedPayment}
               />
               {!isPaymentsLoading ? (
                 <div className="px-14 py-6">
@@ -406,8 +405,8 @@ const Payments = () => {
                               <button
                                 type="button"
                                 onClick={() => {
-                                  setSelectedPaymentID(payment.paymentID);
                                   setPayingAmount(payment.payingAmount)
+                                  setSelectedPayment(payment)
                                   handleOpenPaymentModal();
                                 }}
                                 className="text-[#116A7B] underline uppercase"

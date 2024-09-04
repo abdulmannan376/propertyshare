@@ -27,6 +27,7 @@ import RaiseRequest from "@/components/user/raiseRequest";
 import Purchases from "@/components/user/purchases";
 import Reservations from "@/components/user/reservations";
 import Payments from "@/components/user/payments";
+import FeaturedManagement from "@/components/user/featureProperty";
 
 const Page = () => {
   const dispatch = useDispatch();
@@ -247,7 +248,8 @@ const Page = () => {
           {activeTab === "Modification & Maintenance" && <RaiseRequest />}
           {activeTab === "Shares in Properties" && <Purchases />}
           {activeTab === "Reservations" && <Reservations />}
-          {activeTab === "Bills and Payment" && <Payments/>}
+          {activeTab === "Bills and Payment" && <Payments />}
+          {activeTab === "Featured Management" && <FeaturedManagement />}
         </div>
       </div>
     </div>
