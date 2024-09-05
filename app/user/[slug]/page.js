@@ -28,6 +28,7 @@ import Purchases from "@/components/user/purchases";
 import Reservations from "@/components/user/reservations";
 import Payments from "@/components/user/payments";
 import FeaturedManagement from "@/components/user/featureProperty";
+import WithdrawalManagement from "@/components/user/withdrawals";
 
 const Page = () => {
   const dispatch = useDispatch();
@@ -124,7 +125,7 @@ const Page = () => {
     },
     { name: "Featured Management", roles: ["admin"] },
     // { name: "Blocked Users", roles: ["shareholder", "user"] },
-    // { name: "Buyback Requests", roles: ["admin", "shareholder"] },
+    { name: "Withdrawal Management", roles: ["admin", "shareholder"] },
     // { name: "Share Transfer", roles: ["admin"] },
     // { name: "Restricted Users", roles: ["admin", "super admin"] },
     { name: "Admin Management", roles: ["super admin"] },
@@ -250,6 +251,7 @@ const Page = () => {
           {activeTab === "Reservations" && <Reservations />}
           {activeTab === "Bills and Payment" && <Payments />}
           {activeTab === "Featured Management" && <FeaturedManagement />}
+          {activeTab === "Withdrawal Management" && <WithdrawalManagement />}
         </div>
       </div>
     </div>

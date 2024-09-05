@@ -391,6 +391,12 @@ const OfferCard = ({ card, fetchData }) => {
                 <p className="mx-2 text-yellow-500">Pending</p>
               </>
             )}
+            {card.status === "payment pending" && (
+              <>
+                <MdPending className="text-xl text-yellow-500" />{" "}
+                <p className="mx-2 text-yellow-500">Payment Pending</p>
+              </>
+            )}
             {card.status === "rejected" && (
               <>
                 <IoMdCloseCircle className="text-xl text-red-500" />{" "}
