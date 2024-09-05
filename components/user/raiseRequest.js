@@ -227,12 +227,12 @@ const RaiseRequest = () => {
         setUrlsList("");
         setFiles(null);
         fetchRaiseRequests();
-        successAlert("Success", response.message)
+        successAlert("Success", response.message);
       } else {
         throw new Error(response.message);
       }
     } catch (error) {
-      errorAlert("Error", error.message)
+      errorAlert("Error", error.message);
     }
   };
 
@@ -440,12 +440,12 @@ const RaiseRequest = () => {
 
       const response = await res.json();
       if (response.success) {
-        successAlert("Success", response.message)
+        successAlert("Success", response.message);
         setThreadBody("");
         fetchThreads(shareID, requestType, requestID);
       }
     } catch (error) {
-      errorAlert("Error", error.message)
+      errorAlert("Error", error.message);
     }
   };
 
@@ -491,12 +491,12 @@ const RaiseRequest = () => {
 
       if (response.success) {
         fetchRequests("pending_approval");
-        successAlert("Success", response.message)
+        successAlert("Success", response.message);
       } else {
         throw new Error(response.message);
       }
     } catch (error) {
-      errorAlert("Error", error.message)
+      errorAlert("Error", error.message);
     }
   };
 
@@ -769,8 +769,10 @@ const RaiseRequest = () => {
                           key={index}
                           className="cursor-pointer flex flex-row"
                           onClick={() => {
-                            fetchRaiseRequestDetail(request.raisedRequestID);
-                            setSelectedRequest(request);
+                            if (request.status !== "Payment Pending") {
+                              fetchRaiseRequestDetail(request.raisedRequestID);
+                              setSelectedRequest(request);
+                            }
                           }}
                         >
                           <RaiseRequestCard card={request} />
@@ -1104,7 +1106,10 @@ const RaiseRequest = () => {
                           key={index}
                           className="cursor-pointer"
                           onClick={() => {
-                            if (request.status !== "Expired") {
+                            if (
+                              request.status !== "Expired" &&
+                              request.status !== "Payment Pending"
+                            ) {
                               fetchRaiseRequestDetail(request.raisedRequestID);
                               setSelectedRequest(request);
                             }
@@ -1443,7 +1448,10 @@ const RaiseRequest = () => {
                           key={index}
                           className="cursor-pointer"
                           onClick={() => {
-                            if (request.status !== "Expired") {
+                            if (
+                              request.status !== "Expired" &&
+                              request.status !== "Payment Pending"
+                            ) {
                               fetchRaiseRequestDetail(request.raisedRequestID);
                               setSelectedRequest(request);
                             }

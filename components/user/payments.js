@@ -29,9 +29,27 @@ const Payments = () => {
     }
   };
 
+  const fetchMyRecievings = async () => {
+    try {
+      setIsPaymentsLoading(true);
+      const username = JSON.parse(localStorage.getItem("userDetails")).username;
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_HOST}/payment/get-payments-by-reciever/?username=${username}`
+      );
+
+      const response = await res.json();
+      setIsPaymentsLoading(false);
+      setPayments(response.body);
+    } catch (error) {
+      console.error("Error fetching payments:", error);
+    }
+  };
+
+
   useEffect(() => {
     if (activePaymentsTab === "My Payments") fetchPayments("all");
     else if (activePaymentsTab === "Pending Payments") fetchPayments("Pending");
+    else if (activePaymentsTab === "My Recievings") fetchMyRecievings();
   }, [activePaymentsTab]);
 
   const [isGenPayment, setIsGenPayment] = useState(false);
@@ -151,7 +169,7 @@ const Payments = () => {
   };
 
   const [selectedPayment, setSelectedPayment] = useState({});
-  const [payingAmount, setPayingAmount] = useState(0)
+  const [payingAmount, setPayingAmount] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleOpenPaymentModal = async () => setIsModalOpen(true);
@@ -216,6 +234,21 @@ const Payments = () => {
               } `}
             >
               Pending Payments
+            </h2>
+          </button>
+          <button
+            onClick={() => {
+              dispatch(updateActivePaymentTab("My Recievings"));
+            }}
+          >
+            <h2
+              className={`flex ${
+                activePaymentsTab === "My Recievings"
+                  ? "underline-text"
+                  : "hover-underline-animation"
+              } `}
+            >
+              My Recievings
             </h2>
           </button>
 
@@ -405,14 +438,110 @@ const Payments = () => {
                               <button
                                 type="button"
                                 onClick={() => {
-                                  setPayingAmount(payment.payingAmount)
-                                  setSelectedPayment(payment)
+                                  setPayingAmount(payment.payingAmount);
+                                  setSelectedPayment(payment);
                                   handleOpenPaymentModal();
                                 }}
                                 className="text-[#116A7B] underline uppercase"
                               >
                                 Pay
                               </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    ) : (
+                      <h1 className="w-full text-center text-xl p-5">
+                        No Payments
+                      </h1>
+                    )}
+                  </table>
+                </div>
+              ) : (
+                <div className="bg-white w-full my-6 h-[40rem] max-h-[44rem] overflow-y-auto flex flex-row items-center justify-center">
+                  <div className="border-t-4 border-b-4 border-[#116A7B] bg-transparent h-20 p-2 m-3 animate-spin duration-[2200] shadow-lg w-20 mx-auto rounded-full"></div>
+                </div>
+              )}
+            </div>
+          )}
+          {activePaymentsTab === "My Recievings" && (
+            <div>
+              {!isPaymentsLoading ? (
+                <div className="px-14 py-6">
+                  <table className="min-w-full table-auto border-collapse border border-gray-300">
+                    <thead>
+                      <tr className="bg-gray-100">
+                        <th className="border border-gray-300 px-4 py-2 text-left">
+                          Payment ID
+                        </th>
+                        <th className="border border-gray-300 px-4 py-2 text-left">
+                          Username
+                        </th>
+                        {/* <th className="border border-gray-300 px-4 py-2 text-left">
+                          Name
+                        </th> */}
+                        <th className="border border-gray-300 px-4 py-2 text-left">
+                          Payment For
+                        </th>
+                        <th className="border border-gray-300 px-4 py-2 text-left">
+                          Total Amount
+                        </th>
+                        <th className="border border-gray-300 px-4 py-2 text-left">
+                          Discount type
+                        </th>
+                        <th className="border border-gray-300 px-4 py-2 text-left">
+                          Discount
+                        </th>
+                        <th className="border border-gray-300 px-4 py-2 text-left">
+                          Subtotal Amount
+                        </th>
+                        <th className="border border-gray-300 px-4 py-2 text-left">
+                          Date
+                        </th>
+                        <th className="border border-gray-300 px-4 py-2 text-left">
+                          Time
+                        </th>
+                        <th className="border border-gray-300 px-4 py-2 text-left">
+                          Status
+                        </th>
+                      </tr>
+                    </thead>
+                    {payments.length > 0 ? (
+                      <tbody>
+                        {payments.map((payment) => (
+                          <tr key={payment.paymentID} className="text-sm">
+                            <td className="border border-gray-300 px-4 py-2">
+                              {payment.paymentID}
+                            </td>
+                            <td className="border border-gray-300 px-4 py-2">
+                              {payment.userDocID.username}
+                            </td>
+                            {/* <td className="border border-gray-300 px-4 py-2">
+                            {payment.userDocID.name}
+                          </td> */}
+                            <td className="border border-gray-300 px-4 py-2">
+                              {payment.purpose}
+                            </td>
+                            <td className="border border-gray-300 px-4 py-2">
+                              {payment.totalAmount}
+                            </td>
+                            <td className="border border-gray-300 px-4 py-2">
+                              {payment.discountType}
+                            </td>
+                            <td className="border border-gray-300 px-4 py-2">
+                              {payment.discountAmount}
+                            </td>
+                            <td className="border border-gray-300 px-4 py-2">
+                              {payment.payingAmount}
+                            </td>
+                            <td className="border border-gray-300 px-4 py-2">
+                              {new Date(payment.createdAt).toLocaleDateString()}
+                            </td>
+                            <td className="border border-gray-300 px-4 py-2">
+                              {new Date(payment.createdAt).toLocaleTimeString()}
+                            </td>
+                            <td className="border border-gray-300 px-4 py-2">
+                              {payment.status}
                             </td>
                           </tr>
                         ))}

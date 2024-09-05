@@ -128,8 +128,8 @@ const RaiseRequestCard = ({ card, fetchData, sharesList, fetchRequests }) => {
         usernameList: usernameList,
         username: JSON.parse(localStorage.getItem("userDetails")).username,
       };
-      console.log("sharesList: ", sharesList)
-      console.log("usernameList: ", usernameList)
+      console.log("sharesList: ", sharesList);
+      console.log("usernameList: ", usernameList);
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_SERVER_HOST}/property/update-raise-request-action-by-PO`,
         {
@@ -145,12 +145,12 @@ const RaiseRequestCard = ({ card, fetchData, sharesList, fetchRequests }) => {
 
       if (response.success) {
         fetchRequests("pending_approval");
-        successAlert("Success", response.message)
+        successAlert("Success", response.message);
       } else {
         throw new Error(response.message);
       }
     } catch (error) {
-      errorAlert("Error", error.message)
+      errorAlert("Error", error.message);
     }
   };
 
@@ -423,6 +423,14 @@ const RaiseRequestCard = ({ card, fetchData, sharesList, fetchRequests }) => {
             processUserResponse()}
           {processStatus()}
         </div>
+        {card.status === "Payment Pending" && (
+          <div className="flex flex-row items-center">
+            <h1 className="w-52 text-2xl font-semibold">Paying Status: </h1>
+            <p className="text-2xl">
+              <strong>{card.paidByUsersCount}</strong>/{card.payingUserCount}
+            </p>
+          </div>
+        )}
         {/* {activeRaiseRequestTab === "Pending Approvals" &&
           card.status !== "Payment Pending" && (
             <button
