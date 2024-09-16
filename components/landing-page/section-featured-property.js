@@ -62,8 +62,6 @@ const SectionFeaturedProperty = () => {
     handleFetchFeaturedProperty();
   }, []);
 
-  
-
   const TruncatingH1 = ({ text }) => {
     const h1Ref = useRef(null);
     const [displayText, setDisplayText] = useState(text);
@@ -119,23 +117,24 @@ const SectionFeaturedProperty = () => {
     );
   };
   return (
-    <div className="bg-[#CDC2AE] bg-opacity-5">
-      <div className="px-14 pt-14">
-        <h1 className="xl:text-[40px] md:text-4xl text-2xl text-center uppercase font-semibold text-[#116A7B] ">
-          Featured property around the globe
-        </h1>
-        {/* <h1 className="text-4xl text-center uppercase font-semibold text-[#116A7B] ">
+    featuredProperties.length > 0 && (
+      <div className="bg-[#CDC2AE] bg-opacity-5">
+        <div className="px-14 pt-14">
+          <h1 className="xl:text-[40px] md:text-4xl text-2xl text-center uppercase font-semibold text-[#116A7B] ">
+            Featured property around the globe
+          </h1>
+          {/* <h1 className="text-4xl text-center uppercase font-semibold text-[#116A7B] ">
           Featured property <i className="text-[#CDC2AE]"> around </i> the globe
         </h1> */}
-        {/* <h1 className="text-4xl text-center uppercase font-semibold text-[#116A7B] ">
+          {/* <h1 className="text-4xl text-center uppercase font-semibold text-[#116A7B] ">
           Featured property around the<i className="text-[#CDC2AE]"> globe </i>
         </h1> */}
-      </div>
+        </div>
 
-      {/* <div className="px-14 py-14">
+        {/* <div className="px-14 py-14">
         <SwiperComponent />
       </div> */}
-      {featuredProperties.length > 0 && (
+
         <div className="my-10 ">
           {/* <h1 className="xl:text-[40px] text-4xl mb-5 text-center text-[#116A7B] font-semibold ">
             Featured Properties
@@ -226,8 +225,8 @@ const SectionFeaturedProperty = () => {
             </div>
           )}
         </div>
-      )}
-    </div>
+      </div>
+    )
   );
 };
 

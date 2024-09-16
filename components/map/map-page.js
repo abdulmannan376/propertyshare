@@ -172,6 +172,8 @@ const MapPage = () => {
     // Handle response
   };
 
+  
+
   const router = useRouter(); // Hook for programmatic navigation
 
   // Function to handle marker click

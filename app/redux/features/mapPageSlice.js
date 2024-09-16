@@ -17,12 +17,13 @@ export const mapPageSlice = createSlice({
       state.coordinates = action.payload;
     },
     updatePropertyType: (state, action) => {
+      console.log(action)
       if (action.payload.task === "add") {
         state.propertyType.push(action.payload.value);
       } else {
-        const newState = state.propertyType.filter(
-          (type) => type !== action.payload.value
-        );
+        const newState = state.propertyType.filter((type) => {
+          return type !== action.payload.value;
+        });
         state.propertyType = [...newState];
       }
     },
@@ -30,9 +31,9 @@ export const mapPageSlice = createSlice({
       if (action.payload.task === "add") {
         state.availableShares.push(action.payload.value);
       } else {
-        const newState = state.availableShares.filter(
-          (type) => type !== action.payload.value
-        );
+        const newState = state.availableShares.filter((type) => {
+          return type !== action.payload.value;
+        });
         state.availableShares = [...newState];
       }
     },

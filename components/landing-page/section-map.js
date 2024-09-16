@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
-import { FaAngleDown } from "react-icons/fa";
+import React, { useEffect, useRef, useState } from "react";
+import { FaAngleDown, FaCross } from "react-icons/fa";
 import { IoIosSearch } from "react-icons/io";
 
 import {
@@ -19,12 +19,20 @@ import SearchBar from "./searchBar";
 import Modal from "@/components/map/requestPropertyModal";
 import FlyToCoordinate from "./flyToCoordinate";
 import NoSsr from "../noSSR";
+import { useDispatch, useSelector } from "react-redux";
+import { updateAvailableShares } from "@/app/redux/features/mapPageSlice";
+import { updatePropertyType } from "@/app/redux/features/mapPageSlice";
+import { IoClose } from "react-icons/io5";
 
 const SectionMap = () => {
   const [position, setPosition] = useState(null);
   const [markers, setMarkers] = useState([]);
+  const [propertyTypeMarkers, setPropertyTypeMarkers] = useState([]);
+  const [availableShareMarkers, setAvailableShareMarkers] = useState([]);
   const [customIcon, setCustomIcon] = useState(null);
   const [customFilterIcon, setCustomFilterIcon] = useState(null);
+  const [customPropertyTypeIcon, setCustomPropertyTypeIcon] = useState(null);
+  const [customAvailableSharesIcon, setAvailableSharesIcon] = useState(null);
 
   const [searchedName, setSearchedName] = useState("");
   const [searchedCoordinate, setSearchedCoordinate] = useState([]);
@@ -114,23 +122,53 @@ const SectionMap = () => {
     return null;
   };
 
-  const handleFilterClick = async (index, id, value, key) => {
-    console.log(index, id, value, key);
+  const propertyType = useSelector(
+    (state) => state.mapPageSliceReducer.propertyType
+  );
+  const availableShares = useSelector(
+    (state) => state.mapPageSliceReducer.availableShares
+  );
+
+  const dispatch = useDispatch();
+
+  const handleFilterClick = (index, dataIndex, value) => {
+    let action;
+    if (index === 0) {
+      if (value) {
+        action = updateAvailableShares({
+          task: "add",
+          value: filters[index].data[dataIndex].name,
+        });
+      } else {
+        action = updateAvailableShares({
+          task: "remove",
+          value: filters[index].data[dataIndex].name,
+        });
+      }
+    } else {
+      if (value) {
+        console.log(index, dataIndex, value);
+        action = updatePropertyType({
+          task: "add",
+          value: filters[index].data[dataIndex].name,
+        });
+      } else {
+        action = updatePropertyType({
+          task: "remove",
+          value: filters[index].data[dataIndex].name,
+        });
+      }
+    }
+
+    console.log("Dispatching action: ", action); // Log the action before dispatching
+    dispatch(action);
+
+    console.log("propertyType: ", propertyType);
     setFilters((prevDetails) => {
       const newDetails = [...prevDetails];
-      newDetails[index].active = value;
+      newDetails[index].data[dataIndex].selected = value;
       return newDetails;
     });
-    if (value) {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_SERVER_HOST}/property/fetch-coordinates-of-property`
-      );
-      const response = await res.json();
-
-      handleFilterSelect(response.data, filters[index].iconURL);
-    } else {
-      handleFilterSelect([]);
-    }
   };
 
   const handleFilterSelect = (coordinates, iconURL) => {
@@ -143,6 +181,60 @@ const SectionMap = () => {
         popupAnchor: [0, -35],
       })
     );
+  };
+
+  const [allRequestes, setAllRequestes] = useState({
+    name: "All requests",
+    active: false,
+    iconURL: "/person-pin.png",
+  });
+
+  const handleAllRequestesClick = async (value) => {
+    setAllRequestes((prevDetails) => {
+      const newDetails = { ...prevDetails };
+      newDetails.active = value;
+      return newDetails;
+    });
+    if (value) {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_HOST}/property/fetch-coordinates-of-property`
+      );
+      const response = await res.json();
+
+      handleFilterSelect(response.data, allRequestes.iconURL);
+    } else {
+      handleFilterSelect([]);
+    }
+  };
+
+  const handlePropertyTypeFilterSelect = (coordinates, iconURL) => {
+    setPropertyTypeMarkers(coordinates);
+    console.log("title: ", process?.title);
+    if (process?.title === "browser") {
+      setCustomPropertyTypeIcon(
+        new L.Icon({
+          iconUrl: `/assets/property-icon.svg`, // Ensure this is the correct path from your public directory
+          iconSize: [45, 45],
+          iconAnchor: [17, 35],
+          popupAnchor: [0, -35],
+        })
+      );
+    }
+  };
+
+  const handleAvailableSharesFilterSelect = (coordinates, iconURL) => {
+    setAvailableShareMarkers(coordinates);
+    console.log("title: ", process?.title);
+    if (process?.title === "browser") {
+      setAvailableSharesIcon(
+        new L.Icon({
+          iconUrl: `/assets/property-icon.svg`, // Ensure this is the correct path from your public directory
+          iconSize: [45, 45],
+          iconAnchor: [17, 35],
+          popupAnchor: [0, -35],
+        })
+      );
+    }
   };
 
   const handleModalSave = async (data) => {
@@ -160,6 +252,9 @@ const SectionMap = () => {
           contact: data.contact,
           lat: data.coordinates.lat,
           long: data.coordinates.long,
+          propertyType: data.selectedPropertyType,
+          areaRange: data.areaRange,
+          priceRange: data.priceRange,
         }),
       }
     );
@@ -191,6 +286,68 @@ const SectionMap = () => {
       return newDetails;
     });
   };
+
+  const handleFilterSubmit = async () => {
+    console.log("in handleFilterSubmit");
+    if (propertyType.length > 0) {
+      const res = await fetch(
+        `${
+          process.env.NEXT_PUBLIC_SERVER_HOST
+        }/property/get-property-by-type/${JSON.stringify({
+          propertyType: propertyType,
+        })}`
+      );
+
+      const response = await res.json();
+      console.log("response: ", response);
+      handlePropertyTypeFilterSelect(response.body);
+    } else {
+      handlePropertyTypeFilterSelect([]);
+    }
+
+    if (availableShares.length > 0) {
+      const res = await fetch(
+        `${
+          process.env.NEXT_PUBLIC_SERVER_HOST
+        }/property/get-property-by-available-shares/${JSON.stringify({
+          availableShares: availableShares,
+        })}`
+      );
+
+      const response = await res.json();
+
+      handleAvailableSharesFilterSelect(response.body);
+    } else {
+      handleAvailableSharesFilterSelect([]);
+    }
+  };
+
+  const [isFilterUpdated, setIsFilterUpdated] = useState(false);
+  const [pageMounted, setPageMounted] = useState(false);
+
+  useEffect(() => {
+    if (pageMounted) {
+      setIsFilterUpdated(true);
+    } else {
+      setPageMounted(true);
+    }
+  }, [filters]);
+
+  const applyBtnRef = useRef();
+  useEffect(() => {
+    console.log("in page useEffect");
+    if (!isFilterUpdated) {
+      applyBtnRef.current?.classList.remove("translate-x-10");
+      applyBtnRef.current?.classList.remove("z-0");
+      applyBtnRef.current?.classList.add("-translate-x-60");
+      applyBtnRef.current?.classList.add("-z-50");
+    } else {
+      applyBtnRef.current?.classList.remove("-translate-x-60");
+      applyBtnRef.current?.classList.remove("-z-50");
+      applyBtnRef.current?.classList.add("translate-x-10");
+      applyBtnRef.current?.classList.add("z-0");
+    }
+  }, [isFilterUpdated]);
 
   const dropdowns = {
     propertyType: {
@@ -289,6 +446,27 @@ const SectionMap = () => {
                 </Popup>
               </Marker>
             ))}
+
+            {propertyTypeMarkers.map((data, index) => (
+              <Marker
+                key={index}
+                position={[data.coordinates[1], data.coordinates[0]]}
+                icon={customPropertyTypeIcon}
+                eventHandlers={{
+                  click: () => handleMarkerClick(data.propertyID),
+                }}
+              ></Marker>
+            ))}
+            {availableShareMarkers.map((data, index) => (
+              <Marker
+                key={index}
+                position={[data.coordinates[1], data.coordinates[0]]}
+                icon={customAvailableSharesIcon}
+                eventHandlers={{
+                  click: () => handleMarkerClick(data.propertyID),
+                }}
+              ></Marker>
+            ))}
             {myMarkers.map((coordinates, index) => (
               <Marker
                 key={index}
@@ -335,13 +513,17 @@ const SectionMap = () => {
                       );
                       handleDropdownActivity("propertyTypeActive", false, e);
                     }
-                  } else {
-                    handleFilterClick(
-                      index,
-                      filter.name,
-                      !filter.active,
-                      "null"
-                    );
+                  } else if (index === 1) {
+                    // handleFilterClick(
+                    //   index,
+                    //   filter.name,
+                    //   !filter.active,
+                    //   "null"
+                    // );
+                    handleDropdownActivity("availableSharesActive", false, e);
+                    handleDropdownActivity("propertyTypeActive", false, e);
+                  } else if (index === 2) {
+                    handleAllRequestesClick(!allRequestes.active);
                     handleDropdownActivity("availableSharesActive", false, e);
                     handleDropdownActivity("propertyTypeActive", false, e);
                   }
@@ -354,11 +536,18 @@ const SectionMap = () => {
                     <FaAngleDown className="inline-flex" />
                   )}
                 </h1>
-                {filter.active && (
+                {index !== 2 && filter.active && (
                   <div
-                    className={`text-xs text-white rounded-full py-[3px] px-[8px] ml-5 bg-blue-500`}
+                    className={`text-xs text-white rounded-full py-[3px] px-[3px] ml-5 bg-blue-500`}
                   >
-                    1
+                    <IoClose/>
+                  </div>
+                )}
+                {index === 2 && allRequestes.active && (
+                  <div
+                    className={`text-xs text-white rounded-full py-[3px] px-[3px] ml-5 bg-blue-500`}
+                  >
+                    <IoClose/>
                   </div>
                 )}
               </button>
@@ -368,10 +557,20 @@ const SectionMap = () => {
                     {filter.data.map((listItem, i) => (
                       <li
                         key={i}
-                        onClick={(e) => e.stopPropagation()}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleFilterClick(index, i, !listItem.selected);
+                        }}
                         className="flex flex-row items-center justify-between p-2 border-b border-black border-opacity-20 text-base text-[#676767] cursor-pointer"
                       >
                         {listItem.name}{" "}
+                        {listItem.selected && (
+                          <div
+                          className={`text-xs text-white rounded-full py-[3px] px-[3px] ml-5 bg-blue-500`}
+                        >
+                          <IoClose/>
+                        </div>
+                        )}
                         {/* <div
                         className={`w-3 h-3 rounded-full ml-5 ${availableShareTypeColorList[i]}`}
                       /> */}
@@ -386,13 +585,23 @@ const SectionMap = () => {
                     {filter.data.map((listItem, i) => (
                       <li
                         key={i}
-                        onClick={(e) => e.stopPropagation()}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleFilterClick(index, i, !listItem.selected);
+                        }}
                         className="flex flex-row items-center justify-between p-2 border-b border-black border-opacity-20 text-base text-[#676767] cursor-pointer"
                       >
                         {listItem.name}{" "}
-                        <div
+                        {listItem.selected && (
+                          <div
+                          className={`text-xs text-white rounded-full py-[3px] px-[3px] ml-5 bg-blue-500`}
+                        >
+                          <IoClose/>
+                        </div>
+                        )}
+                        {/* <div
                           className={`w-3 h-3 rounded-full ml-5 ${availableShareTypeColorList[i]}`}
-                        />
+                        /> */}
                       </li>
                     ))}
                   </ul>
@@ -400,6 +609,41 @@ const SectionMap = () => {
               )}
             </div>
           ))}
+          {/* 
+          <div className="relative">
+            <button
+              className="flex flex-row items-center justify-around w-64 bg-white p-3 text-xl"
+              onClick={(e) => {
+                handleAllRequestesClick(!allRequestes.active);
+                handleDropdownActivity("availableSharesActive", false, e);
+                handleDropdownActivity("propertyTypeActive", false, e);
+              }}
+            >
+              <h1>{allRequestes.name} </h1>
+              {allRequestes.active && (
+                <div
+                  className={`text-xs text-white rounded-full py-[3px] px-[8px] ml-5 bg-blue-500`}
+                >
+                  &nbsp;
+                </div>
+              )}
+            </button>
+          </div> */}
+          <div className="relative mb-10">
+            <button
+              type="button"
+              ref={applyBtnRef}
+              onClick={(e) => {
+                setIsFilterUpdated(false);
+                handleFilterSubmit();
+                handleDropdownActivity("availableSharesActive", false, e);
+                handleDropdownActivity("propertyTypeActive", false, e);
+              }}
+              className="absolute bg-[#116A7B] w-32 text-sm text-white transition-transform -translate-x-60 -z-50 px-3 py-2 rounded-lg "
+            >
+              Apply Changes
+            </button>
+          </div>
         </div>
       </div>
     </NoSsr>
