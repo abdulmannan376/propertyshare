@@ -19,6 +19,15 @@ const Footer = () => {
   return (
     <>
       <div
+        className={`bg-[#116A7B] text-white text-center w-full ${
+          currentPage.tag === "Messages" ? "hidden" : "flex"
+        } flex-row items-center justify-center xxl:px-24 xl:px-16 lg:px-10 sm:px-5 border-y-[1px] border-white`}
+      >
+        <h1 className="text-center uppercase text-xl font-semibold p-5">
+          Come, explore, own, and stay!
+        </h1>
+      </div>
+      <div
         className={`bg-[#116A7B] w-full ${
           currentPage.tag === "Messages" ? "hidden" : "flex"
         } flex-row items-start justify-between xxl:px-24 xl:px-16 lg:px-10 sm:px-5 pt-5`}
@@ -80,12 +89,25 @@ const Footer = () => {
                   />
                 </li>
                 <li className="font-normal text-white">
-                  <SocialIcon
-                    url={"https://instagram.com"}
-                    fgColor="#116A7B"
-                    bgColor="#fff"
-                    style={socialIconStyles}
-                  />
+                  <div className="flex items-center space-x-2">
+                    <SocialIcon
+                      url={
+                        "https://www.instagram.com/beachbunnyhouseofficial?igsh=b2oxZnRxbjRpaTdo"
+                      }
+                      fgColor="#116A7B"
+                      bgColor="#fff"
+                      style={socialIconStyles}
+                      target="blank"
+                    />
+                    <Link
+                      href={
+                        "https://www.instagram.com/beachbunnyhouseofficial?igsh=b2oxZnRxbjRpaTdo"
+                      }
+                      target="blank"
+                    >
+                      beachbunnyhouseofficial
+                    </Link>
+                  </div>
                 </li>
                 <li className="font-normal text-white">
                   <SocialIcon
@@ -96,12 +118,21 @@ const Footer = () => {
                   />
                 </li>
                 <li className="font-normal text-white">
-                  <SocialIcon
-                    url={"https://youtube.com"}
-                    fgColor="#116A7B"
-                    bgColor="#fff"
-                    style={socialIconStyles}
-                  />
+                  <div className="flex items-center space-x-2">
+                    <SocialIcon
+                      url={"http://www.youtube.com/@Beachbunnyhouse"}
+                      fgColor="#116A7B"
+                      bgColor="#fff"
+                      style={socialIconStyles}
+                      target="blank"
+                    />
+                    <Link
+                      href={"http://www.youtube.com/@Beachbunnyhouse"}
+                      target="blank"
+                    >
+                      Beachbunnyhouse
+                    </Link>
+                  </div>
                 </li>
               </ul>
             </div>

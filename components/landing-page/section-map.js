@@ -540,14 +540,14 @@ const SectionMap = () => {
                   <div
                     className={`text-xs text-white rounded-full py-[3px] px-[3px] ml-5 bg-blue-500`}
                   >
-                    <IoClose/>
+                    <IoClose />
                   </div>
                 )}
                 {index === 2 && allRequestes.active && (
                   <div
                     className={`text-xs text-white rounded-full py-[3px] px-[3px] ml-5 bg-blue-500`}
                   >
-                    <IoClose/>
+                    <IoClose />
                   </div>
                 )}
               </button>
@@ -566,10 +566,10 @@ const SectionMap = () => {
                         {listItem.name}{" "}
                         {listItem.selected && (
                           <div
-                          className={`text-xs text-white rounded-full py-[3px] px-[3px] ml-5 bg-blue-500`}
-                        >
-                          <IoClose/>
-                        </div>
+                            className={`text-xs text-white rounded-full py-[3px] px-[3px] ml-5 bg-blue-500`}
+                          >
+                            <IoClose />
+                          </div>
                         )}
                         {/* <div
                         className={`w-3 h-3 rounded-full ml-5 ${availableShareTypeColorList[i]}`}
@@ -594,10 +594,10 @@ const SectionMap = () => {
                         {listItem.name}{" "}
                         {listItem.selected && (
                           <div
-                          className={`text-xs text-white rounded-full py-[3px] px-[3px] ml-5 bg-blue-500`}
-                        >
-                          <IoClose/>
-                        </div>
+                            className={`text-xs text-white rounded-full py-[3px] px-[3px] ml-5 bg-blue-500`}
+                          >
+                            <IoClose />
+                          </div>
                         )}
                         {/* <div
                           className={`w-3 h-3 rounded-full ml-5 ${availableShareTypeColorList[i]}`}
