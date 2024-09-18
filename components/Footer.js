@@ -13,8 +13,8 @@ const Footer = () => {
   );
 
   const socialIconStyles = {
-    width: "20px",
-    height: "20px",
+    width: "15px",
+    height: "15px",
   };
   return (
     <>
@@ -23,31 +23,31 @@ const Footer = () => {
           currentPage.tag === "Messages" ? "hidden" : "flex"
         } flex-row items-center justify-center xxl:px-24 xl:px-16 lg:px-10 sm:px-5 border-y-[1px] border-white`}
       >
-        <h1 className="text-center uppercase text-xl font-semibold p-5">
+        <h1 className="text-center uppercase lg:text-xl text-base font-semibold lg:p-5 p-3">
           Come, explore, own, and stay!
         </h1>
       </div>
       <div
         className={`bg-[#116A7B] w-full ${
           currentPage.tag === "Messages" ? "hidden" : "flex"
-        } flex-row items-start justify-between xxl:px-24 xl:px-16 lg:px-10 sm:px-5 pt-5`}
+        } md:flex-row flex-col md:items-start items-center justify-between xxl:px-24 xl:px-16 lg:px-10 sm:px-5 pt-5`}
       >
-        <div className="w-1/2">
+        <div className="lg:w-1/2 w-1/3">
           <Image
             width={1000}
             height={1000}
             src={"/logo-bbh-transparent-bg.png"}
-            className="w-[320px] h-[250px] object-contain object-center"
+            className="lg:w-[320px] lg:h-[250px] w-[220px] h-[150px] object-contain object-center"
             alt="Footer-logo"
           />
         </div>
-        <div className="w-1/2">
-          <div className="flex flex-row items-start justify-start space-x-20">
-            <div>
-              <h1 className="text-xl font-semibold text-white uppercase">
+        <div className="lg:w-1/2 md:w-1/2 w-full my-5 md:px-0 sm:px-20 xs:px-5 px-0">
+          <div className="grid grid-rows-2 grid-cols-2 gap-5 items-start justify-start">
+            <div className="md:ml-0 sm:ml-20 xs:ml-10 ml-5">
+              <h1 className="lg:text-xl text-base font-semibold text-white uppercase">
                 Connect
               </h1>
-              <ul className="space-y-1 mt-1">
+              <ul className="space-y-1 mt-1 text-xs">
                 <li className=" font-normal text-white">
                   <Link href={"/map"}>Map</Link>
                 </li>
@@ -62,11 +62,11 @@ const Footer = () => {
                 </li>
               </ul>
             </div>
-            <div>
-              <h1 className="text-xl font-semibold text-white uppercase">
+            <div className="md:ml-0 sm:ml-20 xs:ml-10 ml-5">
+              <h1 className="lg:text-xl text-base font-semibold text-white uppercase">
                 Company
               </h1>
-              <ul className="space-y-1 mt-1">
+              <ul className="space-y-1 mt-1 text-xs">
                 <li className="font-normal text-white">
                   <Link href={"/about-us"}>About Us</Link>
                 </li>
@@ -75,11 +75,11 @@ const Footer = () => {
                 </li>
               </ul>
             </div>
-            <div>
-              <h1 className="w-36 text-xl font-semibold text-white uppercase">
+            <div className="md:ml-0 sm:ml-20 xs:ml-10 ml-5">
+              <h1 className="lg:text-xl text-base font-semibold text-white uppercase">
                 Follow Us
               </h1>
-              <ul className="space-y-1 mt-2">
+              <ul className="space-y-1 mt-2 text-xs">
                 <li className="font-normal text-white">
                   <SocialIcon
                     url={"https://facebook.com"}
@@ -136,15 +136,15 @@ const Footer = () => {
                 </li>
               </ul>
             </div>
-            <div className="space-y-1">
-              <h1 className="text-xl font-semibold text-white uppercase">
+            <div className="md:ml-0 sm:ml-20 xs:ml-10 ml-5 space-y-1">
+              <h1 className="lg:text-xl text-base font-semibold text-white uppercase">
                 Contact
               </h1>
-              <h1 className="text-sm text-white">
+              <h1 className="lg:text-sm text-xs text-white">
                 <IoPinSharp className="inline-flex text-lg mb-1" />
                 office number, street number, state, city
               </h1>
-              <h1 className="text-sm text-white">
+              <h1 className="lg:text-sm text-xs text-white">
                 <MdOutlinePhoneIphone className="inline-flex text-lg mb-1" />
                 +1 (XXX) XXX XXXX
               </h1>

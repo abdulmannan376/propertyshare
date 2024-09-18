@@ -81,7 +81,7 @@ const MessageComponent = ({ message, participants }) => {
                 }profile-pic.png`
               : "/dummy-image.png"
           }
-          className="w-10 h-10 object-contain object-center rounded-full mr-3"
+          className="sm:w-10 sm:h-10 w-7 h-7 object-contain object-center rounded-full mr-3"
           alt="user profile pic"
         />
       )}
@@ -99,15 +99,15 @@ const MessageComponent = ({ message, participants }) => {
               )
             }
           >
-            <MdDelete className="text-gray-300 hover:text-gray-500 mx-3" />
+            <MdDelete className="sm:text-base text-sm text-gray-300 hover:text-gray-500 mx-3" />
           </button>
         )}
       {message?.sender?.username ===
         participants[handleViewer() === 1 ? 0 : 1]?.username &&
         message?.isLiked &&
-        !message?.isDeleted && <FaHeart className="text-red-500 mx-3" />}
+        !message?.isDeleted && <FaHeart className="sm:text-base text-sm text-red-500 mx-3" />}
       <div
-        className={`inline-flex px-4 py-2 rounded-xl ${
+        className={`inline-flex sm:px-4 px-2 sm:py-2 py-2 rounded-xl sm:text-base text-xs ${
           message?.sender?.username === participants[handleViewer()]?.username
             ? "bg-gray-200 text-black rounded-bl-none"
             : "bg-green-500 text-white rounded-br-none"
@@ -125,12 +125,12 @@ const MessageComponent = ({ message, participants }) => {
           {message?.sender?.username ===
             participants[handleViewer() === 1 ? 0 : 1]?.username &&
             !message.isOpened && (
-              <IoCheckmark className="text-sm mt-2 ml-2 text-gray-600" />
+              <IoCheckmark className="sm:text-sm text-[10px] mt-2 ml-2 text-gray-600" />
             )}
           {message?.sender?.username ===
             participants[handleViewer() === 1 ? 0 : 1]?.username &&
             message.isOpened && (
-              <IoCheckmarkDone className="text-sm mt-2 ml-2 text-blue-600" />
+              <IoCheckmarkDone className="sm:text-sm text-[10px] mt-2 ml-2 text-blue-600" />
             )}
         </div>
       </div>
@@ -148,7 +148,7 @@ const MessageComponent = ({ message, participants }) => {
             }
           >
             {" "}
-            <FaHeart className="text-red-500 mx-3" />
+            <FaHeart className="sm:text-base text-sm text-red-500 mx-3" />
           </button>
         )}
 
@@ -166,7 +166,7 @@ const MessageComponent = ({ message, participants }) => {
             }
           >
             {" "}
-            <FaRegHeart className="text-red-300 hover:text-red-500 mx-3" />
+            <FaRegHeart className="sm:text-base text-sm text-red-300 hover:text-red-500 mx-3" />
           </button>
         )}
       {message?.sender?.username ===
@@ -183,7 +183,7 @@ const MessageComponent = ({ message, participants }) => {
                 }profile-pic.png`
               : "/dummy-image.png"
           }
-          className="w-10 h-10 object-contain object-center rounded-full ml-3"
+          className="sm:w-10 sm:h-10 w-7 h-7 object-contain object-center rounded-full ml-3"
           alt="user profile pic"
         />
       )}

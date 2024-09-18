@@ -121,7 +121,7 @@ const Page = () => {
       <h1
         ref={h1Ref}
         style={{ lineHeight: "1.5em", overflow: "hidden" }}
-        className="text-sm text-[#D9D9D9]"
+        className="lg:text-sm text-xs text-[#D9D9D9]"
       >
         {displayText}
       </h1>
@@ -314,11 +314,11 @@ const Page = () => {
           ref={panelRef}
           className={`${
             panelIsOpen ? "-translate-x-[0%]" : "-translate-x-[100%]"
-          } absolute xl:w-1/5 lg:w-[23%] xxl:h-[90vh] xl:h-[93vh] lg:h-[93vh] md:h-[93vh] max-h-[93vh] z-20 transition-transform bg-[#015A6B] duration-500`}
+          } absolute xl:w-1/5 lg:w-[23%] xxl:h-[90vh] xl:h-[93vh] lg:h-[93vh] h-[93vh] max-h-[93vh] z-20 transition-transform bg-[#015A6B] duration-500`}
         >
           <div
             // onClick={(event) => handleUpdateActiveTab(event, "Profile")}
-            className={`relative flex flex-row items-center px-10 py-5 border-b border-b-[#D9D9D9] cursor-pointer`}
+            className={`relative flex flex-row items-center text-white lg:px-10 pr-10 pl-5 py-5 border-b border-b-[#D9D9D9] cursor-pointer`}
           >
             Messages
             {panelIsOpen ? (
@@ -366,7 +366,7 @@ const Page = () => {
                       dispatch(updateSelectedConversation(conversation));
                       fetchSelectedConversation(conversation.conversationID);
                     }}
-                    className="w-full px-10 py-5 hover:bg-[#8E9B9D] flex flex-row justify-start"
+                    className="w-full lg:px-10 pr-10 pl-5 py-5 hover:bg-[#8E9B9D] flex flex-row justify-start"
                   >
                     <Image
                       width={1000}
@@ -380,13 +380,13 @@ const Page = () => {
                             }profile-pic.png`
                           : "/dummy-image.png"
                       }
-                      className="w-12 h-12 object-contain object-center rounded-full"
+                      className="lg:w-12 lg:h-12 w-9 h-9 object-contain object-center rounded-full"
                       alt="user profile pic"
                     />
                     <div className="flex flex-col items-start pl-4">
                       <h1 className="text-white text-start leading-5 ">
                         {" "}
-                        <strong className="text-xl ">
+                        <strong className="lg:text-xl text-base">
                           {conversation.participants[isViewer ? 1 : 0].name}
                         </strong>
                         <br />
@@ -422,7 +422,7 @@ const Page = () => {
         ></div>
         <div
           className={`${
-            panelIsOpen ? "xl:w-4/5 lg:w-[77%] md:w-full" : "w-full"
+            panelIsOpen ? "xl:w-4/5 lg:w-[77%] w-full" : "w-full"
           } duration-700 ease-in-out`}
         >
           {!isConversationLoading ? (

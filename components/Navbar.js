@@ -82,7 +82,7 @@ const Navbar = () => {
     (state) => state.adminSliceReducer.profilePicURL
   );
 
-  const [isMobView, setIsMobView] = useState(false);
+  const [isMobView, setIsMobView] = useState(true);
 
   useEffect(() => {
     if (window.innerWidth < 1024) {

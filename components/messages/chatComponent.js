@@ -106,7 +106,7 @@ export default function ChatComponent({ selectedConversation }) {
         </div>
 
         {/* Messages */}
-        <div className="px-14 py-5 h-[75dvh] max-h-[75dvh] overflow-y-auto">
+        <div className="md:px-14 sm:px-5 px-3 py-5 h-[75dvh] max-h-[75dvh] overflow-y-auto">
           {selectedConversation.messages?.map((message, index) => (
             <MessageComponent
               key={index}
@@ -134,7 +134,7 @@ export default function ChatComponent({ selectedConversation }) {
             }}
             value={text}
             onChange={({ target }) => setText(target.value)}
-            className="w-[75%] px-4 pt-1 border border-gray-300 rounded-full outline-none focus:ring-2 focus:ring-green-500"
+            className="md:w-[75%] xs:w-[95%] w-full px-4 pt-1 border border-gray-300 rounded-full outline-none focus:ring-2 focus:ring-green-500"
             onKeyDown={(event) => {
               console.log(event.key);
               console.log(event.ctrlKey && event.key === "ENTER");

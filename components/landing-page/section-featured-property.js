@@ -119,8 +119,8 @@ const SectionFeaturedProperty = () => {
   return (
     featuredProperties.length > 0 && (
       <div className="bg-[#CDC2AE] bg-opacity-5">
-        <div className="px-14 pt-14">
-          <h1 className="xl:text-[40px] md:text-4xl text-2xl text-center uppercase font-semibold text-[#116A7B] ">
+        <div className="sm:px-14 px-3 pt-14">
+          <h1 className="xl:text-[40px] md:text-4xl sm:text-2xl text-xl text-center uppercase font-semibold text-[#116A7B] ">
             Featured property around the globe
           </h1>
           {/* <h1 className="text-4xl text-center uppercase font-semibold text-[#116A7B] ">

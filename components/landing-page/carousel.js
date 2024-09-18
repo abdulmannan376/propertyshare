@@ -206,7 +206,7 @@ const Carousel = () => {
         handleDropdownActivity("areaActive", false, e);
         handleDropdownActivity("bedsActive", false, e);
       }}
-      className="w-full h-screen flex md:flex-row flex-col items-center md:justify-start justify-center bg-cover bg-center xxl:px-24 xl:px-16 lg:px-10 md:px-5 px-10"
+      className="w-full h-screen flex md:flex-row flex-col items-center md:justify-start justify-center bg-cover bg-center xxl:px-24 xl:px-16 lg:px-10 md:px-5 px-5"
       style={{ backgroundImage: "url('/assets/landing-page/carousel-bg.svg')" }}
       ref={carouselRef}
     >
