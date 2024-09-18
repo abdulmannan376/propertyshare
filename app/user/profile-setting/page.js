@@ -11,7 +11,7 @@ import {
 } from "@/app/redux/features/userSlice";
 import AccountSetting from "@/components/user/setting-components/accountSetting";
 import Image from "next/image";
-import React, { act, useEffect, useState } from "react";
+import React, { act, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { FaCcVisa, FaCcMastercard } from "react-icons/fa6";
@@ -105,7 +105,7 @@ const Page = () => {
         throw new Error(response.message);
       }
     } catch (error) {
-      errorAlert("Error", error.message)
+      errorAlert("Error", error.message);
     }
   };
 
@@ -502,13 +502,13 @@ const Page = () => {
         // }
 
         fetchUserDetails();
-        successAlert("Success", response.message)
+        successAlert("Success", response.message);
       } else {
         throw new Error(response.message);
       }
     } catch (error) {
       setIsLoadingSubmission(false);
-      errorAlert("Error", error.message)
+      errorAlert("Error", error.message);
     }
   };
 
@@ -545,19 +545,31 @@ const Page = () => {
     }
   }
 
+  const primaryDetailsRef = useRef(null);
+  const contactDetailsRef = useRef(null);
+  const nextOfKinRef = useRef(null);
+
+  const handleScrollIntoView = (ref) => {
+    ref.current?.scrollIntoView({
+      behavior: "smooth", // Adds a smooth scroll effect
+      block: "nearest", // Ensures the element is scrolled to the nearest visible area
+      inline: "center", // Keeps the element centered in the view horizontally
+    });
+  };
+
   return (
     <div
       onClick={() => dispatch(updateDropdrownStatus({ field: "close all" }))}
     >
       <div className="w-full h-20 bg-[#116A7B]"></div>
-      <div className="w-screen flex items-center justify-start xxl:mx-24 xl:mx-16 lg:mx-10 md:mx-5 md:space-x-20 space-x-14 my-3 text-white text-2xl font-semibold">
+      <div className="w-screen flex flex-row max-w-screen overflow-x-auto items-center justify-start xxl:mx-24 xl:mx-16 lg:mx-10 px-5 md:space-x-20 space-x-14 my-3 text-white text-2xl font-semibold">
         <button
           onClick={() =>
             dispatch(handleUserSettingNavigation("Profile Setting"))
           }
         >
           <h1
-            className={`flex ${
+            className={`flex w-[10rem] whitespace-nowrap ${
               settingActiveTab === "Profile Setting"
                 ? "underline-text"
                 : "hover-underline-animation"
@@ -573,7 +585,7 @@ const Page = () => {
           }
         >
           <h2
-            className={`flex ${
+            className={`flex w-[12rem] whitespace-nowrap ${
               settingActiveTab === "Account Setting"
                 ? "underline-text"
                 : "hover-underline-animation"
@@ -586,43 +598,49 @@ const Page = () => {
       </div>
       {settingActiveTab === "Profile Setting" && (
         <>
-          <div className="flex flex-row flex-wrap space-x-5 xxl:mx-24 xl:mx-16 lg:mx-10 md:mx-5 my-16 text-xl">
+          <div className="flex flex-row max-w-screen overflow-x-auto space-x-5 xxl:mx-24 xl:mx-16 lg:mx-10 mx-5 my-16 text-xl">
             <button
               type="button"
-              onClick={() =>
-                dispatch(handleUserProfileSettingNavigation("Primary Details"))
-              }
+              onClick={() => {
+                handleScrollIntoView(primaryDetailsRef);
+                dispatch(handleUserProfileSettingNavigation("Primary Details"));
+              }}
+              ref={primaryDetailsRef}
               className={`${
                 profileSettingActiveTab === "Primary Details"
                   ? "opacity-100"
                   : "opacity-70"
-              } text-[#09363F] font-semibold`}
+              } text-[#09363F] w-[25rem] font-semibold whitespace-nowrap`}
             >
               Primary Details
             </button>
             <button
               type="button"
-              onClick={() =>
-                dispatch(handleUserProfileSettingNavigation("Contact Details"))
-              }
+              onClick={() => {
+                handleScrollIntoView(contactDetailsRef);
+                dispatch(handleUserProfileSettingNavigation("Contact Details"));
+              }}
+              ref={contactDetailsRef}
               className={`${
                 profileSettingActiveTab === "Contact Details"
                   ? "opacity-100"
                   : "opacity-70"
-              } text-[#09363F] font-semibold`}
+              } text-[#09363F] w-[25rem] font-semibold whitespace-nowrap`}
             >
               Contact Details
             </button>
             <button
               type="button"
-              onClick={() =>
-                dispatch(handleUserProfileSettingNavigation("Next of Kin"))
-              }
+              onClick={() => {
+                handleScrollIntoView(nextOfKinRef);
+                dispatch(handleUserProfileSettingNavigation("Next of Kin"));
+              }}
+              ref={nextOfKinRef}
               className={`${
                 profileSettingActiveTab === "Next of Kin"
                   ? "opacity-100"
                   : "opacity-70"
-              } text-[#09363F] font-semibold`}
+              } text-[#09363F] w-[25rem] font-semibold whitespace-nowrap`}
             >
               Next of Kin
             </button>
@@ -655,7 +673,7 @@ const Page = () => {
               Withdrawal Details
             </button> */}
           </div>
-          <div className="xxl:mx-24 xl:mx-16 lg:mx-10 md:mx-5 my-16">
+          <div className="xxl:mx-24 xl:mx-16 lg:mx-10 mx-5 my-16">
             {profileSettingActiveTab === "Primary Details" && (
               <>
                 <div className="flex flex-row flex-wrap">
@@ -671,7 +689,7 @@ const Page = () => {
                       onChange={({ target }) =>
                         handleUserProfileUpdates("name", target.value, false)
                       }
-                      className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                      className="sm:w-[620px] xs:w-[370px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                     />
                   </div>
                   <div className="mb-6 mr-6 flex flex-col">
@@ -691,7 +709,7 @@ const Page = () => {
                           false
                         )
                       }
-                      className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                      className="sm:w-[620px] xs:w-[370px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                     />
                   </div>
                   <div className="mb-6 mr-6 flex flex-col">
@@ -729,7 +747,7 @@ const Page = () => {
                       value={userDetails?.userProfile.gender}
                       required={true}
                       readOnly={true}
-                      className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                      className="sm:w-[620px] xs:w-[370px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                     />
                   </div>
                   <div className="mb-6 mr-6 flex flex-col">
@@ -750,7 +768,7 @@ const Page = () => {
                         );
                         handleUserProfileUpdates("dob", date, true);
                       }}
-                      className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                      className="sm:w-[620px] xs:w-[370px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                     />
                   </div>
                   <div className="mb-6 mr-6 flex flex-col">
@@ -769,7 +787,7 @@ const Page = () => {
                           true
                         )
                       }
-                      className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                      className="sm:w-[620px] xs:w-[370px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                     />
                   </div>
                   <div className="mb-6 mr-6 flex flex-col">
@@ -791,7 +809,7 @@ const Page = () => {
                             handleUserProfileUpdates("nationality", "", true);
                           }
                         }}
-                        className="inline-flex mx-10 border border-[#116A7B30] rounded-full px-3 focus:border-[#116A7B] outline-none"
+                        className="inline-flex xs:mx-10 xs:mt-0 mt-1 mx-0 xs:w-fit w-[310px] border border-[#116A7B30] rounded-full px-3 focus:border-[#116A7B] outline-none"
                       >
                         <option value="Select">Select</option>
                         {nationalities.map((nationality, index) => (
@@ -807,7 +825,7 @@ const Page = () => {
                       value={userDetails?.userProfile.nationality}
                       required={true}
                       readOnly={true}
-                      className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                      className="sm:w-[620px] xs:w-[370px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                     />
                   </div>
                   <div className="mb-6 mr-6 flex flex-col">
@@ -845,7 +863,7 @@ const Page = () => {
                       value={userDetails?.userProfile.religion}
                       required={true}
                       readOnly={true}
-                      className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                      className="sm:w-[620px] xs:w-[370px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                     />
                   </div>
                   <div className="mb-6 mr-6 flex flex-col">
@@ -883,7 +901,7 @@ const Page = () => {
                       value={userDetails?.userProfile.bloodGroup}
                       required={true}
                       readOnly={true}
-                      className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                      className="sm:w-[620px] xs:w-[370px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                     />
                   </div>
                   <div className="flex flex-col mr-6">
@@ -895,7 +913,7 @@ const Page = () => {
                       accept="image/png"
                       required={true}
                       onChange={({ target }) => setFiles(target.files)}
-                      className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                      className="sm:w-[620px] xs:w-[370px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                     />
                     {userDetails?.userProfile.profilePicURL.length > 0 && (
                       <div className="my-5">
@@ -954,7 +972,7 @@ const Page = () => {
                       onChange={({ target }) =>
                         handleUserProfileUpdates("email", target.value, false)
                       }
-                      className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                      className="sm:w-[620px] xs:w-[370px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                     />
                   </div>
                   <div className="mb-6 mr-6 flex flex-col">
@@ -969,7 +987,7 @@ const Page = () => {
                       onChange={({ target }) =>
                         handleUserProfileUpdates("contact", target.value, false)
                       }
-                      className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                      className="sm:w-[620px] xs:w-[370px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                     />
                   </div>
                   <div className="mb-6 mr-6 flex flex-col">
@@ -991,7 +1009,7 @@ const Page = () => {
                           true
                         )
                       }
-                      className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                      className="sm:w-[620px] xs:w-[370px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                     />
                   </div>
                 </div>
@@ -1028,7 +1046,7 @@ const Page = () => {
                           return newDetails;
                         })
                       }
-                      className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                      className="sm:w-[620px] xs:w-[370px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                     />
                   </div>
                   <div className="mb-6 mr-6 flex flex-col">
@@ -1070,7 +1088,7 @@ const Page = () => {
                       value={nextOfKinDetails?.relation}
                       required={true}
                       readOnly={true}
-                      className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                      className="sm:w-[620px] xs:w-[370px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                     />
                   </div>
                   <div className="mb-6 mr-6 flex flex-col">
@@ -1089,7 +1107,7 @@ const Page = () => {
                           return newDetails;
                         })
                       }
-                      className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                      className="sm:w-[620px] xs:w-[370px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                     />
                   </div>
                   <div className="mb-6 mr-6 flex flex-col">
@@ -1108,7 +1126,7 @@ const Page = () => {
                           return newDetails;
                         })
                       }
-                      className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                      className="sm:w-[620px] xs:w-[370px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                     />
                   </div>
                   <div className="mb-6 mr-6 flex flex-col">
@@ -1127,7 +1145,7 @@ const Page = () => {
                           return newDetails;
                         })
                       }
-                      className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                      className="sm:w-[620px] xs:w-[370px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                     />
                   </div>
                   <div className="mb-6 mr-6 flex flex-col">
@@ -1149,7 +1167,7 @@ const Page = () => {
                           return newDetails;
                         });
                       }}
-                      className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                      className="sm:w-[620px] xs:w-[370px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                     />
                   </div>
                 </div>
@@ -1186,7 +1204,7 @@ const Page = () => {
                           return newDetails;
                         })
                       }
-                      className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                      className="sm:w-[620px] xs:w-[370px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                     />
                   </div>
                   <div className="flex flex-col">

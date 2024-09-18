@@ -157,7 +157,7 @@ const AccountSetting = () => {
         </div>
       ) : (
         <>
-          <div className="w-full xxl:mx-24 xl:mx-16 lg:mx-10 md:mx-5 mx-16">
+          <div className="w-full xxl:mx-24 xl:mx-16 lg:mx-10 mx-5">
             <div className="w-full flex flex-col items-start pb-8 my-16">
               <h1 className="text-xl text-[#09363F] font-semibold">
                 Notification Settings
@@ -283,7 +283,7 @@ const AccountSetting = () => {
             </div>
           </div>
           <div className="w-screen h-[2px] bg-[#D9D9D9]"></div>
-          <div className="w-full xxl:mx-24 xl:mx-16 lg:mx-10 md:mx-5 mx-16 my-16">
+          <div className="w-full xxl:mx-24 xl:mx-16 lg:mx-10 mx-5 my-16">
             <div className="space-y-5">
               <div className="flex flex-col space-y-3">
                 <label htmlFor="language" className="text-xl text-[#116A7B]">

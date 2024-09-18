@@ -42,7 +42,7 @@ const Footer = () => {
           />
         </div>
         <div className="lg:w-1/2 md:w-1/2 w-full my-5 md:px-0 sm:px-20 xs:px-5 px-0">
-          <div className="grid md:grid-cols-4 md:grid-rows-1 grid-rows-2 grid-cols-2 gap-5 items-start justify-start">
+          <div className="grid lg:grid-cols-4 lg:grid-rows-1 grid-rows-2 grid-cols-2 gap-5 items-start justify-start">
             <div className="md:ml-0 sm:ml-20 xs:ml-10 ml-5">
               <h1 className="lg:text-xl text-base font-semibold text-white uppercase">
                 Connect

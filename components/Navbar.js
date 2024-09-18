@@ -188,7 +188,7 @@ const Navbar = () => {
           if (response.action && response.action === "login")
             setTimeout(() => {
               router.push("/login");
-            }, 2100);
+            }, 2000);
 
           throw new Error(response.message);
         }
@@ -297,7 +297,7 @@ const Navbar = () => {
         className={`fixed top-0 w-full ${textColor} ${bgColor} body-font z-[1000]`}
         onClick={() => dispatch(updateDropdrownStatus({ field: "close all" }))}
       >
-        <div className="xxl:mx-24 xl:mx-16 lg:mx-10 md:mx-5 xs:mx-3 mx-1 flex flex-wrap p-5 flex-row items-center md:justify-normal justify-between">
+        <div className="xxl:mx-24 xl:mx-16 lg:mx-10 md:mx-5 xs:mx-3 mx-1 flex flex-wrap p-5 flex-row items-center lg:justify-normal justify-between">
           {isMobView && (
             <button
               type="button"
@@ -324,7 +324,7 @@ const Navbar = () => {
               className="w-auto h-10 object-contain object-center"
             />
           </Link>
-          <nav className="md:ml-12 md:mr-auto md:flex hidden flex-wrap items-center lg:text-base md:text-sm justify-center">
+          <nav className="md:ml-12 md:mr-auto lg:flex hidden flex-wrap items-center lg:text-base md:text-sm justify-center">
             <Link
               href={"/"}
               className={`lg:mr-12 mr-5 hover:${hoverTextColor} ${

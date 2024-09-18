@@ -60,7 +60,7 @@ const ChangePasswordModal = ({ isOpen, onClose }) => {
       className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full"
       id="my-modal"
     >
-      <div className="relative top-20 mx-auto p-5 border w-[30rem] shadow-lg rounded-md bg-white">
+      <div className="relative top-20 mx-auto p-5 border sm:w-[30rem] w-[90vw] shadow-lg rounded-md bg-white">
         <div className="mt-3 text-center">
           <h3 className="text-lg leading-6 font-medium text-gray-900">
             Change Password
