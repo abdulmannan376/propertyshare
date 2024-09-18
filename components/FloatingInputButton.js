@@ -30,7 +30,7 @@ const FloatingLabelInput = ({
         onFocus={handleFocus}
         onBlur={handleBlur}
         required={true}
-        className={`lg:w-[550px] md:w-[443px] bg-[#FFFDF4] bg-opacity-[78%] rounded border border-[#CACACA] text-xl outline-none text-[#676767] pt-4 pb-3 pr-7 pl-3 leading-8 transition-colors duration-200 ease-in-out`}
+        className={`lg:w-[550px] xs:w-[443px] w-[320px] bg-[#FFFDF4] bg-opacity-[78%] rounded border border-[#CACACA] text-xl outline-none text-[#676767] pt-4 pb-3 pr-7 pl-3 leading-8 transition-colors duration-200 ease-in-out`}
         placeholder=" "
       />
       <span className="absolute inset-y-5 right-0 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer">

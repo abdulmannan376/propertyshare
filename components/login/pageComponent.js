@@ -108,7 +108,7 @@ const LoginPageComponent = () => {
         style={{ backgroundImage: "url('/background.png')" }}
         onClick={() => dispatch(updateDropdrownStatus({ field: "close all" }))}
       >
-        <div>
+        <div className="lg:flex hidden">
           <Image
             width={1000}
             height={1000}
@@ -138,7 +138,7 @@ const LoginPageComponent = () => {
             type={showPassword ? "text" : "password"}
             handleShow={handleShowPassword}
           />
-          <div className="lg:w-[550px] md:w-[443px] relative mt-6">
+          <div className="lg:w-[550px] xs:w-[443px] w-[320px] relative mt-6">
             <input
               type="checkbox"
               id="rememberMe"
@@ -158,7 +158,7 @@ const LoginPageComponent = () => {
           </div>
           <button
             type="submit"
-            className="lg:w-[550px] md:w-[443px] bg-[#FFFDF4] bg-opacity-[78%] rounded border border-[#CACACA] mt-6 p-4 text-xl text-[#676767] "
+            className="lg:w-[550px] xs:w-[443px] w-[320px] bg-[#FFFDF4] bg-opacity-[78%] rounded border border-[#CACACA] mt-6 p-4 text-xl text-[#676767] "
           >
             {" "}
             {!isLoading && `Login`}
