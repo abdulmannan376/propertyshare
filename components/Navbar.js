@@ -40,7 +40,7 @@ const Navbar = () => {
         console.log("message: ", message);
         dispatch(addNewNotification(message));
         dispatch(updateNewNotificationFlag(true));
-        successAlert(message.subject, "")
+        successAlert(message.subject, "");
       });
 
       socket.on("newMessage", (message) => {
@@ -448,8 +448,8 @@ const Navbar = () => {
                     )}
                   </button>
                   {showDropDowns["notification"] && !selectedNotification && (
-                    <div className="absolute w-96 -right-0 rounded-xl bg-white border border-[#116A7B] p-2">
-                      <ul className=" text-gray-800  h-[34rem] max-h-[34rem] overflow-y-auto ">
+                    <div className="absolute xs:w-96 w-72 -right-0 rounded-xl bg-white border border-[#116A7B] p-2">
+                      <ul className=" text-gray-800 h-[34rem] max-h-[34rem] overflow-y-auto ">
                         <li>
                           <button
                             type="button"
@@ -481,7 +481,7 @@ const Navbar = () => {
                                   {notification.subject}
                                 </h2>
                                 {notification.inAppStatus === "unread" && (
-                                  <span className="w-3 h-3 bg-[#116A7B] rounded-full mr-5 mb-2"></span>
+                                  <span className="w-3 h-3 bg-[#116A7B] rounded-full xs:mr-5 mr-0 mb-2"></span>
                                 )}
                               </div>
                               <p>
@@ -494,7 +494,7 @@ const Navbar = () => {
                     </div>
                   )}
                   {showDropDowns["notification"] && selectedNotification && (
-                    <div className="absolute w-96 -right-0 bg-white text-gray-800 border border-[#116A7B] mt-0 p-5 space-y-5 h-[34rem] max-h-[34rem] overflow-y-auto">
+                    <div className="absolute xs:w-96 w-72 -right-0 bg-white text-gray-800 border border-[#116A7B] rounded-xl mt-0 p-5 space-y-5 h-[34rem] max-h-[34rem] overflow-y-auto">
                       <FaAngleLeft
                         onClick={(e) => {
                           e.stopPropagation();
@@ -508,7 +508,7 @@ const Navbar = () => {
                       <textarea
                         readOnly
                         value={selectedNotification?.body}
-                        rows={10}
+                        rows={15}
                         className="w-full focus:outline-none"
                         style={{ resize: "none" }}
                       >
@@ -629,6 +629,7 @@ const Navbar = () => {
                     ? `bg-white text-[#116A7B]`
                     : "bg-transparent"
                 } px-3`}
+                onClick={() => setIsMobNavOpen(!isMobNavOpen)}
               >
                 Home
               </Link>
@@ -639,6 +640,7 @@ const Navbar = () => {
                     ? `bg-white text-[#116A7B]`
                     : "bg-transparent"
                 } px-3`}
+                onClick={() => setIsMobNavOpen(!isMobNavOpen)}
               >
                 Map
               </Link>
@@ -649,6 +651,7 @@ const Navbar = () => {
                     ? `bg-white text-[#116A7B]`
                     : "bg-transparent"
                 } px-3`}
+                onClick={() => setIsMobNavOpen(!isMobNavOpen)}
               >
                 Buy Shares
               </Link>
@@ -659,6 +662,7 @@ const Navbar = () => {
                     ? `bg-white text-[#116A7B]`
                     : "bg-transparent"
                 } px-3`}
+                onClick={() => setIsMobNavOpen(!isMobNavOpen)}
               >
                 Rent Shares
               </Link>
@@ -672,16 +676,18 @@ const Navbar = () => {
                     ? `bg-white text-[#116A7B]`
                     : "bg-transparent"
                 } px-3`}
+                onClick={() => setIsMobNavOpen(!isMobNavOpen)}
               >
                 Contact
               </Link>
               <Link
-                href={"/under-development"}
+                href={"/aboutus"}
                 className={`lg:mr-12 mr-5 hover:${hoverTextColor} ${
                   currentPage.tag === "About"
                     ? `bg-white text-[#116A7B]`
                     : "bg-transparent"
                 } px-3`}
+                onClick={() => setIsMobNavOpen(!isMobNavOpen)}
               >
                 About
               </Link>
@@ -692,6 +698,7 @@ const Navbar = () => {
                     ? `bg-white text-[#116A7B]`
                     : "bg-transparent"
                 } px-3`}
+                onClick={() => setIsMobNavOpen(!isMobNavOpen)}
               >
                 Privacy
               </Link>
