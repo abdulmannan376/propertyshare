@@ -384,17 +384,29 @@ const Inspections = () => {
 
       const response = await res.json();
       if (response.success) {
-        successAlert("Success", response.message)
+        successAlert("Success", response.message);
         setThreadBody("");
         fetchThreads(shareID, "Inspection");
       }
     } catch (error) {
-      errorAlert("Error", error.message)
+      errorAlert("Error", error.message);
     }
   };
 
   const [selectedShareID, setSelectedShareID] = useState("");
   const [inspectionActionBody, setInspectionActionBody] = useState(null);
+
+  const myInspectionsRef = useRef(null);
+  const allInspectionsRef = useRef(null);
+  const pendingApprovalsRef = useRef(null);
+
+  const handleScrollIntoView = (ref) => {
+    ref.current?.scrollIntoView({
+      behavior: "smooth", // Adds a smooth scroll effect
+      block: "nearest", // Ensures the element is scrolled to the nearest visible area
+      inline: "center", // Keeps the element centered in the view horizontally
+    });
+  };
 
   return (
     <div className="bg-white w-full my-6 xxl:h-[85vh] md:h-[88vh] max-h-[88vh] overflow-y-auto">
@@ -402,19 +414,21 @@ const Inspections = () => {
         <h1 className="text-2xl font-medium">Inspections</h1>
       </div>
 
-      <div className="flex items-center justify-start md:space-x-20 space-x-14 my-3 px-14 text-white text-2xl font-semibold">
+      <div className="flex items-center justify-start max-w-screen overflow-x-auto md:space-x-20 space-x-14 my-3 md:px-14 px-5 text-white text-2xl font-semibold">
         <button
           onClick={() => {
             dispatch(updateActiveInspectionTab("My Inspections"));
             setSelectedInspection(null);
+            handleScrollIntoView(myInspectionsRef);
           }}
         >
           <h1
-            className={`flex ${
+            className={`flex w-44 whitespace-nowrap ${
               activeInspectionTab === "My Inspections"
                 ? "underline-text"
                 : "hover-underline-animation"
             } `}
+            ref={myInspectionsRef}
           >
             My Inspections
           </h1>
@@ -424,14 +438,16 @@ const Inspections = () => {
           onClick={() => {
             dispatch(updateActiveInspectionTab("All Inspections"));
             setSelectedInspection(null);
+            handleScrollIntoView(allInspectionsRef);
           }}
         >
           <h2
-            className={`flex ${
+            className={`flex w-44 whitespace-nowrap ${
               activeInspectionTab === "All Inspections"
                 ? "underline-text"
                 : "hover-underline-animation"
             } `}
+            ref={allInspectionsRef}
           >
             All Inspections
           </h2>
@@ -440,14 +456,16 @@ const Inspections = () => {
           onClick={() => {
             dispatch(updateActiveInspectionTab("Pending Approvals"));
             setSelectedInspection(null);
+            handleScrollIntoView(pendingApprovalsRef);
           }}
         >
           <h2
-            className={`flex ${
+            className={`flex w-44 whitespace-nowrap ${
               activeInspectionTab === "Pending Approvals"
                 ? "underline-text"
                 : "hover-underline-animation"
             } `}
+            ref={pendingApprovalsRef}
           >
             Pending Approvals
           </h2>
@@ -467,7 +485,7 @@ const Inspections = () => {
         <div>
           {!isLoading ? (
             !selectedInspection && (
-              <div className="mx-14 flex flex-row flex-wrap items-center">
+              <div className="md:mx-14 mx-5 flex flex-row flex-wrap items-center justify-center">
                 {inspectionsList?.length > 0 ? (
                   inspectionsList?.map((inspection, index) => (
                     <div
@@ -910,7 +928,7 @@ const Inspections = () => {
         <div>
           {!isLoading ? (
             !selectedInspection && (
-              <div className="mx-14 flex flex-row flex-wrap items-center">
+              <div className="md:mx-14 mx-5 flex flex-row flex-wrap items-center justify-center">
                 {inspectionsList?.length > 0 ? (
                   inspectionsList?.map((inspection, index) => (
                     <div
@@ -1212,7 +1230,7 @@ const Inspections = () => {
         <div>
           {!isLoading ? (
             !selectedInspection && (
-              <div className="mx-14 flex flex-row flex-wrap items-center">
+              <div className="md:mx-14 mx-5 flex flex-row flex-wrap items-center justify-center">
                 {inspectionsList?.length > 0 ? (
                   inspectionsList?.map((inspection, index) => (
                     <div
@@ -1223,7 +1241,11 @@ const Inspections = () => {
                           setSelectedInspection(inspection);
                       }}
                     >
-                      <InspectionCard card={inspection} sharesList={sharesList} fetchInspections={fetchInspections}/>
+                      <InspectionCard
+                        card={inspection}
+                        sharesList={sharesList}
+                        fetchInspections={fetchInspections}
+                      />
                     </div>
                   ))
                 ) : (

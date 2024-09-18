@@ -60,7 +60,7 @@ const WishList = () => {
               <WishlistCard key={index} card={favourite} />
             ))
           ) : (
-            <div className="mx-14 my-5 ">Wishlist Empty</div>
+            <div className="mx-14 my-5 h-[80dvh]">Wishlist Empty</div>
           )}
         </div>
       ) : (

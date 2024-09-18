@@ -116,7 +116,7 @@ const FavouriteCard = ({ card }) => {
   return (
     <div
       onClick={() => router.push(`/buy-shares/property/${card.propertyID}`)}
-      className="w-[20rem] flex flex-col bg-white border-2 border-[#D9D9D9] rounded-xl md:mx-10 mx-1 mt-20 cursor-pointer"
+      className="w-[20rem] flex flex-col bg-white border-2 border-[#D9D9D9] rounded-xl md:mx-10 sm:mx-5 mx-auto mt-20 cursor-pointer"
     >
       <div className="p-2 relative">
         <Image

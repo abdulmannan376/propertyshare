@@ -158,7 +158,7 @@ const InspectionCard = ({ card, fetchData, sharesList, fetchInspections }) => {
     //   href={`/rent-shares/property/${card.shareDocID.propertyDocID.propertyID}`}
     //   className="w-[20rem] bg-white border-2 border-[#D9D9D9] rounded-xl mr-20 mt-5"
     // >
-    <div className="w-[20rem] bg-white border-2 border-[#D9D9D9] rounded-xl mr-20 mt-5">
+    <div className="w-[20rem] bg-white border-2 border-[#D9D9D9] rounded-xl lg:mr-20 sm:mr-5 mt-5">
       <div className="p-2 relative">
         <Image
           width={1000}

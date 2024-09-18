@@ -5,6 +5,7 @@ import { TiTick } from "react-icons/ti";
 import { MdClose } from "react-icons/md";
 import { useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
+import { FaEdit } from "react-icons/fa";
 
 const UserManagement = () => {
   const [myDetails, setMyDetails] = useState({});
@@ -69,20 +70,28 @@ const UserManagement = () => {
     <>
       {!pageLoading ? (
         <div className="bg-white w-full my-6 lg:h-[85vh] md:h-[88vh] lg:max-h-[85vh] max-h-[88vh] overflow-y-auto">
-          <div className="w-full flex flex-row items-center border-b border-b-[#D9D9D9] pt-1 pb-7 px-14">
+          <div className="w-full flex flex-row items-center border-b border-b-[#D9D9D9] pt-1 pb-7 sm:px-14 pl-14 pr-5">
             <h1 className="text-2xl font-medium">
               {myDetails?.role?.toUpperCase()}
             </h1>
             <button
               onClick={(e) => router.push("/user/profile-setting")}
               type="button"
-              className="bg-[#116A7B] text-white text-lg ml-auto mx-1 px-5 py-1 rounded-full"
+              className="xs:block hidden bg-[#116A7B] text-white text-lg ml-auto mx-1 px-5 py-1 rounded-full"
             >
               Edit Profile
               {/* <FaPlus className="inline-flex text-sm ml-2 mb-1" /> */}
             </button>
+            <button
+              onClick={(e) => router.push("/user/profile-setting")}
+              type="button"
+              className="xs:hidden block bg-[#116A7B] text-white ml-auto mx-1 pb-1 px-3 py-1 rounded-full"
+            >
+              <FaEdit/>
+              {/* <FaPlus className="inline-flex text-sm ml-2 mb-1" /> */}
+            </button>
           </div>
-          <div className="my-5 px-14">
+          <div className="my-5 sm:px-14 px-5">
             {myDetails?.userProfile?.profilePicURl?.length > 0 ? (
               ""
             ) : (
@@ -98,48 +107,57 @@ const UserManagement = () => {
               />
             )}
           </div>
-          <div className="w-full flex flex-col flex-wrap px-14 my-10 space-y-4">
-            <div className="flex flex-row text-2xl">
-              <h1 className="w-80 font-bold text-[#666666]">Fullname </h1>
+          <div className="w-full flex flex-col flex-wrap sm:px-14 px-5 my-10 space-y-4">
+            <div className="flex sm:flex-row flex-col md:text-2xl text-xl">
+              <h1 className="md:w-80 w-44 font-bold text-[#666666]">
+                Fullname{" "}
+              </h1>
               <textarea
                 rows="1"
                 value={myDetails?.name}
                 readOnly
-                className="w-80 outline-none"
+                className="md:w-80 w-60 outline-none"
                 style={{ resize: "none" }}
               ></textarea>
             </div>
-            <div className="flex flex-row text-2xl">
-              <h1 className="w-80 font-bold text-[#666666]">Username </h1>
+            <div className="flex sm:flex-row flex-col md:text-2xl text-xl">
+              <h1 className="md:w-80 w-44 font-bold text-[#666666]">
+                Username{" "}
+              </h1>
               <textarea
                 rows="1"
                 value={myDetails?.username}
                 readOnly
-                className="w-80 outline-none"
+                className="md:w-80 w-60 outline-none"
                 style={{ resize: "none" }}
               ></textarea>
             </div>
-            <div className="flex flex-row text-2xl">
-              <h1 className="w-80 font-bold text-[#666666]">Email Address </h1>
-              <textarea
-                rows="1"
-                value={myDetails?.email}
-                readOnly
-                className="w-96 outline-none"
-                style={{ resize: "none" }}
-              ></textarea>
-              {myDetails?.emailVerified ? (
-                <div className="bg-transparent text-green-600 p-1 ">
-                  <TiTick />
-                </div>
-              ) : (
-                <div className="bg-transparent text-red-600 p-1 ">
-                  <MdClose />
-                </div>
-              )}
+            <div className="flex sm:flex-row flex-col md:text-2xl text-xl">
+              <h1 className="md:w-80 w-44 font-bold text-[#666666]">
+                Email Address{" "}
+              </h1>
+              <div className="flex flex-row space-x-5">
+                <input
+                  type="text"
+                  value={myDetails?.email}
+                  readOnly
+                  className="sm:w-80 w-full outline-none bg-transparent text-black leading-5"
+                />
+                {myDetails?.emailVerified ? (
+                  <div className="bg-transparent text-green-600 p-1 ">
+                    <TiTick />
+                  </div>
+                ) : (
+                  <div className="bg-transparent text-red-600 p-1 ">
+                    <MdClose />
+                  </div>
+                )}
+              </div>
             </div>
-            <div className="flex flex-row text-2xl">
-              <h1 className="w-80 font-bold text-[#666666]">NIC Number </h1>
+            <div className="flex sm:flex-row flex-col md:text-2xl text-xl">
+              <h1 className="md:w-80 w-44 font-bold text-[#666666]">
+                NIC Number{" "}
+              </h1>
               <textarea
                 rows="1"
                 value={
@@ -148,12 +166,14 @@ const UserManagement = () => {
                     : "--"
                 }
                 readOnly
-                className="w-80 outline-none"
+                className="md:w-80 w-60 outline-none"
                 style={{ resize: "none" }}
               ></textarea>
             </div>
-            <div className="flex flex-row text-2xl">
-              <h1 className="w-80 font-bold text-[#666666]">Date of Birth </h1>
+            <div className="flex sm:flex-row flex-col md:text-2xl text-xl">
+              <h1 className="md:w-80 w-44 font-bold text-[#666666]">
+                Date of Birth{" "}
+              </h1>
               <textarea
                 rows="1"
                 value={
@@ -162,12 +182,14 @@ const UserManagement = () => {
                     : "--"
                 }
                 readOnly
-                className="w-80 outline-none"
+                className="md:w-80 w-60 outline-none"
                 style={{ resize: "none" }}
               ></textarea>
             </div>
-            <div className="flex flex-row text-2xl">
-              <h1 className="w-80 font-bold text-[#666666]">Nationality </h1>
+            <div className="flex sm:flex-row flex-col md:text-2xl text-xl">
+              <h1 className="md:w-80 w-44 font-bold text-[#666666]">
+                Nationality{" "}
+              </h1>
               <textarea
                 rows="1"
                 value={
@@ -176,12 +198,12 @@ const UserManagement = () => {
                     : "--"
                 }
                 readOnly
-                className="w-80 outline-none"
+                className="md:w-80 w-60 outline-none"
                 style={{ resize: "none" }}
               ></textarea>
             </div>
-            <div className="flex flex-row text-2xl">
-              <h1 className="w-80 font-bold text-[#666666]">Gender </h1>
+            <div className="flex sm:flex-row flex-col md:text-2xl text-xl">
+              <h1 className="md:w-80 w-44 font-bold text-[#666666]">Gender </h1>
               <textarea
                 rows="1"
                 value={
@@ -190,7 +212,7 @@ const UserManagement = () => {
                     : "--"
                 }
                 readOnly
-                className="w-80 outline-none"
+                className="md:w-80 w-60 outline-none"
                 style={{ resize: "none" }}
               ></textarea>
             </div>

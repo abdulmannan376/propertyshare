@@ -59,9 +59,13 @@ const Favourites = () => {
 
       {!isLoading ? (
         <div className="flex flex-row flex-wrap items-center">
-          {myFavouritesList.length > 0 ? myFavouritesList.map((favourite, index) => (
-            <FavouriteCard key={index} card={favourite} />
-          )) : <div className="mx-14 my-5 ">No Favourites</div>}
+          {myFavouritesList.length > 0 ? (
+            myFavouritesList.map((favourite, index) => (
+              <FavouriteCard key={index} card={favourite} />
+            ))
+          ) : (
+            <div className="mx-14 my-5 h-[80dvh]">No Favourites</div>
+          )}
         </div>
       ) : (
         <div className="bg-white w-full my-6 xxl:h-[85vh] md:h-[88vh] max-h-[88vh] overflow-y-auto flex flex-row items-center justify-center">

@@ -161,7 +161,7 @@ const Page = () => {
           ref={panelRef}
           className={`${
             panelIsOpen ? "-translate-x-[0%]" : "-translate-x-[100%]"
-          } absolute xl:w-1/5 lg:w-[23%] xxl:h-[90vh] xl:h-[93vh] lg:h-[93vh] md:h-[93vh] max-h-[93vh] z-20 transition-transform bg-[#015A6B] duration-500`}
+          } absolute xl:w-1/5 lg:w-[23%] xxl:h-[90vh] xl:h-[93vh] lg:h-[93vh] h-[93vh] max-h-[93vh] z-20 transition-transform bg-[#015A6B] duration-500`}
         >
           <div
             onClick={(event) => handleUpdateActiveTab(event, "Profile")}
@@ -236,7 +236,7 @@ const Page = () => {
         ></div>
         <div
           className={`${
-            panelIsOpen ? "xl:w-4/5 lg:w-[77%] md:w-full" : "w-full"
+            panelIsOpen ? "xl:w-4/5 lg:w-[77%] w-full" : "w-full"
           } duration-700 ease-in-out`}
         >
           {activeTab === "Property Management" && <PropertyManagement />}

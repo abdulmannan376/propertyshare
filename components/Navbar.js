@@ -224,7 +224,7 @@ const Navbar = () => {
         const username = JSON.parse(
           localStorage.getItem("userDetails")
         ).username;
-        socket.emit("logout", { username: username });
+        socket?.emit("logout", { username: username });
         console.log("reponse: ", response);
         successAlert("Success", response.message);
         setLoggedIn(false);
@@ -236,6 +236,7 @@ const Navbar = () => {
         }, 2000);
       }
     } catch (error) {
+      console.error(error);
       errorAlert("Error", error.message);
     }
   };
@@ -608,7 +609,7 @@ const Navbar = () => {
             ) : (
               <Link
                 href={"/login"}
-                className="inline-flex items-center bg-[#116A7B] text-white border-0 py-1 px-3 focus:outline-none hover:bg-[#0C4A56] rounded text-base mt-4 md:mt-0"
+                className="inline-flex items-center bg-[#116A7B] text-white border-0 py-1 px-3 focus:outline-none hover:bg-[#0C4A56] rounded text-base md:mt-0"
               >
                 Login
               </Link>
