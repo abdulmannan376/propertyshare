@@ -12,18 +12,18 @@ import Image from "next/image";
 
 const SectionOne = () => {
   return (
-    <div className="w-full h-full flex flex-row items-start justify-center bg-[#116A7B] px-24 py-10">
-      <div className="w-1/3 flex items-center justify-end pr-10">
+    <div className="w-full h-full flex md:flex-row flex-col items-start justify-center bg-[#116A7B] lg:px-24 xs:px-10 px-3 py-10">
+      <div className="lg:w-1/2 md:w-[60%] w-full flex items-center md:justify-end justify-center md:pr-10">
         <Image
           width={1000}
           height={2000}
           src={"/assets/about-us/section-1-1.jpg"}
-          className="w-[526px] h-[617px] border-4 border-white object-cover object-center rounded-3xl overflow-hidden"
+          className="w-[526px] md:h-[617px] h-[317px] border-4 border-white object-cover object-center rounded-3xl overflow-hidden"
         />
       </div>
-      <div className="w-1/3 pr-10 space-y-5">
-        <h1 className="text-6xl font-bold uppercase text-white">Our Story</h1>
-        <p className="text-base font-normal text-white">
+      <div className="w-full md:pr-10 space-y-5 mx-auto">
+        <h1 className="lg:text-6xl text-4xl font-bold uppercase text-white md:text-start text-center md:mt-0 mt-5">Our Story</h1>
+        <p className="lg:text-base text-sm md:text-start text-center font-normal text-white">
           <strong className="font-semibold text-white">
             beachbunnyhouse.com
           </strong>{" "}
@@ -75,14 +75,14 @@ const SectionOne = () => {
 const SectionTwo = () => {
   return (
     <div
-      className="w-full h-full flex flex-row items-center justify-center p-24 bg-cover bg-center bg-no-repeat"
+      className="w-full h-full flex flex-row items-center justify-center lg:p-24 md:py-24 py-10 sm:px-10 xs:px-5 px-3 bg-cover bg-center bg-no-repeat"
       style={{ backgroundImage: "url('/assets/about-us/section-2-bg.jpg')" }}
     >
-      <div className="w-2/3 bg-white border-4 border-[#116A7B] rounded-3xl space-y-10 p-20">
-        <h1 className="text-[#116A7B] text-6xl text-center font-bold uppercase">
+      <div className="w-6/6 bg-white border-4 border-[#116A7B] rounded-3xl space-y-10 md:p-20 sm:p-10 px-5 py-10">
+        <h1 className="text-[#116A7B] lg:text-6xl text-4xl text-center font-bold uppercase">
           What we do
         </h1>
-        <p className="text-xl font-normal leading-10">
+        <p className="lg:text-xl text-base font-normal leading-10">
           At{" "}
           <strong className="font-semibold text-[#116A7B]">
             beachbunnyhouse.com
@@ -93,8 +93,8 @@ const SectionTwo = () => {
           you instead of losing value in a bank account, we have a solution
           tailored to your needs.
         </p>
-        <ul className="list-disc space-y-5">
-          <h2 className="text-xl font-semibold">Our platform is perfect if:</h2>
+        <ul className="list-disc space-y-5 text-sm">
+          <h2 className="lg:text-xl text-base font-semibold">Our platform is perfect if:</h2>
           <li className="mx-10">
             You want to gradually build up your fortune while avoiding the
             costly interest associated with traditional bank investments.
@@ -120,7 +120,7 @@ const SectionTwo = () => {
             with others around you.
           </li>
         </ul>
-        <p className="text-xl font-normal leading-10">
+        <p className="lg:text-xl text-base font-normal leading-10">
           <strong className="font-semibold text-[#116A7B]">
             beachbunnyhouse.com
           </strong>{" "}
@@ -136,23 +136,23 @@ const SectionTwo = () => {
 const SectionThree = () => {
   return (
     <div className="w-full h-full bg-[#116A7B] py-10">
-      <h1 className=" text-white text-6xl text-center font-bold uppercase">
+      <h1 className=" text-white lg:text-6xl text-4xl text-center font-bold uppercase">
         our leadership
       </h1>
-      <div className="w-full h-screen flex flex-row items-center justify-center bg-[#116A7B] px-24 py-10">
-        <div className="w-1/3 flex items-center justify-end pr-10">
+      <div className="w-full h-screen flex sm:flex-row flex-col items-center justify-center bg-[#116A7B] lg:px-24 xs:px-10 px-3 py-10">
+        <div className="lg:w-1/3 md:w-[55%] w-[100%] flex items-center justify-end sm:pr-10">
           <Image
             width={1000}
             height={2000}
             src={"/assets/about-us/section-3-1.png"}
-            className="w-[526px] h-[617px] border-4 border-white object-cover object-center rounded-3xl overflow-hidden"
+            className="sm:w-[526px] sm:h-[617px] h-[417px] border-4 border-white object-cover sm:object-center object-top rounded-3xl overflow-hidden"
           />
         </div>
-        <div className="w-1/3 pr-10 space-y-5">
-          <h1 className="text-6xl font-bold text-white uppercase">
+        <div className="lg:w-1/2 w-full sm:pr-10 space-y-5 sm:mt-0 mt-5">
+          <h1 className="lg:text-6xl text-4xl sm:text-start text-center font-bold text-white uppercase">
             Dr. Huschyar Al-Kaidy
           </h1>
-          <p className="text-base font-normal text-white leading-10">
+          <p className="lg:text-base text-sm sm:text-start text-center font-normal text-white md:leading-10 leading-6">
             At{" "}
             <strong className="font-semibold text-white">
               beachbunnyhouse.com
@@ -163,12 +163,12 @@ const SectionThree = () => {
           </p>
         </div>
       </div>
-      <div className="w-full h-screen flex flex-row items-center justify-center bg-white px-24 py-10">
-        <div className="w-1/3 pr-10 space-y-5">
-          <h1 className="text-6xl font-bold text-[#116A7B] uppercase">
+      <div className="w-full h-screen flex sm:flex-row flex-col items-center justify-center bg-white lg:px-24 xs:px-10 px-3 py-10">
+        <div className="sm:w-1/2 w-full sm:pr-10 space-y-5 sm:mb-0 mb-5">
+          <h1 className="lg:text-6xl text-4xl sm:text-start text-center font-bold text-[#116A7B] uppercase">
             Dr. Huschyar Al-Kaidy
           </h1>
-          <p className="text-base font-normal text-[#116A7B] leading-10">
+          <p className="lg:text-base text-sm sm:text-start text-center font-normal text-[#116A7B] md:leading-10 leading-6">
             Dr. Al-Kaidy&apos;s journey began with a personal challenge: finding
             affordable vacation homes in a favorite annual destination.
             Realizing the high costs associated with traditional rental and
@@ -179,29 +179,29 @@ const SectionThree = () => {
             modern remote work.
           </p>
         </div>
-        <div className="w-1/3 flex items-center justify-end pr-10">
+        <div className="lg:w-1/3 md:w-[55%] w-[100%] flex items-center justify-end sm:pr-10">
           <Image
             width={1000}
             height={2000}
             src={"/assets/about-us/section-3-2.png"}
-            className="w-[526px] h-[617px] border-4 border-white object-cover object-center rounded-3xl overflow-hidden"
+            className="sm:w-[526px] sm:h-[617px] h-[417px] border-4 border-white object-cover object-center rounded-3xl overflow-hidden"
           />
         </div>
       </div>
-      <div className="w-full h-screen flex flex-row items-center justify-center bg-[#116A7B] px-24 py-10">
-        <div className="w-1/3 flex items-center justify-end pr-10">
+      <div className="w-full md:h-screen h-full flex sm:flex-row flex-col items-center justify-center bg-[#116A7B] lg:px-24 xs:px-10 px-3 py-10">
+        <div className="lg:w-1/3 md:w-[55%] w-[100%] flex items-center justify-end sm:pr-10">
           <Image
             width={1000}
             height={2000}
             src={"/assets/about-us/section-3-1.png"}
-            className="w-[526px] h-[617px] border-4 border-white object-cover object-center rounded-3xl overflow-hidden"
+            className="sm:w-[526px] sm:h-[617px] h-[417px] border-4 border-white object-cover sm:object-center object-top rounded-3xl overflow-hidden"
           />
         </div>
-        <div className="w-1/3 pr-10 space-y-5">
-          <h1 className="text-6xl font-bold text-white uppercase">
+        <div className="sm:w-1/2 w-full sm:pr-10 space-y-5 sm:mt-0 mt-5">
+          <h1 className="lg:text-6xl text-4xl sm:text-start text-center font-bold text-white uppercase">
             Dr. Huschyar Al-Kaidy
           </h1>
-          <p className="text-base font-normal text-white leading-10">
+          <p className="lg:text-base text-sm sm:text-start text-center font-normal text-white md:leading-10 leading-6">
             In addition to his role at{" "}
             <strong className="font-semibold text-white">
               beachbunnyhouse.com
@@ -232,7 +232,7 @@ const SectionThree = () => {
 
 const SectionFour = () => {
   return (
-    <div className="w-full h-[50vh] bg-white px-24 py-10">
+    <div className="w-full h-[50vh] bg-white sm:px-24 xs:px-10 px-3 py-10">
       <h1 className="text-4xl text-[#116A7B] text-center font-semibold uppercase">
         our investors
       </h1>
@@ -241,25 +241,25 @@ const SectionFour = () => {
           width={500}
           height={500}
           src={"/assets/about-us/rapidsai.png"}
-          className="w-40 h-auto mx-10"
+          className="lg:w-40 md:w-24 w-20 h-auto md:mx-10 mx-5"
         />
         <Image
           width={500}
           height={500}
           src={"/logo-bbh.png"}
-          className="w-40 h-auto mx-10"
+          className="lg:w-40 md:w-24 w-20 h-auto md:mx-10 mx-5"
         />
         <Image
           width={500}
           height={500}
           src={"/icon-bbh.png"}
-          className="w-40 h-auto mx-10"
+          className="lg:w-40 md:w-24 w-20 h-auto md:mx-10 mx-5"
         />
         <Image
           width={500}
           height={500}
           src={"/assets/about-us/rapidsai.png"}
-          className="w-40 h-auto mx-10"
+          className="lg:w-40 md:w-24 w-20 h-auto md:mx-10 mx-5"
         />
       </div>
     </div>
