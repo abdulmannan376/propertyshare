@@ -1,6 +1,6 @@
 import { updateActiveWithdrawalTab } from "@/app/redux/features/dashboardSlice";
 import { errorAlert } from "@/utils/alert";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import WithdrawalRequestModal from "../modals/withdrawalRequest";
 import WithdrawalUpdateModal from "../modals/updateWithdrawalRequest";
@@ -132,9 +132,21 @@ const WithdrawalManagement = () => {
 
   const [viewImageSrc, setViewImageSrc] = useState("");
 
+  const myWithdrawalsRef = useRef(null);
+  const pendingWithdrawalsRef = useRef(null);
+  const dispatchedWithdrawalsRef = useRef(null);
+
+  const handleScrollIntoView = (ref) => {
+    ref.current?.scrollIntoView({
+      behavior: "smooth", // Adds a smooth scroll effect
+      block: "nearest", // Ensures the element is scrolled to the nearest visible area
+      inline: "center", // Keeps the element centered in the view horizontally
+    });
+  };
+
   return (
     <div className="bg-white w-full my-6 xxl:h-[85vh] md:h-[88vh] max-h-[88vh] overflow-y-auto">
-      <div className="w-full flex flex-row items-center justify-between border-b border-b-[#D9D9D9] pt-1 pb-7 px-14">
+      <div className="w-full flex flex-row items-center justify-between border-b border-b-[#D9D9D9] pt-1 pb-7 sm:px-14 pl-14 pr-5">
         <h1 className="text-2xl font-medium">Withdrawal Management</h1>
         {JSON.parse(localStorage.getItem("userDetails")).role !== "admin" && (
           <div>
@@ -142,7 +154,7 @@ const WithdrawalManagement = () => {
               <button
                 type="button"
                 onClick={() => setRequestWithdrawal(false)}
-                className="w-52 bg-[#116A7B] text-white text-lg ml-auto mx-1 px-5 py-1 rounded-full"
+                className="sm:w-52 w-32 bg-[#116A7B] text-white sm:text-lg text-sm ml-auto mx-1 sm:px-5 px-3 py-1 rounded-full"
               >
                 {" "}
                 Back{" "}
@@ -151,7 +163,7 @@ const WithdrawalManagement = () => {
               <button
                 type="button"
                 onClick={handleOpenRequestModal}
-                className="w-52 bg-[#116A7B] text-white text-lg ml-auto mx-1 px-5 py-1 rounded-full"
+                className="sm:w-52 w-32 bg-[#116A7B] text-white sm:text-lg text-sm ml-auto mx-1 sm:px-5 px-3 py-1 rounded-full"
               >
                 {" "}
                 New Request{" "}
@@ -161,7 +173,7 @@ const WithdrawalManagement = () => {
         )}
       </div>
       {JSON.parse(localStorage.getItem("userDetails")).role !== "admin" && (
-        <div className="mx-14 my-5">
+        <div className="sm:mx-14 mx-5 my-5">
           <h2 className="text-2xl text-[#116A7B]">
             Available Balance: <strong>${userData.availBalnc}</strong>
           </h2>
@@ -173,15 +185,17 @@ const WithdrawalManagement = () => {
         fetchWithdrawals={fetchWithdrawals}
         fetchUserData={fetchUserData}
       />
-      <div className="flex items-center justify-start md:space-x-20 space-x-14 my-3 px-14 text-white text-2xl font-semibold">
+      <div className="max-w-screen overflow-x-auto flex items-center justify-start md:space-x-20 space-x-14 my-3 sm:px-14 px-5 text-white text-2xl font-semibold">
         {JSON.parse(localStorage.getItem("userDetails")).role !== "admin" && (
           <button
             onClick={() => {
               dispatch(updateActiveWithdrawalTab("My Withdrawals"));
+              handleScrollIntoView(myWithdrawalsRef);
             }}
+            ref={myWithdrawalsRef}
           >
             <h1
-              className={`flex ${
+              className={`flex w-48 whitespace-nowrap ${
                 activeWithdrawalsTab === "My Withdrawals"
                   ? "underline-text"
                   : "hover-underline-animation"
@@ -195,10 +209,12 @@ const WithdrawalManagement = () => {
         <button
           onClick={() => {
             dispatch(updateActiveWithdrawalTab("Pending Withdrawals"));
+            handleScrollIntoView(pendingWithdrawalsRef);
           }}
+          ref={pendingWithdrawalsRef}
         >
           <h2
-            className={`flex ${
+            className={`flex w-64 whitespace-nowrap ${
               activeWithdrawalsTab === "Pending Withdrawals"
                 ? "underline-text"
                 : "hover-underline-animation"
@@ -211,10 +227,12 @@ const WithdrawalManagement = () => {
           <button
             onClick={() => {
               dispatch(updateActiveWithdrawalTab("Dispatched Withdrawals"));
+              handleScrollIntoView(dispatchedWithdrawalsRef);
             }}
+            ref={dispatchedWithdrawalsRef}
           >
             <h2
-              className={`flex ${
+              className={`flex w-64 whitespace-nowrap ${
                 activeWithdrawalsTab === "Dispatched Withdrawals"
                   ? "underline-text"
                   : "hover-underline-animation"
@@ -237,7 +255,7 @@ const WithdrawalManagement = () => {
               imageSrc={viewImageSrc}
             />
             {!isWithdrawalsLoading ? (
-              <div className="px-14 py-6">
+              <div className="sm:px-14 px-5 py-6 max-w-screen overflow-x-auto">
                 <table className="min-w-full table-auto border-collapse border border-gray-300">
                   <thead>
                     <tr className="bg-gray-100">
@@ -303,7 +321,9 @@ const WithdrawalManagement = () => {
                               <button
                                 type="button"
                                 onClick={() => {
-                                  setViewImageSrc(`${process.env.NEXT_PUBLIC_SERVER_HOST}/${withdrawal.imageDir}reciept.png`);
+                                  setViewImageSrc(
+                                    `${process.env.NEXT_PUBLIC_SERVER_HOST}/${withdrawal.imageDir}reciept.png`
+                                  );
                                   handleOpenViewImageModal();
                                 }}
                                 className="text-blue-500 uppercase underline"
@@ -337,7 +357,7 @@ const WithdrawalManagement = () => {
               withdrawal={selectedWithdrawal}
             />
             {!isWithdrawalsLoading ? (
-              <div className="px-14 py-6">
+              <div className="sm:px-14 px-5 py-6 max-w-screen overflow-x-auto">
                 <table className="min-w-full table-auto border-collapse border border-gray-300">
                   <thead>
                     <tr className="bg-gray-100">
@@ -456,7 +476,7 @@ const WithdrawalManagement = () => {
         {activeWithdrawalsTab === "Dispatched Withdrawals" && (
           <div>
             {!isWithdrawalsLoading ? (
-              <div className="px-14 py-6">
+              <div className="sm:px-14 px-5 py-6 max-w-screen overflow-x-auto">
                 <table className="min-w-full table-auto border-collapse border border-gray-300">
                   <thead>
                     <tr className="bg-gray-100">
