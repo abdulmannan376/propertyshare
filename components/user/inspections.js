@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import InspectionCard from "./inspectionCard";
-import { MdClose } from "react-icons/md";
+import { MdClose, MdPending } from "react-icons/md";
 import { AiFillMessage } from "react-icons/ai";
 import Image from "next/image";
 // Import Swiper React components and Swiper styles
@@ -17,6 +17,8 @@ import "swiper/css/navigation";
 import Thread from "./threadComponent";
 import RejectionModal from "../modals/inspectionRejectionModal";
 import { errorAlert, successAlert } from "@/utils/alert";
+import { FaCheckCircle } from "react-icons/fa";
+import { IoCloseCircle } from "react-icons/io5";
 
 const Inspections = () => {
   const dispatch = useDispatch();
@@ -485,7 +487,7 @@ const Inspections = () => {
         <div>
           {!isLoading ? (
             !selectedInspection && (
-              <div className="md:mx-14 mx-5 flex flex-row flex-wrap items-center justify-center">
+              <div className="md:mx-14 mx-5 flex flex-row flex-wrap sm:items-start items-center sm:justify-start justify-center">
                 {inspectionsList?.length > 0 ? (
                   inspectionsList?.map((inspection, index) => (
                     <div
@@ -508,7 +510,7 @@ const Inspections = () => {
           )}
           {selectedInspection?.status === "Pending Submission" && (
             <>
-              <div className="w-full flex flex-row items-center pt-1 pb-7 px-14 mt-5">
+              <div className="w-full flex flex-row items-center pt-1 pb-7 md:px-14 px-5 mt-5">
                 <h1 className="text-2xl font-medium">Submit Inspection</h1>
                 <button
                   onClick={(e) => setSelectedInspection(null)}
@@ -518,7 +520,7 @@ const Inspections = () => {
                   Back
                 </button>
               </div>
-              <div className="flex flex-col mx-14">
+              <div className="flex flex-col md:mx-14 mx-5">
                 <label htmlFor="propertyImages" className="text-[#676767]">
                   Max 10, {`supported formats: .png`}
                 </label>
@@ -528,7 +530,7 @@ const Inspections = () => {
                   accept="image/png"
                   required={true}
                   onChange={({ target }) => setFiles(target.files)}
-                  className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                  className="sm:w-[620px] xs:w-[420px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                 />
               </div>
               {selectedInspection?.imageCount > 0 ? (
@@ -596,7 +598,7 @@ const Inspections = () => {
                 <div></div>
               )}
               <div className="space-y-2 my-5">
-                <h2 className="mx-14">
+                <h2 className="md:mx-14 mx-5">
                   Date:{" "}
                   {(() => {
                     const newDate = new Date(selectedInspection.createdAt);
@@ -604,7 +606,7 @@ const Inspections = () => {
                   })()}{" "}
                   {/* Immediately invoke the function */}
                 </h2>
-                <h2 className="mx-14">
+                <h2 className="md:mx-14 mx-5">
                   Time:{" "}
                   {(() => {
                     const newDate = new Date(selectedInspection.createdAt);
@@ -613,7 +615,7 @@ const Inspections = () => {
                   {/* Immediately invoke the function */}
                 </h2>
               </div>
-              <div className="flex flex-col mx-14">
+              <div className="flex flex-col md:mx-14 mx-5">
                 <label htmlFor="Comment" className="text-[#676767]">
                   Comment
                 </label>
@@ -625,10 +627,10 @@ const Inspections = () => {
                   value={comment}
                   onChange={({ target }) => setComment(target.value)}
                   style={{ overflow: "hidden", resize: "none" }}
-                  className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                  className="sm:w-[620px] xs:w-[420px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                 />
               </div>
-              <div className="mx-14 my-5">
+              <div className="md:mx-14 mx-5 my-5">
                 <button
                   type="button"
                   onClick={(e) =>
@@ -653,7 +655,7 @@ const Inspections = () => {
           {selectedInspection?.status !== "Pending Submission" &&
             selectedInspection && (
               <>
-                <div className="w-full flex flex-row items-center pt-1 pb-7 px-14 mt-5">
+                <div className="w-full flex flex-row items-center pt-1 pb-7 md:px-14 px-5 mt-5">
                   <h1 className="text-2xl font-medium">Inspection Details</h1>
                   <button
                     onClick={(e) => setSelectedInspection(null)}
@@ -663,7 +665,7 @@ const Inspections = () => {
                     Back
                   </button>
                 </div>
-                <div className="mx-14 ">
+                <div className="md:mx-14 mx-5">
                   {selectedInspection?.imageCount > 0 ? (
                     <div className="swiper-container">
                       {/* Swiper component */}
@@ -745,15 +747,15 @@ const Inspections = () => {
                     <div className="bg-[#FCFBF5] border border-[#D9D9D9] divide-y-2 divide-[#D9D9D9]">
                       {sharesList.map((share, index) => (
                         <div key={index}>
-                          <div className="flex flex-row items-center justify-between p-10">
-                            <h3 className="text-xl text-[#09363F] font-semibold">
+                          <div className="flex flex-row items-center justify-between sm:p-10 xs:p-5 p-2">
+                            <h3 className="sm:text-xl xs:text-base text-sm text-[#09363F] font-semibold">
                               {share.currentOwnerDocID?.username}{" "}
                               &nbsp;&nbsp;&nbsp;
                               {share.currentOwnerDocID?.username ===
                                 JSON.parse(localStorage.getItem("userDetails"))
                                   .username && "(You)"}
                               <br />
-                              <p className="text-sm">
+                              <p className="sm:text-sm xs:text-xs text-[9px] font-normal">
                                 {processDate(
                                   share.availableInDuration.startDateString
                                 )}{" "}
@@ -763,7 +765,7 @@ const Inspections = () => {
                                 )}
                               </p>
                             </h3>
-                            <div className="flex flex-row items-center justify-center space-x-5">
+                            <div className="flex flex-row items-center justify-center sm:space-x-5 xs:space-x-2 space-x-1">
                               <button
                                 type="button"
                                 onClick={() => {
@@ -777,7 +779,7 @@ const Inspections = () => {
                                 }}
                                 className="p-1"
                               >
-                                <AiFillMessage className="text-[#116A7B] text-2xl" />
+                                <AiFillMessage className="text-[#116A7B] sm:text-2xl text-base" />
                               </button>
                               {!selectedInspection?.approvedByUsersList?.includes(
                                 share.currentOwnerDocID?.username
@@ -799,7 +801,7 @@ const Inspections = () => {
                                           "approved"
                                         )
                                       }
-                                      className="w-32 px-5 py-3 bg-[#116A7B] text-white rounded mx-2 font-semibold"
+                                      className="sm:w-32 xs:w-16 w-14 sm:px-5 xs:px-3 px-1 py-1 sm:py-3 bg-[#116A7B] text-white sm:text-base xs:text-xs text-[9px] rounded mr-1 font-semibold"
                                     >
                                       Approve
                                     </button>
@@ -819,7 +821,7 @@ const Inspections = () => {
                                         });
                                         handleRejectionModalOpen();
                                       }}
-                                      className="w-32 px-5 py-3 bg-[#116A7B] text-white rounded mx-2 font-semibold"
+                                      className="sm:w-32 xs:w-16 w-14 sm:px-5 xs:px-3 px-1 py-1 sm:py-3 bg-[#116A7B] text-white sm:text-base xs:text-xs text-[9px] rounded mr-1 font-semibold"
                                     >
                                       Reject
                                     </button>
@@ -834,13 +836,46 @@ const Inspections = () => {
                                 share.currentOwnerDocID?.username !==
                                   JSON.parse(
                                     localStorage.getItem("userDetails")
-                                  ).username && <h4>Pending Response</h4>}
+                                  ).username && (
+                                  <>
+                                    <h4 className="text-base xs:block hidden">
+                                      Pending Response
+                                    </h4>
+                                    <MdPending
+                                      title="Pending Response"
+                                      className="text-lg xs:hidden block text-yellow-500"
+                                    />
+                                  </>
+                                )}
                               {selectedInspection?.approvedByUsersList?.includes(
                                 share.currentOwnerDocID?.username
-                              ) && <h4>Approved</h4>}
+                              ) &&
+                                !selectedInspection?.rejectedUsersList?.includes(
+                                  share.currentOwnerDocID?.username
+                                ) && (
+                                  <>
+                                    <h4 className="text-base xs:block hidden">
+                                      Approved
+                                    </h4>
+                                    <FaCheckCircle
+                                      title="Approved"
+                                      className="text-base xs:hidden block text-green-500"
+                                    />
+                                  </>
+                                )}
                               {selectedInspection?.rejectedUsersList?.includes(
                                 share.currentOwnerDocID?.username
-                              ) && <h4>Rejected</h4>}
+                              ) && (
+                                <>
+                                  <h4 className="text-base xs:block hidden">
+                                    Rejected
+                                  </h4>
+                                  <IoCloseCircle
+                                    title="Rejected"
+                                    className="text-lg xs:hidden block text-red-500"
+                                  />
+                                </>
+                              )}
                             </div>
                           </div>
                           {showThreadsByShare === share.shareID &&
@@ -870,18 +905,18 @@ const Inspections = () => {
                                 </div>
                               ))
                             : showThreadsByShare === share.shareID && (
-                                <div className="text-[20px] font-semibold text-[#116A7B]">
+                                <div className="sm:text-[20px] text-base font-semibold text-[#116A7B]">
                                   <h1 className="text-center">
                                     No Threads Yet.
                                   </h1>
                                 </div>
                               )}
                           {showThreadsByShare === share.shareID && (
-                            <div className="bg-[#FCFBF5] flex flex-row border border-[#D9D9D9] px-5 py-3 mx-10 my-5 rounded-full">
+                            <div className="bg-[#FCFBF5] flex flex-row border border-[#D9D9D9] sm:px-5 px-3 py-1 sm:py-3 sm:mx-10 mx-5 my-5 rounded-full">
                               <textarea
                                 ref={threadBodyRef}
                                 rows="1"
-                                className="w-full p-1 outline-none text-lg"
+                                className="w-full p-1 outline-none sm:text-lg text-base"
                                 style={{
                                   backgroundColor: "transparent",
                                   resize: "none",
@@ -928,7 +963,7 @@ const Inspections = () => {
         <div>
           {!isLoading ? (
             !selectedInspection && (
-              <div className="md:mx-14 mx-5 flex flex-row flex-wrap items-center justify-center">
+              <div className="md:mx-14 mx-5 flex flex-row flex-wrap sm:items-start items-center sm:justify-start justify-center">
                 {inspectionsList?.length > 0 ? (
                   inspectionsList?.map((inspection, index) => (
                     <div
@@ -1024,7 +1059,7 @@ const Inspections = () => {
                         height={1000}
                         src={"/assets/user/property-management/no-image.jpg"}
                         className="w-full h-full object-scale-down object-center"
-                        alt={`${property.slug}-noimage`}
+                        alt={`${selectedInspection.title}-noimage`}
                       />
                     </div>
                   )}
@@ -1230,7 +1265,7 @@ const Inspections = () => {
         <div>
           {!isLoading ? (
             !selectedInspection && (
-              <div className="md:mx-14 mx-5 flex flex-row flex-wrap items-center justify-center">
+              <div className="md:mx-14 mx-5 flex flex-row flex-wrap sm:items-start items-center sm:justify-start justify-center">
                 {inspectionsList?.length > 0 ? (
                   inspectionsList?.map((inspection, index) => (
                     <div
@@ -1261,7 +1296,7 @@ const Inspections = () => {
           {selectedInspection?.status !== "Pending Submission" &&
             selectedInspection && (
               <>
-                <div className="w-full flex flex-row items-center pt-1 pb-7 px-14 mt-5">
+                <div className="w-full flex flex-row items-center pt-1 pb-7 sm:px-14 px-5 mt-5">
                   <h1 className="text-2xl font-medium">Inspection Details</h1>
                   <button
                     onClick={(e) => setSelectedInspection(null)}

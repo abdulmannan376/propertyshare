@@ -47,7 +47,7 @@ const LoginPageComponent = () => {
     setShowPassword(!showPassword);
   }
 
-//   const socket = useSocket();
+  // const socket = useSocket();
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmission = async (e) => {
@@ -78,7 +78,7 @@ const LoginPageComponent = () => {
         localStorage.setItem("token", response.token);
         localStorage.setItem("userDetails", JSON.stringify(response.body));
         setTimeout(() => {
-        //   socket.emit("login", { username: response.body.username });
+          // socket.emit("login", { username: response.body.username });
           router.push("/");
         }, 2000);
       } else {
