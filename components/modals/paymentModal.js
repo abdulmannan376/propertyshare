@@ -124,20 +124,20 @@ const PaymentModal = ({ isOpen, onClose, payment, amount }) => {
           bottom: "auto",
           marginRight: "-50%",
           transform: "translate(-50%, -50%)",
-          border: "1px solid #ccc",
-          background: "#fff",
+          // border: "1px solid #ccc",
+          background: "transparent",
           overflow: "auto",
           WebkitOverflowScrolling: "touch",
           borderRadius: "15px",
           outline: "none",
           padding: "5px",
-          width: "30vw",
+          width: "100vw",
           height: "60vh",
           maxHeight: "80vh",
         },
       }}
     >
-      <div className="p-10 ">
+      <div className="sm:p-10 p-5 lg:w-[30vw] md:w-[50vw] sm:w-[70vw] w-[95vw] bg-white rounded-2xl">
         <h1 className="text-2xl font-semibold text-[#116A7B] text-center">
           Payment Action
         </h1>
