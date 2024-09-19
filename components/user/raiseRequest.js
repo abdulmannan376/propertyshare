@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import RaiseRequestCard from "./raiseRequestCard";
-import { FaPlus } from "react-icons/fa";
+import { FaCheckCircle, FaPlus } from "react-icons/fa";
 import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperCore from "swiper";
 import { Pagination, Navigation } from "swiper/modules";
@@ -20,6 +20,8 @@ import Slider from "react-slick";
 import { TiArrowRightThick } from "react-icons/ti";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import { errorAlert, successAlert } from "@/utils/alert";
+import { MdPending } from "react-icons/md";
+import { IoCloseCircle } from "react-icons/io5";
 
 const NextArrow = ({ className, style, onClick }) => {
   return (
@@ -500,10 +502,22 @@ const RaiseRequest = () => {
     }
   };
 
+  const myRequestsRef = useRef(null);
+  const allRequestsRef = useRef(null);
+  const pendingApprovalsRef = useRef(null);
+
+  const handleScrollIntoView = (ref) => {
+    ref.current?.scrollIntoView({
+      behavior: "smooth", // Adds a smooth scroll effect
+      block: "nearest", // Ensures the element is scrolled to the nearest visible area
+      inline: "center", // Keeps the element centered in the view horizontally
+    });
+  };
+
   return (
     <div className="bg-white w-full my-6 xxl:h-[85vh] md:h-[88vh] max-h-[88vh] overflow-y-auto">
       {isAddNewClicked ? (
-        <div className="w-full flex flex-row items-center border-b border-b-[#D9D9D9] pb-7 px-14">
+        <div className="w-full flex flex-row items-center border-b border-b-[#D9D9D9] pb-7 sm:px-14 pl-14 pr-5">
           <h1 className="text-2xl font-medium">
             Modification and Maintenance Requests
           </h1>
@@ -513,14 +527,14 @@ const RaiseRequest = () => {
               //   setFormPhase(1);
             }}
             type="button"
-            className="bg-[#116A7B] text-white text-lg ml-auto mx-1 px-5 py-1 rounded-full"
+            className="sm:w-52 w-20 bg-[#116A7B] text-white sm:text-lg text-sm ml-auto mx-1 sm:px-5 px-3 py-1 rounded-full"
           >
             Back
             {/* <FaPlus className="inline-flex text-sm ml-2 mb-1" /> */}
           </button>
         </div>
       ) : (
-        <div className="w-full flex flex-row items-center border-b border-b-[#D9D9D9] pb-7 px-14">
+        <div className="w-full flex flex-row items-center border-b border-b-[#D9D9D9] pb-7 sm:px-14 pl-14 pr-5">
           <h1 className="text-2xl font-medium">
             Modification and Maintenance Requests
           </h1>
@@ -530,15 +544,15 @@ const RaiseRequest = () => {
               setIsAddNewClicked(true);
             }}
             type="button"
-            className="bg-[#116A7B] text-white text-lg ml-auto mx-1 px-5 py-1 rounded-full"
+            className="sm:w-52 w-20 bg-[#116A7B] text-white sm:text-lg text-sm ml-auto mx-1 sm:px-5 px-3 py-1 rounded-full"
           >
-            New Request
-            <FaPlus className="inline-flex text-sm ml-2 mb-1" />
+            <h3 className="sm:inline-flex hidden ">New Request</h3>
+            <FaPlus className="sm:hidden inline-flex text-sm mb-1" />
           </button>
         </div>
       )}
       {isAddNewClicked ? (
-        <div className="mx-14">
+        <div className="sm:mx-14 mx-5">
           <div className="my-5">
             <select
               name="myProperties"
@@ -594,7 +608,7 @@ const RaiseRequest = () => {
                 required={true}
                 placeholder="Required"
                 onChange={({ target }) => setTitle(target.value)}
-                className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                className="sm:w-[620px] xs:w-[420px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
               />
             </div>
             <div className="mb-6 mr-6 flex flex-col">
@@ -608,7 +622,7 @@ const RaiseRequest = () => {
                 required={true}
                 placeholder="Required"
                 onChange={({ target }) => setDetails(target.value)}
-                className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                className="sm:w-[620px] xs:w-[420px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
               />
             </div>
             <div className="mb-6 mr-6 flex flex-col">
@@ -623,10 +637,10 @@ const RaiseRequest = () => {
                 required={true}
                 placeholder="Required"
                 onChange={({ target }) => setEstimatedPrice(target.value)}
-                className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                className="sm:w-[620px] xs:w-[420px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
               />
             </div>
-            <div className="flex flex-col">
+            <div className="mb-6 mr-6 flex flex-col">
               <label htmlFor="propertyImages" className="text-[#676767]">
                 Max 10, {`supported formats: .png`}
               </label>
@@ -636,12 +650,13 @@ const RaiseRequest = () => {
                 accept="image/png"
                 required={true}
                 onChange={({ target }) => setFiles(target.files)}
-                className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                className="sm:w-[620px] xs:w-[420px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
               />
             </div>
             <div className="mb-6 mr-6 flex flex-col">
               <label htmlFor="requestUrlsList" className="text-[#676767]">
-                Attach Links (separate each link with a comma ,)
+                Attach Links <br className="xs:hidden" />
+                (separate each link with a comma ,)
               </label>
               <textarea
                 rows={5}
@@ -650,7 +665,7 @@ const RaiseRequest = () => {
                 required={true}
                 onChange={({ target }) => setUrlsList(target.value)}
                 style={{ resize: "none" }}
-                className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded"
+                className="sm:w-[620px] xs:w-[420px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded"
               />
             </div>
           </div>
@@ -671,7 +686,7 @@ const RaiseRequest = () => {
       ) : (
         <div>
           {!selectedRequest && (
-            <div className="flex items-center justify-start md:space-x-20 space-x-14 my-3 px-14 text-white text-2xl font-semibold">
+            <div className="max-w-screen overflow-auto flex items-center justify-start md:space-x-20 space-x-14 my-3 sm:px-14 px-5 text-white text-2xl font-semibold">
               <button
                 onClick={() => {
                   dispatch(updateActiveRaiseRequestTab("My Requests"));
@@ -679,10 +694,12 @@ const RaiseRequest = () => {
                   setSelectedRequest(null);
                   setThreads([]);
                   setThreadBody("");
+                  handleScrollIntoView(myRequestsRef);
                 }}
+                ref={myRequestsRef}
               >
                 <h1
-                  className={`flex ${
+                  className={`flex w-40 whitespace-nowrap ${
                     activeRaiseRequestTab === "My Requests"
                       ? "underline-text"
                       : "hover-underline-animation"
@@ -699,10 +716,12 @@ const RaiseRequest = () => {
                   setSelectedRequest(null);
                   setThreads([]);
                   setThreadBody("");
+                  handleScrollIntoView(allRequestsRef);
                 }}
+                ref={allRequestsRef}
               >
                 <h2
-                  className={`flex ${
+                  className={`flex w-40 whitespace-nowrap ${
                     activeRaiseRequestTab === "All Requests"
                       ? "underline-text"
                       : "hover-underline-animation"
@@ -718,10 +737,12 @@ const RaiseRequest = () => {
                   setSelectedRequest(null);
                   setThreads([]);
                   setThreadBody("");
+                  handleScrollIntoView(pendingApprovalsRef);
                 }}
+                ref={pendingApprovalsRef}
               >
                 <h2
-                  className={`flex ${
+                  className={`flex w-56 whitespace-nowrap ${
                     activeRaiseRequestTab === "Pending Approvals"
                       ? "underline-text"
                       : "hover-underline-animation"
@@ -735,14 +756,14 @@ const RaiseRequest = () => {
             </div>
           )}
           {!selectedRequest && (
-            <div className="my-5 mx-3">
+            <div className="my-5 sm:mx-3 mx-5">
               <select
-                name="Gender"
+                name="requestType"
                 value={requestType}
                 onChange={({ target }) => {
                   setRequestType(target.value);
                 }}
-                className="inline-flex mx-10 bg-[#D9D9D9] text-xl font-semibold border border-[#116A7B30] rounded px-3 py-1 focus:border-[#116A7B] outline-none"
+                className="inline-flex sm:mx-10 bg-[#D9D9D9] text-xl font-semibold border border-[#116A7B30] rounded px-3 py-1 focus:border-[#116A7B] outline-none"
               >
                 <option value="Modification">Modification</option>
                 <option value="Maintenance">Maintenance</option>
@@ -762,7 +783,7 @@ const RaiseRequest = () => {
             <div>
               {!isLoading ? (
                 !selectedRequest && (
-                  <div className="mx-14 flex flex-col">
+                  <div className="sm:mx-14 mx-5 flex flex-col">
                     {requestsList?.length > 0 ? (
                       requestsList?.map((request, index) => (
                         <div
@@ -790,7 +811,7 @@ const RaiseRequest = () => {
               )}
               {selectedRequest && (
                 <>
-                  <div className="w-full flex flex-row items-center pt-1 pb-7 px-14 mt-5">
+                  <div className="w-full flex flex-row items-center pt-1 pb-7 md:px-14 px-5 mt-5">
                     <h1 className="text-2xl font-medium">Request Details</h1>
                     <button
                       onClick={(e) => setSelectedRequest(null)}
@@ -800,7 +821,7 @@ const RaiseRequest = () => {
                       Back
                     </button>
                   </div>
-                  <div className="mx-14 ">
+                  <div className="md:mx-14 mx-5">
                     {selectedRequest?.imageCount > 0 ? (
                       <div>
                         {/* Swiper component */}
@@ -871,7 +892,7 @@ const RaiseRequest = () => {
                           height={1000}
                           src={"/assets/user/property-management/no-image.jpg"}
                           className="w-full h-full object-scale-down object-center"
-                          alt={`${property.slug}-noimage`}
+                          alt={`${selectedRequest.title}-noimage`}
                         />
                       </div>
                     )}
@@ -907,8 +928,8 @@ const RaiseRequest = () => {
                       <div className="bg-[#FCFBF5] border border-[#D9D9D9] divide-y-2 divide-[#D9D9D9]">
                         {sharesList.map((share, index) => (
                           <div key={index}>
-                            <div className="flex flex-row items-center justify-between p-10">
-                              <h3 className="text-xl text-[#09363F] font-semibold">
+                            <div className="flex flex-row items-center justify-between sm:p-10 xs:p-5 p-2">
+                              <h3 className="sm:text-xl xs:text-base text-sm text-[#09363F] font-semibold">
                                 {share.currentOwnerDocID.username}{" "}
                                 &nbsp;&nbsp;&nbsp;
                                 {share.currentOwnerDocID.username ===
@@ -916,7 +937,7 @@ const RaiseRequest = () => {
                                     localStorage.getItem("userDetails")
                                   ).username && "(You)"}
                                 <br />
-                                <p className="text-sm">
+                                <p className="sm:text-sm xs:text-xs text-[9px] font-normal">
                                   {processDate(
                                     share.availableInDuration.startDateString
                                   )}{" "}
@@ -926,7 +947,7 @@ const RaiseRequest = () => {
                                   )}
                                 </p>
                               </h3>
-                              <div className="flex flex-row items-center justify-center space-x-5">
+                              <div className="flex flex-row items-center justify-center sm:space-x-5 xs:space-x-2 space-x-1">
                                 <button
                                   type="button"
                                   onClick={() => {
@@ -944,7 +965,7 @@ const RaiseRequest = () => {
                                   }}
                                   className="p-1"
                                 >
-                                  <AiFillMessage className="text-[#116A7B] text-2xl" />
+                                  <AiFillMessage className="text-[#116A7B] sm:text-2xl text-base" />
                                 </button>
                                 {!selectedRequest?.approvedByUsersList?.includes(
                                   share.currentOwnerDocID.username
@@ -966,7 +987,7 @@ const RaiseRequest = () => {
                                             "approved"
                                           )
                                         }
-                                        className="w-32 px-5 py-3 bg-[#116A7B] text-white rounded mx-2 font-semibold"
+                                        className="sm:w-32 xs:w-16 w-14 sm:px-5 xs:px-3 px-1 py-1 sm:py-3 bg-[#116A7B] text-white sm:text-base xs:text-xs text-[9px] rounded mr-1 font-semibold"
                                       >
                                         Approve
                                       </button>
@@ -986,7 +1007,7 @@ const RaiseRequest = () => {
                                           });
                                           handleRejectionModalOpen();
                                         }}
-                                        className="w-32 px-5 py-3 bg-[#116A7B] text-white rounded mx-2 font-semibold"
+                                        className="sm:w-32 xs:w-16 w-14 sm:px-5 xs:px-3 px-1 py-1 sm:py-3 bg-[#116A7B] text-white sm:text-base xs:text-xs text-[9px] rounded mr-1 font-semibold"
                                       >
                                         Reject
                                       </button>
@@ -1001,13 +1022,43 @@ const RaiseRequest = () => {
                                   share.currentOwnerDocID.username !==
                                     JSON.parse(
                                       localStorage.getItem("userDetails")
-                                    ).username && <h4>Pending Response</h4>}
+                                    ).username && (
+                                    <>
+                                      <h4 className="text-base xs:block hidden">
+                                        Pending Response
+                                      </h4>
+                                      <MdPending
+                                        title="Pending Response"
+                                        className="text-lg xs:hidden block text-yellow-500"
+                                      />
+                                    </>
+                                  )}
                                 {selectedRequest?.approvedByUsersList?.includes(
                                   share.currentOwnerDocID.username
-                                ) && <h4>Approved</h4>}
+                                ) && (
+                                  <>
+                                    <h4 className="text-base xs:block hidden">
+                                      Approved
+                                    </h4>
+                                    <FaCheckCircle
+                                      title="Approved"
+                                      className="text-base xs:hidden block text-green-500"
+                                    />
+                                  </>
+                                )}
                                 {selectedRequest?.rejectedByUsersList?.includes(
                                   share.currentOwnerDocID.username
-                                ) && <h4>Rejected</h4>}
+                                ) && (
+                                  <>
+                                    <h4 className="text-base xs:block hidden">
+                                      Rejected
+                                    </h4>
+                                    <IoCloseCircle
+                                      title="Rejected"
+                                      className="text-lg xs:hidden block text-red-500"
+                                    />
+                                  </>
+                                )}
                               </div>
                             </div>
                             {showThreadsByShare === share.shareID &&
@@ -1038,18 +1089,18 @@ const RaiseRequest = () => {
                                   </div>
                                 ))
                               : showThreadsByShare === share.shareID && (
-                                  <div className="text-[20px] font-semibold text-[#116A7B]">
+                                  <div className="sm:text-[20px] text-base font-semibold text-[#116A7B]">
                                     <h1 className="text-center">
                                       No Threads Yet.
                                     </h1>
                                   </div>
                                 )}
                             {showThreadsByShare === share.shareID && (
-                              <div className="bg-[#FCFBF5] flex flex-row border border-[#D9D9D9] px-5 py-3 mx-10 my-5 rounded-full">
+                              <div className="bg-[#FCFBF5] flex flex-row border border-[#D9D9D9] sm:px-5 px-3 py-1 sm:py-3 sm:mx-10 mx-5 my-5 rounded-full">
                                 <textarea
                                   ref={threadBodyRef}
                                   rows="1"
-                                  className="w-full p-1 outline-none text-lg"
+                                  className="w-full p-1 outline-none sm:text-lg text-base"
                                   style={{
                                     backgroundColor: "transparent",
                                     resize: "none",
@@ -1099,7 +1150,7 @@ const RaiseRequest = () => {
             <div>
               {!isLoading ? (
                 !selectedRequest && (
-                  <div className="mx-14 flex flex-row flex-wrap items-center">
+                  <div className="sm:mx-14 mx-5 flex flex-row flex-wrap items-center">
                     {requestsList?.length > 0 ? (
                       requestsList?.map((request, index) => (
                         <div
@@ -1441,7 +1492,7 @@ const RaiseRequest = () => {
             <div>
               {!isLoading ? (
                 !selectedRequest && (
-                  <div className="mx-14 flex flex-row flex-wrap items-center">
+                  <div className="sm:mx-14 mx-5 flex flex-row flex-wrap items-center">
                     {requestsList?.length > 0 ? (
                       requestsList?.map((request, index) => (
                         <div

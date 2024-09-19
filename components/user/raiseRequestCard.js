@@ -156,26 +156,26 @@ const RaiseRequestCard = ({ card, fetchData, sharesList, fetchRequests }) => {
 
   function processStatus() {
     if (card.status === "Decision Pending")
-      return <p className=" text-2xl mx-2 text-yellow-500">{card.status}</p>;
+      return <p className="lg:text-2xl sm:text-lg text-base xs:mx-2 text-yellow-500">{card.status}</p>;
     else if (card.status === "Property Owner Approval Pending")
-      return <p className=" text-2xl mx-2 text-yellow-500">{card.status}</p>;
+      return <p className="lg:text-2xl sm:text-lg text-base xs:mx-2 text-yellow-500">{card.status}</p>;
     else if (card.status === "Payment Pending")
-      return <p className=" text-2xl mx-2 text-green-500">{card.status}</p>;
+      return <p className="lg:text-2xl sm:text-lg text-base xs:mx-2 text-green-500">{card.status}</p>;
     else if (card.status === "Successfull")
-      return <p className=" text-2xl mx-2 text-green-500">{card.status}</p>;
+      return <p className="lg:text-2xl sm:text-lg text-base xs:mx-2 text-green-500">{card.status}</p>;
     else if (card.status === "Property Owner Rejected")
-      return <p className=" text-2xl mx-2 text-red-500">{card.status}</p>;
+      return <p className="lg:text-2xl sm:text-lg text-base xs:mx-2 text-red-500">{card.status}</p>;
     else if (card.status === "Expired")
-      return <p className=" text-2xl mx-2 text-gray-500">{card.status}</p>;
+      return <p className="lg:text-2xl sm:text-lg text-base xs:mx-2 text-gray-500">{card.status}</p>;
   }
 
   function processUserResponse() {
     const username = JSON.parse(localStorage.getItem("userDetails")).username;
     if (card.approvedByUsersList.includes(username))
-      return <p className="text-2xl">You Approved</p>;
+      return <p className="lg:text-2xl sm:text-lg text-base">You Approved</p>;
     else if (card.rejectedByUsersList.includes(username))
-      return <p className="text-2xl">You Rejected</p>;
-    else return <p className="text-2xl">Vote Pending</p>;
+      return <p className="lg:text-2xl sm:text-lg text-base">You Rejected</p>;
+    else return <p className="lg:text-2xl sm:text-lg text-base">Vote Pending</p>;
   }
 
   return (
@@ -183,7 +183,7 @@ const RaiseRequestCard = ({ card, fetchData, sharesList, fetchRequests }) => {
     //   href={`/rent-shares/property/${card.shareDocID.propertyDocID.propertyID}`}
     //   className="w-[20rem] bg-white border-2 border-[#D9D9D9] rounded-xl mr-20 mt-5"
     // >
-    <div className="w-full flex flex-row items-center justify-between">
+    <div className="w-full flex md:flex-row flex-col md:items-center items-start justify-between">
       <div className="w-[13rem] bg-white border-2 border-[#D9D9D9] rounded-xl mr-5 mt-5">
         <div className="p-2 relative">
           <Image
@@ -404,29 +404,29 @@ const RaiseRequestCard = ({ card, fetchData, sharesList, fetchRequests }) => {
         )} */}
         </div>
       </div>
-      <div className="w-5/6 mt-5 flex flex-col justify-center text-start space-y-5">
-        <div className="flex flex-row items-center">
-          <h1 className="w-52 text-2xl font-semibold">Title: </h1>
-          <p className="text-2xl">{card.title}</p>
+      <div className="md:w-5/6 w-full mt-5 flex flex-col justify-center text-start md:space-y-5 space-y-2">
+        <div className="flex xs:flex-row flex-col xs:items-center items-start">
+          <h1 className="sm:w-52 w-40 lg:text-2xl sm:text-lg text-base font-semibold">Title: </h1>
+          <p className="lg:text-2xl sm:text-lg text-base">{card.title}</p>
         </div>
-        <div className="flex flex-row items-center">
-          <h1 className="w-52 text-2xl font-semibold">Request Type: </h1>
-          <p className="text-2xl">{card.requestType}</p>
+        <div className="flex xs:flex-row flex-col xs:items-center items-start">
+          <h1 className="sm:w-52 w-40 lg:text-2xl sm:text-lg text-base font-semibold">Request Type: </h1>
+          <p className="lg:text-2xl sm:text-lg text-base">{card.requestType}</p>
         </div>
-        <div className="flex flex-row items-center">
-          <h1 className="w-52 text-2xl font-semibold">Estimated Price: </h1>
-          <p className="text-2xl">{card.estimatedPrice}</p>
+        <div className="flex xs:flex-row flex-col xs:items-center items-start">
+          <h1 className="sm:w-52 w-40 lg:text-2xl sm:text-lg text-base font-semibold">Estimated Price: </h1>
+          <p className="lg:text-2xl sm:text-lg text-base">{card.estimatedPrice}</p>
         </div>
-        <div className="flex flex-row items-center">
-          <h1 className="w-52 text-2xl font-semibold">Status: </h1>
+        <div className="flex xs:flex-row flex-col xs:items-center items-start">
+          <h1 className="sm:w-52 w-40 lg:text-2xl sm:text-lg text-base font-semibold">Status: </h1>
           {activeRaiseRequestTab !== "Pending Approvals" &&
             processUserResponse()}
           {processStatus()}
         </div>
         {card.status === "Payment Pending" && (
-          <div className="flex flex-row items-center">
-            <h1 className="w-52 text-2xl font-semibold">Paying Status: </h1>
-            <p className="text-2xl">
+          <div className="flex xs:flex-row flex-col xs:items-center items-start">
+            <h1 className="sm:w-52 w-40 lg:text-2xl sm:text-lg text-base font-semibold">Paying Status: </h1>
+            <p className="lg:text-2xl sm:text-lg text-base">
               <strong>{card.paidByUsersCount}</strong>/{card.payingUserCount}
             </p>
           </div>
@@ -446,7 +446,7 @@ const RaiseRequestCard = ({ card, fetchData, sharesList, fetchRequests }) => {
             </button>
           )} */}
       </div>
-      <div className="w-1/6 mt-5 flex flex-col">
+      <div className="md:w-1/6 w-full mt-5 flex flex-col">
         <h2 className="text-base text-[#A2B0B2]">
           {card.daysLeftForVoting === 0
             ? "Voting Closed "

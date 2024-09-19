@@ -217,7 +217,7 @@ const Payments = () => {
 
   return (
     <div className="bg-white w-full my-6 xxl:h-[85vh] md:h-[88vh] max-h-[88vh] overflow-y-auto">
-      <div className="w-full flex flex-row items-center justify-between border-b border-b-[#D9D9D9] pt-1 pb-7 sm:px-14  pl-14 pr-5">
+      <div className="w-full flex flex-row items-center justify-between border-b border-b-[#D9D9D9] pt-1 pb-7 sm:px-14 pl-14 pr-5">
         <h1 className="text-2xl font-medium">Bills And Payments</h1>
         {JSON.parse(localStorage.getItem("userDetails")).role === "admin" && (
           <div>
