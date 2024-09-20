@@ -2,7 +2,7 @@
 import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
 import { FaAngleDown, FaCross } from "react-icons/fa";
-import { IoIosSearch } from "react-icons/io";
+import { IoIosFunnel, IoIosSearch } from "react-icons/io";
 
 import {
   MapContainer,
@@ -23,6 +23,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { updateAvailableShares } from "@/app/redux/features/mapPageSlice";
 import { updatePropertyType } from "@/app/redux/features/mapPageSlice";
 import { IoClose } from "react-icons/io5";
+import FiltersModal from "../modals/sectionMapFiltersModal";
 
 const SectionMap = () => {
   const [position, setPosition] = useState(null);
@@ -47,6 +48,12 @@ const SectionMap = () => {
 
   const [filters, setFilters] = useState([
     {
+      name: "All requests",
+      data: [],
+      active: false,
+      iconURL: "/person-pin.png",
+    },
+    {
       name: "Available shares",
       data: [
         { name: "Fully Available", selected: false },
@@ -70,12 +77,6 @@ const SectionMap = () => {
         { name: "Single family home", selected: false },
       ],
       active: false,
-    },
-    {
-      name: "All requests",
-      data: [],
-      active: false,
-      iconURL: "/person-pin.png",
     },
   ]);
   console.log("window: ", typeof window);
@@ -385,6 +386,11 @@ const SectionMap = () => {
     "bg-amber-400",
     "bg-red-400",
   ];
+
+  const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
+
+  const handleOpenFilterModal = () => setIsFilterModalOpen(true);
+  const handleCloseFilterModal = () => setIsFilterModalOpen(false);
   return (
     <NoSsr>
       <div
@@ -416,11 +422,22 @@ const SectionMap = () => {
             nameResult={setSearchedName}
           />
         </div>
-        <div className="mt-6 xxl:mx-24 xl:mx-16 lg:mx-10 sm:mx-5">
+        <FiltersModal
+          isOpen={isFilterModalOpen}
+          onClose={handleCloseFilterModal}
+          filters={filters}
+          allRequestes={allRequestes}
+          dropdownsStatus={dropdownsStatus}
+          handleDropdownActivity={handleDropdownActivity}
+          handleFilterClick={handleFilterClick}
+          handleAllRequestesClick={handleAllRequestesClick}
+          handleFilterSubmit={handleFilterSubmit}
+        />
+        <div className="mt-6 xxl:mx-24 xl:mx-16 lg:mx-10 mx-5">
           <MapContainer
             center={position || [51.505, -0.09]}
             zoom={15}
-            style={{ height: "60vh", width: "100%" }}
+            style={{ height: "60vh", width: "100%", zIndex: "0px" }}
           >
             {/* <SearchBar /> */}
             <TileLayer
@@ -501,7 +518,7 @@ const SectionMap = () => {
           </MapContainer>
         </div>
 
-        <div className="w-fit flex flex-row items-center border-2 border-[#676767] divide-x-2 divide-[#676767] justify-center bg-white my-16 mx-auto duration-700 transition">
+        <div className="w-fit flex flex-row items-center sm:border-2 border-[#676767] divide-x-2 divide-[#676767] justify-center bg-white my-16 sm:mx-auto ml-5 duration-700 transition">
           <div className="relative mb-10">
             <button
               type="button"
@@ -512,129 +529,143 @@ const SectionMap = () => {
                 handleDropdownActivity("availableSharesActive", false, e);
                 handleDropdownActivity("propertyTypeActive", false, e);
               }}
-              className="absolute bg-[#116A7B] w-32 text-sm text-white transition-transform lg:hidden block lg:-translate-x-60 translate-y-0 -z-50 px-3 py-2 rounded-lg "
+              className="absolute bg-[#116A7B] w-32 text-sm text-white transition-transform lg:hidden sm:block hidden lg:-translate-x-60 translate-y-0 -z-50 px-3 py-2 rounded-lg "
             >
               Apply Changes
             </button>
           </div>
-          {filters.map((filter, index) => (
-            <div key={index} className="relative">
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  if (filter.data.length > 0) {
-                    if (index === 0) {
-                      handleDropdownActivity(
-                        "propertyTypeActive",
-                        !dropdownsStatus["propertyTypeActive"],
-                        e
-                      );
+
+          <button
+            type="button"
+            onClick={handleOpenFilterModal}
+            className="bg-[#116A7B] p-3 rounded-full"
+          >
+            <IoIosFunnel className="text-white text-2xl" />
+          </button>
+          <div className="sm:block hidden">
+            {filters.map((filter, index) => (
+              <div key={index} className="relative">
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (filter.data.length > 0) {
+                      if (index === 0) {
+                        handleDropdownActivity(
+                          "propertyTypeActive",
+                          !dropdownsStatus["propertyTypeActive"],
+                          e
+                        );
+                        handleDropdownActivity(
+                          "availableSharesActive",
+                          false,
+                          e
+                        );
+                      } else {
+                        handleDropdownActivity(
+                          "availableSharesActive",
+                          !dropdownsStatus["availableSharesActive"],
+                          e
+                        );
+                        handleDropdownActivity("propertyTypeActive", false, e);
+                      }
+                    } else if (index === 1) {
+                      // handleFilterClick(
+                      //   index,
+                      //   filter.name,
+                      //   !filter.active,
+                      //   "null"
+                      // );
                       handleDropdownActivity("availableSharesActive", false, e);
-                    } else {
-                      handleDropdownActivity(
-                        "availableSharesActive",
-                        !dropdownsStatus["availableSharesActive"],
-                        e
-                      );
+                      handleDropdownActivity("propertyTypeActive", false, e);
+                    } else if (index === 2) {
+                      handleAllRequestesClick(!allRequestes.active);
+                      handleDropdownActivity("availableSharesActive", false, e);
                       handleDropdownActivity("propertyTypeActive", false, e);
                     }
-                  } else if (index === 1) {
-                    // handleFilterClick(
-                    //   index,
-                    //   filter.name,
-                    //   !filter.active,
-                    //   "null"
-                    // );
-                    handleDropdownActivity("availableSharesActive", false, e);
-                    handleDropdownActivity("propertyTypeActive", false, e);
-                  } else if (index === 2) {
-                    handleAllRequestesClick(!allRequestes.active);
-                    handleDropdownActivity("availableSharesActive", false, e);
-                    handleDropdownActivity("propertyTypeActive", false, e);
-                  }
-                }}
-                className="md:w-72 w-56 bg-transparent p-3 md:text-xl text-base font-semibold flex items-center justify-between"
-              >
-                <h1>
-                  {filter.name}{" "}
-                  {filter.data.length > 0 && (
-                    <FaAngleDown className="inline-flex" />
+                  }}
+                  className="md:w-72 w-56 bg-transparent p-3 md:text-xl text-base font-semibold flex items-center justify-between"
+                >
+                  <h1>
+                    {filter.name}{" "}
+                    {filter.data.length > 0 && (
+                      <FaAngleDown className="inline-flex" />
+                    )}
+                  </h1>
+                  {index !== 2 && filter.active && (
+                    <div
+                      className={`text-xs text-white rounded-full py-[3px] px-[3px] ml-5 bg-blue-500`}
+                    >
+                      <IoClose />
+                    </div>
                   )}
-                </h1>
-                {index !== 2 && filter.active && (
-                  <div
-                    className={`text-xs text-white rounded-full py-[3px] px-[3px] ml-5 bg-blue-500`}
-                  >
-                    <IoClose />
-                  </div>
-                )}
-                {index === 2 && allRequestes.active && (
-                  <div
-                    className={`text-xs text-white rounded-full py-[3px] px-[3px] ml-5 bg-blue-500`}
-                  >
-                    <IoClose />
-                  </div>
-                )}
-              </button>
-              {index === 1 && dropdownsStatus["availableSharesActive"] && (
-                <div className="absolute md:w-72 w-56 bg-white ">
-                  <ul className="px-5 space-y-1 max-h-40 overflow-y-auto">
-                    {filter.data.map((listItem, i) => (
-                      <li
-                        key={i}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleFilterClick(index, i, !listItem.selected);
-                        }}
-                        className="flex flex-row items-center justify-between p-2 border-b border-black border-opacity-20 text-base text-[#676767] cursor-pointer"
-                      >
-                        {listItem.name}{" "}
-                        {listItem.selected && (
-                          <div
-                            className={`text-xs text-white rounded-full py-[3px] px-[3px] ml-5 bg-blue-500`}
-                          >
-                            <IoClose />
-                          </div>
-                        )}
-                        {/* <div
+                  {index === 2 && allRequestes.active && (
+                    <div
+                      className={`text-xs text-white rounded-full py-[3px] px-[3px] ml-5 bg-blue-500`}
+                    >
+                      <IoClose />
+                    </div>
+                  )}
+                </button>
+                {index === 1 && dropdownsStatus["availableSharesActive"] && (
+                  <div className="absolute md:w-72 w-56 bg-white ">
+                    <ul className="px-5 space-y-1 max-h-40 overflow-y-auto">
+                      {filter.data.map((listItem, i) => (
+                        <li
+                          key={i}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleFilterClick(index, i, !listItem.selected);
+                          }}
+                          className="flex flex-row items-center justify-between p-2 border-b border-black border-opacity-20 text-base text-[#676767] cursor-pointer"
+                        >
+                          {listItem.name}{" "}
+                          {listItem.selected && (
+                            <div
+                              className={`text-xs text-white rounded-full py-[3px] px-[3px] ml-5 bg-blue-500`}
+                            >
+                              <IoClose />
+                            </div>
+                          )}
+                          {/* <div
                         className={`w-3 h-3 rounded-full ml-5 ${availableShareTypeColorList[i]}`}
                       /> */}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-              {index === 0 && dropdownsStatus["propertyTypeActive"] && (
-                <div className="absolute md:w-72 w-56 bg-white z-[5000]">
-                  <ul className="px-5 space-y-1 max-h-60 overflow-y-auto">
-                    {filter.data.map((listItem, i) => (
-                      <li
-                        key={i}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleFilterClick(index, i, !listItem.selected);
-                        }}
-                        className="flex flex-row items-center justify-between p-2 border-b border-black border-opacity-20 text-base text-[#676767] cursor-pointer"
-                      >
-                        {listItem.name}{" "}
-                        {listItem.selected && (
-                          <div
-                            className={`text-xs text-white rounded-full py-[3px] px-[3px] ml-5 bg-blue-500`}
-                          >
-                            <IoClose />
-                          </div>
-                        )}
-                        {/* <div
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                {index === 0 && dropdownsStatus["propertyTypeActive"] && (
+                  <div className="absolute md:w-72 w-56 bg-white z-[5000]">
+                    <ul className="px-5 space-y-1 max-h-60 overflow-y-auto">
+                      {filter.data.map((listItem, i) => (
+                        <li
+                          key={i}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleFilterClick(index, i, !listItem.selected);
+                          }}
+                          className="flex flex-row items-center justify-between p-2 border-b border-black border-opacity-20 text-base text-[#676767] cursor-pointer"
+                        >
+                          {listItem.name}{" "}
+                          {listItem.selected && (
+                            <div
+                              className={`text-xs text-white rounded-full py-[3px] px-[3px] ml-5 bg-blue-500`}
+                            >
+                              <IoClose />
+                            </div>
+                          )}
+                          {/* <div
                           className={`w-3 h-3 rounded-full ml-5 ${availableShareTypeColorList[i]}`}
                         /> */}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </div>
-          ))}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
           {/* 
           <div className="relative">
             <button

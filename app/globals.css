@@ -10,7 +10,6 @@ body {
   overflow-x: hidden;
 }
 
-
 .swiper-container {
   width: 100%;
 }
@@ -128,4 +127,12 @@ input[type='range'].slider::-moz-range-thumb {
 .custom-next:hover {
   background-color: #ccc;
   /* Light grey background on hover */
+}
+
+.leaflet-top, .leaflet-bottom {
+  z-index: 0 !important; /* or whatever value you need */
+}
+
+.leaflet-pane {
+  z-index: 0 !important;
 }

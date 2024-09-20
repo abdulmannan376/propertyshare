@@ -155,31 +155,51 @@ const BuyShareModal = ({
   }, []);
 
   useEffect(() => {
-    if (clientToken && isOpen) {
-      DropIn.create(
-        {
-          authorization: clientToken,
-          container: "#dropin-container",
-          paypal: {
-            flow: "vault", // Options are 'vault' or 'checkout'
-            amount: "10.00", // You can specify an amount or leave this empty
-            currency: "USD", // Specify currency
-            buttonStyle: {
-              color: "blue", // Options are 'blue', 'gold', 'silver', 'white', 'black'
-              shape: "rect", // Options are 'rect', 'pill'
-              size: "medium", // Options are 'small', 'medium', 'large', 'responsive'
+    if (selectedShareID.length > 0) {
+      if (clientToken && isOpen) {
+        DropIn.create(
+          {
+            authorization: clientToken,
+            container: "#dropin-container",
+            paypal: {
+              flow: "vault", // Options are 'vault' or 'checkout'
+              amount: "", // You can specify an amount or leave this empty
+              currency: "USD", // Specify currency
+              buttonStyle: {
+                color: "blue", // Options are 'blue', 'gold', 'silver', 'white', 'black'
+                shape: "rect", // Options are 'rect', 'pill'
+                size: "medium", // Options are 'small', 'medium', 'large', 'responsive'
+              },
             },
           },
-        },
-        (error, dropinInstance) => {
-          if (error) errorAlert("Error", error);
-          else setInstance(dropinInstance);
+          (error, dropinInstance) => {
+            if (error) errorAlert("Error", error);
+            else setInstance(dropinInstance);
+          }
+        );
+      }
+    } else {
+      if (instance) {
+        // Clear the instance
+        instance.teardown((err) => {
+          if (err) {
+            console.error("Error tearing down DropIn instance:", err);
+          } else {
+            setInstance(null); // Clear instance state
+          }
+        });
+      }
+      // Remove children from #dropin-container
+      const dropinContainer = document.getElementById("dropin-container");
+      if (dropinContainer) {
+        while (dropinContainer.firstChild) {
+          dropinContainer.removeChild(dropinContainer.firstChild);
         }
-      );
+      }
     }
 
     console.log(instance);
-  }, [clientToken, isOpen]);
+  }, [clientToken, isOpen, selectedShareID]);
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -259,8 +279,8 @@ const BuyShareModal = ({
     >
       {/* Modal Content */}
 
-      <div className="relative flex flex-row items-stretch bg-white border border-[#116A7B] py-5 px-10 rounded-xl shadow-lg max-w-5xl w-full">
-        <div className="w-1/2 flex flex-col justify-between items-start mr-5">
+      <div className="relative flex flex-row items-stretch bg-white border border-[#116A7B] py-5 px-10 rounded-xl shadow-lg max-w-5xl md:w-full w-[70vw]">
+        <div className="md:w-1/2 w-full flex flex-col justify-between items-start mr-5">
           <div className="flex justify-between items-center mb-3">
             <h4 className="text-4xl text-[#09363F] font-medium">Buy shares</h4>
           </div>
@@ -320,7 +340,7 @@ const BuyShareModal = ({
             </button>
           </div>
         </div>
-        <div className="w-1/2">
+        <div className="w-1/2 md:block hidden">
           <Image
             width={2000}
             height={2000}

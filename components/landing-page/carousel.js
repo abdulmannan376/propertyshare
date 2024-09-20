@@ -20,6 +20,7 @@ import {
   updatePriceRange,
   updatePropertyType,
 } from "@/app/redux/features/buyShareSlice";
+import FiltersModal from "../modals/filterModal";
 
 const Carousel = () => {
   const dispatch = useDispatch();
@@ -135,6 +136,7 @@ const Carousel = () => {
 
   const handleShowFitlterBox = () => {
     setShowFilterBox(!showFilterBox);
+    setIsFilterModalOpen(true);
   };
 
   const carouselRef = useRef();
@@ -198,6 +200,92 @@ const Carousel = () => {
   }, []);
 
   const handleBuySharesClick = () => {};
+
+  const [filters, setFilters] = useState([
+    {
+      name: "Property Type",
+      id: "propertyTypeActive",
+      data: [
+        { name: "Mansion", selected: false },
+        { name: "Villa", selected: false },
+        { name: "Apartment", selected: false },
+        { name: "Suite", selected: false },
+        { name: "Condo", selected: false },
+        { name: "Townhouse", selected: false },
+        { name: "Bungalow", selected: false },
+        { name: "Cabin", selected: false },
+        { name: "Studio", selected: false },
+        { name: "Single family home", selected: false },
+      ],
+      active: false,
+    },
+    {
+      name: "Price",
+      id: "priceActive",
+      dataMIN: [
+        { name: "0", selected: false },
+        { name: "300", selected: false },
+        { name: "600", selected: false },
+        { name: "900", selected: false },
+      ],
+      dataMAX: [
+        { name: "300", selected: false },
+        { name: "600", selected: false },
+        { name: "900", selected: false },
+        { name: "ANY", selected: false },
+      ],
+      active: false,
+    },
+    {
+      name: "Area",
+      id: "areaActive",
+      dataMIN: [
+        { name: "0", selected: false },
+        { name: "50", selected: false },
+        { name: "100", selected: false },
+        { name: "150", selected: false },
+        { name: "200", selected: false },
+        { name: "250", selected: false },
+        { name: "300", selected: false },
+      ],
+      dataMAX: [
+        { name: "50", selected: false },
+        { name: "100", selected: false },
+        { name: "150", selected: false },
+        { name: "200", selected: false },
+        { name: "250", selected: false },
+        { name: "300", selected: false },
+        { name: "ANY", selected: false },
+      ],
+      active: false,
+    },
+    {
+      name: "Beds",
+      id: "bedsActive",
+      data: [
+        { name: "1", selected: false },
+        { name: "2", selected: false },
+        { name: "3", selected: false },
+        { name: "4", selected: false },
+        { name: "5", selected: false },
+        { name: "6", selected: false },
+        { name: "7", selected: false },
+        { name: "8", selected: false },
+        { name: "9", selected: false },
+        { name: "10+", selected: false },
+      ],
+      active: false,
+    },
+  ]);
+
+  const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
+
+  const handleOpenFilterModal = () => setIsFilterModalOpen(true);
+  const handleCloseFilterModal = () => {
+    setShowFilterBox(false);
+    setIsFilterModalOpen(false);
+  };
+
   return (
     <div
       onClick={(e) => {
@@ -271,8 +359,18 @@ const Carousel = () => {
           </div>
         </form>
 
+        <div className="sm:hidden block">
+          <FiltersModal
+            isOpen={isFilterModalOpen}
+            onClose={handleCloseFilterModal}
+            dropdownsStatus={dropdownsStatus}
+            filters={filters}
+            handleDropdownActivity={handleDropdownActivity}
+          />
+        </div>
+
         {showFilterBox && (
-          <div className="flex flex-row bg-white mt-3 duration-700 transition">
+          <div className="sm:flex hidden flex-row bg-white mt-3 duration-700 transition">
             <div className="relative">
               <button
                 type="button"

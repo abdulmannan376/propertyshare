@@ -28,6 +28,7 @@ const SearchBar = ({ setIsFilterUpdated }) => {
 
   const dispatch = useDispatch();
   const handleSelect = (lat, lon, name) => {
+    setIsFilterUpdated(true)
     setQuery(name);
     dispatch(updateCoordinates({ coordinates: [lon, lat] }));
     setResults([]);
@@ -190,7 +191,7 @@ const SearchBar = ({ setIsFilterUpdated }) => {
         }}
         className="w-full relative"
       >
-        <form className="flex flex-row bg-[#D9D9D9] bg-opacity-[76%] border border-[#F5F5F5] mt-6 rounded-md pl-2">
+        <form className="flex flex-row bg-[#D9D9D9] bg-opacity-[100%] border border-[#F5F5F5] mt-6 rounded-md pl-2">
           <input
             type="text"
             name="searchbar"

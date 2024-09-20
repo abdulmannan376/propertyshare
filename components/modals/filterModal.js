@@ -1,26 +1,24 @@
+import React, { Fragment, useEffect, useState } from "react";
+import Modal from "react-modal";
+import { FaAngleDown } from "react-icons/fa";
 import {
-  handleAllDropdownsActivity,
-  updateAreaRange,
+    updateAreaRange,
   updateNumberOfBeds,
   updatePriceRange,
   updatePropertyType,
 } from "@/app/redux/features/buyShareSlice";
-import React, { Fragment, useEffect, useState } from "react";
-import { FaAngleDown } from "react-icons/fa";
-import { IoIosFunnel, IoMdClose } from "react-icons/io";
 import { useDispatch, useSelector } from "react-redux";
-import FiltersModal from "../modals/filterModal";
 
-const FilterComponent = ({
+Modal.setAppElement("#app-body");
+
+const FiltersModal = ({
+  isOpen,
+  onClose,
   filters,
-  setFilters,
-  area,
-  handleAreaRange,
-  price,
-  handlePriceRange,
+  handleDropdownActivity,
+  dropdownsStatus,
 }) => {
   const dispatch = useDispatch();
-
   const numberOfBeds = useSelector(
     (state) => state.buyShareSliceReducer.numberOfBeds
   );
@@ -33,189 +31,37 @@ const FilterComponent = ({
   const priceRange = useSelector(
     (state) => state.buyShareSliceReducer.priceRange
   );
-
-  const [dropdownsStatus, setDropdownsStatus] = useState({
-    propertyTypeActive: false,
-    priceActive: false,
-    areaActive: false,
-    bedsActive: false,
-  });
-
-  const handleFilterSelect = (index, dataIndex, value, dataType) => {
-    console.log(
-      "in handleFilterSelect",
-      index,
-      dataIndex,
-      value,
-      typeof dataType
-    );
-    if (index === 0 || index === 3) {
-      console.log("in if");
-      setFilters((prevDetails) => {
-        const newDetails = [...prevDetails];
-        newDetails[index].data[dataIndex].selected = value;
-        return newDetails;
-      });
-      if (index === 0) {
-        if (value) {
-          dispatch(
-            updatePropertyType({
-              task: "add",
-              propertyType: filters[index].data[dataIndex].name,
-            })
-          );
-        } else {
-          dispatch(
-            updatePropertyType({
-              task: "remove",
-              propertyType: filters[index].data[dataIndex].name,
-            })
-          );
-        }
-      } else {
-        if (value) {
-          dispatch(
-            updateNumberOfBeds({
-              task: "add",
-              beds: filters[index].data[dataIndex].name,
-            })
-          );
-        } else {
-          dispatch(
-            updateNumberOfBeds({
-              task: "remove",
-              beds: filters[index].data[dataIndex].name,
-            })
-          );
-        }
-      }
-    } else if (index === 1) {
-      console.log("in else if");
-      if (dataType === "min") {
-        console.log("in if");
-        setFilters((prevDetails) => {
-          const newDetails = [...prevDetails];
-          newDetails[index].dataMIN[dataIndex].selected = value;
-          return newDetails;
-        });
-      } else if (dataType === "max") {
-        setFilters((prevDetails) => {
-          const newDetails = [...prevDetails];
-          newDetails[index].dataMAX[dataIndex].selected = value;
-          return newDetails;
-        });
-      }
-    }
-  };
-
-  const handleDropdownActivity = (field, value, e) => {
-    e.preventDefault();
-    console.log("in handle dropdown activity");
-    setDropdownsStatus((prevDetails) => {
-      const newDetails = { ...prevDetails };
-      Object.keys(newDetails).map((data) => {
-        if (data === field) {
-          newDetails[data] = value;
-        } else {
-          newDetails[data] = false;
-        }
-      });
-      return newDetails;
-    });
-  };
-
-  const dropdowns = {
-    propertyType: {
-      data: [
-        "Mansion",
-        "Villa",
-        "Apartment",
-        "Suite",
-        "Condo",
-        "Townhouse",
-        "Bungalow",
-        "Cabin",
-        "Studio",
-        "Single family home",
-      ],
-    },
-    price: {
-      dataMin: ["0", "300", "600", "900"],
-      dataMax: ["300", "600", "900", "Any"],
-    },
-    area: {
-      dataMin: ["0", "50", "100", "150", "200", "250", "300"],
-      dataMax: ["50", "100", "150", "200", "250", "300", "Any"],
-    },
-    beds: {
-      data: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10+"],
-    },
-  };
-
-  const priceMin = "";
-  const priceMax = "";
-
-  const availableShareTypeColorList = [
-    "bg-green-400",
-    "bg-amber-400",
-    "bg-red-400",
-  ];
-
-  const [userSettings, setUserSettings] = useState({});
-
-  const fetchUserSettings = async () => {
-    try {
-    } catch (error) {}
-  };
-
-  const isAllDropdownsClosed = useSelector(
-    (state) => state.buyShareSliceReducer.isAllDropdownsClosed
-  );
-
-  useEffect(() => {
-    if (!isAllDropdownsClosed) {
-      setDropdownsStatus((prevDetails) => {
-        const newDetails = { ...prevDetails };
-
-        Object.keys(newDetails).map((fieldName) => {
-          newDetails[fieldName] = false;
-        });
-
-        return newDetails;
-      });
-
-      dispatch(handleAllDropdownsActivity(true));
-    }
-  }, [isAllDropdownsClosed]);
-
-  const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
-
-  const handleOpenFilterModal = () => setIsFilterModalOpen(true);
-  const handleCloseFilterModal = () => setIsFilterModalOpen(false);
-
   return (
-    <>
-    <FiltersModal 
-      isOpen={isFilterModalOpen}
-      onClose={handleCloseFilterModal}
-      dropdownsStatus={dropdownsStatus}
-      filters={filters}
-      handleDropdownActivity={handleDropdownActivity}
-    />
-      <div className="w-full sm:hidden flex mt-5">
-        <button
-          type="button"
-          onClick={handleOpenFilterModal}
-          className="bg-[#116A7B] p-3 rounded-full"
-        >
-          <IoIosFunnel className="text-white text-2xl" />
-        </button>
-      </div>
-      <div className="w-full sm:flex hidden flex-row items-center border-2 border-[#676767] divide-x-2 divide-[#676767] justify-center bg-white my-5 md:space-x-10 mx-auto duration-700 transition">
+    <Modal
+      isOpen={isOpen}
+      onRequestClose={onClose}
+      className="fixed inset-0 bg-black bg-opacity-50 z-[5000] flex justify-center items-center"
+      overlayClassName="fixed inset-0 bg-black bg-opacity-75"
+      style={{
+        content: {
+          top: "50%",
+          left: "50%",
+          right: "auto",
+          bottom: "auto",
+          marginRight: "-50%",
+          transform: "translate(-50%, -50%)",
+          // border: "1px solid #ccc",
+          background: "transparent",
+          overflow: "auto",
+          WebkitOverflowScrolling: "touch",
+          borderRadius: "15px",
+          outline: "none",
+          padding: "5px",
+          width: "full",
+          maxHeight: "80vh",
+        },
+      }}
+    >
+      <div className="w-full h-[65vh] flex-col items-center justify-center bg-white px-5 py-3 my-5 space-y-10 mx-auto duration-700 transition rounded-2xl">
         {filters.map((filter, index) => (
           <Fragment key={index}>
             {index === 0 && (
-              <div className="relative">
+              <div className="relative w-full">
                 <button
                   type="button"
                   onClick={(e) => {
@@ -226,7 +72,7 @@ const FilterComponent = ({
                       e
                     );
                   }}
-                  className="xxl:w-96 xl:w-64 lg:w-52 md:w-52 sm:w-44 bg-transparent md:p-3 px-1 py-3 lg:text-xl md:text-base sm:text-sm text-[#676767] flex items-center justify-between"
+                  className="w-64 bg-transparent md:p-3 px-1 py-3 lg:text-xl md:text-base sm:text-sm text-[#676767] flex items-center justify-between"
                 >
                   Property Type{" "}
                   <div className="flex flex-row items-center md:space-x-5 space-x-0">
@@ -236,7 +82,7 @@ const FilterComponent = ({
                           e.stopPropagation();
                           dispatch(updatePropertyType({ task: "reset" }));
                         }}
-                        className="rounded-full text-[#116A7B] md:text-sm text-xs p-1"
+                        className="rounded-full text-[#116A7B] sm:text-sm text-xs p-1"
                       >
                         RESET
                       </span>
@@ -282,7 +128,7 @@ const FilterComponent = ({
               </div>
             )}
             {index === 1 && (
-              <div className="relative">
+              <div className="relative w-full">
                 <button
                   type="button"
                   onClick={(e) => {
@@ -293,17 +139,17 @@ const FilterComponent = ({
                       e
                     );
                   }}
-                  className="xxl:w-96 xl:w-64 lg:w-52 md:w-52 sm:w-44 bg-transparent md:p-3 px-1 py-3 lg:text-xl md:text-base sm:text-sm text-[#676767] flex items-center justify-between"
+                  className="w-64 bg-transparent md:p-3 px-1 py-3 lg:text-xl md:text-base sm:text-sm text-[#676767] flex items-center justify-between"
                 >
                   Price {"($)"}
-                  <div className="flex flex-row items-center md:space-x-5 space-x-1">
+                  <div className="flex flex-row items-center md:space-x-5 space-x-0">
                     {priceRange.length > 0 && (
                       <span
                         onClick={(e) => {
                           e.stopPropagation();
                           dispatch(updatePriceRange({ task: "reset" }));
                         }}
-                        className="rounded-full text-[#116A7B] md:text-sm text-xs p-1"
+                        className="rounded-full text-[#116A7B] sm:text-sm text-xs p-1"
                       >
                         RESET
                       </span>
@@ -359,7 +205,6 @@ const FilterComponent = ({
                         placeholder="MAX:"
                         onClick={(e) => e.stopPropagation()}
                         onChange={(e) => {
-                          e.stopPropagation();
                           dispatch(
                             updatePriceRange({
                               task: "max",
@@ -406,7 +251,7 @@ const FilterComponent = ({
                       e
                     );
                   }}
-                  className="xxl:w-96 xl:w-64 lg:w-52 md:w-52 sm:w-44 bg-transparent md:p-3 px-1 py-3 lg:text-xl md:text-base sm:text-sm text-[#676767] flex items-center justify-between"
+                  className="w-64 bg-transparent md:p-3 px-1 py-3 lg:text-xl md:text-base sm:text-sm text-[#676767] flex items-center justify-between"
                 >
                   Area {"(sqmt)"}
                   <div className="flex flex-row items-center md:space-x-5 space-x-0">
@@ -520,7 +365,7 @@ const FilterComponent = ({
                       e
                     );
                   }}
-                  className="xxl:w-96 xl:w-64 lg:w-52 md:w-52 sm:w-36 bg-transparent md:p-3 px-1 py-3 lg:text-xl md:text-base sm:text-sm text-[#676767] flex items-center justify-between"
+                  className="w-64 bg-transparent md:p-3 px-1 py-3 lg:text-xl md:text-base sm:text-sm text-[#676767] flex items-center justify-between"
                 >
                   Beds{" "}
                   <div className="flex flex-row items-center md:space-x-5 space-x-0">
@@ -578,8 +423,8 @@ const FilterComponent = ({
           </Fragment>
         ))}
       </div>
-    </>
+    </Modal>
   );
 };
 
-export default FilterComponent;
+export default FiltersModal;

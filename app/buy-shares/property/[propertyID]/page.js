@@ -9,7 +9,7 @@ import {
 import { updateActiveBuyShareNavBtn } from "@/app/redux/features/propertyPageSlice";
 import Image from "next/image";
 import { useParams, useSearchParams } from "next/navigation";
-import React, { Suspense, useEffect, useState } from "react";
+import React, { Suspense, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
 import { IoIosPricetag, IoIosBed } from "react-icons/io";
@@ -52,7 +52,6 @@ import CalendarModal from "@/components/modals/calendarModal";
 import Slider from "react-slick";
 import { TiArrowRightThick } from "react-icons/ti";
 import { errorAlert } from "@/utils/alert";
-
 
 const NextArrow = ({ className, style, onClick }) => {
   return (
@@ -248,7 +247,18 @@ const Page = () => {
   const handleOpenCalendarModal = () => setIsCalendarModalOpen(true);
   const handleCloseCalendarModal = () => setIsCalendarModalOpen(false);
 
-  
+  const propertyDetailsRef = useRef(null);
+  const rentRef = useRef(null);
+  const sellRef = useRef(null);
+  const swapRef = useRef(null);
+
+  const handleScrollIntoView = (ref) => {
+    ref.current?.scrollIntoView({
+      behavior: "smooth", // Adds a smooth scroll effect
+      block: "nearest", // Ensures the element is scrolled to the nearest visible area
+      inline: "center", // Keeps the element centered in the view horizontally
+    });
+  };
 
   return (
     <>
@@ -272,7 +282,7 @@ const Page = () => {
       />
       {propertyFetched && (
         <div
-          className="xl:mx-24 mx-16 "
+          className="xl:mx-24 md:mx-16 mx-5"
           onClick={() =>
             dispatch(updateDropdrownStatus({ field: "close all" }))
           }
@@ -334,15 +344,17 @@ const Page = () => {
                 />
               </div>
             )}
-            <div className="flex items-center justify-between">
-              <div className="w-full flex items-center justify-start md:space-x-20 space-x-14 my-3 text-white text-2xl font-semibold">
+            <div className="flex sm:flex-row flex-col sm:items-center sm:justify-between">
+              <div className="w-full max-w-screen overflow-x-auto flex items-center justify-start md:space-x-20 space-x-14 my-3 text-white text-2xl font-semibold">
                 <button
-                  onClick={() =>
-                    dispatch(updateActiveBuyShareNavBtn("Property Details"))
-                  }
+                  onClick={() => {
+                    dispatch(updateActiveBuyShareNavBtn("Property Details"));
+                    handleScrollIntoView(propertyDetailsRef);
+                  }}
+                  ref={propertyDetailsRef}
                 >
                   <h1
-                    className={`flex ${
+                    className={`flex w-48 whitespace-nowrap ${
                       activeNavBtn === "Property Details"
                         ? "underline-text"
                         : "hover-underline-animation"
@@ -353,10 +365,14 @@ const Page = () => {
                 </button>
                 {/* <Link href={`${process.env.NEXT_PUBLIC_HOST}/chef`}> */}
                 <button
-                  onClick={() => dispatch(updateActiveBuyShareNavBtn("Rent"))}
+                  onClick={() => {
+                    dispatch(updateActiveBuyShareNavBtn("Rent"));
+                    handleScrollIntoView(rentRef);
+                  }}
+                  ref={rentRef}
                 >
                   <h2
-                    className={`flex ${
+                    className={`flex w-14 whitespace-nowrap ${
                       activeNavBtn === "Rent"
                         ? "underline-text"
                         : "hover-underline-animation"
@@ -366,10 +382,14 @@ const Page = () => {
                   </h2>
                 </button>
                 <button
-                  onClick={() => dispatch(updateActiveBuyShareNavBtn("Sell"))}
+                  onClick={() => {
+                    dispatch(updateActiveBuyShareNavBtn("Sell"));
+                    handleScrollIntoView(sellRef);
+                  }}
+                  ref={sellRef}
                 >
                   <h2
-                    className={`flex ${
+                    className={`flex w-14 whitespace-nowrap ${
                       activeNavBtn === "Sell"
                         ? "underline-text"
                         : "hover-underline-animation"
@@ -381,10 +401,14 @@ const Page = () => {
                 {JSON.parse(localStorage.getItem("userDetails")).role ===
                   "admin" && (
                   <button
-                    onClick={() => dispatch(updateActiveBuyShareNavBtn("Swap"))}
+                    onClick={() => {
+                      dispatch(updateActiveBuyShareNavBtn("Swap"));
+                      handleScrollIntoView(swapRef);
+                    }}
+                    ref={swapRef}
                   >
                     <h2
-                      className={`flex ${
+                      className={`flex w-14 whitespace-nowrap ${
                         activeNavBtn === "Swap"
                           ? "underline-text"
                           : "hover-underline-animation"
@@ -397,10 +421,14 @@ const Page = () => {
                 {JSON.parse(localStorage.getItem("userDetails")).role ===
                   "shareholder" && (
                   <button
-                    onClick={() => dispatch(updateActiveBuyShareNavBtn("Swap"))}
+                    onClick={() => {
+                      dispatch(updateActiveBuyShareNavBtn("Swap"));
+                      handleScrollIntoView(swapRef);
+                    }}
+                    ref={swapRef}
                   >
                     <h2
-                      className={`flex ${
+                      className={`flex w-14 whitespace-nowrap ${
                         activeNavBtn === "Swap"
                           ? "underline-text"
                           : "hover-underline-animation"
@@ -412,7 +440,7 @@ const Page = () => {
                 )}
                 {/* </Link> */}
               </div>
-              <div className="flex items-center">
+              <div className="flex items-center sm:mb-0 mb-2">
                 <button
                   type="button"
                   title="Add to Favourites"
