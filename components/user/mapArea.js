@@ -64,7 +64,7 @@ const MapArea = ({ searchedCoordinate, handleCoordinates }) => {
   };
   return (
     <NoSsr>
-      <div className="w-full my-6 ml-6">
+      <div className="w-full my-6 md:ml-6">
         <MapContainer
           center={position || [51.505, -0.09]}
           zoom={15}

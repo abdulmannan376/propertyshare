@@ -334,18 +334,29 @@ const SectionMap = () => {
   }, [filters]);
 
   const applyBtnRef = useRef();
+  const applyBtnInMobViewRef = useRef();
   useEffect(() => {
     console.log("in page useEffect");
     if (!isFilterUpdated) {
-      applyBtnRef.current?.classList.remove("translate-x-10");
+      applyBtnRef.current?.classList.remove("lg:translate-x-10");
       applyBtnRef.current?.classList.remove("z-0");
-      applyBtnRef.current?.classList.add("-translate-x-60");
+      applyBtnRef.current?.classList.add("lg:-translate-x-60");
       applyBtnRef.current?.classList.add("-z-50");
+
+      applyBtnInMobViewRef.current?.classList.remove("z-0");
+      applyBtnInMobViewRef.current?.classList.add("-z-50");
+      applyBtnInMobViewRef.current?.classList.remove("-translate-y-12");
+      applyBtnInMobViewRef.current?.classList.add("translate-y-0");
     } else {
-      applyBtnRef.current?.classList.remove("-translate-x-60");
+      applyBtnRef.current?.classList.remove("lg:-translate-x-60");
       applyBtnRef.current?.classList.remove("-z-50");
-      applyBtnRef.current?.classList.add("translate-x-10");
+      applyBtnRef.current?.classList.add("lg:translate-x-10");
       applyBtnRef.current?.classList.add("z-0");
+
+      applyBtnInMobViewRef.current?.classList.remove("-z-50");
+      applyBtnInMobViewRef.current?.classList.add("z-0");
+      applyBtnInMobViewRef.current?.classList.remove("translate-y-0");
+      applyBtnInMobViewRef.current?.classList.add("-translate-y-12");
     }
   }, [isFilterUpdated]);
 
@@ -491,6 +502,21 @@ const SectionMap = () => {
         </div>
 
         <div className="w-fit flex flex-row items-center border-2 border-[#676767] divide-x-2 divide-[#676767] justify-center bg-white my-16 mx-auto duration-700 transition">
+          <div className="relative mb-10">
+            <button
+              type="button"
+              ref={applyBtnInMobViewRef}
+              onClick={(e) => {
+                setIsFilterUpdated(false);
+                handleFilterSubmit();
+                handleDropdownActivity("availableSharesActive", false, e);
+                handleDropdownActivity("propertyTypeActive", false, e);
+              }}
+              className="absolute bg-[#116A7B] w-32 text-sm text-white transition-transform lg:hidden block lg:-translate-x-60 translate-y-0 -z-50 px-3 py-2 rounded-lg "
+            >
+              Apply Changes
+            </button>
+          </div>
           {filters.map((filter, index) => (
             <div key={index} className="relative">
               <button
@@ -639,7 +665,7 @@ const SectionMap = () => {
                 handleDropdownActivity("availableSharesActive", false, e);
                 handleDropdownActivity("propertyTypeActive", false, e);
               }}
-              className="absolute bg-[#116A7B] w-32 text-sm text-white transition-transform -translate-x-60 -z-50 px-3 py-2 rounded-lg "
+              className="absolute bg-[#116A7B] w-32 text-sm text-white transition-transform lg:block hidden lg:-translate-x-60 translate-y-10 -z-50 px-3 py-2 rounded-lg "
             >
               Apply Changes
             </button>

@@ -404,7 +404,7 @@ const PropertyManagement = () => {
         const response = await res.json();
         setIsLoading(false);
         if (response.success) {
-          successAlert("Success", response.message)
+          successAlert("Success", response.message);
           setListingStatus("draft");
           changeFormPhase(formPhase + 1);
           setMyProperties((prevData) => {
@@ -442,7 +442,7 @@ const PropertyManagement = () => {
           setIsLoading(false);
           if (response.success) {
             changeFormPhase(formPhase + 1);
-            successAlert("Success", response.message)
+            successAlert("Success", response.message);
           } else {
             throw new Error(response.message);
           }
@@ -499,7 +499,7 @@ const PropertyManagement = () => {
           setIsLoading(false);
           if (response.success) {
             changeFormPhase(formPhase + 1);
-            successAlert("Success", response.message)
+            successAlert("Success", response.message);
           } else {
             throw new Error(response.message);
           }
@@ -552,7 +552,7 @@ const PropertyManagement = () => {
 
           const response = await res.json();
           if (response.success) {
-            successAlert("Success", response.message)
+            successAlert("Success", response.message);
             setIsLoading(false);
             setIsAddPropertyClicked(false);
           } else {
@@ -562,7 +562,7 @@ const PropertyManagement = () => {
       }
     } catch (error) {
       setIsLoading(false);
-      errorAlert("Error", error.message)
+      errorAlert("Error", error.message);
     }
   };
 
@@ -986,7 +986,7 @@ const PropertyManagement = () => {
   return (
     <div className="bg-white w-full my-6 lg:h-[85vh] md:h-[89vh] lg:max-h-[85vh] max-h-[93vh] overflow-y-auto">
       {isAddPropertyClicked ? (
-        <div className="w-full flex flex-row items-center pb-8 px-14">
+        <div className="w-full flex flex-row items-center pb-8 sm:px-14 pl-14 pr-5">
           <h1 className="text-2xl font-medium">Add Property</h1>
           <button
             onClick={() => {
@@ -1001,23 +1001,23 @@ const PropertyManagement = () => {
           </button>
         </div>
       ) : (
-        <div className="w-full flex flex-row items-center border-b border-b-[#D9D9D9] pb-7 px-14">
+        <div className="w-full flex flex-row items-center border-b border-b-[#D9D9D9] pb-7 sm:px-14 pl-14 pr-5">
           <h1 className="text-2xl font-medium">My Properties</h1>
           <button
             onClick={(e) => handleClickToAdd(e, "new")}
             type="button"
-            className="bg-[#116A7B] text-white text-lg ml-auto mx-1 px-5 py-1 rounded-full"
+            className="bg-[#116A7B] text-white text-lg ml-auto mx-1 sm:px-5 px-3 py-1 rounded-full"
           >
-            Add Property
-            <FaPlus className="inline-flex text-sm ml-2 mb-1" />
+            <h3 className="sm:inline-flex hidden">Add Property</h3>
+            <FaPlus className="sm:hidden inline-flex text-sm sm:ml-2 mb-1" />
           </button>
         </div>
       )}
       {isAddPropertyClicked ? (
-        <form className="flex flex-row flex-wrap gap-x-[90px] px-14 py-5">
+        <form className="flex flex-row flex-wrap gap-x-[90px] sm:px-14 px-5 py-5">
           {formPhase === 1 && (
             <>
-              <div className="relative mb-6 ml-6 flex flex-col">
+              <div className="relative mb-6 xl:ml-6 flex flex-col">
                 <label htmlFor="title" className="text-[#676767]">
                   Property Title
                 </label>
@@ -1027,13 +1027,13 @@ const PropertyManagement = () => {
                   value={title}
                   required={true}
                   onChange={({ target }) => setTitle(target.value)}
-                  className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                  className="sm:w-[620px] xs:w-[420px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                 />
                 <span className="absolute inset-y-12 right-0 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer">
                   *
                 </span>
               </div>
-              <div className="relative mb-6 ml-6 flex flex-col">
+              <div className="relative mb-6 xl:ml-6 flex flex-col">
                 <label htmlFor="title" className="text-[#676767]">
                   Property Overview
                 </label>
@@ -1045,13 +1045,13 @@ const PropertyManagement = () => {
                   required={true}
                   onChange={({ target }) => setOverview(target.value)}
                   style={{ height: "46px" }}
-                  className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 resize-none rounded-full"
+                  className="sm:w-[620px] xs:w-[420px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 resize-none rounded-full"
                 />
                 <span className="absolute inset-y-12 right-0 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer">
                   *
                 </span>
               </div>
-              <div className="mb-6 ml-6 flex flex-col">
+              <div className="mb-6 xl:ml-6 flex flex-col">
                 <label htmlFor="shares-slider" className="text-gray-600">
                   Total Number of Shares: <strong>{numOfShares}</strong>
                 </label>
@@ -1064,7 +1064,7 @@ const PropertyManagement = () => {
                   step="1"
                   value={numOfShares}
                   onChange={({ target }) => setNumberOfShares(target.value)}
-                  className="slider w-[620px] h-2 my-auto rounded-full bg-[#116A7B30] outline-none appearance-none"
+                  className="slider sm:w-[620px] xs:w-[420px] w-[320px] h-2 my-auto rounded-full bg-[#116A7B30] outline-none appearance-none"
                   style={{
                     backgroundSize: `${((numOfShares - 1) / 24) * 100}%`,
                     backgroundImage: `
@@ -1076,7 +1076,7 @@ const PropertyManagement = () => {
                   }}
                 />
               </div>
-              <div className="relative mb-6 ml-6 flex flex-col">
+              <div className="relative mb-6 xl:ml-6 flex flex-col">
                 <label htmlFor="totalPrize" className="text-[#676767]">
                   Total Price {`($)`}
                 </label>
@@ -1086,13 +1086,13 @@ const PropertyManagement = () => {
                   value={totalPrize}
                   required={true}
                   onChange={({ target }) => setTotalPrize(target.value)}
-                  className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                  className="sm:w-[620px] xs:w-[420px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                 />
                 <span className="absolute inset-y-12 right-0 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer">
                   *
                 </span>
               </div>
-              <div className="relative mb-6 ml-6 flex flex-col">
+              <div className="relative mb-6 xl:ml-6 flex flex-col">
                 <label htmlFor="areaSize" className="text-[#676767]">
                   Area Size{" "}
                   {`(${
@@ -1105,13 +1105,13 @@ const PropertyManagement = () => {
                   value={areaSize}
                   required={true}
                   onChange={({ target }) => setAreaSize(target.value)}
-                  className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                  className="sm:w-[620px] xs:w-[420px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                 />
                 <span className="absolute inset-y-12 right-0 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer">
                   *
                 </span>
               </div>
-              <div className="relative mb-6 ml-6 flex flex-col">
+              <div className="relative mb-6 xl:ml-6 flex flex-col">
                 <label htmlFor="title" className="text-[#676767]">
                   Duration
                   {startDate && endDate ? `: ${startDate} to ${endDate}` : ""}
@@ -1125,14 +1125,14 @@ const PropertyManagement = () => {
                     const date = new Date(target.value);
                     setStartDate(date.toISOString().split("T")[0]);
                   }}
-                  className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                  className="sm:w-[620px] xs:w-[420px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                 />
                 <span className="absolute inset-y-12 right-0 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer">
                   *
                 </span>
               </div>
 
-              <div className="relative mb-6 ml-6 flex flex-col">
+              <div className="relative mb-6 xl:ml-6 flex flex-col">
                 <div>
                   <label htmlFor="propertyType" className="text-[#676767]">
                     Property Type
@@ -1147,7 +1147,7 @@ const PropertyManagement = () => {
                         setSelectedPropertyType(target.value);
                       }
                     }}
-                    className="inline-flex mx-10 border border-[#116A7B30] rounded-full px-3 focus:border-[#116A7B] outline-none"
+                    className="inline-flex sm:mx-10 ml-1 border border-[#116A7B30] rounded-full px-3 focus:border-[#116A7B] outline-none"
                   >
                     {propertyTypes.map((type, index) => (
                       <option key={index} value={type}>
@@ -1162,7 +1162,7 @@ const PropertyManagement = () => {
                   value={selectedPropertyType}
                   required={true}
                   readOnly={true}
-                  className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                  className="sm:w-[620px] xs:w-[420px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                 />
                 <span className="absolute inset-y-12 right-0 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer">
                   *
@@ -1178,7 +1178,7 @@ const PropertyManagement = () => {
               <div className="w-full flex flex-row items-center pb-8">
                 <h1 className="text-2xl font-medium">Address</h1>
               </div>
-              <div className="relative mb-6 ml-6 flex flex-col">
+              <div className="relative mb-6 xl:ml-6 flex flex-col">
                 <label htmlFor="houseNumber" className="text-[#676767]">
                   House Number
                 </label>
@@ -1188,13 +1188,13 @@ const PropertyManagement = () => {
                   value={houseNumber}
                   required={true}
                   onChange={({ target }) => setHouseNumber(target.value)}
-                  className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                  className="sm:w-[620px] xs:w-[420px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                 />
                 <span className="absolute inset-y-12 right-0 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer">
                   *
                 </span>
               </div>
-              <div className="relative mb-6 ml-6 flex flex-col">
+              <div className="relative mb-6 xl:ml-6 flex flex-col">
                 <label htmlFor="streetNumber" className="text-[#676767]">
                   Street Number
                 </label>
@@ -1204,13 +1204,13 @@ const PropertyManagement = () => {
                   value={streetNumber}
                   required={true}
                   onChange={({ target }) => setStreetNumber(target.value)}
-                  className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                  className="sm:w-[620px] xs:w-[420px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                 />
                 <span className="absolute inset-y-12 right-0 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer">
                   *
                 </span>
               </div>
-              <div className="relative mb-6 ml-6 flex flex-col">
+              <div className="relative mb-6 xl:ml-6 flex flex-col">
                 <label htmlFor="zipCode" className="text-[#676767]">
                   Zip Code
                 </label>
@@ -1220,13 +1220,13 @@ const PropertyManagement = () => {
                   value={zipCode}
                   required={true}
                   onChange={({ target }) => setZipCode(target.value)}
-                  className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                  className="sm:w-[620px] xs:w-[420px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                 />
                 <span className="absolute inset-y-12 right-0 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer">
                   *
                 </span>
               </div>
-              <div className="relative mb-6 ml-6 flex flex-col">
+              <div className="relative mb-6 xl:ml-6 flex flex-col">
                 <div>
                   <label htmlFor="country" className="text-[#676767]">
                     Country
@@ -1245,7 +1245,7 @@ const PropertyManagement = () => {
                         setSelectedCountry(country);
                       }
                     }}
-                    className="inline-flex mx-10 border border-[#116A7B30] rounded-full px-3 focus:border-[#116A7B] outline-none"
+                    className="w-52 inline-flex sm:mx-10 ml-1 border border-[#116A7B30] rounded-full px-3 focus:border-[#116A7B] outline-none"
                   >
                     <option value="Select">Select</option>
                     {allCountries.map((country, index) => (
@@ -1261,13 +1261,13 @@ const PropertyManagement = () => {
                   value={selectedCountry?.name}
                   required={true}
                   readOnly={true}
-                  className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                  className="sm:w-[620px] xs:w-[420px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                 />
                 <span className="absolute inset-y-12 right-0 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer">
                   *
                 </span>
               </div>
-              <div className="relative mb-6 ml-6 flex flex-col">
+              <div className="relative mb-6 xl:ml-6 flex flex-col">
                 <div>
                   <label htmlFor="state" className="text-[#676767]">
                     State/Province
@@ -1282,7 +1282,7 @@ const PropertyManagement = () => {
                         setSelectedState(target.value);
                       }
                     }}
-                    className="inline-flex mx-10 border border-[#116A7B30] rounded-full px-3 focus:border-[#116A7B] outline-none"
+                    className="inline-flex sm:mx-10 ml-1 border border-[#116A7B30] rounded-full px-3 focus:border-[#116A7B] outline-none"
                   >
                     <option value="Select">Select</option>
                     {allStates?.map((state, index) => (
@@ -1298,13 +1298,13 @@ const PropertyManagement = () => {
                   value={selectedState}
                   required={true}
                   readOnly={true}
-                  className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                  className="sm:w-[620px] xs:w-[420px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                 />
                 <span className="absolute inset-y-12 right-0 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer">
                   *
                 </span>
               </div>
-              <div className="relative mb-6 ml-6 flex flex-col">
+              <div className="relative mb-6 xl:ml-6 flex flex-col">
                 <div>
                   <label htmlFor="City" className="text-[#676767]">
                     City
@@ -1335,10 +1335,10 @@ const PropertyManagement = () => {
                   value={selectedCity}
                   required={true}
                   readOnly={true}
-                  className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                  className="sm:w-[620px] xs:w-[420px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                 />
               </div>
-              <div className="mb-6 ml-6 flex flex-col">
+              <div className="mb-6 xl:ml-6 flex flex-col">
                 <label htmlFor="fullAddress" className="text-[#676767]">
                   Full Address
                 </label>
@@ -1348,7 +1348,7 @@ const PropertyManagement = () => {
                   value={fullAddress}
                   required={true}
                   onChange={({ target }) => setFullAddress(target.value)}
-                  className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                  className="sm:w-[620px] xs:w-[420px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                 />
               </div>
               {/* <div className="mb-6 ml-6 flex flex-col">
@@ -1358,7 +1358,7 @@ const PropertyManagement = () => {
               className="w-[620px] bg-transparent outline-none px-5 py-2 mt-3 rounded-full"
             />
           </div> */}
-              <div className="mb-6 ml-6 flex flex-col relative">
+              <div className="mb-6 xl:ml-6 flex flex-col relative">
                 <label htmlFor="searchLocation" className="text-[#676767]">
                   Search Location
                 </label>
@@ -1369,9 +1369,9 @@ const PropertyManagement = () => {
                   required={true}
                   onChange={handleSearch}
                   placeholder="Search..."
-                  className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                  className="sm:w-[620px] xs:w-[420px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                 />
-                <div className="absolute w-[620px] z-[5000] top-20">
+                <div className="absolute sm:w-[620px] xs:w-[420px] w-[320px] z-[5000] top-20">
                   {results.length > 0 && (
                     <ul className="mx-5 bg-white p-3">
                       {results.map((item, index) => (
@@ -1394,7 +1394,7 @@ const PropertyManagement = () => {
                 handleCoordinates={handleLocation}
                 marker={coordinates}
               />
-              <div className="relative mb-6 ml-6 flex flex-col">
+              <div className="relative mb-6 xl:ml-6 flex flex-col">
                 <label htmlFor="fullAddress" className="text-[#676767]">
                   Latitude
                 </label>
@@ -1413,14 +1413,14 @@ const PropertyManagement = () => {
                     });
                   }}
                   placeholder="Click on the map..."
-                  className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                  className="sm:w-[620px] xs:w-[420px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                 />
                 <span className="absolute inset-y-12 right-0 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer">
                   *
                 </span>
               </div>
 
-              <div className="relative mb-6 ml-6 flex flex-col">
+              <div className="relative mb-6 xl:ml-6 flex flex-col">
                 <label htmlFor="fullAddress" className="text-[#676767]">
                   Longitude
                 </label>
@@ -1439,7 +1439,7 @@ const PropertyManagement = () => {
                     });
                   }}
                   placeholder="Click on the map..."
-                  className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                  className="sm:w-[620px] xs:w-[420px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                 />
                 <span className="absolute inset-y-12 right-0 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer">
                   *
@@ -1452,7 +1452,7 @@ const PropertyManagement = () => {
               <div className="w-full flex flex-row items-center pb-8">
                 <h1 className="text-2xl font-medium">Main Features</h1>
               </div>
-              <div className="mb-6 ml-6 flex flex-col">
+              <div className="mb-6 xl:ml-6 flex flex-col">
                 <label htmlFor="yearBuilt" className="text-[#676767]">
                   Year Built
                 </label>
@@ -1462,10 +1462,10 @@ const PropertyManagement = () => {
                   value={yearBuilt}
                   required={true}
                   onChange={({ target }) => setYearBuilt(target.value)}
-                  className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                  className="sm:w-[620px] xs:w-[420px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                 />
               </div>
-              <div className="mb-6 ml-6 flex flex-col">
+              <div className="mb-6 xl:ml-6 flex flex-col">
                 <label htmlFor="floorCount" className="text-[#676767]">
                   Floor Count
                 </label>
@@ -1475,10 +1475,10 @@ const PropertyManagement = () => {
                   value={floorCount}
                   required={true}
                   onChange={({ target }) => setFloorCount(target.value)}
-                  className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                  className="sm:w-[620px] xs:w-[420px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                 />
               </div>
-              <div className="mb-6 ml-6 flex flex-col">
+              <div className="mb-6 xl:ml-6 flex flex-col">
                 <label htmlFor="parkingSpace" className="text-[#676767]">
                   Parking Space
                 </label>
@@ -1488,10 +1488,10 @@ const PropertyManagement = () => {
                   value={parkingSpace}
                   required={true}
                   onChange={({ target }) => setParkingSpace(target.value)}
-                  className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                  className="sm:w-[620px] xs:w-[420px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                 />
               </div>
-              <div className="mb-6 ml-6 flex flex-col">
+              <div className="mb-6 xl:ml-6 flex flex-col">
                 <label htmlFor="elevators" className="text-[#676767]">
                   Elevators
                 </label>
@@ -1501,10 +1501,10 @@ const PropertyManagement = () => {
                   value={elevators}
                   required={true}
                   onChange={({ target }) => setElevators(target.value)}
-                  className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                  className="sm:w-[620px] xs:w-[420px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                 />
               </div>
-              <div className="mb-6 ml-6 flex flex-col">
+              <div className="mb-6 xl:ml-6 flex flex-col">
                 <div>
                   <label htmlFor="otherFeatures" className="text-[#676767]">
                     Other Features
@@ -1517,7 +1517,7 @@ const PropertyManagement = () => {
                         handleAddTags(0, target.value);
                       }
                     }}
-                    className="inline-flex mx-10 border border-[#116A7B30] rounded-full px-3 focus:border-[#116A7B] outline-none"
+                    className="inline-flex sm:mx-10 ml-2 border border-[#116A7B30] rounded-full px-3 focus:border-[#116A7B] outline-none"
                   >
                     {mainFeaturesList.map((type, index) => (
                       <option key={index} value={type}>
@@ -1526,7 +1526,7 @@ const PropertyManagement = () => {
                     ))}
                   </select>
                 </div>
-                <div className="w-[620px] min-h-[46px] flex flex-wrap items-center border border-[#116A7B30] focus-within:border-[#116A7B] rounded-full px-5 py-2 mt-3 outline-none">
+                <div className="sm:w-[620px] xs:w-[420px] w-[320px] min-h-[46px] flex flex-wrap items-center border border-[#116A7B30] focus-within:border-[#116A7B] rounded-full px-5 py-2 mt-3 outline-none">
                   {selectedTags[0].tagsByName.map((tag, index) => (
                     <div
                       key={index}
@@ -1543,7 +1543,7 @@ const PropertyManagement = () => {
                   ))}
                 </div>
               </div>
-              <div className="mb-6 ml-6 flex flex-col">
+              <div className="mb-6 xl:ml-6 flex flex-col">
                 <input
                   type="button"
                   name="noName"
@@ -1553,7 +1553,7 @@ const PropertyManagement = () => {
               <div className="w-full flex flex-row items-center pb-8">
                 <h1 className="text-2xl font-medium">Rooms Detail</h1>
               </div>
-              <div className="mb-6 ml-6 flex flex-col">
+              <div className="mb-6 xl:ml-6 flex flex-col">
                 <div>
                   <label htmlFor="selectedNumOfBeds" className="text-[#676767]">
                     Beds
@@ -1583,10 +1583,10 @@ const PropertyManagement = () => {
                   value={selectedNumOfBeds}
                   required={true}
                   readOnly={true}
-                  className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                  className="sm:w-[620px] xs:w-[420px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                 />
               </div>
-              <div className="mb-6 ml-6 flex flex-col">
+              <div className="mb-6 xl:ml-6 flex flex-col">
                 <div>
                   <label htmlFor="numOfBaths" className="text-[#676767]">
                     Baths
@@ -1616,10 +1616,10 @@ const PropertyManagement = () => {
                   value={selectedNumOfBaths}
                   required={true}
                   readOnly={true}
-                  className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                  className="sm:w-[620px] xs:w-[420px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                 />
               </div>
-              <div className="mb-6 ml-6 flex flex-col">
+              <div className="mb-6 xl:ml-6 flex flex-col">
                 <label htmlFor="servantQuater" className="text-[#676767]">
                   Servant Quater
                 </label>
@@ -1629,10 +1629,10 @@ const PropertyManagement = () => {
                   value={servantQuater}
                   required={true}
                   onChange={({ target }) => setServantQuater(target.value)}
-                  className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                  className="sm:w-[620px] xs:w-[420px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                 />
               </div>
-              <div className="mb-6 ml-6 flex flex-col">
+              <div className="mb-6 xl:ml-6 flex flex-col">
                 <label htmlFor="kitchens" className="text-[#676767]">
                   Kitchens
                 </label>
@@ -1642,10 +1642,10 @@ const PropertyManagement = () => {
                   value={kitchens}
                   required={true}
                   onChange={({ target }) => setKitchens(target.value)}
-                  className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                  className="sm:w-[620px] xs:w-[420px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                 />
               </div>
-              <div className="mb-6 ml-6 flex flex-col">
+              <div className="mb-6 xl:ml-6 flex flex-col">
                 <div>
                   <label htmlFor="otherFeatures" className="text-[#676767]">
                     Other Features
@@ -1658,7 +1658,7 @@ const PropertyManagement = () => {
                         handleAddTags(1, target.value);
                       }
                     }}
-                    className="inline-flex mx-10 border border-[#116A7B30] rounded-full px-3 focus:border-[#116A7B] outline-none"
+                    className="inline-flex sm:mx-10 ml-2 border border-[#116A7B30] rounded-full px-3 focus:border-[#116A7B] outline-none"
                   >
                     {roomsDetailList.map((type, index) => (
                       <option key={index} value={type}>
@@ -1667,7 +1667,7 @@ const PropertyManagement = () => {
                     ))}
                   </select>
                 </div>
-                <div className="w-[620px] min-h-[46px] flex flex-wrap items-center border border-[#116A7B30] focus-within:border-[#116A7B] rounded-full px-5 py-2 mt-3 outline-none">
+                <div className="sm:w-[620px] xs:w-[420px] w-[320px] min-h-[46px] flex flex-wrap items-center border border-[#116A7B30] focus-within:border-[#116A7B] rounded-full px-5 py-2 mt-3 outline-none">
                   {selectedTags[1].tagsByName.map((tag, index) => (
                     <div
                       key={index}
@@ -1684,7 +1684,7 @@ const PropertyManagement = () => {
                   ))}
                 </div>
               </div>
-              <div className="mb-6 ml-6 flex flex-col">
+              <div className="mb-6 xl:ml-6 flex flex-col">
                 <input
                   type="button"
                   name="noName"
@@ -1696,7 +1696,7 @@ const PropertyManagement = () => {
                   Business and Communication
                 </h1>
               </div>
-              <div className="mb-6 ml-6 flex flex-col">
+              <div className="mb-6 xl:ml-6 flex flex-col">
                 <div>
                   <label htmlFor="features" className="text-[#676767]">
                     Features
@@ -1718,7 +1718,7 @@ const PropertyManagement = () => {
                     ))}
                   </select>
                 </div>
-                <div className="w-[620px] min-h-[46px] flex flex-wrap items-center border border-[#116A7B30] focus-within:border-[#116A7B] rounded-full px-5 py-2 mt-3 outline-none">
+                <div className="sm:w-[620px] xs:w-[420px] w-[320px] min-h-[46px] flex flex-wrap items-center border border-[#116A7B30] focus-within:border-[#116A7B] rounded-full px-5 py-2 mt-3 outline-none">
                   {selectedTags[2].tagsByName.map((tag, index) => (
                     <div
                       key={index}
@@ -1735,7 +1735,7 @@ const PropertyManagement = () => {
                   ))}
                 </div>
               </div>
-              <div className="mb-6 ml-6 flex flex-col">
+              <div className="mb-6 xl:ml-6 flex flex-col">
                 <input
                   type="button"
                   name="noName"
@@ -1745,7 +1745,7 @@ const PropertyManagement = () => {
               <div className="w-full flex flex-row items-center pb-8">
                 <h1 className="text-2xl font-medium">Community</h1>
               </div>
-              <div className="mb-6 ml-6 flex flex-col">
+              <div className="mb-6 xl:ml-6 flex flex-col">
                 <div>
                   <label htmlFor="features" className="text-[#676767]">
                     Features
@@ -1767,7 +1767,7 @@ const PropertyManagement = () => {
                     ))}
                   </select>
                 </div>
-                <div className="w-[620px] min-h-[46px] flex flex-wrap items-center border border-[#116A7B30] focus-within:border-[#116A7B] rounded-full px-5 py-2 mt-3 outline-none">
+                <div className="sm:w-[620px] xs:w-[420px] w-[320px] min-h-[46px] flex flex-wrap items-center border border-[#116A7B30] focus-within:border-[#116A7B] rounded-full px-5 py-2 mt-3 outline-none">
                   {selectedTags[3].tagsByName.map((tag, index) => (
                     <div
                       key={index}
@@ -1784,7 +1784,7 @@ const PropertyManagement = () => {
                   ))}
                 </div>
               </div>
-              <div className="mb-6 ml-6 flex flex-col">
+              <div className="mb-6 xl:ml-6 flex flex-col">
                 <input
                   type="button"
                   name="noName"
@@ -1796,7 +1796,7 @@ const PropertyManagement = () => {
                   Health and Recreational
                 </h1>
               </div>
-              <div className="mb-6 ml-6 flex flex-col">
+              <div className="mb-6 xl:ml-6 flex flex-col">
                 <div>
                   <label htmlFor="features" className="text-[#676767]">
                     Features
@@ -1818,7 +1818,7 @@ const PropertyManagement = () => {
                     ))}
                   </select>
                 </div>
-                <div className="w-[620px] min-h-[46px] flex flex-wrap items-center border border-[#116A7B30] focus-within:border-[#116A7B] rounded-full px-5 py-2 mt-3 outline-none">
+                <div className="sm:w-[620px] xs:w-[420px] w-[320px] min-h-[46px] flex flex-wrap items-center border border-[#116A7B30] focus-within:border-[#116A7B] rounded-full px-5 py-2 mt-3 outline-none">
                   {selectedTags[4].tagsByName.map((tag, index) => (
                     <div
                       key={index}
@@ -1835,7 +1835,7 @@ const PropertyManagement = () => {
                   ))}
                 </div>
               </div>
-              <div className="mb-6 ml-6 flex flex-col">
+              <div className="mb-6 xl:ml-6 flex flex-col">
                 <input
                   type="button"
                   name="noName"
@@ -1847,7 +1847,7 @@ const PropertyManagement = () => {
                   Nearby Facilities and Locations
                 </h1>
               </div>
-              <div className="mb-6 ml-6 flex flex-col">
+              <div className="mb-6 xl:ml-6 flex flex-col">
                 <label htmlFor="distanceFromAirport" className="text-[#676767]">
                   Distance From Airport {"(km)"}
                 </label>
@@ -1859,10 +1859,10 @@ const PropertyManagement = () => {
                   onChange={({ target }) =>
                     setDistanceFromAirport(target.value)
                   }
-                  className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                  className="sm:w-[620px] xs:w-[420px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                 />
               </div>
-              <div className="mb-6 ml-6 flex flex-col">
+              <div className="mb-6 xl:ml-6 flex flex-col">
                 <div>
                   <label htmlFor="features" className="text-[#676767]">
                     Other Features
@@ -1875,7 +1875,7 @@ const PropertyManagement = () => {
                         handleAddTags(5, target.value);
                       }
                     }}
-                    className="inline-flex mx-10 border border-[#116A7B30] rounded-full px-3 focus:border-[#116A7B] outline-none"
+                    className="inline-flex sm:mx-10 ml-2 border border-[#116A7B30] rounded-full px-3 focus:border-[#116A7B] outline-none"
                   >
                     {nearbyFacilitiesAndLocationsList.map((type, index) => (
                       <option key={index} value={type}>
@@ -1884,7 +1884,7 @@ const PropertyManagement = () => {
                     ))}
                   </select>
                 </div>
-                <div className="w-[620px] min-h-[46px] flex flex-wrap items-center border border-[#116A7B30] focus-within:border-[#116A7B] rounded-full px-5 py-2 mt-3 outline-none">
+                <div className="sm:w-[620px] xs:w-[420px] w-[320px] min-h-[46px] flex flex-wrap items-center border border-[#116A7B30] focus-within:border-[#116A7B] rounded-full px-5 py-2 mt-3 outline-none">
                   {selectedTags[5].tagsByName.map((tag, index) => (
                     <div
                       key={index}
@@ -1909,7 +1909,7 @@ const PropertyManagement = () => {
                 <h1 className="text-2xl font-medium">Upload Images</h1>
               </div>
               <div
-                className={`mb-6 ml-6 flex ${
+                className={`mb-6 xl:ml-6 flex ${
                   myProperties[propertyByIndex]?.imageCount > 0
                     ? "flex-col"
                     : "flex-row"
@@ -1925,12 +1925,12 @@ const PropertyManagement = () => {
                     accept="image/png"
                     required={true}
                     onChange={({ target }) => setFiles(target.files)}
-                    className="w-[620px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                    className="sm:w-[620px] xs:w-[420px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                   />
                 </div>
                 {myProperties[propertyByIndex]?.imageCount > 0 ? (
                   <div
-                    className="relative flex flex-row gap-x-3 overflow-y-visible overflow-x-auto my-5"
+                    className="relative flex flex-row flex-wrap gap-x-3 overflow-y-visible overflow-x-auto my-5"
                     style={{ maxWidth: "fit" }}
                   >
                     {Array.from(
@@ -2015,7 +2015,7 @@ const PropertyManagement = () => {
               </div> */}
             </>
           )}
-          <div className="submit-button mb-6 ml-6 flex flex-row space-x-3">
+          <div className="submit-button mb-6 xl:ml-6 flex flex-row space-x-3">
             {formPhase < 3 && (
               <button
                 type="button"
@@ -2058,7 +2058,7 @@ const PropertyManagement = () => {
         </form>
       ) : (
         <>
-          <div className="flex items-center justify-start md:space-x-20 space-x-14 my-3 px-14 text-white text-2xl font-semibold">
+          <div className="flex items-center justify-start md:space-x-20 space-x-14 my-3 sm:px-14 px-5 text-white text-2xl font-semibold">
             <button
               onClick={() =>
                 dispatch(updateActivePropertyManagementTab("Listings"))
@@ -2075,7 +2075,7 @@ const PropertyManagement = () => {
               </h1>
             </button>
             {/* <Link href={`${process.env.NEXT_PUBLIC_HOST}/chef`}> */}
-            <button
+            {/* <button
               onClick={() => {
                 dispatch(updateActivePropertyManagementTab("Purchases"));
                 fetchMyPurchase();
@@ -2090,8 +2090,8 @@ const PropertyManagement = () => {
               >
                 Purchases
               </h2>
-            </button>
-            <button
+            </button> */}
+            {/* <button
               onClick={() => {
                 dispatch(updateActivePropertyManagementTab("Reservations"));
                 fetchMyReservations();
@@ -2106,7 +2106,7 @@ const PropertyManagement = () => {
               >
                 Reservations
               </h2>
-            </button>
+            </button> */}
             <button
               onClick={() => {
                 dispatch(updateActivePropertyManagementTab("Rentals"));
@@ -2156,7 +2156,7 @@ const PropertyManagement = () => {
                     onClick={(e) =>
                       handleClickToAdd(e, property.listingStatus, index)
                     }
-                    className="w-full flex flex-row flex-wrap border border-[#D9D9D9] px-14 mb-5 cursor-pointer"
+                    className="w-full flex flex-row flex-wrap border border-[#D9D9D9] sm:px-14 px-5 mb-5 cursor-pointer"
                   >
                     {property?.imageCount > 0 ? (
                       <Image
@@ -2169,35 +2169,35 @@ const PropertyManagement = () => {
                             ? "1"
                             : `${property?.pinnedImageIndex}`
                         }.png`}
-                        className="w-64 h-60 object-cover object-center"
+                        className="md:w-64 w-52 md:h-60 h-48 object-cover object-center"
                       />
                     ) : (
                       <Image
                         width={1000}
                         height={1000}
                         src={"/assets/user/property-management/no-image.jpg"}
-                        className="w-64 h-60 object-cover object-center"
+                        className="md:w-64 w-52 md:h-60 h-48 object-cover object-center"
                       />
                     )}
-                    <div className="ml-10 space-y-4 mt-5">
-                      <div className="flex flex-row text-xl text-[#09363F]">
-                        <h1 className="w-80 text-xl font-medium">
+                    <div className="lg:ml-10 md:ml-5 sm:ml-auto md:space-y-4 space-y-2 md:mt-5 mt-3">
+                      <div className="flex flex-row md:text-xl text-base text-[#09363F]">
+                        <h1 className="lg:w-80 md:w-44 w-36 font-medium">
                           Property Title:{" "}
                         </h1>
-                        <p className="ml-44">{property?.title}</p>
+                        <p className="lg:ml-44 ml-10">{property?.title}</p>
                       </div>
-                      <div className="flex flex-row text-xl text-[#09363F]">
-                        <h1 className="w-80 text-xl font-medium">
+                      <div className="flex flex-row md:text-xl text-base text-[#09363F]">
+                        <h1 className="lg:w-80 md:w-44 w-36 font-medium">
                           PropertyID:{" "}
                         </h1>
-                        <p className="ml-44">{property?.propertyID}</p>
+                        <p className="lg:ml-44 ml-10">{property?.propertyID}</p>
                       </div>
-                      <div className="flex flex-row text-xl text-[#09363F]">
-                        <h1 className="w-80 text-xl font-medium">
+                      <div className="flex flex-row md:text-xl text-base text-[#09363F]">
+                        <h1 className="lg:w-80 md:w-44 w-36 font-medium">
                           Property Status:{" "}
                         </h1>
                         <p
-                          className={`ml-44 ${
+                          className={`lg:ml-44 ml-10 ${
                             property?.listingStatus === "live"
                               ? "text-[#36FE62]"
                               : property?.listingStatus === "pending approval"
@@ -2210,17 +2210,19 @@ const PropertyManagement = () => {
                           {property?.listingStatus}
                         </p>
                       </div>
-                      <div className="flex flex-row text-xl text-[#09363F]">
-                        <h1 className="w-80 text-xl font-medium">
+                      <div className="flex flex-row md:text-xl text-base text-[#09363F]">
+                        <h1 className="lg:w-80 md:w-44 w-36 font-medium">
                           Total Shares:{" "}
                         </h1>
-                        <p className="ml-44">{property?.totalStakes}</p>
+                        <p className="lg:ml-44 ml-10">
+                          {property?.totalStakes}
+                        </p>
                       </div>
-                      <div className="flex flex-row text-xl text-[#09363F]">
-                        <h1 className="w-80 text-xl font-medium">
+                      <div className="flex flex-row md:text-xl text-base text-[#09363F]">
+                        <h1 className="lg:w-80 md:w-44 w-36 font-medium">
                           Available Shares:{" "}
                         </h1>
-                        <p className="ml-44">
+                        <p className="lg:ml-44 ml-10">
                           {property?.totalStakes - property?.stakesOccupied}
                         </p>
                       </div>
@@ -2228,8 +2230,8 @@ const PropertyManagement = () => {
                     {JSON.parse(localStorage.getItem("userDetails")).role &&
                       property.listingStatus !== "pending approval" &&
                       property.listingStatus !== "draft" && (
-                        <div className=" mx-auto">
-                          <div className="flex flex-row space-x-4 space-y-4 items-center justify-center">
+                        <div className="md:mx-auto sm:ml-auto sm:my-0 my-3">
+                          <div className="flex flex-row space-x-4 sm:space-y-4 space-y-2 items-center justify-center">
                             <h1 className="w-20 text-xl font-medium mt-3">
                               Feature:{" "}
                             </h1>
@@ -2527,7 +2529,7 @@ const PropertyManagement = () => {
                   </Link>
                 ))
               ) : (
-                <h1 className="text-2xl text-[#116A7B] font-semibold px-14">
+                <h1 className="text-2xl h-[88vh] text-[#116A7B] font-semibold sm:px-14 px-5">
                   No Rentals Yet.
                 </h1>
               )}
