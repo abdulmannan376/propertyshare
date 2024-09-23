@@ -19,7 +19,6 @@ const MapArea = ({ searchedCoordinate, handleCoordinates }) => {
   const [marker, setMarker] = useState(null);
 
   useEffect(() => {
-    // console.log("window: ", window);
     if (typeof window !== "undefined") {
       navigator.geolocation.getCurrentPosition(
         (position) => {

@@ -134,7 +134,6 @@ const Page = () => {
   // }
 
   const params = useParams();
-  console.log("params: ", params);
 
   const [propertyID, setPropertyID] = useState(params.propertyID || null);
   const [property, setProperty] = useState({});
@@ -145,7 +144,6 @@ const Page = () => {
   const fetchData = async () => {
     try {
       const role = JSON.parse(localStorage.getItem("userDetails")).role;
-      console.log(role);
       if (role !== "admin" && role !== "super admin") {
         setTimeout(() => {
           router.push("/");

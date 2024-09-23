@@ -12,9 +12,7 @@ export const SocketProvider = ({ children }) => {
 
   useEffect(() => {
     // if (!socket) {
-    console.log("in useSocket, socket: ", socket)
     const userDetails = JSON.parse(localStorage.getItem("userDetails"));
-    // console.log(userDetails);
     if (userDetails && !socket) {
       const newSocket = io(process.env.NEXT_PUBLIC_WEBSOCKET_HOST, {
         transports: ["websocket"],

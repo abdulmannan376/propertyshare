@@ -81,7 +81,6 @@ const RaiseRequest = () => {
 
   const fetchRaiseRequests = async (tag) => {
     try {
-      console.log("in fetchRaiseRequests with tag: ", tag);
       setIsLoading(true);
 
       const username = JSON.parse(localStorage.getItem("userDetails")).username;
@@ -380,7 +379,6 @@ const RaiseRequest = () => {
   const [threads, setThreads] = useState([]);
 
   const fetchThreads = async (shareID, category, requestID) => {
-    console.log(shareID, category, requestID);
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_SERVER_HOST}/thread/get-root-threads/${shareID}/${category}/?requestID=${requestID}`,
@@ -476,8 +474,6 @@ const RaiseRequest = () => {
         usernameList: usernameList,
         username: JSON.parse(localStorage.getItem("userDetails")).username,
       };
-      // console.log("sharesList: ", sharesList);
-      // console.log("usernameList: ", usernameList);
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_SERVER_HOST}/property/update-raise-request-action-by-PO`,
         {

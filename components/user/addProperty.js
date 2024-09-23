@@ -67,7 +67,6 @@ const PropertyManagement = () => {
 
   const TextArea = () => {
     const textRef = useRef();
-    console.log(`${textRef.current}`);
     return (
       <textarea
         ref={textRef}
@@ -148,7 +147,6 @@ const PropertyManagement = () => {
       setIsAddPropertyClicked(true);
       setPropertyByIndex(index);
       setPinnedImage(property.pinnedImageIndex);
-      console.log("length: ", Object.keys(property.amenitiesID)?.length);
       if (Object.keys(property.amenitiesID)?.length > 2) {
         const amenities = property.amenitiesID;
         setYearBuilt(amenities.mainFeatures?.inputs?.yearBuilt || "");
@@ -276,12 +274,10 @@ const PropertyManagement = () => {
     const duration = numOfShares * 14;
     const afterDuration = new Date();
     afterDuration.setDate(date.getDate() + duration);
-    console.log("in useEffect: ", afterDuration.toISOString().split("T")[0]);
     setEndDate(afterDuration.toISOString().split("T")[0]);
   }, [startDate, numOfShares]);
 
   useEffect(() => {
-    console.log("in useEffect");
     if (listingStatus !== "draft") {
       if (selectedCountry) {
         setAllStates(compCities.getStatesByShort(selectedCountry.shortName));
@@ -541,7 +537,6 @@ const PropertyManagement = () => {
           //   );
           // } else {
           // }
-          // console.log(formData.get("propertyID"))
           res = await fetch(
             `${process.env.NEXT_PUBLIC_SERVER_HOST}/property/upload-property-images`,
             {
@@ -639,7 +634,6 @@ const PropertyManagement = () => {
   ];
 
   const handleAddTags = (index, value) => {
-    console.log("Called handleAddTags with index:", index, "and value:", value);
 
     // Function to convert string to camelCase
     const toCamelCase = (str) => {
@@ -654,7 +648,6 @@ const PropertyManagement = () => {
     setSelectedTags((prevData) => {
       // Check if the camelCase value already exists in the tagsByName array at the given index
       if (!prevData[index].tagsByName.includes(value)) {
-        console.log("Adding new camelCase tag:", camelCaseValue);
         // Create a new array with all the previous data
         const newData = prevData.map((item, idx) => {
           if (idx === index) {
@@ -674,7 +667,6 @@ const PropertyManagement = () => {
   };
 
   const handleAddTagsByCamelCase = (index, value) => {
-    console.log("Called handleAddTags with index:", index, "and value:", value);
 
     // Function to convert camelCase string to human-readable format
     const toHumanReadable = (str) => {

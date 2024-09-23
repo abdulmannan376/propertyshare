@@ -56,7 +56,6 @@ const FilterComponent = ({
 
   const handleDropdownActivity = (field, value, e) => {
     e.preventDefault();
-    console.log("in handle dropdown activity");
     setDropdownsStatus((prevDetails) => {
       const newDetails = { ...prevDetails };
       newDetails[field] = value;
@@ -65,7 +64,6 @@ const FilterComponent = ({
   };
   const dispatch = useDispatch();
   const handleFilterClick = (index, dataIndex, value) => {
-    // console.log(index, id, value, key);
 
     if (index === 0) {
       if (value) {
@@ -143,7 +141,6 @@ const FilterComponent = ({
       );
 
       const response = await res.json();
-      console.log("response: ", response);
       onPropertyFilterSelect(response.body);
     } else {
       onPropertyFilterSelect([]);
@@ -179,7 +176,6 @@ const FilterComponent = ({
 
   const applyBtnRef = useRef();
   useEffect(() => {
-    console.log("in page useEffect");
     if (!isFilterUpdated) {
       applyBtnRef.current.classList.remove("translate-x-10");
       applyBtnRef.current.classList.remove("z-0");

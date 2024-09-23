@@ -198,7 +198,6 @@ const Page = () => {
   const applyBtnRef = useRef();
   const applyBtnInMobRef = useRef();
   useEffect(() => {
-    console.log("in page useEffect");
     if (!isFilterUpdated) {
       applyBtnRef.current.classList.remove("-translate-y-0");
       applyBtnRef.current.classList.remove("z-0");

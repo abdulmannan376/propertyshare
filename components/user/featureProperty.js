@@ -28,7 +28,9 @@ const FeaturedManagement = () => {
           )}
         </div>
       </div>
-      {isNewFeatureProperty && <></>}
+      {isNewFeatureProperty && <>
+        
+      </>}
     </div>
   );
 };

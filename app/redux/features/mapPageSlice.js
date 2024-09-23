@@ -17,7 +17,6 @@ export const mapPageSlice = createSlice({
       state.coordinates = action.payload;
     },
     updatePropertyType: (state, action) => {
-      console.log(action)
       if (action.payload.task === "add") {
         state.propertyType.push(action.payload.value);
       } else {

@@ -37,14 +37,12 @@ const Navbar = () => {
   useEffect(() => {
     if (socket) {
       socket.on("getNewNotification", (message) => {
-        console.log("message: ", message);
         dispatch(addNewNotification(message));
         dispatch(updateNewNotificationFlag(true));
         successAlert(message.subject, "");
       });
 
       socket.on("newMessage", (message) => {
-        console.log("new message: ", message);
         dispatch(updateNewMessageFlag(true));
       });
       return () => {
@@ -199,7 +197,6 @@ const Navbar = () => {
   };
 
   useEffect(() => {
-    console.log(pathname, typeof pathname);
     if (pathname != "/login" && pathname != "/signup") {
       fetchUserDetails();
     }
@@ -225,7 +222,6 @@ const Navbar = () => {
           localStorage.getItem("userDetails")
         ).username;
         socket?.emit("logout", { username: username });
-        console.log("reponse: ", response);
         successAlert("Success", response.message);
         setLoggedIn(false);
         localStorage.removeItem("token");
@@ -248,7 +244,6 @@ const Navbar = () => {
   const [selectedNotification, setSelectedNotification] = useState(null);
 
   const handleUnreadNotificationSelect = async (index, all) => {
-    console.log("in function handleUnreadNotificationSelect: ", index, all);
     try {
       const username = JSON.parse(
         localStorage.getItem("userDetails")
@@ -261,7 +256,6 @@ const Navbar = () => {
       );
 
       const response = await res.json();
-      console.log(response);
       if (response.success) {
         if (all) {
           fetchNotifications();

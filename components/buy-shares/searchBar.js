@@ -176,7 +176,6 @@ const SearchBar = ({ setIsFilterUpdated }) => {
   useEffect(() => {
     if (pageMounted) {
       setIsFilterUpdated(true);
-      console.log("in filter status check useEffect");
     } else {
       setPageMounted(true);
     }

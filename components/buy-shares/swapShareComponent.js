@@ -35,7 +35,6 @@ const SwapShareComponent = ({ propertyID, propertyDocID, category }) => {
       );
 
       const response = await res.json();
-      console.log(response);
       if (response.success) {
         setIsLoading(false);
         setMyShareList(response.body);
@@ -72,7 +71,6 @@ const SwapShareComponent = ({ propertyID, propertyDocID, category }) => {
 
       const response = await res.json();
 
-      console.log(response);
       if (response.success) {
         setIsLoading(false);
         setForSwapShareList(response.body);
@@ -145,7 +143,6 @@ const SwapShareComponent = ({ propertyID, propertyDocID, category }) => {
         category: category,
       };
 
-      console.log("data: ", data);
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_SERVER_HOST}/share/open-share-by-category`,
         {

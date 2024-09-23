@@ -54,7 +54,6 @@ const MapPage = () => {
   const [myMarkers, setMyMarkers] = useState([]);
 
   useEffect(() => {
-    console.log("title: ", process?.title);
     if (process?.title === "browser") {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -79,8 +78,6 @@ const MapPage = () => {
   const MapEvents = () => {
     useMapEvents({
       click(e) {
-        console.log("Clicked class: ", e.originalEvent.target.className);
-        console.log("Event: ", e);
 
         const elClass = e.originalEvent.target.className;
         if (
@@ -97,7 +94,6 @@ const MapPage = () => {
 
   const handleFilterSelect = (coordinates, iconURL) => {
     setMarkers(coordinates);
-    console.log("title: ", process?.title);
     if (process?.title === "browser") {
       setCustomFilterIcon(
         new L.Icon({
@@ -112,7 +108,6 @@ const MapPage = () => {
 
   const handlePropertyTypeFilterSelect = (coordinates, iconURL) => {
     setPropertyTypeMarkers(coordinates);
-    console.log("title: ", process?.title);
     if (process?.title === "browser") {
       setCustomPropertyTypeIcon(
         new L.Icon({
@@ -127,7 +122,6 @@ const MapPage = () => {
 
   const handleAvailableSharesFilterSelect = (coordinates, iconURL) => {
     setAvailableShareMarkers(coordinates);
-    console.log("title: ", process?.title);
     if (process?.title === "browser") {
       setAvailableSharesIcon(
         new L.Icon({
@@ -141,7 +135,6 @@ const MapPage = () => {
   };
 
   const handleModalSave = async (data) => {
-    console.log(data);
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_SERVER_HOST}/property/add-property-request`,
       {
@@ -168,7 +161,6 @@ const MapPage = () => {
       return newDetails;
     });
     const responseData = await response.json();
-    console.log(responseData);
     // Handle response
   };
 

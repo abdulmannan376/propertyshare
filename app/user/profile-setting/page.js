@@ -376,11 +376,9 @@ const Page = () => {
 
       const formData = new FormData();
 
-      console.log(files);
       formData.append("username", username);
       for (const file of files) formData.append("imageFile", file);
 
-      console.log(formData.get("imageFile"));
 
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_SERVER_HOST}/user/upload-profile-pic`,
@@ -441,7 +439,6 @@ const Page = () => {
         };
       }
       // } else if (action === "Payment Details") {
-      //   console.log("paymentDetails: ", paymentDetails);
       //   if (
       //     paymentDetails.nameOnCard &&
       //     paymentDetails.cardNumber &&
@@ -452,7 +449,6 @@ const Page = () => {
       //     body.paymentDetails = paymentDetails;
       //   else throw new Error("missing fields.");
       // } else if (action === "Withdrawal Details") {
-      //   console.log("paymentDetails: ", paymentDetails);
       //   if (
       //     withdrawalDetails.accountTitle &&
       //     withdrawalDetails.ibanNumber &&

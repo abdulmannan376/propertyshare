@@ -70,7 +70,6 @@ const NewSwapOfferModal = ({
         username: JSON.parse(localStorage.getItem("userDetails")).username,
         offeredShareID: selectedShareID,
       };
-      console.log(data);
 
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_SERVER_HOST}/share/gen-share-swap-offer`,

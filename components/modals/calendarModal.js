@@ -50,7 +50,6 @@ const Calendar = ({ propertyDuration, isShareholder, shareList }) => {
       const owner = shareList.find(
         (share) => share.shareID === dayDetails.shareID
       );
-      console.log("owner: ", owner);
       setHoveredOwner(owner);
       handleMouseMove(e); // Update cursor position when hovering starts
     } else {
@@ -61,7 +60,6 @@ const Calendar = ({ propertyDuration, isShareholder, shareList }) => {
   useEffect(() => {
     if (hoveredOwner) {
       window.addEventListener("mousemove", handleMouseMove);
-      //   console.log("in useEffect: ", hoveredOwner);
     } else {
       window.removeEventListener("mousemove", handleMouseMove);
     }
@@ -81,7 +79,6 @@ const Calendar = ({ propertyDuration, isShareholder, shareList }) => {
       return;
     }
 
-    // console.log("in handleBgColor: ", isShareholder, details);
 
     const owner = shareList.find((share) => share.shareID === details.shareID);
 
@@ -420,7 +417,6 @@ const CalendarModal = ({
           color: colorList[index],
           shareID: share.shareID,
         });
-        console.log("monthData: ", monthData);
         currentDate.setDate(currentDate.getDate() + 1); // Move to the next day
       }
     });

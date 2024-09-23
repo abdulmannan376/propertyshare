@@ -42,15 +42,8 @@ const FilterComponent = ({
   });
 
   const handleFilterSelect = (index, dataIndex, value, dataType) => {
-    console.log(
-      "in handleFilterSelect",
-      index,
-      dataIndex,
-      value,
-      typeof dataType
-    );
+    
     if (index === 0 || index === 3) {
-      console.log("in if");
       setFilters((prevDetails) => {
         const newDetails = [...prevDetails];
         newDetails[index].data[dataIndex].selected = value;
@@ -90,9 +83,7 @@ const FilterComponent = ({
         }
       }
     } else if (index === 1) {
-      console.log("in else if");
       if (dataType === "min") {
-        console.log("in if");
         setFilters((prevDetails) => {
           const newDetails = [...prevDetails];
           newDetails[index].dataMIN[dataIndex].selected = value;
@@ -110,7 +101,6 @@ const FilterComponent = ({
 
   const handleDropdownActivity = (field, value, e) => {
     e.preventDefault();
-    console.log("in handle dropdown activity");
     setDropdownsStatus((prevDetails) => {
       const newDetails = { ...prevDetails };
       Object.keys(newDetails).map((data) => {
@@ -195,13 +185,13 @@ const FilterComponent = ({
 
   return (
     <>
-    <FiltersModal 
-      isOpen={isFilterModalOpen}
-      onClose={handleCloseFilterModal}
-      dropdownsStatus={dropdownsStatus}
-      filters={filters}
-      handleDropdownActivity={handleDropdownActivity}
-    />
+      <FiltersModal
+        isOpen={isFilterModalOpen}
+        onClose={handleCloseFilterModal}
+        dropdownsStatus={dropdownsStatus}
+        filters={filters}
+        handleDropdownActivity={handleDropdownActivity}
+      />
       <div className="w-full sm:hidden flex mt-5">
         <button
           type="button"

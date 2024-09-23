@@ -39,7 +39,6 @@ const NewThread = ({
           }
         );
         const response = await res.json();
-        console.log("response: ", response);
         if (response.success) {
           if (response.body) setPropertyShares(response.body);
           else successAlert("Success", response.message);
@@ -62,7 +61,6 @@ const NewThread = ({
     e.preventDefault();
 
     try {
-      console.log("price: ", price, "selectedShareId: ", selectedShareID);
       if (price.length === 0 || selectedShareID.length === 0) {
         throw new Error("Missing fields.");
       }

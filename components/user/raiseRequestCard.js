@@ -128,8 +128,6 @@ const RaiseRequestCard = ({ card, fetchData, sharesList, fetchRequests }) => {
         usernameList: usernameList,
         username: JSON.parse(localStorage.getItem("userDetails")).username,
       };
-      console.log("sharesList: ", sharesList);
-      console.log("usernameList: ", usernameList);
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_SERVER_HOST}/property/update-raise-request-action-by-PO`,
         {

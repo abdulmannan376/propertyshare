@@ -34,7 +34,6 @@ const Thread = ({
       );
 
       const response = await res.json();
-      console.log(response);
       if (response.success) {
         setChildren(response.body);
 
@@ -69,7 +68,6 @@ const Thread = ({
 
   const handleReplySubmit = async (threadID) => {
     try {
-      console.log("threadLevel: ", threadLevel);
       const data = {
         threadID: threadID,
         threadBody: text,
@@ -78,7 +76,6 @@ const Thread = ({
         threadLevel: `${threadLevel + 1}`,
       };
 
-      console.log("reply submit: ", data);
 
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_SERVER_HOST}/thread/add-child-thread`,
@@ -179,12 +176,9 @@ const Thread = ({
 
                   <button
                     onClick={() => {
-                      console.log("in onclick");
                       if (children?.length > 0) {
-                        console.log("in if");
                         setChildren([]);
                       } else {
-                        console.log("in else");
                         setFetchChildren(true);
                       }
                     }}

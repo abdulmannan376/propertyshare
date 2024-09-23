@@ -31,7 +31,7 @@ const AccountSetting = () => {
       );
 
       const response = await res.json();
-      console.log("response: ", response);
+      
       if (response.success) {
         setNotifyMessages(response.body.notifyMessages);
         setNotifyUpdates(response.body.notifyUpdates);
@@ -105,7 +105,6 @@ const AccountSetting = () => {
         notifyMessages: notifyMessages,
       };
 
-      console.log("data: ", data);
 
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_SERVER_HOST}/user/update-account-settings/${
@@ -120,7 +119,7 @@ const AccountSetting = () => {
         }
       );
       const response = await res.json();
-      console.log("response: ", response);
+      
 
       if (response.success) {
         toast.success(response.message, {

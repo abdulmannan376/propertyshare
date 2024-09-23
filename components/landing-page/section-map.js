@@ -79,10 +79,8 @@ const SectionMap = () => {
       active: false,
     },
   ]);
-  console.log("window: ", typeof window);
 
   useEffect(() => {
-    // console.log("window: ", window);
     if (typeof window !== "undefined") {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -107,8 +105,6 @@ const SectionMap = () => {
   const MapEvents = () => {
     useMapEvents({
       click(e) {
-        console.log("Clicked class: ", e.originalEvent.target.className);
-        console.log("Event: ", e);
 
         const elClass = e.originalEvent.target.className;
         if (
@@ -148,7 +144,6 @@ const SectionMap = () => {
       }
     } else {
       if (value) {
-        console.log(index, dataIndex, value);
         action = updatePropertyType({
           task: "add",
           value: filters[index].data[dataIndex].name,
@@ -161,10 +156,8 @@ const SectionMap = () => {
       }
     }
 
-    console.log("Dispatching action: ", action); // Log the action before dispatching
     dispatch(action);
 
-    console.log("propertyType: ", propertyType);
     setFilters((prevDetails) => {
       const newDetails = [...prevDetails];
       newDetails[index].data[dataIndex].selected = value;
@@ -210,7 +203,6 @@ const SectionMap = () => {
 
   const handlePropertyTypeFilterSelect = (coordinates, iconURL) => {
     setPropertyTypeMarkers(coordinates);
-    console.log("title: ", process?.title);
     if (process?.title === "browser") {
       setCustomPropertyTypeIcon(
         new L.Icon({
@@ -225,7 +217,6 @@ const SectionMap = () => {
 
   const handleAvailableSharesFilterSelect = (coordinates, iconURL) => {
     setAvailableShareMarkers(coordinates);
-    console.log("title: ", process?.title);
     if (process?.title === "browser") {
       setAvailableSharesIcon(
         new L.Icon({
@@ -239,7 +230,6 @@ const SectionMap = () => {
   };
 
   const handleModalSave = async (data) => {
-    console.log(data);
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_SERVER_HOST}/property/add-property-request`,
       {
@@ -266,7 +256,6 @@ const SectionMap = () => {
       return newDetails;
     });
     const responseData = await response.json();
-    console.log(responseData);
     // Handle response
   };
   const [searchBar, setSearchBar] = useState();
@@ -280,7 +269,6 @@ const SectionMap = () => {
 
   const handleDropdownActivity = (field, value, e) => {
     e.preventDefault();
-    console.log("in handle dropdown activity");
     setDropdownsStatus((prevDetails) => {
       const newDetails = { ...prevDetails };
       newDetails[field] = value;
@@ -289,7 +277,6 @@ const SectionMap = () => {
   };
 
   const handleFilterSubmit = async () => {
-    console.log("in handleFilterSubmit");
     if (propertyType.length > 0) {
       const res = await fetch(
         `${
@@ -300,7 +287,6 @@ const SectionMap = () => {
       );
 
       const response = await res.json();
-      console.log("response: ", response);
       handlePropertyTypeFilterSelect(response.body);
     } else {
       handlePropertyTypeFilterSelect([]);
@@ -337,7 +323,6 @@ const SectionMap = () => {
   const applyBtnRef = useRef();
   const applyBtnInMobViewRef = useRef();
   useEffect(() => {
-    console.log("in page useEffect");
     if (!isFilterUpdated) {
       applyBtnRef.current?.classList.remove("lg:translate-x-10");
       applyBtnRef.current?.classList.remove("z-0");

@@ -12,7 +12,6 @@ const NewMessageModal = ({ isOpen, onClose, recipient }) => {
     if (textRef.current) {
       textRef.current.style.height = "inherit"; // Reset the height so the scrollHeight measurement is correct
       textRef.current.style.height = `${textRef.current.scrollHeight}px`;
-      // console.log(textRef.current.style.height, textRef.current.style.height)
       // Ensure height doesn't exceed maxHeight
       if (textRef.current.scrollHeight > 150) {
         textRef.current.style.height = "150px"; // Match maxHeight
@@ -107,8 +106,6 @@ const NewMessageModal = ({ isOpen, onClose, recipient }) => {
             onChange={({ target }) => setText(target.value)}
             className="w-[75%] px-4 pt-1 border border-gray-300 rounded-full outline-none focus:ring-2 focus:ring-green-500"
             onKeyDown={(event) => {
-              console.log(event.key);
-              console.log(event.ctrlKey && event.key === "ENTER");
               if (event.ctrlKey && event.key === "Enter") {
                 handleSendNewMessage();
               }

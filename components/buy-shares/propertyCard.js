@@ -20,7 +20,6 @@ const PropertyCard = ({ card }) => {
   );
 
   const handleFavouriteListRequest = async (action) => {
-    console.log("action: ", action)
     try {
       const username = JSON.parse(localStorage.getItem("userDetails")).username;
 

@@ -133,7 +133,6 @@ const Payments = () => {
         discountValue,
       };
 
-      console.log(data);
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_SERVER_HOST}/payment/generate-payment`,
         {
@@ -648,7 +647,6 @@ const Payments = () => {
                       key={user._id}
                       onMouseDown={(e) => {
                         e.stopPropagation();
-                        console.log("onclick");
                         setQuery(user.username);
                         setRecipient(user.username);
                       }}

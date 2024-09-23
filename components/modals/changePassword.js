@@ -49,7 +49,6 @@ const ChangePasswordModal = ({ isOpen, onClose }) => {
     }
 
     // Here, you would typically handle the password change logic or call an API
-    console.log("Password changed:", { currentPassword, newPassword });
     // Close modal on successful change
   };
 

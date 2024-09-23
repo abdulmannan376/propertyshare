@@ -30,7 +30,6 @@ const MakeOffer = ({
         price: price,
         category: category,
       };
-      console.log(data);
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_SERVER_HOST}/share/gen-new-offer`,
         {

@@ -198,7 +198,6 @@ const BuyShareModal = ({
       }
     }
 
-    console.log(instance);
   }, [clientToken, isOpen, selectedShareID]);
 
   const [isLoading, setIsLoading] = useState(false);

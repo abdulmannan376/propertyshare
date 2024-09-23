@@ -54,7 +54,6 @@ const PaymentModal = ({ isOpen, onClose, payment, amount }) => {
       );
     }
 
-    console.log(instance);
   }, [clientToken, isOpen]);
 
   const [isLoading, setIsLoading] = useState(false);

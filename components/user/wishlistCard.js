@@ -19,7 +19,6 @@ const WishlistCard = ({ card }) => {
   );
 
   const handleFavouriteListRequest = async (action) => {
-    console.log("action: ", action);
     try {
       const username = JSON.parse(localStorage.getItem("userDetails")).username;
 
@@ -117,7 +116,6 @@ const WishlistCard = ({ card }) => {
   const wishList = useSelector((state) => state.adminSliceReducer.wishList);
 
   const handleWishListRequest = async (action, propertyID) => {
-    console.log("action: ", action);
     try {
       const username = JSON.parse(localStorage.getItem("userDetails")).username;
 

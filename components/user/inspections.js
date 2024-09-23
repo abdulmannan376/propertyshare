@@ -165,7 +165,6 @@ const Inspections = () => {
 
   const fetchInspectionDetail = async (inspectionID) => {
     try {
-      console.log("in fetchInspectionDetail");
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_SERVER_HOST}/property/get-inspection-detail/${inspectionID}`,
         {
@@ -177,7 +176,6 @@ const Inspections = () => {
       );
 
       const response = await res.json();
-      console.log(response);
       if (response.success) {
         // setSelectedInspection(response.body.inspection);
         setSharesList(response.body.sharesList);
@@ -199,7 +197,6 @@ const Inspections = () => {
   };
 
   useEffect(() => {
-    console.log("in useEffect");
     if (selectedInspection) {
       fetchInspectionDetail(selectedInspection.inspectionID);
     }
@@ -325,7 +322,6 @@ const Inspections = () => {
   const [threads, setThreads] = useState([]);
 
   const fetchThreads = async (shareID, category) => {
-    console.log(shareID, category);
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_SERVER_HOST}/thread/get-root-threads/${shareID}/${category}`,

@@ -55,7 +55,6 @@ const Page = () => {
   );
 
   const fetchConversations = async () => {
-    console.log("in fetchConversations");
     try {
       const username = JSON.parse(localStorage.getItem("userDetails")).username;
       const res = await fetch(
@@ -140,7 +139,6 @@ const Page = () => {
   }, [selectedConversation]);
 
   function handleAddNewMessage(msg, id) {
-    console.log("selectedConversation: ", conversationRef.current);
     const currentConversation = conversationRef.current;
     if (currentConversation && currentConversation?.conversationID === id) {
       const username = JSON.parse(localStorage.getItem("userDetails")).username;
@@ -154,13 +152,11 @@ const Page = () => {
         reciever: reciever,
         conversationID: id,
       });
-      console.log("in handleAddNewMessage", msg, id);
       dispatch(addNewMessage(msg));
     }
   }
 
   useEffect(() => {
-    // console.log("selectedConversationID: ", selectedConversationID);
 
     socket?.on("newMessage", (data) => {
       fetchConversations();
@@ -168,7 +164,6 @@ const Page = () => {
     });
 
     socket?.on("seenMessages", (message) => {
-      console.log("seen messages: ", message);
       const currentConversation = conversationRef.current;
       if (
         currentConversation &&

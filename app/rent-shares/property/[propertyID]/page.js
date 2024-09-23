@@ -120,7 +120,6 @@ const Page = () => {
   // }
 
   const params = useParams();
-  console.log("params: ", params);
 
   const [propertyID, setPropertyID] = useState(params.propertyID || null);
   const [property, setProperty] = useState({});

@@ -80,7 +80,6 @@ const CodeVerificationInput = (userEmail) => {
   const handleGenNewVerificationCode = async (e) => {
     e.preventDefault();
     try {
-      console.log(userEmail);
       const data = {
         email: userEmail.userEmail,
       };

@@ -38,7 +38,6 @@ const Thread = ({
       );
 
       const response = await res.json();
-      console.log(response);
       if (response.success) {
         setChildren(response.body);
 
@@ -73,7 +72,6 @@ const Thread = ({
 
   const handleReplySubmit = async (threadID) => {
     try {
-      console.log("threadLevel: ", threadLevel);
       const data = {
         threadID: threadID,
         threadBody: text,
@@ -82,7 +80,6 @@ const Thread = ({
         threadLevel: `${threadLevel + 1}`,
       };
 
-      console.log("reply submit: ", data);
 
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_SERVER_HOST}/thread/add-child-thread`,
@@ -176,12 +173,9 @@ const Thread = ({
 
                   <button
                     onClick={() => {
-                      console.log("in onclick");
                       if (children?.length > 0) {
-                        console.log("in if");
                         setChildren([]);
                       } else {
-                        console.log("in else");
                         setFetchChildren(true);
                       }
                     }}
@@ -267,7 +261,6 @@ const ThreadDisplay = ({ propertyID, propertyDocID, category }) => {
   const userRole = useSelector((state) => state.adminSliceReducer.userRole);
 
   const fetchThreads = async (shareID) => {
-    console.log(shareID);
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_SERVER_HOST}/thread/get-root-threads/${shareID}/${category}`,
@@ -338,7 +331,6 @@ const ThreadDisplay = ({ propertyID, propertyDocID, category }) => {
   }, [newThreadSubmitted]);
 
   const handleFetchChildren = async (threadID, threadIndex, threadLevel) => {
-    console.log("role: ", userRole, typeof userRole, userRole === "admin");
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_SERVER_HOST}/thread/get-childern-by-parent/${threadID}`,
@@ -348,7 +340,6 @@ const ThreadDisplay = ({ propertyID, propertyDocID, category }) => {
       );
 
       const response = await res.json();
-      // console.log(threads, response)
       if (response.success) {
         if (threadLevel === 1) {
           setThreads((prevData) => {
@@ -506,7 +497,6 @@ const ThreadDisplay = ({ propertyID, propertyDocID, category }) => {
         price: price,
         category: category,
       };
-      console.log(data);
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_SERVER_HOST}/share/gen-new-offer`,
         {

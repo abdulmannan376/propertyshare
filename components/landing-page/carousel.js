@@ -98,7 +98,6 @@ const Carousel = () => {
 
   const handleDropdownActivity = (field, value, e) => {
     e.preventDefault();
-    console.log("in handle dropdown activity");
     setDropdownsStatus((prevDetails) => {
       const newDetails = { ...prevDetails };
       newDetails[field] = value;

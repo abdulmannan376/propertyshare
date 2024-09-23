@@ -44,7 +44,6 @@ export const adminSlice = createSlice({
       state.currentLocation = action.payload;
     },
     updateFavoritesList: (state, action) => {
-      console.log("payload: ", action.payload);
       if (action.payload.action === "all") {
         state.favouriteList = action.payload.body;
       } else if (action.payload.action === "add") {
@@ -57,7 +56,6 @@ export const adminSlice = createSlice({
       }
     },
     updateWishList: (state, action) => {
-      console.log("payload: ", action.payload);
       if (action.payload.action === "all") {
         state.wishList = action.payload.body;
       } else if (action.payload.action === "add") {
@@ -77,7 +75,6 @@ export const adminSlice = createSlice({
       state.notificationsList = action.payload;
     },
     addNewNotification: (state, action) => {
-      console.log("addNewNotification payload: ", action.payload);
       state.notificationsList.unshift(action.payload);
       state.isNewNotificationAdded = true;
     },
