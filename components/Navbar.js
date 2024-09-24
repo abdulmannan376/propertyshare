@@ -184,11 +184,11 @@ const Navbar = () => {
         } else {
           setLoggedIn(false);
           if (response.action && response.action === "login")
-            localStorage.removeItem("token")
-            localStorage.removeItem("userDetails")
-            setTimeout(() => {
-              router.push("/login");
-            }, 2000);
+            localStorage.removeItem("token");
+          localStorage.removeItem("userDetails");
+          setTimeout(() => {
+            router.push("/login");
+          }, 2000);
 
           throw new Error(response.message);
         }
@@ -384,6 +384,16 @@ const Navbar = () => {
               } px-3`}
             >
               About
+            </Link>
+            <Link
+              href={"/faqs"}
+              className={`lg:mr-12 mr-5 hover:${hoverTextColor} ${
+                currentPage.tag === "FAQs"
+                  ? `${currentPage.bgColor} ${currentPage.textColor}`
+                  : "bg-transparent"
+              } px-3`}
+            >
+              FAQs
             </Link>
             <Link
               href={"/privacy-policy"}
@@ -687,6 +697,16 @@ const Navbar = () => {
                 onClick={() => setIsMobNavOpen(!isMobNavOpen)}
               >
                 About
+              </Link>
+              <Link
+                href={"/faqs"}
+                className={`lg:mr-12 mr-5 hover:${hoverTextColor} ${
+                  currentPage.tag === "FAQs"
+                    ? `${currentPage.bgColor} ${currentPage.textColor}`
+                    : "bg-transparent"
+                } px-3`}
+              >
+                FAQs
               </Link>
               <Link
                 href={"/privacy-policy"}
