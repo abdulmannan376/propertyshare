@@ -300,7 +300,7 @@ const Page = () => {
   return (
     <>
       <div className="w-full h-20 bg-[#116A7B]"></div>
-      <div className="container mx-auto min-h-[90vh] sm:px-28 py-10">
+      <div className="container min-h-[90vh] xxl:px-24 xl:px-16 lg:px-10 md:px-5 xs:px-3 px-1 md:my-10 my-5">
         <h1 className="text-3xl font-bold mb-5 text-center">
           Frequently Asked Questions
         </h1>

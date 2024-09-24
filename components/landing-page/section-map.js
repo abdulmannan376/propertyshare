@@ -105,7 +105,6 @@ const SectionMap = () => {
   const MapEvents = () => {
     useMapEvents({
       click(e) {
-
         const elClass = e.originalEvent.target.className;
         if (
           elClass.includes("leaflet-container") &&
@@ -269,6 +268,7 @@ const SectionMap = () => {
 
   const handleDropdownActivity = (field, value, e) => {
     e.preventDefault();
+    console.log(field, value)
     setDropdownsStatus((prevDetails) => {
       const newDetails = { ...prevDetails };
       newDetails[field] = value;
@@ -523,47 +523,33 @@ const SectionMap = () => {
           <button
             type="button"
             onClick={handleOpenFilterModal}
-            className="bg-[#116A7B] p-3 rounded-full"
+            className="sm:hidden block bg-[#116A7B] p-3 rounded-full"
           >
             <IoIosFunnel className="text-white text-2xl" />
           </button>
-          <div className="sm:block hidden">
+          <div className="sm:flex hidden">
             {filters.map((filter, index) => (
               <div key={index} className="relative">
                 <button
                   type="button"
                   onClick={(e) => {
                     e.stopPropagation();
-                    if (filter.data.length > 0) {
-                      if (index === 0) {
-                        handleDropdownActivity(
-                          "propertyTypeActive",
-                          !dropdownsStatus["propertyTypeActive"],
-                          e
-                        );
-                        handleDropdownActivity(
-                          "availableSharesActive",
-                          false,
-                          e
-                        );
-                      } else {
-                        handleDropdownActivity(
-                          "availableSharesActive",
-                          !dropdownsStatus["availableSharesActive"],
-                          e
-                        );
-                        handleDropdownActivity("propertyTypeActive", false, e);
-                      }
-                    } else if (index === 1) {
-                      // handleFilterClick(
-                      //   index,
-                      //   filter.name,
-                      //   !filter.active,
-                      //   "null"
-                      // );
+                    console.log(index)
+                    if (index === 2) {
+                      handleDropdownActivity(
+                        "propertyTypeActive",
+                        !dropdownsStatus["propertyTypeActive"],
+                        e
+                      );
                       handleDropdownActivity("availableSharesActive", false, e);
+                    } else if (index === 1) {
+                      handleDropdownActivity(
+                        "availableSharesActive",
+                        !dropdownsStatus["availableSharesActive"],
+                        e
+                      );
                       handleDropdownActivity("propertyTypeActive", false, e);
-                    } else if (index === 2) {
+                    } else if (index === 0) {
                       handleAllRequestesClick(!allRequestes.active);
                       handleDropdownActivity("availableSharesActive", false, e);
                       handleDropdownActivity("propertyTypeActive", false, e);
@@ -577,14 +563,14 @@ const SectionMap = () => {
                       <FaAngleDown className="inline-flex" />
                     )}
                   </h1>
-                  {index !== 2 && filter.active && (
+                  {index !== 0 && filter.active && (
                     <div
                       className={`text-xs text-white rounded-full py-[3px] px-[3px] ml-5 bg-blue-500`}
                     >
                       <IoClose />
                     </div>
                   )}
-                  {index === 2 && allRequestes.active && (
+                  {index === 0 && allRequestes.active && (
                     <div
                       className={`text-xs text-white rounded-full py-[3px] px-[3px] ml-5 bg-blue-500`}
                     >
@@ -620,7 +606,7 @@ const SectionMap = () => {
                     </ul>
                   </div>
                 )}
-                {index === 0 && dropdownsStatus["propertyTypeActive"] && (
+                {index === 2 && dropdownsStatus["propertyTypeActive"] && (
                   <div className="absolute md:w-72 w-56 bg-white z-[5000]">
                     <ul className="px-5 space-y-1 max-h-60 overflow-y-auto">
                       {filter.data.map((listItem, i) => (
@@ -681,7 +667,7 @@ const SectionMap = () => {
                 handleDropdownActivity("availableSharesActive", false, e);
                 handleDropdownActivity("propertyTypeActive", false, e);
               }}
-              className="absolute bg-[#116A7B] w-32 text-sm text-white transition-transform lg:block hidden lg:-translate-x-60 translate-y-10 -z-50 px-3 py-2 rounded-lg "
+              className="absolute bg-[#116A7B] w-32 text-sm text-white transition-transform lg:block hidden lg:-translate-x-60 translate-y-0 -z-50 px-3 py-2 rounded-lg "
             >
               Apply Changes
             </button>
