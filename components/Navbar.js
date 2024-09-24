@@ -184,6 +184,8 @@ const Navbar = () => {
         } else {
           setLoggedIn(false);
           if (response.action && response.action === "login")
+            localStorage.removeItem("token")
+            localStorage.removeItem("userDetails")
             setTimeout(() => {
               router.push("/login");
             }, 2000);

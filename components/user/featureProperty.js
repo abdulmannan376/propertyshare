@@ -98,14 +98,14 @@ const FeaturedManagement = () => {
 
   return (
     <div className="bg-white w-full my-6 xxl:h-[85vh] md:h-[88vh] max-h-[88vh] overflow-y-auto">
-      <div className="w-full flex flex-row items-center justify-between border-b border-b-[#D9D9D9] pt-1 pb-7 px-14">
+      <div className="w-full flex flex-row items-center justify-between border-b border-b-[#D9D9D9] pt-1 pb-7 sm:px-14 pr-5 pl-14">
         <h1 className="text-2xl font-medium">Featured Management</h1>
         <div>
           {isNewFeatureProperty ? (
             <button
               type="button"
               onClick={() => setIsNewFeatureProperty(false)}
-              className="w-52 bg-[#116A7B] text-white text-lg ml-auto mx-1 px-5 py-1 rounded-full"
+              className="sm:w-52 w-28 bg-[#116A7B] text-white text-lg ml-auto mx-1 px-5 py-1 rounded-full"
             >
               {" "}
               Back{" "}
@@ -114,7 +114,7 @@ const FeaturedManagement = () => {
             <button
               type="button"
               onClick={() => setIsNewFeatureProperty(true)}
-              className="w-52 bg-[#116A7B] text-white text-lg ml-auto mx-1 px-5 py-1 rounded-full"
+              className="sm:w-52 w-28 bg-[#116A7B] text-white text-lg ml-auto mx-1 px-5 py-1 rounded-full"
             >
               {" "}
               New{" "}
@@ -126,7 +126,7 @@ const FeaturedManagement = () => {
         <>
           <div className="w-full my-6 md:px-14 px-5">
             {/* Input field for username query */}
-            <div className="relative flex flex-row items-end">
+            <div className="relative flex md:flex-row flex-col md:items-end">
               <div
                 // onBlur={() => setTimeout(() => set([]), 200)}
                 className="flex flex-col pt-1 "
@@ -144,7 +144,7 @@ const FeaturedManagement = () => {
                   className="sm:w-[620px] xs:w-[420px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                 />
               </div>
-              <div className="my-1 mx-5">
+              <div className="md:my-1 md:mx-5 my-3">
                 <button
                   onClick={findProperty}
                   disabled={query.length < 16}
@@ -160,30 +160,30 @@ const FeaturedManagement = () => {
             {propertyFound ? (
               <div className="w-full flex flex-col space-y-5 my-5 mx-2">
                 <div className="flex flex-row">
-                  <h1 className="w-56 font-semibold text-xl">Property Title</h1>
-                  <h2 className="text-xl">{propertyFound.title}</h2>
+                  <h1 className="xs:w-56 w-36 font-semibold sm:text-xl text-base">Property Title</h1>
+                  <h2 className="sm:text-xl text-base">{propertyFound.title}</h2>
                 </div>
                 <div className="flex flex-row">
-                  <h1 className="w-56 font-semibold text-xl">PropertyID</h1>
-                  <h2 className="text-xl">{propertyFound.propertyID}</h2>
+                  <h1 className="xs:w-56 w-36 font-semibold sm:text-xl text-base">PropertyID</h1>
+                  <h2 className="sm:text-xl text-base">{propertyFound.propertyID}</h2>
                 </div>
                 <div className="flex flex-row">
-                  <h1 className="w-56 font-semibold text-xl">
+                  <h1 className="xs:w-56 w-36 font-semibold sm:text-xl text-base">
                     Property Status
                   </h1>
-                  <h2 className="text-xl">{propertyFound.status}</h2>
+                  <h2 className="sm:text-xl text-base">{propertyFound.status}</h2>
                 </div>
                 <div className="flex flex-row">
-                  <h1 className="w-56 font-semibold text-xl">
+                  <h1 className="xs:w-56 w-36 font-semibold sm:text-xl text-base">
                     Property Shares
                   </h1>
-                  <h2 className="text-xl">{propertyFound.totalStakes - 1}</h2>
+                  <h2 className="sm:text-xl text-base">{propertyFound.totalStakes - 1}</h2>
                 </div>
                 <div className="flex flex-row">
-                  <h1 className="w-56 font-semibold text-xl">
+                  <h1 className="xs:w-56 w-36 font-semibold sm:text-xl text-base">
                     Property Share Value
                   </h1>
-                  <h2 className="text-xl">${propertyFound.valuePerShare}</h2>
+                  <h2 className="sm:text-xl text-base">${propertyFound.valuePerShare}</h2>
                 </div>
                 <div className="">
                   <button
