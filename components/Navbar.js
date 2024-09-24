@@ -396,6 +396,16 @@ const Navbar = () => {
               FAQs
             </Link>
             <Link
+              href={"/how-it-works"}
+              className={`lg:mr-12 mr-5 hover:${hoverTextColor} ${
+                currentPage.tag === "How It Works"
+                  ? `${currentPage.bgColor} ${currentPage.textColor}`
+                  : "bg-transparent"
+              } px-3`}
+            >
+              How it works
+            </Link>
+            <Link
               href={"/privacy-policy"}
               className={`lg:mr-12 mr-5 hover:${hoverTextColor} ${
                 currentPage.tag === "Privacy"
@@ -629,95 +639,123 @@ const Navbar = () => {
         >
           <div className="md:hidden flex flex-col">
             <nav className="md:ml-12 md:mr-auto flex flex-col flex-wrap items-center space-y-10 my-10 sm:text-xl justify-center">
-              <Link
-                href={"/"}
-                className={`lg:mr-12 mr-5 hover:${hoverTextColor} ${
-                  currentPage.tag === "Home"
-                    ? `bg-white text-[#116A7B]`
-                    : "bg-transparent"
-                } px-3`}
-                onClick={() => setIsMobNavOpen(!isMobNavOpen)}
-              >
-                Home
+              <Link href={"/"}>
+                <span
+                  className={`lg:mr-12 mr-5 hover:${hoverTextColor} ${
+                    currentPage.tag === "Home"
+                      ? `bg-white text-[#116A7B]`
+                      : "bg-transparent"
+                  } px-3`}
+                  onClick={() => setIsMobNavOpen(!isMobNavOpen)}
+                >
+                  Home
+                </span>
               </Link>
-              <Link
-                href={"/map"}
-                className={`lg:mr-12 mr-5 hover:${hoverTextColor} ${
-                  currentPage.tag === "Map"
-                    ? `bg-white text-[#116A7B]`
-                    : "bg-transparent"
-                } px-3`}
-                onClick={() => setIsMobNavOpen(!isMobNavOpen)}
-              >
-                Map
+              <Link href={"/map"}>
+                <span
+                  className={`lg:mr-12 mr-5 hover:${hoverTextColor} ${
+                    currentPage.tag === "Map"
+                      ? `bg-white text-[#116A7B]`
+                      : "bg-transparent"
+                  } px-3`}
+                  onClick={() => setIsMobNavOpen(!isMobNavOpen)}
+                >
+                  Map
+                </span>
               </Link>
-              <Link
-                href={"/buy-shares"}
-                className={`lg:mr-12 mr-5 hover:${hoverTextColor} ${
-                  currentPage.tag === "Buy Shares"
-                    ? `bg-white text-[#116A7B]`
-                    : "bg-transparent"
-                } px-3`}
-                onClick={() => setIsMobNavOpen(!isMobNavOpen)}
-              >
-                Buy Shares
+              <Link href={"/buy-shares"}>
+                <span
+                  className={`lg:mr-12 mr-5 hover:${hoverTextColor} ${
+                    currentPage.tag === "Buy Shares"
+                      ? `bg-white text-[#116A7B]`
+                      : "bg-transparent"
+                  } px-3`}
+                  onClick={() => setIsMobNavOpen(!isMobNavOpen)}
+                >
+                  Buy Shares
+                </span>
               </Link>
-              <Link
-                href={"/rent-shares"}
-                className={`lg:mr-12 mr-5 hover:${hoverTextColor} ${
-                  currentPage.tag === "Rent Shares"
-                    ? `bg-white text-[#116A7B]`
-                    : "bg-transparent"
-                } px-3`}
-                onClick={() => setIsMobNavOpen(!isMobNavOpen)}
-              >
-                Rent Shares
+              <Link href={"/rent-shares"}>
+                <span
+                  className={`lg:mr-12 mr-5 hover:${hoverTextColor} ${
+                    currentPage.tag === "Rent Shares"
+                      ? `bg-white text-[#116A7B]`
+                      : "bg-transparent"
+                  } px-3`}
+                  onClick={() => setIsMobNavOpen(!isMobNavOpen)}
+                >
+                  Rent Shares
+                </span>
               </Link>
               {/* <Link href={"/"} className={`lg:mr-12 mr-5 hover:${hoverTextColor}`}>
             Rent
           </Link> */}
-              <Link
-                href={"/contactus"}
-                className={`lg:mr-12 mr-5 hover:${hoverTextColor} ${
-                  currentPage.tag === "Contact"
-                    ? `bg-white text-[#116A7B]`
-                    : "bg-transparent"
-                } px-3`}
-                onClick={() => setIsMobNavOpen(!isMobNavOpen)}
-              >
-                Contact
+              <Link href="/contactus" className="lg:mr-12 mr-5">
+                <span
+                  className={`hover:${hoverTextColor} ${
+                    currentPage.tag === "Contact"
+                      ? `bg-white text-[#116A7B]`
+                      : "bg-transparent"
+                  } px-3`}
+                  onClick={() => setIsMobNavOpen(!isMobNavOpen)}
+                >
+                  Contact
+                </span>
+              </Link>
+              <Link href={"/aboutus"}>
+                <span
+                  className={`lg:mr-12 mr-5 hover:${hoverTextColor} ${
+                    currentPage.tag === "About"
+                      ? `bg-white text-[#116A7B]`
+                      : "bg-transparent"
+                  } px-3`}
+                  onClick={() => setIsMobNavOpen(!isMobNavOpen)}
+                >
+                  About
+                </span>
+              </Link>
+              <Link href={"/faqs"}>
+                <span
+                  className={`lg:mr-12 mr-5 hover:${hoverTextColor} ${
+                    currentPage.tag === "FAQs"
+                      ? `${currentPage.bgColor} ${currentPage.textColor}`
+                      : "bg-transparent"
+                  } px-3`}
+                  onClick={() => setIsMobNavOpen(!isMobNavOpen)}
+                >
+                  FAQs
+                </span>
               </Link>
               <Link
-                href={"/aboutus"}
+                href={"/how-it-works"}
                 className={`lg:mr-12 mr-5 hover:${hoverTextColor} ${
-                  currentPage.tag === "About"
-                    ? `bg-white text-[#116A7B]`
-                    : "bg-transparent"
-                } px-3`}
-                onClick={() => setIsMobNavOpen(!isMobNavOpen)}
-              >
-                About
-              </Link>
-              <Link
-                href={"/faqs"}
-                className={`lg:mr-12 mr-5 hover:${hoverTextColor} ${
-                  currentPage.tag === "FAQs"
+                  currentPage.tag === "How It Works"
                     ? `${currentPage.bgColor} ${currentPage.textColor}`
                     : "bg-transparent"
                 } px-3`}
               >
-                FAQs
+                <span
+                  className={`lg:mr-12 mr-5 hover:${hoverTextColor} ${
+                    currentPage.tag === "How It Works"
+                      ? `${currentPage.bgColor} ${currentPage.textColor}`
+                      : "bg-transparent"
+                  } px-3`}
+                  onClick={() => setIsMobNavOpen(!isMobNavOpen)}
+                >
+                  How it works
+                </span>
               </Link>
-              <Link
-                href={"/privacy-policy"}
-                className={`lg:mr-12 mr-5 hover:${hoverTextColor} ${
-                  currentPage.tag === "Privacy"
-                    ? `bg-white text-[#116A7B]`
-                    : "bg-transparent"
-                } px-3`}
-                onClick={() => setIsMobNavOpen(!isMobNavOpen)}
-              >
-                Privacy
+              <Link href={"/privacy-policy"}>
+                <span
+                  className={`lg:mr-12 mr-5 hover:${hoverTextColor} ${
+                    currentPage.tag === "Privacy"
+                      ? `bg-white text-[#116A7B]`
+                      : "bg-transparent"
+                  } px-3`}
+                  onClick={() => setIsMobNavOpen(!isMobNavOpen)}
+                >
+                  Privacy
+                </span>
               </Link>
             </nav>
           </div>
