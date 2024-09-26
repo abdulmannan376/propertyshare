@@ -2223,7 +2223,7 @@ const PropertyManagement = () => {
                       property.listingStatus !== "pending approval" &&
                       property.listingStatus !== "draft" && (
                         <div className="md:mx-auto sm:ml-auto sm:my-0 my-3">
-                          <div className="flex flex-row space-x-4 sm:space-y-4 space-y-2 items-center justify-center">
+                          {/* <div className="flex flex-row space-x-4 sm:space-y-4 space-y-2 items-center justify-center">
                             <h1 className="w-20 text-xl font-medium mt-3">
                               Feature:{" "}
                             </h1>
@@ -2252,7 +2252,7 @@ const PropertyManagement = () => {
                                 ></div>
                               </button>
                             </div>
-                          </div>
+                          </div> */}
                           {
                             <div className="flex flex-row space-x-4 space-y-4 items-center justify-center">
                               <h1 className="w-20 text-xl font-medium mt-3">
