@@ -176,17 +176,28 @@ const Page = () => {
   const [isFilterUpdated, setIsFilterUpdated] = useState(false);
 
   const applyBtnRef = useRef();
+  const applyBtnInMobRef = useRef();
   useEffect(() => {
     if (!isFilterUpdated) {
       applyBtnRef.current.classList.remove("-translate-y-0");
       applyBtnRef.current.classList.remove("z-0");
       applyBtnRef.current.classList.add("-translate-y-16");
       applyBtnRef.current.classList.add("-z-50");
+
+      applyBtnInMobRef.current.classList.remove("translate-y-3");
+      applyBtnInMobRef.current.classList.remove("z-0");
+      applyBtnInMobRef.current.classList.add("-translate-y-28");
+      applyBtnInMobRef.current.classList.add("-z-50");
     } else {
       applyBtnRef.current.classList.remove("-translate-y-16");
       applyBtnRef.current.classList.remove("-z-50");
       applyBtnRef.current.classList.add("-translate-y-0");
       applyBtnRef.current.classList.add("z-0");
+
+      applyBtnInMobRef.current.classList.remove("-translate-y-28");
+      applyBtnInMobRef.current.classList.remove("-z-50");
+      applyBtnInMobRef.current.classList.add("translate-y-3");
+      applyBtnInMobRef.current.classList.add("z-0");
     }
   }, [isFilterUpdated]);
 
@@ -215,7 +226,7 @@ const Page = () => {
         theme="light"
       />
       <div className="w-full h-20 bg-[#116A7B]"></div>
-      <div className="xxl:mx-24 xl:mx-16 lg:mx-10 sm:mx-5 relative mb-20">
+      <div className="xxl:mx-24 xl:mx-16 lg:mx-10 mx-5 relative mb-20">
         <div className="">
           <SearchBar setIsFilterUpdated={setIsFilterUpdated} />
         </div>
@@ -225,11 +236,27 @@ const Page = () => {
           ref={applyBtnRef}
           onClick={() => {
             setIsFilterUpdated(false);
-            handleFetchFeaturedProperty();
-            handleFetchMostViewedProperty();
-            handleFetchRecentlyAddedProperty();
+            handleFetchFeaturedProperty(1);
+            handleFetchMostViewedProperty(1);
+            handleFetchRecentlyAddedProperty(1);
+            // showAlert()
           }}
-          className="absolute bg-[#116A7B] w-40 text-white transition-transform -translate-y-16 -z-50 px-3 py-2 rounded-lg "
+          className="absolute bg-[#116A7B] w-40 text-white sm:block hidden transition-transform -translate-y-16 -z-50 px-3 py-2 rounded-lg "
+        >
+          Apply Changes
+        </button>
+
+        <button
+          type="button"
+          ref={applyBtnInMobRef}
+          onClick={() => {
+            setIsFilterUpdated(false);
+            handleFetchFeaturedProperty(1);
+            handleFetchMostViewedProperty(1);
+            handleFetchRecentlyAddedProperty(1);
+            // showAlert()
+          }}
+          className="absolute bg-[#116A7B] w-40 text-white sm:hidden block transition-transform -translate-y-28 -z-50 px-3 py-2 rounded-lg "
         >
           Apply Changes
         </button>
