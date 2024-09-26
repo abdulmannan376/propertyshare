@@ -29,17 +29,18 @@ const SearchBar = () => {
         e.stopPropagation();
         e.preventDefault();
       }}
-      style={{ position: "absolute", top: 100, left: 64, zIndex: 1000 }}
+      className="sm:left-16 xs:left-10 left-5"
+      style={{ position: "absolute", top: 100, zIndex: 1000 }}
     >
       <input
         type="text"
         value={query}
         onChange={handleSearch}
         placeholder="Search for places"
-        className="w-[40rem] bg-white border border-[#116A7B] text-2xl px-5 py-3 rounded-full"
+        className="sm:w-[40rem] xs:w-[25rem] w-[22rem] bg-white border border-[#116A7B] text-2xl px-5 py-3 rounded-full"
       />
       {results.length > 0 && (
-        <ul className="mx-5 bg-white p-3">
+        <ul className="sm:mx-5 mr-5 bg-white p-3">
           {results.map((item, index) => (
             <li
               key={index}

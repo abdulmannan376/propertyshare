@@ -81,8 +81,8 @@ const MapPage = () => {
 
         const elClass = e.originalEvent.target.className;
         if (
-          elClass.includes("leaflet-container") &&
-          elClass.includes("leaflet-touch")
+          elClass?.includes("leaflet-container") &&
+          elClass?.includes("leaflet-touch")
         ) {
           setModalCoordinates({ lat: e.latlng.lat, long: e.latlng.lng });
           setModalOpen(true);

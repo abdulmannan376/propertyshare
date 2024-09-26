@@ -4,7 +4,10 @@ import {
 } from "@/app/redux/features/mapPageSlice";
 import React, { useEffect, useRef, useState } from "react";
 import { FaAngleDown } from "react-icons/fa";
+import { IoIosFunnel } from "react-icons/io";
 import { useDispatch, useSelector } from "react-redux";
+import FiltersModal from "../modals/sectionMapFiltersModal";
+import { MdClose } from "react-icons/md";
 
 const FilterComponent = ({
   onFilterSelect,
@@ -12,6 +15,12 @@ const FilterComponent = ({
   onAvailableShareFilterSelect,
 }) => {
   const [filters, setFilters] = useState([
+    {
+      name: "All requests",
+      data: [],
+      active: false,
+      iconURL: "/person-pin.png",
+    },
     {
       name: "Available shares",
       data: [
@@ -24,7 +33,6 @@ const FilterComponent = ({
     {
       name: "Type of property",
       data: [
-        { name: "All", selected: false },
         { name: "Mansion", selected: false },
         { name: "Villa", selected: false },
         { name: "Apartment", selected: false },
@@ -64,7 +72,6 @@ const FilterComponent = ({
   };
   const dispatch = useDispatch();
   const handleFilterClick = (index, dataIndex, value) => {
-
     if (index === 0) {
       if (value) {
         dispatch(
@@ -189,12 +196,17 @@ const FilterComponent = ({
     }
   }, [isFilterUpdated]);
 
+  const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
+
+  const handleOpenFilterModal = () => setIsFilterModalOpen(true);
+  const handleCloseFilterModal = () => setIsFilterModalOpen(false);
+
   return (
     <div
       onClick={(e) => {
         e.stopPropagation();
       }}
-      className="absolute flex flex-row items-center justify-evenly bottom-16 left-16 z-[1000] bg-transparent border-2 border-white p-1 space-x-5 shadow-md"
+      className="absolute flex flex-row items-center justify-evenly bottom-16 lg:left-16 xs:left-10 left-5 z-[1000] bg-transparent md:border-2 border-white p-1 lg:space-x-5 space-x-1 md:shadow-md"
       //   style={{
       //     position: "absolute",
       //     bottom: 64,
@@ -206,12 +218,32 @@ const FilterComponent = ({
       //     boxShadow: "0 2px 4px rgba(0,0,0,0.25)",
       //   }}
     >
+      <FiltersModal
+        isOpen={isFilterModalOpen}
+        onClose={handleCloseFilterModal}
+        dropdownsStatus={dropdownsStatus}
+        filters={filters}
+        handleDropdownActivity={handleDropdownActivity}
+        allRequestes={allRequestes}
+        handleAllRequestesClick={handleAllRequestesClick}
+        handleFilterClick={handleFilterClick}
+        handleFilterSubmit={handleFilterSubmit}
+      />
+      <div className="w-full md:hidden flex mt-5">
+        <button
+          type="button"
+          onClick={handleOpenFilterModal}
+          className="bg-[#116A7B] p-3 rounded-full"
+        >
+          <IoIosFunnel className="text-white text-2xl" />
+        </button>
+      </div>
       {filters.map((filter, index) => (
-        <div key={index} className="relative">
+        index !== 0 && <div key={index} className="relative">
           <button
-            className="flex flex-row items-center justify-around w-64 bg-white p-3 text-xl"
+            className="md:flex hidden flex-row items-center justify-around w-64 bg-white p-3 text-xl"
             onClick={(e) => {
-              if (index === 0) {
+              if (index === 1) {
                 handleDropdownActivity(
                   "propertyTypeDropdownActive",
                   !dropdownsStatus["propertyTypeDropdownActive"],
@@ -242,11 +274,11 @@ const FilterComponent = ({
               <div
                 className={`text-xs text-white rounded-full py-[3px] px-[8px] ml-5 bg-blue-500`}
               >
-                1
+                <MdClose />
               </div>
             )}
           </button>
-          {index === 0 && dropdownsStatus["propertyTypeDropdownActive"] && (
+          {index === 1 && dropdownsStatus["propertyTypeDropdownActive"] && (
             <div className="absolute w-64 bg-white bottom-12 z-[1000]">
               <ul className="px-5 space-y-1 max-h-full overflow-y-auto">
                 {filter.data.map((listItem, i) => (
@@ -273,7 +305,7 @@ const FilterComponent = ({
               </ul>
             </div>
           )}
-          {index === 1 && dropdownsStatus["availableSharesDropdownActive"] && (
+          {index === 2 && dropdownsStatus["availableSharesDropdownActive"] && (
             <div className="absolute w-64 bg-white bottom-12 z-[1000]">
               <ul className="px-5 space-y-1 max-h-full overflow-y-auto">
                 {filter.data.map((listItem, i) => (
@@ -304,7 +336,7 @@ const FilterComponent = ({
       ))}
       <div className="relative">
         <button
-          className="flex flex-row items-center justify-around w-64 bg-white p-3 text-xl"
+          className="md:flex hidden flex-row items-center justify-around w-64 bg-white p-3 text-xl"
           onClick={(e) => {
             handleAllRequestesClick(!allRequestes.active);
             handleDropdownActivity("availableSharesDropdownActive", false, e);
@@ -331,7 +363,7 @@ const FilterComponent = ({
             handleDropdownActivity("availableSharesDropdownActive", false, e);
             handleDropdownActivity("propertyTypeDropdownActive", false, e);
           }}
-          className="absolute bg-[#116A7B] w-40 text-white transition-transform -translate-x-60 -z-50 px-3 py-2 rounded-lg "
+          className="md:block hidden absolute bg-[#116A7B] lg:w-40 w-32 text-white transition-transform -translate-x-60 -z-50 px-3 py-2 rounded-lg "
         >
           Apply Changes
         </button>
