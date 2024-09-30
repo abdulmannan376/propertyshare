@@ -9,8 +9,51 @@ import {
   updateNotificationIconColor,
 } from "../redux/features/navbarSlice";
 import { useRouter } from "next/navigation";
+import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
+import Slider from "react-slick";
+
+const NextArrow = ({ className, style, onClick }) => {
+  return (
+    <FaArrowRight
+      className={`${className} text-white bg-blue-500 hover:bg-blue-600 p-2 rounded-full`}
+      style={{
+        ...style,
+        display: "block",
+        color: "white",
+        backgroundColor: "#116A7B",
+      }}
+      onClick={onClick}
+    />
+  );
+};
+
+const PrevArrow = ({ className, style, onClick }) => {
+  return (
+    <FaArrowLeft
+      className={`${className} text-white bg-blue-500 hover:bg-blue-600 p-2 rounded-full`}
+      style={{
+        ...style,
+        display: "block",
+        color: "white",
+        backgroundColor: "#116A7B",
+      }}
+      onClick={onClick}
+    />
+  );
+};
 
 const Page = () => {
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    autoplaySpeed: 2000,
+    nextArrow: <NextArrow />,
+    prevArrow: <PrevArrow />,
+  };
+
   const dispatch = useDispatch();
   const router = useRouter(); // Using Next.js router for navigation
 
@@ -45,16 +88,39 @@ const Page = () => {
 
         {/* YouTube Video */}
         <div className="flex justify-center mb-10">
-          <iframe
-            width="800"
-            height="450"
-            src="https://www.youtube.com/embed/Mgwd_3k3pOw?list=RDQMHYGSpa2FLZY" // Replace with your video URL
-            title="How It Works"
-            // frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-            className="rounded-lg shadow-lg"
-          ></iframe>
+          <Slider
+            {...settings}
+            // modules={[Pagination, Navigation]}
+            // slidesPerView={1}
+            // navigation={{
+            //   nextEl: ".swiper-button-next", // Define next button class
+            //   prevEl: ".swiper-button-prev", // Define prev button class
+            // }}
+            // pagination={{
+            //   clickable: true,
+            //   el: "#swiper-pagination",
+            //   type: "bullets",
+            //   bulletActiveClass: "swiper-pagination-bullet-active",
+            //   bulletClass: "swiper-pagination-bullet",
+            // }}
+            style={{ width: "800px", height: "70%" }}
+            className="mb-5"
+          >
+            {Array.from({ length: 3 }, (_, index) => (
+              <div key={index} className="outline-none">
+                <iframe
+                  width="800"
+                  height="450"
+                  src="https://www.youtube.com/embed/ewyIqEIU9zw" // Replace with your video URL
+                  title="How It Works"
+                  // frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  className="rounded-lg shadow-lg"
+                ></iframe>
+              </div>
+            ))}
+          </Slider>
         </div>
 
         {/* Navigation Button to FAQs */}
