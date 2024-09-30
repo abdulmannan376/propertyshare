@@ -179,7 +179,7 @@ const Page = () => {
   const handleFavouriteListRequest = async (action) => {
     console.log("action: ", action);
     try {
-      const username = JSON.parse(localStorage.getItem("userDetails")).username;
+      const username = JSON.parse(localStorage.getItem("userDetails"))?.username;
 
       const data = {
         username: username,
@@ -213,7 +213,7 @@ const Page = () => {
   const handleWishListRequest = async (action) => {
     console.log("action: ", action);
     try {
-      const username = JSON.parse(localStorage.getItem("userDetails")).username;
+      const username = JSON.parse(localStorage.getItem("userDetails"))?.username;
 
       const data = {
         username: username,
@@ -364,7 +364,7 @@ const Page = () => {
                   </h1>
                 </button>
                 {/* <Link href={`${process.env.NEXT_PUBLIC_HOST}/chef`}> */}
-                <button
+                {JSON.parse(localStorage.getItem("userDetails"))?.role && <button
                   onClick={() => {
                     dispatch(updateActiveBuyShareNavBtn("Rent"));
                     handleScrollIntoView(rentRef);
@@ -380,8 +380,8 @@ const Page = () => {
                   >
                     Rent
                   </h2>
-                </button>
-                <button
+                </button>}
+                {JSON.parse(localStorage.getItem("userDetails"))?.role && <button
                   onClick={() => {
                     dispatch(updateActiveBuyShareNavBtn("Sell"));
                     handleScrollIntoView(sellRef);
@@ -397,8 +397,8 @@ const Page = () => {
                   >
                     Sell
                   </h2>
-                </button>
-                {JSON.parse(localStorage.getItem("userDetails")).role ===
+                </button>}
+                {JSON.parse(localStorage.getItem("userDetails"))?.role ===
                   "admin" && (
                   <button
                     onClick={() => {
@@ -418,7 +418,7 @@ const Page = () => {
                     </h2>
                   </button>
                 )}
-                {JSON.parse(localStorage.getItem("userDetails")).role ===
+                {JSON.parse(localStorage.getItem("userDetails"))?.role ===
                   "shareholder" && (
                   <button
                     onClick={() => {

@@ -30,7 +30,7 @@ const NewThread = ({
     const fetchPropertyShares = async () => {
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_SERVER_HOST}/share/get-shares-by-property/${propertyDocID}/Purchased`,
+          `${process.env.NEXT_PUBLIC_SERVER_HOST}/share/get-shares-by-property/${propertyDocID}/Purchased/?category=${category}`,
           {
             method: "GET",
             headers: {

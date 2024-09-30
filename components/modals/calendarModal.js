@@ -427,7 +427,7 @@ const CalendarModal = ({
   const [isShareholderInProperty, setIsShareholderInProperty] = useState(false);
 
   function checkUserStatus() {
-    const username = JSON.parse(localStorage.getItem("userDetails")).username;
+    const username = JSON.parse(localStorage.getItem("userDetails"))?.username;
     property.shareDocIDList.map((share) => {
       if (
         share.currentOwnerDocID &&
