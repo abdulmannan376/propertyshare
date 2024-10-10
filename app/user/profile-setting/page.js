@@ -673,10 +673,10 @@ const Page = () => {
               <div
                 className="bg-[#116A7B] text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-l-full"
                 style={{
-                  width: `${userDetails.userProfile.profileCompletePercentage}%`,
+                  width: `${userDetails?.userProfile?.profileCompletePercentage}%`,
                 }}
               >
-                {userDetails.userProfile.profileCompletePercentage}%
+                {userDetails?.userProfile?.profileCompletePercentage}%
               </div>
             </div>
           </div>
