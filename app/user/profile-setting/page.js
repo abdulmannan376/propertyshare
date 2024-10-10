@@ -379,7 +379,6 @@ const Page = () => {
       formData.append("username", username);
       for (const file of files) formData.append("imageFile", file);
 
-
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_SERVER_HOST}/user/upload-profile-pic`,
         {
@@ -668,6 +667,18 @@ const Page = () => {
             >
               Withdrawal Details
             </button> */}
+          </div>
+          <div>
+            <div className="w-[200px] border border-[#116A7B] rounded-full xxl:mx-24 xl:mx-16 lg:mx-10 mx-5 ">
+              <div
+                className="bg-[#116A7B] text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-l-full"
+                style={{
+                  width: `${userDetails.userProfile.profileCompletePercentage}%`,
+                }}
+              >
+                {userDetails.userProfile.profileCompletePercentage}%
+              </div>
+            </div>
           </div>
           <div className="xxl:mx-24 xl:mx-16 lg:mx-10 mx-5 my-16">
             {profileSettingActiveTab === "Primary Details" && (

@@ -65,6 +65,7 @@ const SectionMap = () => {
     {
       name: "Type of property",
       data: [
+        { name: "ALL", selected: false },
         { name: "Mansion", selected: false },
         { name: "Villa", selected: false },
         { name: "Apartment", selected: false },

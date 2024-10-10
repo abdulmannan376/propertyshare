@@ -110,12 +110,25 @@ const Footer = () => {
                   </div>
                 </li>
                 <li className="font-normal text-white">
-                  <SocialIcon
-                    url={"https://x.com"}
-                    fgColor="#116A7B"
-                    bgColor="#fff"
-                    style={socialIconStyles}
-                  />
+                  <div className="flex items-center space-x-2">
+                    <SocialIcon
+                      url={
+                        "https://x.com/beachbunnyhouse"
+                      }
+                      fgColor="#116A7B"
+                      bgColor="#fff"
+                      style={socialIconStyles}
+                      target="blank"
+                    />
+                    <Link
+                      href={
+                        "https://x.com/beachbunnyhouse"
+                      }
+                      target="blank"
+                    >
+                      Beachbunnyhouse
+                    </Link>
+                  </div>
                 </li>
                 <li className="font-normal text-white">
                   <div className="flex items-center space-x-2">
@@ -146,7 +159,7 @@ const Footer = () => {
               </h1>
               <h1 className="lg:text-sm text-xs text-white">
                 <MdOutlinePhoneIphone className="inline-flex text-lg mb-1" />
-                +1 (XXX) XXX XXXX
+                +1 (762) 387 5717
               </h1>
               {/* <h1 className="text-white">
               <IoPinSharp className="inline-flex text-xl mb-1" />
