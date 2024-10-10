@@ -14,7 +14,7 @@ const SectionAboutUs = () => {
           <Image
             width={2000}
             height={2000}
-            src={"/assets/landing-page/section-aboutus.png"}
+            src={"/assets/landing-page/1.webp"}
             className="w-full h-auto object-cover object-center rounded-3xl overflow-hidden"
             alt="about-us"
           />
@@ -60,7 +60,7 @@ const SectionAboutUs = () => {
           <Image
             width={2000}
             height={2000}
-            src={"/assets/landing-page/section-aboutus.png"}
+            src={"/assets/landing-page/2.webp"}
             className="w-full h-auto object-cover object-center rounded-3xl overflow-hidden"
             alt="about-us"
           />
@@ -71,7 +71,7 @@ const SectionAboutUs = () => {
           <Image
             width={2000}
             height={2000}
-            src={"/assets/landing-page/section-aboutus.png"}
+            src={"/assets/landing-page/2.webp"}
             className="w-full h-auto object-cover object-center rounded-3xl overflow-hidden"
             alt="about-us"
           />
@@ -99,7 +99,7 @@ const SectionAboutUs = () => {
           <Image
             width={2000}
             height={2000}
-            src={"/assets/landing-page/section-aboutus.png"}
+            src={"/assets/landing-page/3.webp"}
             className="w-full h-auto object-cover object-center rounded-3xl overflow-hidden"
             alt="about-us"
           />
