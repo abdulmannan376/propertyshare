@@ -550,6 +550,8 @@ const PropertyManagement = () => {
             successAlert("Success", response.message);
             setIsLoading(false);
             setIsAddPropertyClicked(false);
+            setPinnedImage(-1)
+            setDeleteImageList([])
           } else {
             throw new Error(response.message);
           }
@@ -1953,7 +1955,7 @@ const PropertyManagement = () => {
                             className="w-60 h-32  object-fit rounded-xl overflow-hidden "
                             alt={`Property Image ${index + 1}`} // Always include an alt for accessibility
                           />
-                          {deleteImageList.includes(index) && (
+                          {deleteImageList.includes(index + 1) && (
                             <div className="absolute inset-y-4 w-60 h-32 bg-gray-700 opacity-60 rounded-xl"></div>
                           )}
                           {pinnedImage === index + 1 && (
