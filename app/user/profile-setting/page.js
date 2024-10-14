@@ -408,6 +408,61 @@ const Page = () => {
     }
   };
 
+  const [selectedIDCardFace, setSelectedIDCardFace] = useState("");
+  const [idCardFiles, setIdCardFiles] = useState(null);
+  const [isLoadingIDCardPic, setIsLoadingIDCardPic] = useState(false);
+
+  const handleUploadIDCardPic = async () => {
+    try {
+      setIsLoadingIDCardPic(true);
+      const username = JSON.parse(localStorage.getItem("userDetails")).username;
+
+      const formData = new FormData();
+
+      formData.append("username", username);
+      formData.append("cardFace", selectedIDCardFace);
+      for (const file of idCardFiles) formData.append("imageFile", file);
+
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_HOST}/user/upload-id-card-pics`,
+        {
+          method: "PUT",
+          body: formData,
+        }
+      );
+
+      const response = await res.json();
+
+      if (response.success) {
+        if ((selectedIDCardFace === "Front")) {
+          setUserDetails((prevDetails) => {
+            const newDetails = { ...prevDetails };
+            newDetails["userProfile"] = {
+              ...newDetails["userProfile"],
+              ["idCardFrontAdded"]: true,
+              ["idCardPicsDir"]: response.body,
+            };
+            return newDetails;
+          });
+        } else if ((selectedIDCardFace === "Back")) {
+          setUserDetails((prevDetails) => {
+            const newDetails = { ...prevDetails };
+            newDetails["userProfile"] = {
+              ...newDetails["userProfile"],
+              ["idCardBackAdded"]: true,
+              ["idCardPicsDir"]: response.body,
+            };
+            return newDetails;
+          });
+        }
+      }
+    } catch (error) {
+      errorAlert("Error", error.message);
+    } finally {
+      setIsLoadingIDCardPic(false);
+    }
+  };
+
   const [isLoadingSubmission, setIsLoadingSubmission] = useState(false);
 
   const handleUserProfileUpdate = async () => {
@@ -988,7 +1043,8 @@ const Page = () => {
                       accept="image/png"
                       required={true}
                       onChange={({ target }) => setFiles(target.files)}
-                      className="sm:w-[620px] xs:w-[370px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                      className="sm:w-[620px] xs:w-[370px] w-[320px] file:border-0 file:bg-violet-50 file:rounded-full file:text-violet-700
+                               hover:file:bg-violet-100 text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                     />
                     {userDetails?.userProfile.profilePicURL.length > 0 && (
                       <div className="my-5">
@@ -1001,7 +1057,7 @@ const Page = () => {
                       </div>
                     )}
                   </div>
-                  <div className="flex flex-col mr-6">
+                  <div className="flex flex-col mr-6 sm:w-[620px] xs:w-[370px] w-[320px]">
                     <label htmlFor="propertyImages" className="text-[#676767]">
                       &nbsp;
                     </label>
@@ -1012,6 +1068,92 @@ const Page = () => {
                     >
                       {!isLoadingProfilePic && `Upload`}
                       {isLoadingProfilePic && (
+                        <div className="border-t-2 border-b-2 border-white bg-transparent h-3 p-2 animate-spin shadow-lg w-fit mx-auto rounded-full"></div>
+                      )}
+                    </button>
+                  </div>
+                  <div className="flex flex-col mr-6">
+                    <div>
+                      <label htmlFor="bloodGroup" className="text-[#676767]">
+                        ID Card
+                      </label>
+                      <select
+                        name="bloodGroup"
+                        value={selectedIDCardFace}
+                        onChange={({ target }) => {
+                          if (target.value === "Select") {
+                            setSelectedIDCardFace("");
+                          } else {
+                            setSelectedIDCardFace(target.value);
+                          }
+                        }}
+                        className="inline-flex mx-10 border border-[#116A7B30] rounded-full px-3 focus:border-[#116A7B] outline-none"
+                      >
+                        <option value="Select">Select</option>
+                        <option value="Front">Front</option>
+                        <option value="Back">Back</option>
+                      </select>
+                    </div>
+                    <input
+                      type="file"
+                      accept="image/png"
+                      disabled={selectedIDCardFace === ""}
+                      required={true}
+                      onChange={({ target }) => setIdCardFiles(target.files)}
+                      className="sm:w-[620px] xs:w-[370px] w-[320px] file:border-0 file:bg-violet-50 file:rounded-full file:text-violet-700
+                               hover:file:bg-violet-100 file:disabled:opacity-40 file:opacity-100 text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
+                    />
+                    {selectedIDCardFace === "Front" && (
+                      <div className="my-5">
+                        {userDetails?.userProfile.idCardFrontAdded ? (
+                          <Image
+                            width={1000}
+                            height={1000}
+                            src={`${process.env.NEXT_PUBLIC_SERVER_HOST}/${userDetails?.userProfile.idCardPicsDir}Front.png`}
+                            className="w-32 h-32 object-cover object-center"
+                          />
+                        ) : (
+                          <Image
+                            width={1000}
+                            height={1000}
+                            src={`/no-image.jpg`}
+                            className="w-32 h-32 object-cover object-center rounded-full"
+                          />
+                        )}
+                      </div>
+                    )}
+                    {selectedIDCardFace === "Back" && (
+                      <div className="my-5">
+                        {userDetails?.userProfile.idCardBackAdded ? (
+                          <Image
+                            width={1000}
+                            height={1000}
+                            src={`${process.env.NEXT_PUBLIC_SERVER_HOST}/${userDetails?.userProfile.idCardPicsDir}Back.png`}
+                            className="w-32 h-32 object-cover object-center"
+                          />
+                        ) : (
+                          <Image
+                            width={1000}
+                            height={1000}
+                            src={`/no-image.jpg`}
+                            className="w-32 h-32 object-cover object-center rounded-full"
+                          />
+                        )}
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex flex-col mr-6 sm:w-[620px] xs:w-[370px] w-[320px]">
+                    <label htmlFor="propertyImages" className="text-[#676767]">
+                      &nbsp;
+                    </label>
+                    <button
+                      type="button"
+                      onClick={(e) => handleUploadIDCardPic()}
+                      disabled={selectedIDCardFace === ""}
+                      className="w-40 disabled:opacity-40 bg-[#116A7B] text-white text-lg font-medium px-7 py-3 mt-2 rounded-full"
+                    >
+                      {!isLoadingIDCardPic && `Upload`}
+                      {isLoadingIDCardPic && (
                         <div className="border-t-2 border-b-2 border-white bg-transparent h-3 p-2 animate-spin shadow-lg w-fit mx-auto rounded-full"></div>
                       )}
                     </button>

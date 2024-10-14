@@ -385,36 +385,6 @@ const Navbar = () => {
             >
               About
             </Link>
-            <Link
-              href={"/faqs"}
-              className={`lg:mr-12 mr-5 hover:${hoverTextColor} ${
-                currentPage.tag === "FAQs"
-                  ? `${currentPage.bgColor} ${currentPage.textColor}`
-                  : "bg-transparent"
-              } px-3`}
-            >
-              FAQs
-            </Link>
-            <Link
-              href={"/how-it-works"}
-              className={`lg:mr-12 mr-5 hover:${hoverTextColor} ${
-                currentPage.tag === "How It Works"
-                  ? `${currentPage.bgColor} ${currentPage.textColor}`
-                  : "bg-transparent"
-              } px-3`}
-            >
-              How it works
-            </Link>
-            <Link
-              href={"/privacy-policy"}
-              className={`lg:mr-12 mr-5 hover:${hoverTextColor} ${
-                currentPage.tag === "Privacy"
-                  ? `${currentPage.bgColor} ${currentPage.textColor}`
-                  : "bg-transparent"
-              } px-3`}
-            >
-              Privacy
-            </Link>
           </nav>
           <div className="flex flex-row items-center">
             {loggedIn ? (
@@ -712,49 +682,6 @@ const Navbar = () => {
                   onClick={() => setIsMobNavOpen(!isMobNavOpen)}
                 >
                   About
-                </span>
-              </Link>
-              <Link href={"/faqs"}>
-                <span
-                  className={`lg:mr-12 mr-5 hover:${hoverTextColor} ${
-                    currentPage.tag === "FAQs"
-                      ? `${currentPage.bgColor} ${currentPage.textColor}`
-                      : "bg-transparent"
-                  } px-3`}
-                  onClick={() => setIsMobNavOpen(!isMobNavOpen)}
-                >
-                  FAQs
-                </span>
-              </Link>
-              <Link
-                href={"/how-it-works"}
-                className={`lg:mr-12 mr-5 hover:${hoverTextColor} ${
-                  currentPage.tag === "How It Works"
-                    ? `${currentPage.bgColor} ${currentPage.textColor}`
-                    : "bg-transparent"
-                } px-3`}
-              >
-                <span
-                  className={`lg:mr-12 mr-5 hover:${hoverTextColor} ${
-                    currentPage.tag === "How It Works"
-                      ? `${currentPage.bgColor} ${currentPage.textColor}`
-                      : "bg-transparent"
-                  } px-3`}
-                  onClick={() => setIsMobNavOpen(!isMobNavOpen)}
-                >
-                  How it works
-                </span>
-              </Link>
-              <Link href={"/privacy-policy"}>
-                <span
-                  className={`lg:mr-12 mr-5 hover:${hoverTextColor} ${
-                    currentPage.tag === "Privacy"
-                      ? `bg-white text-[#116A7B]`
-                      : "bg-transparent"
-                  } px-3`}
-                  onClick={() => setIsMobNavOpen(!isMobNavOpen)}
-                >
-                  Privacy
                 </span>
               </Link>
             </nav>
