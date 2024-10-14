@@ -417,6 +417,15 @@ const Page = () => {
       const action = profileSettingActiveTab;
       let body = {};
       if (action === "Primary Details") {
+        if (
+          userDetails.name.length === 0 ||
+          userDetails.userProfile.gender.length === 0 ||
+          userDetails.userProfile.dobString.length === 0 ||
+          userDetails.userProfile.nicNumber.length === 0 ||
+          userDetails.userProfile.nationality.length === 0 ||
+          userDetails.userProfile.religion.length === 0
+        )
+          throw new Error("Missing Fields");
         body.name = userDetails.name;
         body.gender = userDetails.userProfile.gender;
         body.dobString = userDetails.userProfile.dobString;
@@ -425,9 +434,24 @@ const Page = () => {
         body.religion = userDetails.userProfile.religion;
         body.bloodGroup = userDetails.userProfile.bloodGroup;
       } else if (action === "Contact Details") {
+        if (
+          `${userDetails.contact}`.length === 0 ||
+          userDetails.userProfile.permanentAddress.length === 0
+        ) {
+          throw new Error("Missing Fields");
+        }
         (body.contact = userDetails.contact),
           (body.permanentAddress = userDetails.userProfile.permanentAddress);
       } else if (action === "Next of Kin") {
+        if (
+          nextOfKinDetails.fullName.length === 0 ||
+          nextOfKinDetails.relation.length === 0 ||
+          nextOfKinDetails.email.length === 0 ||
+          `${nextOfKinDetails.contact}`.length === 0 ||
+          `${nextOfKinDetails.nicNumber}`.length === 0 ||
+          nextOfKinDetails.dobString.length === 0
+        )
+          throw new Error("Missing Fields");
         body.nextOfKinDetails = {
           fullName: nextOfKinDetails.fullName,
           relation: nextOfKinDetails.relation,
@@ -545,11 +569,15 @@ const Page = () => {
   const nextOfKinRef = useRef(null);
 
   const handleScrollIntoView = (ref) => {
-    ref.current?.scrollIntoView({
-      behavior: "smooth", // Adds a smooth scroll effect
-      block: "nearest", // Ensures the element is scrolled to the nearest visible area
-      inline: "center", // Keeps the element centered in the view horizontally
-    });
+    const innerWidth = window.innerWidth;
+
+    if (innerWidth < 720) {
+      ref.current?.scrollIntoView({
+        behavior: "smooth", // Adds a smooth scroll effect
+        block: "nearest", // Ensures the element is scrolled to the nearest visible area
+        inline: "center", // Keeps the element centered in the view horizontally
+      });
+    }
   };
 
   return (
@@ -593,7 +621,7 @@ const Page = () => {
       </div>
       {settingActiveTab === "Profile Setting" && (
         <>
-          <div className="flex flex-row max-w-screen overflow-x-auto space-x-5 xxl:mx-24 xl:mx-16 lg:mx-10 mx-5 my-16 text-xl">
+          <div className="flex flex-row max-w-screen items-center justify-start overflow-x-auto space-x-5 xxl:mx-24 xl:mx-16 lg:mx-10 mx-5 my-16 text-xl">
             <button
               type="button"
               onClick={() => {
@@ -669,14 +697,26 @@ const Page = () => {
             </button> */}
           </div>
           <div>
-            <div className="w-[200px] border border-[#116A7B] rounded-full xxl:mx-24 xl:mx-16 lg:mx-10 mx-5 ">
+            <div
+              className={`w-[200px] ${
+                userDetails?.userProfile?.profileCompletePercentage === 100
+                  ? "border-green-500"
+                  : "border-[#116A7B]"
+              } border rounded-full overflow-hidden xxl:mx-24 xl:mx-16 lg:mx-10 mx-5 `}
+            >
               <div
-                className="bg-[#116A7B] text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-l-full"
+                className={`${
+                  userDetails?.userProfile?.profileCompletePercentage === 100
+                    ? "bg-green-500"
+                    : "bg-[#116A7B]"
+                }  text-xs font-medium text-white text-center p-0.5 leading-none rounded-l-full`}
                 style={{
                   width: `${userDetails?.userProfile?.profileCompletePercentage}%`,
                 }}
               >
-                {userDetails?.userProfile?.profileCompletePercentage}%
+                {userDetails?.userProfile?.profileCompletePercentage === 100
+                  ? "Completed"
+                  : `${userDetails?.userProfile?.profileCompletePercentage}%`}
               </div>
             </div>
           </div>
@@ -684,7 +724,7 @@ const Page = () => {
             {profileSettingActiveTab === "Primary Details" && (
               <>
                 <div className="flex flex-row flex-wrap">
-                  <div className="mb-6 mr-6 flex flex-col">
+                  <div className="relative mb-6 mr-6 flex flex-col">
                     <label htmlFor="fullName" className="text-[#676767]">
                       Full name
                     </label>
@@ -698,8 +738,11 @@ const Page = () => {
                       }
                       className="sm:w-[620px] xs:w-[370px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                     />
+                    <span className="absolute inset-y-12 right-0 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer">
+                      *
+                    </span>
                   </div>
-                  <div className="mb-6 mr-6 flex flex-col">
+                  <div className="relative mb-6 mr-6 flex flex-col">
                     <label htmlFor="username" className="text-[#676767]">
                       Username
                     </label>
@@ -718,8 +761,11 @@ const Page = () => {
                       }
                       className="sm:w-[620px] xs:w-[370px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                     />
+                    <span className="absolute inset-y-12 right-0 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer">
+                      *
+                    </span>
                   </div>
-                  <div className="mb-6 mr-6 flex flex-col">
+                  <div className="relative mb-6 mr-6 flex flex-col">
                     <div>
                       <label htmlFor="Gender" className="text-[#676767]">
                         Gender
@@ -756,8 +802,11 @@ const Page = () => {
                       readOnly={true}
                       className="sm:w-[620px] xs:w-[370px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                     />
+                    <span className="absolute inset-y-12 right-0 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer">
+                      *
+                    </span>
                   </div>
-                  <div className="mb-6 mr-6 flex flex-col">
+                  <div className="relative mb-6 mr-6 flex flex-col">
                     <label htmlFor="dob" className="text-[#676767]">
                       Date of Birth
                     </label>
@@ -775,10 +824,20 @@ const Page = () => {
                         );
                         handleUserProfileUpdates("dob", date, true);
                       }}
+                      max={
+                        new Date(
+                          new Date().setFullYear(new Date().getFullYear() - 18)
+                        )
+                          .toISOString()
+                          .split("T")[0]
+                      }
                       className="sm:w-[620px] xs:w-[370px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                     />
+                    <span className="absolute inset-y-12 right-6 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer">
+                      *
+                    </span>
                   </div>
-                  <div className="mb-6 mr-6 flex flex-col">
+                  <div className="relative mb-6 mr-6 flex flex-col">
                     <label htmlFor="nicNumber" className="text-[#676767]">
                       NIC Number
                     </label>
@@ -796,8 +855,11 @@ const Page = () => {
                       }
                       className="sm:w-[620px] xs:w-[370px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                     />
+                    <span className="absolute inset-y-12 right-0 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer">
+                      *
+                    </span>
                   </div>
-                  <div className="mb-6 mr-6 flex flex-col">
+                  <div className="relative mb-6 mr-6 flex flex-col">
                     <div>
                       <label htmlFor="nationality" className="text-[#676767]">
                         Nationality
@@ -834,8 +896,11 @@ const Page = () => {
                       readOnly={true}
                       className="sm:w-[620px] xs:w-[370px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                     />
+                    <span className="absolute inset-y-12 right-0 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer">
+                      *
+                    </span>
                   </div>
-                  <div className="mb-6 mr-6 flex flex-col">
+                  <div className="relative mb-6 mr-6 flex flex-col">
                     <div>
                       <label htmlFor="religion" className="text-[#676767]">
                         Religion
@@ -872,6 +937,9 @@ const Page = () => {
                       readOnly={true}
                       className="sm:w-[620px] xs:w-[370px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                     />
+                    <span className="absolute inset-y-12 right-0 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer">
+                      *
+                    </span>
                   </div>
                   <div className="mb-6 mr-6 flex flex-col">
                     <div>
@@ -966,7 +1034,7 @@ const Page = () => {
             {profileSettingActiveTab === "Contact Details" && (
               <>
                 <div className="flex flex-row flex-wrap">
-                  <div className="mb-6 mr-6 flex flex-col">
+                  <div className="relative mb-6 mr-6 flex flex-col">
                     <label htmlFor="email" className="text-[#676767]">
                       Email
                     </label>
@@ -981,8 +1049,11 @@ const Page = () => {
                       }
                       className="sm:w-[620px] xs:w-[370px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                     />
+                    <span className="absolute inset-y-12 right-0 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer">
+                      *
+                    </span>
                   </div>
-                  <div className="mb-6 mr-6 flex flex-col">
+                  <div className="relative mb-6 mr-6 flex flex-col">
                     <label htmlFor="contact" className="text-[#676767]">
                       Contact
                     </label>
@@ -996,8 +1067,11 @@ const Page = () => {
                       }
                       className="sm:w-[620px] xs:w-[370px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                     />
+                    <span className="absolute inset-y-12 right-0 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer">
+                      *
+                    </span>
                   </div>
-                  <div className="mb-6 mr-6 flex flex-col">
+                  <div className="relative mb-6 mr-6 flex flex-col">
                     <label
                       htmlFor="permanentAddress"
                       className="text-[#676767]"
@@ -1018,6 +1092,9 @@ const Page = () => {
                       }
                       className="sm:w-[620px] xs:w-[370px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                     />
+                    <span className="absolute inset-y-12 right-0 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer">
+                      *
+                    </span>
                   </div>
                 </div>
                 <div className="mt-5">
@@ -1037,7 +1114,7 @@ const Page = () => {
             {profileSettingActiveTab === "Next of Kin" && (
               <>
                 <div className="flex flex-row flex-wrap">
-                  <div className="mb-6 mr-6 flex flex-col">
+                  <div className="relative mb-6 mr-6 flex flex-col">
                     <label htmlFor="fullNameNOK" className="text-[#676767]">
                       Fullname
                     </label>
@@ -1055,8 +1132,11 @@ const Page = () => {
                       }
                       className="sm:w-[620px] xs:w-[370px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                     />
+                    <span className="absolute inset-y-12 right-0 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer">
+                      *
+                    </span>
                   </div>
-                  <div className="mb-6 mr-6 flex flex-col">
+                  <div className="relative mb-6 mr-6 flex flex-col">
                     <div>
                       <label htmlFor="relationNOK" className="text-[#676767]">
                         Relationship
@@ -1097,8 +1177,11 @@ const Page = () => {
                       readOnly={true}
                       className="sm:w-[620px] xs:w-[370px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                     />
+                    <span className="absolute inset-y-12 right-0 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer">
+                      *
+                    </span>
                   </div>
-                  <div className="mb-6 mr-6 flex flex-col">
+                  <div className="relative mb-6 mr-6 flex flex-col">
                     <label htmlFor="emailNOK" className="text-[#676767]">
                       Email
                     </label>
@@ -1116,8 +1199,11 @@ const Page = () => {
                       }
                       className="sm:w-[620px] xs:w-[370px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                     />
+                    <span className="absolute inset-y-12 right-0 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer">
+                      *
+                    </span>
                   </div>
-                  <div className="mb-6 mr-6 flex flex-col">
+                  <div className="relative mb-6 mr-6 flex flex-col">
                     <label htmlFor="contactNOK" className="text-[#676767]">
                       Contact
                     </label>
@@ -1135,8 +1221,11 @@ const Page = () => {
                       }
                       className="sm:w-[620px] xs:w-[370px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                     />
+                    <span className="absolute inset-y-12 right-0 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer">
+                      *
+                    </span>
                   </div>
-                  <div className="mb-6 mr-6 flex flex-col">
+                  <div className="relative mb-6 mr-6 flex flex-col">
                     <label htmlFor="nicNumberNOK" className="text-[#676767]">
                       NIC Number
                     </label>
@@ -1154,8 +1243,11 @@ const Page = () => {
                       }
                       className="sm:w-[620px] xs:w-[370px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                     />
+                    <span className="absolute inset-y-12 right-0 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer">
+                      *
+                    </span>
                   </div>
-                  <div className="mb-6 mr-6 flex flex-col">
+                  <div className="relative mb-6 mr-6 flex flex-col">
                     <label htmlFor="dobNOK" className="text-[#676767]">
                       Date of Birth
                     </label>
@@ -1174,8 +1266,18 @@ const Page = () => {
                           return newDetails;
                         });
                       }}
+                      max={
+                        new Date(
+                          new Date().setFullYear(new Date().getFullYear() - 18)
+                        )
+                          .toISOString()
+                          .split("T")[0]
+                      }
                       className="sm:w-[620px] xs:w-[370px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                     />
+                    <span className="absolute inset-y-12 right-6 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer">
+                      *
+                    </span>
                   </div>
                 </div>
                 <div className="mt-5">
