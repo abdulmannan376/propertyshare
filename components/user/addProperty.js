@@ -1967,14 +1967,14 @@ const PropertyManagement = () => {
                             <MdClose
                               onClick={(event) => {
                                 event.stopPropagation();
-                                if (deleteImageList.includes(index)) {
+                                if (deleteImageList.includes(index + 1)) {
                                   const newList = deleteImageList.filter(
-                                    (item) => item !== index
+                                    (item) => item !== index + 1
                                   );
                                   setDeleteImageList(newList);
                                 } else {
                                   const newList = [...deleteImageList];
-                                  newList.push(index);
+                                  newList.push(index + 1);
                                   setDeleteImageList(newList);
                                   if (pinnedImage === index + 1)
                                     setPinnedImage(-1);
@@ -2028,7 +2028,7 @@ const PropertyManagement = () => {
               <button
                 type="button"
                 onClick={(e) => handleSubmit(e)}
-                className="w-52 bg-[#116A7B] text-white text-2xl font-medium px-7 py-3 rounded-full"
+                className="w-52 h-16 mt-7 bg-[#116A7B] text-white text-2xl font-medium px-7 py-3 rounded-full"
               >
                 {" "}
                 {!isLoading && `Submit`}
@@ -2041,7 +2041,7 @@ const PropertyManagement = () => {
               <button
                 type="button"
                 onClick={() => changeFormPhase(formPhase - 1)}
-                className="bg-[#116A7B] text-white text-2xl font-medium px-7 py-3 rounded-full"
+                className="w-52 h-16 mt-7 bg-[#116A7B] text-white text-2xl font-medium px-7 py-3 rounded-full"
               >
                 Back
               </button>
