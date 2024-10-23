@@ -629,6 +629,9 @@ const WithdrawalManagement = () => {
                         Payment Type
                       </th>
                       <th className="border border-gray-300 px-4 py-2 text-left">
+                        Fee
+                      </th>
+                      <th className="border border-gray-300 px-4 py-2 text-left">
                         Amount
                       </th>
                       <th className="border border-gray-300 px-4 py-2 text-left">
@@ -661,6 +664,11 @@ const WithdrawalManagement = () => {
                           <td className="border border-gray-300 px-4 py-2">
                             {withdrawal.paymentType}
                           </td>
+                          <td className="border border-gray-300 px-4 py-2">
+                            {withdrawal.companyFee
+                              ? withdrawal.companyFee
+                              : 0}
+                          </td>
                           <td
                             className={`border border-gray-300 px-4 py-2 ${
                               withdrawal.paymentType === "Credit"
@@ -669,7 +677,12 @@ const WithdrawalManagement = () => {
                             }`}
                           >
                             {withdrawal.paymentType === "Credit"
-                              ? `+${withdrawal.payingAmount}`
+                              ? `+${
+                                  withdrawal.companyFee
+                                    ? withdrawal.payingAmount -
+                                      withdrawal.companyFee
+                                    : withdrawal.payingAmount
+                                }`
                               : `-${withdrawal.amount}`}
                           </td>
                           <td className="border border-gray-300 px-4 py-2">

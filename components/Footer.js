@@ -165,7 +165,7 @@ const Footer = () => {
               </h1>
               <h1 className="lg:text-sm text-xs text-white">
                 <MdOutlinePhoneIphone className="inline-flex text-lg mb-1" />
-                +1 (762) 387 5717
+                +49 (176) 238 757 17
               </h1>
               {/* <h1 className="text-white">
               <IoPinSharp className="inline-flex text-xl mb-1" />

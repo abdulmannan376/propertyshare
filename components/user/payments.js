@@ -547,6 +547,9 @@ const Payments = () => {
                           Discount
                         </th>
                         <th className="border border-gray-300 px-4 py-2 text-left">
+                          Fee
+                        </th>
+                        <th className="border border-gray-300 px-4 py-2 text-left">
                           Subtotal Amount
                         </th>
                         <th className="border border-gray-300 px-4 py-2 text-left">
@@ -586,7 +589,12 @@ const Payments = () => {
                               {payment.discountAmount}
                             </td>
                             <td className="border border-gray-300 px-4 py-2">
-                              {payment.payingAmount}
+                              {payment.companyFee ? payment.companyFee : 0}
+                            </td>
+                            <td className="border border-gray-300 px-4 py-2">
+                              {payment.companyFee
+                                ? payment.payingAmount - payment.companyFee
+                                : 0}
                             </td>
                             <td className="border border-gray-300 px-4 py-2">
                               {new Date(payment.createdAt).toLocaleDateString()}
