@@ -34,7 +34,7 @@ export default function ChatComponent({ selectedConversation }) {
 
       // Update border-radius dynamically
       const currentHeight = textRef.current.scrollHeight;
-      const borderRadius = currentHeight < 40 ? "100%" : "20px"; // Adjust values as needed
+      const borderRadius = currentHeight < 40 ? "100px" : "20px"; // Adjust values as needed
       textRef.current.style.borderRadius = borderRadius;
     }
   }, [text]); // Adjust height whenever text changes
