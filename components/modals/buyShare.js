@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { updateWishList } from "@/app/redux/features/userSlice";
 import { errorAlert, successAlert } from "@/utils/alert";
 import DropIn from "braintree-web-drop-in";
+import PaypalPayment from "../PaypalPayment";
 
 // Set the app element for accessibility reasons
 Modal.setAppElement("#app-body");
@@ -155,6 +156,7 @@ const BuyShareModal = ({
   }, []);
 
   useEffect(() => {
+    console.log("price: ", price)
     if (selectedShareID.length > 0) {
       if (clientToken && isOpen) {
         DropIn.create(
@@ -197,7 +199,6 @@ const BuyShareModal = ({
         }
       }
     }
-
   }, [clientToken, isOpen, selectedShareID]);
 
   const [isLoading, setIsLoading] = useState(false);
@@ -322,7 +323,9 @@ const BuyShareModal = ({
           </div>
           <div id="dropin-container"></div>
           <div className="mt-4">
-            <button
+            <PaypalPayment amount={price} />
+
+            {/* <button
               onClick={handlePayment}
               className="w-32 bg-[#116A7B] text-white py-2 px-4 rounded  transition duration-150"
             >
@@ -330,12 +333,12 @@ const BuyShareModal = ({
               {isLoading && (
                 <div className="border-t-2 border-b-2 border-white bg-transparent h-3 p-2 animate-spin shadow-lg w-fit mx-auto rounded-full"></div>
               )}
-            </button>
+            </button> */}
             <button
               onClick={handlePayLaterSubmit}
               className="bg-transparent text-white[#116A7B] py-2 px-4 rounded transition duration-150"
             >
-              Pay Later
+              Reserve Share
             </button>
           </div>
         </div>

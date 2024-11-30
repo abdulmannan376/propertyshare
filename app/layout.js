@@ -6,6 +6,7 @@ import ReduxProvider from "./redux/provider";
 import { SocketProvider } from "@/hooks/useSocket";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import MainAppComponent from "@/components/MainAppComponent";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,7 +22,7 @@ export default function RootLayout({ children }) {
         <ReduxProvider>
           <SocketProvider>
             <Navbar />
-            {children}
+            <MainAppComponent children={children}/>
             <Footer />
           </SocketProvider>
         </ReduxProvider>

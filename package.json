@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@paypal/react-paypal-js": "^8.7.0",
     "@react-leaflet/core": "^2.1.0",
     "@reduxjs/toolkit": "^2.2.3",
     "braintree-web-drop-in": "^1.43.0",
