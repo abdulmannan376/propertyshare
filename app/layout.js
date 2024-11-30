@@ -22,7 +22,9 @@ export default function RootLayout({ children }) {
         <ReduxProvider>
           <SocketProvider>
             <Navbar />
-            <MainAppComponent children={children}/>
+            <MainAppComponent>
+                {children}
+            </MainAppComponent>
             <Footer />
           </SocketProvider>
         </ReduxProvider>
