@@ -9,8 +9,9 @@ import {
   PayPalCardFieldsForm,
   PayPalButtons,
 } from "@paypal/react-paypal-js";
+import { errorAlert } from "@/utils/alert";
 
-const PaypalPayment = ({ amount }) => {
+const PaypalPayment = ({ amount, handlePayment }) => {
   const [isPaying, setIsPaying] = useState(false);
   const [billingAddress, setBillingAddress] = useState({
     addressLine1: "",
@@ -60,20 +61,17 @@ const PaypalPayment = ({ amount }) => {
   }
 
   async function onApprove(data) {
-    return fetch(
-      `${process.env.NEXT_PUBLIC_SERVER_HOST}/payment/orders/${data.orderID}/capture`,
-      {
-        method: "POST",
-      }
-    )
-      .then((response) => response.json())
-      .then((orderData) => {
-        // Successful capture!
-        console.log("Order Success.", orderData);
-      })
-      .catch((err) => {
-        console.error("Error: ", err);
-      });
+    
+    try {
+      
+      handlePayment(data.orderID)
+      
+      return true
+    } catch (error) {
+      console.error(error)
+      return true
+    }
+      
   }
 
   function onError(error) {

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
 import DropIn from "braintree-web-drop-in";
 import { errorAlert, successAlert } from "@/utils/alert";
+import PaypalPayment from "../PaypalPayment";
 
 Modal.setAppElement("#app-body");
 
@@ -30,46 +31,47 @@ const PaymentModal = ({ isOpen, onClose, payment, amount }) => {
 
     fetchClientToken();
   }, []);
-  useEffect(() => {
-    if (clientToken && isOpen) {
-      DropIn.create(
-        {
-          authorization: clientToken,
-          container: "#dropin-container",
-          paypal: {
-            flow: "vault", // Options are 'vault' or 'checkout'
-            amount: "10.00", // You can specify an amount or leave this empty
-            currency: "USD", // Specify currency
-            buttonStyle: {
-              color: "blue", // Options are 'blue', 'gold', 'silver', 'white', 'black'
-              shape: "rect", // Options are 'rect', 'pill'
-              size: "medium", // Options are 'small', 'medium', 'large', 'responsive'
-            },
-          },
-        },
-        (error, dropinInstance) => {
-          if (error) errorAlert("Error", error);
-          else setInstance(dropinInstance);
-        }
-      );
-    }
+  // useEffect(() => {
+  //   if (clientToken && isOpen) {
+  //     DropIn.create(
+  //       {
+  //         authorization: clientToken,
+  //         container: "#dropin-container",
+  //         paypal: {
+  //           flow: "vault", // Options are 'vault' or 'checkout'
+  //           amount: "10.00", // You can specify an amount or leave this empty
+  //           currency: "USD", // Specify currency
+  //           buttonStyle: {
+  //             color: "blue", // Options are 'blue', 'gold', 'silver', 'white', 'black'
+  //             shape: "rect", // Options are 'rect', 'pill'
+  //             size: "medium", // Options are 'small', 'medium', 'large', 'responsive'
+  //           },
+  //         },
+  //       },
+  //       (error, dropinInstance) => {
+  //         if (error) errorAlert("Error", error);
+  //         else setInstance(dropinInstance);
+  //       }
+  //     );
+  //   }
 
-  }, [clientToken, isOpen]);
+  // }, [clientToken, isOpen]);
 
   const [isLoading, setIsLoading] = useState(false);
 
   // Handle payment submission
-  const handlePayment = async () => {
+  const handlePayment = async (orderID) => {
     try {
       setIsLoading(true);
 
-      const { nonce } = await instance.requestPaymentMethod();
       const username = JSON.parse(localStorage.getItem("userDetails")).username;
       //   const purpose = `Buy Share of Property: ${propertyID}`;
 
+      console.log(payment)
+
       const request = {
         payment: {
-          nonce,
+          orderID,
           username,
           amount: payment.payingAmount,
           paymentID: payment.paymentID,
@@ -79,7 +81,8 @@ const PaymentModal = ({ isOpen, onClose, payment, amount }) => {
           recipient: payment.userDocID?.username,
           username: payment.initiatedBy?.username,
           shareOfferID: payment.shareOfferDocID?.shareOfferID,
-          isBuybackOffer: payment.shareOfferDocID?.offerToPropertyOwner
+          isBuybackOffer: payment.shareOfferDocID?.offerToPropertyOwner,
+          requestID: payment.raisedRequestDocID?.raisedRequestID
         },
         category: payment.category,
       };
@@ -136,12 +139,16 @@ const PaymentModal = ({ isOpen, onClose, payment, amount }) => {
         },
       }}
     >
-      <div className="sm:p-10 p-5 lg:w-[30vw] md:w-[50vw] sm:w-[70vw] w-[95vw] bg-white rounded-2xl">
+      <div id="payment-modal" className="sm:p-10 p-5 lg:w-[30vw] md:w-[50vw] sm:w-[70vw] w-[95vw] bg-white rounded-2xl">
         <h1 className="text-2xl font-semibold text-[#116A7B] text-center">
           Payment Action
         </h1>
-        <div id="dropin-container"></div>
-        {instance && (
+        <div className="min-h-[40vh] flex items-center justify-center">
+          
+        <PaypalPayment amount={payment.payingAmount} handlePayment={handlePayment}/>
+        </div>
+        {/* <div id="dropin-container"></div> */}
+        {/* {instance && (
           <div className="mt-4">
             <button
               onClick={handlePayment}
@@ -153,7 +160,7 @@ const PaymentModal = ({ isOpen, onClose, payment, amount }) => {
               )}
             </button>
           </div>
-        )}
+        )} */}
       </div>
     </Modal>
   );

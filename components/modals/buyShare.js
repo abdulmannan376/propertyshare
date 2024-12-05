@@ -155,68 +155,66 @@ const BuyShareModal = ({
     fetchClientToken();
   }, []);
 
-  useEffect(() => {
-    console.log("price: ", price)
-    if (selectedShareID.length > 0) {
-      if (clientToken && isOpen) {
-        DropIn.create(
-          {
-            authorization: clientToken,
-            container: "#dropin-container",
-            paypal: {
-              flow: "vault", // Options are 'vault' or 'checkout'
-              amount: "", // You can specify an amount or leave this empty
-              currency: "USD", // Specify currency
-              buttonStyle: {
-                color: "blue", // Options are 'blue', 'gold', 'silver', 'white', 'black'
-                shape: "rect", // Options are 'rect', 'pill'
-                size: "medium", // Options are 'small', 'medium', 'large', 'responsive'
-              },
-            },
-          },
-          (error, dropinInstance) => {
-            if (error) errorAlert("Error", error);
-            else setInstance(dropinInstance);
-          }
-        );
-      }
-    } else {
-      if (instance) {
-        // Clear the instance
-        instance.teardown((err) => {
-          if (err) {
-            console.error("Error tearing down DropIn instance:", err);
-          } else {
-            setInstance(null); // Clear instance state
-          }
-        });
-      }
-      // Remove children from #dropin-container
-      const dropinContainer = document.getElementById("dropin-container");
-      if (dropinContainer) {
-        while (dropinContainer.firstChild) {
-          dropinContainer.removeChild(dropinContainer.firstChild);
-        }
-      }
-    }
-  }, [clientToken, isOpen, selectedShareID]);
+  // useEffect(() => {
+  //   console.log("price: ", price)
+  //   if (selectedShareID.length > 0) {
+  //     if (clientToken && isOpen) {
+  //       DropIn.create(
+  //         {
+  //           authorization: clientToken,
+  //           container: "#dropin-container",
+  //           paypal: {
+  //             flow: "vault", // Options are 'vault' or 'checkout'
+  //             amount: "", // You can specify an amount or leave this empty
+  //             currency: "USD", // Specify currency
+  //             buttonStyle: {
+  //               color: "blue", // Options are 'blue', 'gold', 'silver', 'white', 'black'
+  //               shape: "rect", // Options are 'rect', 'pill'
+  //               size: "medium", // Options are 'small', 'medium', 'large', 'responsive'
+  //             },
+  //           },
+  //         },
+  //         (error, dropinInstance) => {
+  //           if (error) errorAlert("Error", error);
+  //           else setInstance(dropinInstance);
+  //         }
+  //       );
+  //     }
+  //   } else {
+  //     if (instance) {
+  //       // Clear the instance
+  //       instance.teardown((err) => {
+  //         if (err) {
+  //           console.error("Error tearing down DropIn instance:", err);
+  //         } else {
+  //           setInstance(null); // Clear instance state
+  //         }
+  //       });
+  //     }
+  //     // Remove children from #dropin-container
+  //     const dropinContainer = document.getElementById("dropin-container");
+  //     if (dropinContainer) {
+  //       while (dropinContainer.firstChild) {
+  //         dropinContainer.removeChild(dropinContainer.firstChild);
+  //       }
+  //     }
+  //   }
+  // }, [clientToken, isOpen,]);
 
   const [isLoading, setIsLoading] = useState(false);
 
   // Handle payment submission
-  const handlePayment = async () => {
+  const handlePayment = async (orderID) => {
     try {
       setIsLoading(true);
       if (!localStorage.getItem("userDetails")) {
         throw new Error("Login first.");
       }
-
-      const { nonce } = await instance.requestPaymentMethod();
       const username = JSON.parse(localStorage.getItem("userDetails")).username;
       const purpose = `Buy Share of Property: ${propertyID}`;
 
       const request = {
-        payment: { nonce, amount: price, username, purpose },
+        payment: { amount: price, username, purpose, orderID },
         data: {
           username,
           shareID: selectedShareID,
@@ -323,7 +321,7 @@ const BuyShareModal = ({
           </div>
           <div id="dropin-container"></div>
           <div className="mt-4">
-            <PaypalPayment amount={price} />
+            {selectedShareID.length > 0 && <PaypalPayment amount={price} handlePayment={handlePayment} />}
 
             {/* <button
               onClick={handlePayment}
