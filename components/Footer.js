@@ -52,10 +52,10 @@ const Footer = () => {
                   <Link href={"/map"}>Map</Link>
                 </li>
                 <li className=" font-normal text-white">
-                  <Link href={"/buy-share"}>Buy Share</Link>
+                  <Link href={"/buy-shares"}>Buy Share</Link>
                 </li>
                 <li className=" font-normal text-white">
-                  <Link href={"/rent-share"}>Rent Share</Link>
+                  <Link href={"/rent-shares"}>Rent Share</Link>
                 </li>
                 <li className=" font-normal text-white">
                   <Link href={"/login"}>Login</Link>
@@ -68,7 +68,7 @@ const Footer = () => {
               </h1>
               <ul className="space-y-1 mt-1 text-xs">
                 <li className="font-normal text-white">
-                  <Link href={"/about-us"}>About Us</Link>
+                  <Link href={"/aboutus"}>About Us</Link>
                 </li>
                 <li className="font-normal text-white">
                   <Link href={"/faqs"}>FAQs</Link>
