@@ -179,7 +179,9 @@ const Page = () => {
   const handleFavouriteListRequest = async (action) => {
     console.log("action: ", action);
     try {
-      const username = JSON.parse(localStorage.getItem("userDetails"))?.username;
+      const username = JSON.parse(
+        localStorage.getItem("userDetails")
+      )?.username;
 
       const data = {
         username: username,
@@ -213,7 +215,9 @@ const Page = () => {
   const handleWishListRequest = async (action) => {
     console.log("action: ", action);
     try {
-      const username = JSON.parse(localStorage.getItem("userDetails"))?.username;
+      const username = JSON.parse(
+        localStorage.getItem("userDetails")
+      )?.username;
 
       const data = {
         username: username,
@@ -288,7 +292,7 @@ const Page = () => {
           }
         >
           <div className="my-10">
-            {property.imageCount > 0 ? (
+            {property.imageCount > 1 && (
               <div>
                 {/* Swiper component */}
                 <Slider
@@ -333,6 +337,19 @@ const Page = () => {
                   className="flex flex-row justify-center "
                 ></div> */}
               </div>
+            )}
+            {property.imageCount > 0 ? (
+              <div className="h-[44rem]">
+                <Image
+                  width={1000}
+                  height={1000}
+                  src={`${process.env.NEXT_PUBLIC_SERVER_HOST}/${
+                    property.imageDirURL
+                  }image-1.png`}
+                  className="w-full h-full object-scale-down object-center"
+                  alt={`${property.slug}-noimage`}
+                />
+              </div>
             ) : (
               <div className="h-[44rem]">
                 <Image
@@ -364,40 +381,44 @@ const Page = () => {
                   </h1>
                 </button>
                 {/* <Link href={`${process.env.NEXT_PUBLIC_HOST}/chef`}> */}
-                {JSON.parse(localStorage.getItem("userDetails"))?.role && <button
-                  onClick={() => {
-                    dispatch(updateActiveBuyShareNavBtn("Rent"));
-                    handleScrollIntoView(rentRef);
-                  }}
-                  ref={rentRef}
-                >
-                  <h2
-                    className={`flex w-14 whitespace-nowrap ${
-                      activeNavBtn === "Rent"
-                        ? "underline-text"
-                        : "hover-underline-animation"
-                    } `}
+                {JSON.parse(localStorage.getItem("userDetails"))?.role && (
+                  <button
+                    onClick={() => {
+                      dispatch(updateActiveBuyShareNavBtn("Rent"));
+                      handleScrollIntoView(rentRef);
+                    }}
+                    ref={rentRef}
                   >
-                    Rent
-                  </h2>
-                </button>}
-                {JSON.parse(localStorage.getItem("userDetails"))?.role && <button
-                  onClick={() => {
-                    dispatch(updateActiveBuyShareNavBtn("Sell"));
-                    handleScrollIntoView(sellRef);
-                  }}
-                  ref={sellRef}
-                >
-                  <h2
-                    className={`flex w-14 whitespace-nowrap ${
-                      activeNavBtn === "Sell"
-                        ? "underline-text"
-                        : "hover-underline-animation"
-                    } `}
+                    <h2
+                      className={`flex w-14 whitespace-nowrap ${
+                        activeNavBtn === "Rent"
+                          ? "underline-text"
+                          : "hover-underline-animation"
+                      } `}
+                    >
+                      Rent
+                    </h2>
+                  </button>
+                )}
+                {JSON.parse(localStorage.getItem("userDetails"))?.role && (
+                  <button
+                    onClick={() => {
+                      dispatch(updateActiveBuyShareNavBtn("Sell"));
+                      handleScrollIntoView(sellRef);
+                    }}
+                    ref={sellRef}
                   >
-                    Sell
-                  </h2>
-                </button>}
+                    <h2
+                      className={`flex w-14 whitespace-nowrap ${
+                        activeNavBtn === "Sell"
+                          ? "underline-text"
+                          : "hover-underline-animation"
+                      } `}
+                    >
+                      Sell
+                    </h2>
+                  </button>
+                )}
                 {JSON.parse(localStorage.getItem("userDetails"))?.role ===
                   "admin" && (
                   <button
@@ -605,7 +626,8 @@ const Page = () => {
                         </strong>
                       </div>
                     )}
-                    {property?.amenitiesID?.mainFeatures?.inputs?.elevators && (
+                    {property?.amenitiesID?.mainFeatures?.inputs?.elevators !=
+                      undefined && (
                       <div className="border border-[#116A7B] text-2xl  text-[#00262D] p-2 rounded-lg">
                         <PiElevatorDuotone className="inline-flex mx-2 mb-1" />
                         <strong>Elevators:</strong>{" "}
