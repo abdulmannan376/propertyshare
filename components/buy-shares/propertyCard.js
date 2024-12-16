@@ -77,7 +77,7 @@ const PropertyCard = ({ card }) => {
               truncatedText.length > 0
             ) {
               truncatedText = truncatedText.slice(0, -1);
-              current.innerText = truncatedText + "...";
+              current.innerHTML = truncatedText + "...";
             }
           }
         }, 0);

@@ -20,7 +20,7 @@ const Footer = () => {
     <>
       <div
         className={`bg-[#116A7B] text-white text-center w-full ${
-          currentPage.tag === "Messages" ? "hidden" : "flex"
+          currentPage.tag === "Messages" || currentPage.tag === "Dashboard" ? "hidden" : "flex"
         } flex-row items-center justify-center xxl:px-24 xl:px-16 lg:px-10 sm:px-5 border-y-[1px] border-white`}
       >
         <h1 className="text-center uppercase lg:text-xl text-base font-semibold lg:p-5 p-3">
@@ -29,7 +29,7 @@ const Footer = () => {
       </div>
       <div
         className={`bg-[#116A7B] w-full ${
-          currentPage.tag === "Messages" ? "hidden" : "flex"
+          currentPage.tag === "Messages" || currentPage.tag === "Dashboard" ? "hidden" : "flex"
         } md:flex-row flex-col md:items-start items-center justify-between xxl:px-24 xl:px-16 lg:px-10 sm:px-5 pt-5`}
       >
         <div className="lg:w-1/2 w-1/3">
@@ -177,7 +177,7 @@ const Footer = () => {
       </div>
       <div
         className={`bg-[#116A7B] text-white text-center w-full ${
-          currentPage.tag === "Messages" ? "hidden" : "flex"
+          currentPage.tag === "Messages" || currentPage.tag === "Dashboard" ? "hidden" : "flex"
         } flex-row items-center justify-center xxl:px-24 xl:px-16 lg:px-10 sm:px-5 pb-2`}
       >
         <h1 className="text-center">
