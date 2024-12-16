@@ -78,7 +78,6 @@ const MapPage = () => {
   const MapEvents = () => {
     useMapEvents({
       click(e) {
-
         const elClass = e.originalEvent.target.className;
         if (
           elClass?.includes("leaflet-container") &&
@@ -150,7 +149,7 @@ const MapPage = () => {
           long: data.coordinates.long,
           propertyType: data.selectedPropertyType,
           areaRange: data.areaRange,
-          priceRange: data.priceRange
+          priceRange: data.priceRange,
         }),
       }
     );
@@ -163,8 +162,6 @@ const MapPage = () => {
     const responseData = await response.json();
     // Handle response
   };
-
-  
 
   const router = useRouter(); // Hook for programmatic navigation
 
@@ -180,6 +177,8 @@ const MapPage = () => {
         // zoomControl
         center={position || [51.505, -0.09]}
         zoom={15}
+        minZoom={5} // Minimum zoom level
+        maxZoom={18} // Maximum zoom level
         style={{ height: "90vh", width: "100%" }}
       >
         <TileLayer
