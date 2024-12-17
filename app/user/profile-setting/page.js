@@ -8,6 +8,7 @@ import {
 import {
   handleUserProfileSettingNavigation,
   handleUserSettingNavigation,
+  updateUserDetails,
 } from "@/app/redux/features/userSlice";
 import AccountSetting from "@/components/user/setting-components/accountSetting";
 import Image from "next/image";
@@ -101,6 +102,17 @@ const Page = () => {
             swiftCode: "",
           });
         }
+        const user = response.body;
+        const userDetails = {
+          role: user.role,
+          username: user.username,
+          email: user.email,
+          profilePicURL: user.userProfile.profilePicURL,
+          isProfileCompleted: user.isProfileCompleted,
+        };
+        dispatch(updateUserDetails(userDetails));
+        userDetails.name = user.name;
+        localStorage.setItem("userDetails", JSON.stringify(userDetails));
       } else {
         throw new Error(response.message);
       }
@@ -434,7 +446,7 @@ const Page = () => {
       const response = await res.json();
 
       if (response.success) {
-        if ((selectedIDCardFace === "Front")) {
+        if (selectedIDCardFace === "Front") {
           setUserDetails((prevDetails) => {
             const newDetails = { ...prevDetails };
             newDetails["userProfile"] = {
@@ -444,7 +456,7 @@ const Page = () => {
             };
             return newDetails;
           });
-        } else if ((selectedIDCardFace === "Back")) {
+        } else if (selectedIDCardFace === "Back") {
           setUserDetails((prevDetails) => {
             const newDetails = { ...prevDetails };
             newDetails["userProfile"] = {

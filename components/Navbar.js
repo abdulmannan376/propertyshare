@@ -157,11 +157,14 @@ const Navbar = () => {
         const response = await res.json();
         if (response.success) {
           const user = response.body;
+          // console.log("checking isProfileCompleted",user.isProfileCompleted);
+          
           const userDetails = {
             role: user.role,
             username: user.username,
             email: user.email,
             profilePicURL: user.userProfile.profilePicURL,
+            isProfileCompleted: user.isProfileCompleted
           };
           dispatch(updateUserDetails(userDetails));
           userDetails.name = user.name;

@@ -52,6 +52,7 @@ import CalendarModal from "@/components/modals/calendarModal";
 import Slider from "react-slick";
 import { TiArrowRightThick } from "react-icons/ti";
 import { errorAlert } from "@/utils/alert";
+import { useRouter } from "next/navigation";
 
 const NextArrow = ({ className, style, onClick }) => {
   return (
@@ -95,7 +96,7 @@ const Page = () => {
   };
 
   const dispatch = useDispatch();
-
+  const router = useRouter();
   useEffect(() => {
     dispatch(
       updateNavbarTextColor({
@@ -121,7 +122,18 @@ const Page = () => {
 
   const [isModalOpen, setModalOpen] = useState(false);
 
-  const handleOpenModal = () => setModalOpen(true);
+  const handleOpenModal = () => {
+    const userDetails = JSON.parse(localStorage.getItem("userDetails") || "{}");
+    const isProfileCompleted = userDetails?.isProfileCompleted;
+
+    if (isProfileCompleted) {
+      setModalOpen(true);
+    } else {
+      errorAlert("Complete  Profile to continue Buying");
+      router.push("/user/profile-setting");
+    }
+  };
+
   const handleCloseModal = () => setModalOpen(false);
 
   // function useValidateQuery() {
