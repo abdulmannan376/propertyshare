@@ -17,7 +17,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { FaCcVisa, FaCcMastercard } from "react-icons/fa6";
 import { errorAlert, successAlert } from "@/utils/alert";
-
+import {
+  primaryDetailsSchema,
+  contactDetailsSchema,
+  nextOfKinSchema,
+  imageUploadSchema,
+  idCardUploadSchema,
+} from "../../../lib/validations/authentications";
+import { isEmpty } from "lodash";
 const Page = () => {
   const dispatch = useDispatch();
 
@@ -50,6 +57,7 @@ const Page = () => {
   const [nextOfKinDetails, setNextOfKinDetails] = useState(null);
   const [paymentDetails, setPaymentDetails] = useState(null);
   const [withdrawalDetails, setWithdrawalDetails] = useState(null);
+// console.log("userDetails==>",userDetails);
 
   const fetchUserDetails = async () => {
     try {
@@ -142,6 +150,15 @@ const Page = () => {
         return newDetails;
       });
     }
+
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [field]: "", // Clear the error for the specific field
+    }));
+    setErrorsContact((prevErrors) => ({
+      ...prevErrors,
+      [field]: "", // Clear the error for the specific field
+    }));
   };
 
   const genderList = ["Male", "Female", "Other"];
@@ -380,10 +397,43 @@ const Page = () => {
 
   const [files, setFiles] = useState(null);
   const [isLoadingProfilePic, setIsLoadingProfilePic] = useState(false);
-
+  const initailErrorsImageUpload = {
+    imageFile: "",
+  };
+  const [errorsImageUpload, setErrorsImageUpload] = useState(
+    initailErrorsImageUpload
+  );
+  const initailErrorsIDCardPic = {
+    imageFile: "",
+  };
+  const [errorsIDCardPic, setErrorsIDCardPic] = useState(
+    initailErrorsIDCardPic
+  );
   const handleUploadProfilePic = async () => {
     try {
       setIsLoadingProfilePic(true);
+      // await imageUploadSchema.validate({ imageFile: files });
+      let fieldErrors;
+
+      // Validate using Yup
+      await imageUploadSchema
+        .validate({ imageFile: files }, { abortEarly: false })
+        .catch((error) => {
+          fieldErrors = error.inner.reduce((acc, err) => {
+            return {
+              ...acc,
+              [err.path]: err.message,
+            };
+          }, {});
+
+          setErrorsImageUpload(fieldErrors);
+        });
+      if (!isEmpty(fieldErrors)) {
+        throw new Error(
+          "Unsupported file format. Only JPG, JPEG, PNG, and GIF are allowed."
+        );
+      }
+
       const username = JSON.parse(localStorage.getItem("userDetails")).username;
 
       const formData = new FormData();
@@ -400,6 +450,7 @@ const Page = () => {
       );
 
       const response = await res.json();
+
       if (response.success) {
         setIsLoadingProfilePic(false);
         setUserDetails((prevDetails) => {
@@ -410,6 +461,7 @@ const Page = () => {
           };
           return newDetails;
         });
+
         successAlert("Success", response.message);
       } else {
         throw new Error(response.message);
@@ -426,6 +478,24 @@ const Page = () => {
 
   const handleUploadIDCardPic = async () => {
     try {
+      let fieldErrors;
+      for (const file of idCardFiles)
+        await idCardUploadSchema
+          .validate({ imageFile: file }, { abortEarly: false })
+          .catch((error) => {
+            fieldErrors = error.inner.reduce((acc, err) => {
+              return {
+                ...acc,
+                [err.path]: err.message,
+              };
+            }, {});
+            setErrorsIDCardPic(fieldErrors);
+          });
+      if (!isEmpty(fieldErrors)) {
+        throw new Error(
+          "Unsupported file format. Only JPG, JPEG, PNG, and GIF are allowed."
+        );
+      }
       setIsLoadingIDCardPic(true);
       const username = JSON.parse(localStorage.getItem("userDetails")).username;
 
@@ -456,6 +526,7 @@ const Page = () => {
             };
             return newDetails;
           });
+          successAlert("Success", `Front Side ${response.message}`);
         } else if (selectedIDCardFace === "Back") {
           setUserDetails((prevDetails) => {
             const newDetails = { ...prevDetails };
@@ -466,6 +537,7 @@ const Page = () => {
             };
             return newDetails;
           });
+          successAlert("Success", `Back Side ${response.message}`);
         }
       }
     } catch (error) {
@@ -476,7 +548,32 @@ const Page = () => {
   };
 
   const [isLoadingSubmission, setIsLoadingSubmission] = useState(false);
-
+  const initialErrors = {
+    name: "",
+    gender: "",
+    dobString: "",
+    nicNumber: "",
+    nationality: "",
+    religion: "",
+    bloodGroup: "",
+  };
+  const initailErrorsContact = {
+    contact: "",
+    permanentAddress: "",
+  };
+  const initailErrorsNextOfKin = {
+    fullName: "",
+    relation: "",
+    email: "",
+    contact: "",
+    nicNumber: "",
+    dobString: "",
+  };
+  const [errors, setErrors] = useState(initialErrors);
+  const [errorsContact, setErrorsContact] = useState(initailErrorsContact);
+  const [errorsNextOfKin, setErrorsNextOfKin] = useState(
+    initailErrorsNextOfKin
+  );
   const handleUserProfileUpdate = async () => {
     try {
       setIsLoadingSubmission(true);
@@ -484,15 +581,37 @@ const Page = () => {
       const action = profileSettingActiveTab;
       let body = {};
       if (action === "Primary Details") {
-        if (
-          userDetails.name.length === 0 ||
-          userDetails.userProfile.gender.length === 0 ||
-          userDetails.userProfile.dobString.length === 0 ||
-          userDetails.userProfile.nicNumber.length === 0 ||
-          userDetails.userProfile.nationality.length === 0 ||
-          userDetails.userProfile.religion.length === 0
-        )
+        const primaryDetailsToValidate = {
+          ...userDetails.userProfile,
+          name: userDetails.name, // Include name here
+        };
+        let fieldErrors;
+        // Validate using Yup
+        await primaryDetailsSchema
+          .validate(primaryDetailsToValidate, { abortEarly: false })
+          .catch((error) => {
+            fieldErrors = error.inner.reduce((acc, err) => {
+              return {
+                ...acc,
+                [err.path]: err.message,
+              };
+            }, {});
+
+            setErrors(fieldErrors);
+          });
+        if (!isEmpty(fieldErrors)) {
           throw new Error("Missing Fields");
+        }
+
+        // if (
+        //   userDetails.name.length === 0 ||
+        //   userDetails.userProfile.gender.length === 0 ||
+        //   userDetails.userProfile.dobString.length === 0 ||
+        //   userDetails.userProfile.nicNumber.length === 0 ||
+        //   userDetails.userProfile.nationality.length === 0 ||
+        //   userDetails.userProfile.religion.length === 0
+        // )
+        //   throw new Error("Missing Fields");
         body.name = userDetails.name;
         body.gender = userDetails.userProfile.gender;
         body.dobString = userDetails.userProfile.dobString;
@@ -501,24 +620,63 @@ const Page = () => {
         body.religion = userDetails.userProfile.religion;
         body.bloodGroup = userDetails.userProfile.bloodGroup;
       } else if (action === "Contact Details") {
-        if (
-          `${userDetails.contact}`.length === 0 ||
-          userDetails.userProfile.permanentAddress.length === 0
-        ) {
+        let fieldErrors;
+        const primaryDetailsToValidate = {
+          contact: userDetails.contact,
+          permanentAddress: userDetails.userProfile.permanentAddress,
+        };
+        // Validate using Yup
+        await contactDetailsSchema
+          .validate(primaryDetailsToValidate, { abortEarly: false })
+          .catch((error) => {
+            fieldErrors = error.inner.reduce((acc, err) => {
+              return {
+                ...acc,
+                [err.path]: err.message,
+              };
+            }, {});
+
+            setErrorsContact(fieldErrors);
+          });
+        if (!isEmpty(fieldErrors)) {
           throw new Error("Missing Fields");
         }
+        // if (
+        //   `${userDetails.contact}`.length === 0 ||
+        //   userDetails.userProfile.permanentAddress.length === 0
+        // ) {
+        //   throw new Error("Missing Fields");
+        // }
         (body.contact = userDetails.contact),
           (body.permanentAddress = userDetails.userProfile.permanentAddress);
       } else if (action === "Next of Kin") {
-        if (
-          nextOfKinDetails.fullName.length === 0 ||
-          nextOfKinDetails.relation.length === 0 ||
-          nextOfKinDetails.email.length === 0 ||
-          `${nextOfKinDetails.contact}`.length === 0 ||
-          `${nextOfKinDetails.nicNumber}`.length === 0 ||
-          nextOfKinDetails.dobString.length === 0
-        )
+        let fieldErrors;
+
+        // Validate using Yup
+        await nextOfKinSchema
+          .validate(nextOfKinDetails, { abortEarly: false })
+          .catch((error) => {
+            fieldErrors = error.inner.reduce((acc, err) => {
+              return {
+                ...acc,
+                [err.path]: err.message,
+              };
+            }, {});
+
+            setErrorsNextOfKin(fieldErrors);
+          });
+        if (!isEmpty(fieldErrors)) {
           throw new Error("Missing Fields");
+        }
+        // if (
+        //   nextOfKinDetails.fullName.length === 0 ||
+        //   nextOfKinDetails.relation.length === 0 ||
+        //   nextOfKinDetails.email.length === 0 ||
+        //   `${nextOfKinDetails.contact}`.length === 0 ||
+        //   `${nextOfKinDetails.nicNumber}`.length === 0 ||
+        //   nextOfKinDetails.dobString.length === 0
+        // )
+        //   throw new Error("Missing Fields");
         body.nextOfKinDetails = {
           fullName: nextOfKinDetails.fullName,
           relation: nextOfKinDetails.relation,
@@ -808,6 +966,11 @@ const Page = () => {
                     <span className="absolute inset-y-12 right-0 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer">
                       *
                     </span>
+                    {errors.name && (
+                      <div className="text-red-500 text-xs mt-1">
+                        {errors.name}
+                      </div>
+                    )}
                   </div>
                   <div className="relative mb-6 mr-6 flex flex-col">
                     <label htmlFor="username" className="text-[#676767]">
@@ -872,6 +1035,11 @@ const Page = () => {
                     <span className="absolute inset-y-12 right-0 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer">
                       *
                     </span>
+                    {errors.gender && (
+                      <div className="text-red-500 text-xs mt-1">
+                        {errors.gender}
+                      </div>
+                    )}
                   </div>
                   <div className="relative mb-6 mr-6 flex flex-col">
                     <label htmlFor="dob" className="text-[#676767]">
@@ -903,6 +1071,11 @@ const Page = () => {
                     <span className="absolute inset-y-12 right-6 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer">
                       *
                     </span>
+                    {errors.dobString && (
+                      <div className="text-red-500 text-xs mt-1">
+                        {errors.dobString}
+                      </div>
+                    )}
                   </div>
                   <div className="relative mb-6 mr-6 flex flex-col">
                     <label htmlFor="nicNumber" className="text-[#676767]">
@@ -925,6 +1098,11 @@ const Page = () => {
                     <span className="absolute inset-y-12 right-0 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer">
                       *
                     </span>
+                    {errors.nicNumber && (
+                      <div className="text-red-500 text-xs mt-1">
+                        {errors.nicNumber}
+                      </div>
+                    )}
                   </div>
                   <div className="relative mb-6 mr-6 flex flex-col">
                     <div>
@@ -966,6 +1144,11 @@ const Page = () => {
                     <span className="absolute inset-y-12 right-0 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer">
                       *
                     </span>
+                    {errors.nationality && (
+                      <div className="text-red-500 text-xs mt-1">
+                        {errors.nationality}
+                      </div>
+                    )}
                   </div>
                   <div className="relative mb-6 mr-6 flex flex-col">
                     <div>
@@ -1007,6 +1190,11 @@ const Page = () => {
                     <span className="absolute inset-y-12 right-0 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer">
                       *
                     </span>
+                    {errors.religion && (
+                      <div className="text-red-500 text-xs mt-1">
+                        {errors.religion}
+                      </div>
+                    )}
                   </div>
                   <div className="mb-6 mr-6 flex flex-col">
                     <div>
@@ -1054,10 +1242,21 @@ const Page = () => {
                       type="file"
                       accept="image/png"
                       required={true}
-                      onChange={({ target }) => setFiles(target.files)}
+                      onChange={({ target }) => {
+                        setFiles(target.files);
+                        setErrorsImageUpload((prevErrors) => ({
+                          ...prevErrors,
+                          imageFile: "", // Clear the error for this field
+                        }));
+                      }}
                       className="sm:w-[620px] xs:w-[370px] w-[320px] file:border-0 file:bg-violet-50 file:rounded-full file:text-violet-700
                                hover:file:bg-violet-100 text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                     />
+                    {errorsImageUpload.imageFile && (
+                      <div className="text-red-500 text-xs mt-1">
+                        {errorsImageUpload.imageFile}
+                      </div>
+                    )}
                     {userDetails?.userProfile.profilePicURL.length > 0 && (
                       <div className="my-5">
                         <Image
@@ -1111,10 +1310,21 @@ const Page = () => {
                       accept="image/png"
                       disabled={selectedIDCardFace === ""}
                       required={true}
-                      onChange={({ target }) => setIdCardFiles(target.files)}
+                      onChange={({ target }) => {
+                        setIdCardFiles(target.files);
+                        setErrorsIDCardPic((prevErrors) => ({
+                          ...prevErrors,
+                          imageFile: "", // Clear the error for this field
+                        }));
+                      }}
                       className="sm:w-[620px] xs:w-[370px] w-[320px] file:border-0 file:bg-violet-50 file:rounded-full file:text-violet-700
                                hover:file:bg-violet-100 file:disabled:opacity-40 file:opacity-100 text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                     />
+                    {errorsIDCardPic.imageFile && (
+                      <div className="text-red-500 text-xs mt-1">
+                        {errorsIDCardPic.imageFile}
+                      </div>
+                    )}
                     {selectedIDCardFace === "Front" && (
                       <div className="my-5">
                         {userDetails?.userProfile.idCardFrontAdded ? (
@@ -1224,6 +1434,11 @@ const Page = () => {
                     <span className="absolute inset-y-12 right-0 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer">
                       *
                     </span>
+                    {errorsContact.contact && (
+                      <div className="text-red-500 text-xs mt-1">
+                        {errorsContact.contact}
+                      </div>
+                    )}
                   </div>
                   <div className="relative mb-6 mr-6 flex flex-col">
                     <label
@@ -1235,7 +1450,7 @@ const Page = () => {
                     <input
                       type="text"
                       name="permanentAddress"
-                      value={userDetails?.permanentAddress}
+                      value={userDetails?.userProfile?.permanentAddress}
                       required={true}
                       onChange={({ target }) =>
                         handleUserProfileUpdates(
@@ -1249,6 +1464,11 @@ const Page = () => {
                     <span className="absolute inset-y-12 right-0 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer">
                       *
                     </span>
+                    {errorsContact.permanentAddress && (
+                      <div className="text-red-500 text-xs mt-1">
+                        {errorsContact.permanentAddress}
+                      </div>
+                    )}
                   </div>
                 </div>
                 <div className="mt-5">
@@ -1277,18 +1497,29 @@ const Page = () => {
                       name="fullNameNOK"
                       value={nextOfKinDetails?.fullName}
                       required={true}
-                      onChange={({ target }) =>
+                      onChange={({ target }) => {
                         setNextOfKinDetails((prevDetails) => {
                           const newDetails = { ...prevDetails };
                           newDetails["fullName"] = target.value;
                           return newDetails;
-                        })
-                      }
+                        });
+
+                        // Reset the specific field's error
+                        setErrorsNextOfKin((prevErrors) => ({
+                          ...prevErrors,
+                          fullName: "", // Clear the error for this field
+                        }));
+                      }}
                       className="sm:w-[620px] xs:w-[370px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                     />
                     <span className="absolute inset-y-12 right-0 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer">
                       *
                     </span>
+                    {errorsNextOfKin.fullName && (
+                      <div className="text-red-500 text-xs mt-1">
+                        {errorsNextOfKin.fullName}
+                      </div>
+                    )}
                   </div>
                   <div className="relative mb-6 mr-6 flex flex-col">
                     <div>
@@ -1305,6 +1536,10 @@ const Page = () => {
                               newDetails["relation"] = target.value;
                               return newDetails;
                             });
+                            setErrorsNextOfKin((prevErrors) => ({
+                              ...prevErrors,
+                              relation: "", // Clear the error for this field
+                            }));
                           } else {
                             setNextOfKinDetails((prevDetails) => {
                               const newDetails = { ...prevDetails };
@@ -1334,6 +1569,11 @@ const Page = () => {
                     <span className="absolute inset-y-12 right-0 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer">
                       *
                     </span>
+                    {errorsNextOfKin.relation && (
+                      <div className="text-red-500 text-xs mt-1">
+                        {errorsNextOfKin.relation}
+                      </div>
+                    )}
                   </div>
                   <div className="relative mb-6 mr-6 flex flex-col">
                     <label htmlFor="emailNOK" className="text-[#676767]">
@@ -1344,18 +1584,27 @@ const Page = () => {
                       name="fullNameNOK"
                       value={nextOfKinDetails?.email}
                       required={true}
-                      onChange={({ target }) =>
+                      onChange={({ target }) => {
                         setNextOfKinDetails((prevDetails) => {
                           const newDetails = { ...prevDetails };
                           newDetails["email"] = target.value;
                           return newDetails;
-                        })
-                      }
+                        });
+                        setErrorsNextOfKin((prevErrors) => ({
+                          ...prevErrors,
+                          email: "", // Clear the error for this field
+                        }));
+                      }}
                       className="sm:w-[620px] xs:w-[370px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                     />
                     <span className="absolute inset-y-12 right-0 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer">
                       *
                     </span>
+                    {errorsNextOfKin.email && (
+                      <div className="text-red-500 text-xs mt-1">
+                        {errorsNextOfKin.email}
+                      </div>
+                    )}
                   </div>
                   <div className="relative mb-6 mr-6 flex flex-col">
                     <label htmlFor="contactNOK" className="text-[#676767]">
@@ -1366,18 +1615,27 @@ const Page = () => {
                       name="contactNOK"
                       value={nextOfKinDetails?.contact}
                       required={true}
-                      onChange={({ target }) =>
+                      onChange={({ target }) => {
                         setNextOfKinDetails((prevDetails) => {
                           const newDetails = { ...prevDetails };
                           newDetails["contact"] = target.value;
                           return newDetails;
-                        })
-                      }
+                        });
+                        setErrorsNextOfKin((prevErrors) => ({
+                          ...prevErrors,
+                          contact: "", // Clear the error for this field
+                        }));
+                      }}
                       className="sm:w-[620px] xs:w-[370px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                     />
                     <span className="absolute inset-y-12 right-0 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer">
                       *
                     </span>
+                    {errorsNextOfKin.contact && (
+                      <div className="text-red-500 text-xs mt-1">
+                        {errorsNextOfKin.contact}
+                      </div>
+                    )}
                   </div>
                   <div className="relative mb-6 mr-6 flex flex-col">
                     <label htmlFor="nicNumberNOK" className="text-[#676767]">
@@ -1388,18 +1646,27 @@ const Page = () => {
                       name="nicNumberNOK"
                       value={nextOfKinDetails?.nicNumber}
                       required={true}
-                      onChange={({ target }) =>
+                      onChange={({ target }) => {
                         setNextOfKinDetails((prevDetails) => {
                           const newDetails = { ...prevDetails };
                           newDetails["nicNumber"] = target.value;
                           return newDetails;
-                        })
-                      }
+                        });
+                        setErrorsNextOfKin((prevErrors) => ({
+                          ...prevErrors,
+                          nicNumber: "", // Clear the error for this field
+                        }));
+                      }}
                       className="sm:w-[620px] xs:w-[370px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                     />
                     <span className="absolute inset-y-12 right-0 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer">
                       *
                     </span>
+                    {errorsNextOfKin.nicNumber && (
+                      <div className="text-red-500 text-xs mt-1">
+                        {errorsNextOfKin.nicNumber}
+                      </div>
+                    )}
                   </div>
                   <div className="relative mb-6 mr-6 flex flex-col">
                     <label htmlFor="dobNOK" className="text-[#676767]">
@@ -1419,6 +1686,10 @@ const Page = () => {
                             .split("T")[0];
                           return newDetails;
                         });
+                        setErrorsNextOfKin((prevErrors) => ({
+                          ...prevErrors,
+                          dobString: "", // Clear the error for this field
+                        }));
                       }}
                       max={
                         new Date(
@@ -1432,6 +1703,11 @@ const Page = () => {
                     <span className="absolute inset-y-12 right-6 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer">
                       *
                     </span>
+                    {errorsNextOfKin.dobString && (
+                      <div className="text-red-500 text-xs mt-1">
+                        {errorsNextOfKin.dobString}
+                      </div>
+                    )}
                   </div>
                 </div>
                 <div className="mt-5">

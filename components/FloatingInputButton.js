@@ -10,6 +10,7 @@ const FloatingLabelInput = ({
   value,
   setValue,
   handleShow,
+  resetError
 }) => {
   const [isFocused, setIsFocused] = useState(false);
   //   const [value, setValue] = useState('');
@@ -18,7 +19,10 @@ const FloatingLabelInput = ({
   const handleBlur = () => {
     setIsFocused(false);
   };
-
+  const handleChange = (e) => {
+    setValue(e.target.value);
+    resetError(name); // Reset the error for the field
+  };
   return (
     <div className="relative mt-6">
       <input
@@ -26,7 +30,7 @@ const FloatingLabelInput = ({
         name={name}
         type={type}
         value={value}
-        onChange={(e) => setValue(e.target.value)}
+        onChange={handleChange}
         onFocus={handleFocus}
         onBlur={handleBlur}
         required={true}

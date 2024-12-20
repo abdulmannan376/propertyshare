@@ -14,6 +14,8 @@ import {
   updateNavbarTextColor,
 } from "../redux/features/navbarSlice";
 import { errorAlert, successAlert } from "@/utils/alert";
+import { signupSchema } from "../../lib/validations/authentications";
+import { isEmpty } from "lodash";
 
 const Page = () => {
   const dispatch = useDispatch();
@@ -34,7 +36,13 @@ const Page = () => {
     );
     dispatch(updateBgColor("bg-transparent"));
   }, []);
-
+  const initialErrors = {
+    name: "",
+    username: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  };
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -43,7 +51,7 @@ const Page = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [phase, setPhase] = useState(1);
-
+  const [errors, setErrors] = useState(initialErrors);
   function handleShowPassword() {
     setShowPassword(!showPassword);
   }
@@ -53,49 +61,81 @@ const Page = () => {
   }
 
   const [isLoading, setIsLoading] = useState(false);
-
+  const resetError = (fieldName) => {
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [fieldName]: "", // Clear the error for the specific field
+    }));
+  };
   const handleSubmission = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
+
+    setErrors(initialErrors);
     try {
-      if (password !== confirmPassword) {
-        throw new Error("Passwords do not match.");
-      }
-      const data = {
-        name: name,
-        username: username,
-        email: email,
-        password: password,
-        role: "user",
-      };
+      let fieldErrors;
 
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_SERVER_HOST}/user/user-signup`,
-        {
-          method: "POST",
-          headers: {
-            "Content-type": "application/json",
-          },
-          body: JSON.stringify(data),
+      // Validate the schema
+      await signupSchema
+        .validate(
+          { name, username, email, password, confirmPassword },
+          { abortEarly: false }
+        )
+        .catch((error) => {
+          fieldErrors = error.inner.reduce((acc, err) => {
+            return {
+              ...acc,
+              [err.path]: err.message,
+            };
+          }, {});
+
+          setErrors(fieldErrors);
+        });
+
+      if (isEmpty(fieldErrors)) {
+        console.log("yes");
+        setIsLoading(true);
+        const data = {
+          name: name,
+          username: username,
+          email: email,
+          password: password,
+          role: "user",
+        };
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_SERVER_HOST}/user/user-signup`,
+          {
+            method: "POST",
+            headers: {
+              "Content-type": "application/json",
+            },
+            body: JSON.stringify(data),
+          }
+        );
+
+        const response = await res.json();
+        setIsLoading(false);
+        if (response.success) {
+          successAlert("Success", response.message);
+          setPhase(2);
+          setName("");
+          setUsername("");
+          setPassword("");
+          setConfirmPassword("");
+        } else {
+          throw new Error(response.message);
         }
-      );
-
-      const response = await res.json();
-      setIsLoading(false);
-      if (response.success) {
-        successAlert("Success", response.message);
-        setPhase(2);
-        setName("");
-        setUsername("");
-        setPassword("");
-        setConfirmPassword("");
-      } else {
-        throw new Error(response.message);
       }
-
-      // throw new Error("new error")
     } catch (error) {
       setIsLoading(false);
+      console.log("check error", error);
+      // let fieldErrors = error.inner.reduce((acc, err) => {
+      //   return {
+      //     ...acc,
+      //     [err.path]: err.message,
+      //   };
+      // }, {});
+
+      // setErrors(fieldErrors);
       errorAlert("Error", error.message);
     }
   };
@@ -140,7 +180,11 @@ const Page = () => {
               value={name}
               setValue={setName}
               type={"text"}
+              resetError={resetError}
             />
+            {errors.name && (
+              <div className="text-red-500 text-xs mt-1">{errors.name}</div>
+            )}
             <FloatingLabelInput
               id={"username"}
               label={"Username"}
@@ -148,7 +192,11 @@ const Page = () => {
               value={username}
               setValue={setUsername}
               type={"text"}
+              resetError={resetError}
             />
+            {errors.username && (
+              <div className="text-red-500 text-xs mt-1">{errors.username}</div>
+            )}
             <FloatingLabelInput
               id={"email"}
               label={"Email"}
@@ -156,7 +204,11 @@ const Page = () => {
               value={email}
               setValue={setEmail}
               type={"email"}
+              resetError={resetError}
             />
+            {errors.email && (
+              <div className="text-red-500 text-xs mt-1">{errors.email}</div>
+            )}
             <FloatingLabelInput
               id={"password"}
               label={"Password"}
@@ -165,7 +217,11 @@ const Page = () => {
               setValue={setPassword}
               type={showPassword ? "text" : "password"}
               handleShow={handleShowPassword}
+              resetError={resetError}
             />
+            {errors.password && (
+              <div className="text-red-500 text-xs mt-1">{errors.password}</div>
+            )}
             <FloatingLabelInput
               id={"confirmPassword"}
               label={"Confirm Password"}
@@ -174,7 +230,13 @@ const Page = () => {
               setValue={setConfirmPassword}
               type={showConfirmPassword ? "text" : "password"}
               handleShow={handleShowConfirmPassword}
+              resetError={resetError}
             />
+            {errors.confirmPassword && (
+              <div className="text-red-500 text-xs mt-1">
+                {errors.confirmPassword}
+              </div>
+            )}
             <div className="lg:w-[550px] xs:w-[443px] w-[320px] relative mt-6">
               <input
                 type="checkbox"
