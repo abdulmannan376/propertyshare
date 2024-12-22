@@ -294,7 +294,7 @@ const Navbar = () => {
         theme="light"
       />
       <header
-        className={`fixed top-0 w-full ${textColor} ${bgColor} body-font z-[1000]`}
+        className={`fixed top-0 w-full ${textColor} ${bgColor} body-font z-[5000]`}
         onClick={() => dispatch(updateDropdrownStatus({ field: "close all" }))}
       >
         <div className="xxl:mx-24 xl:mx-16 lg:mx-10 md:mx-5 xs:mx-3 mx-1 flex flex-wrap p-5 flex-row items-center lg:justify-normal justify-between">
@@ -427,6 +427,7 @@ const Navbar = () => {
                         !showDropDowns["notification"]
                       );
                       dispatch(updateNewNotificationFlag(false));
+                      setIsMobNavOpen(false)
                     }}
                     className="relative"
                   >

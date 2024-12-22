@@ -1,6 +1,6 @@
 "use client";
 import SectionContact from "@/components/landing-page/section-contactus";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import {
   updateBgColor,
@@ -21,22 +21,22 @@ const Page = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(
-      updateNavbarTextColor({
-        textColor: "text-[#116A7B]",
-        hoverTextColor: "text-[#116A7B]",
-      })
-    );
-    dispatch(updateNavbarLogo("/logo-bbh.png"));
+    dispatch(updateNavbarLogo("/white-icon-bbh.png"));
+    dispatch(updateBgColor("bg-[#116A7B]"));
     dispatch(updateNotificationIconColor("text-white"));
     dispatch(
       updateCurrentPageValue({
         tag: "Contact",
-        bgColor: "bg-[#116A7B]",
-        textColor: "text-white",
+        bgColor: "bg-white",
+        textColor: "text-[#116A7B]",
       })
     );
-    dispatch(updateBgColor("bg-transparent"));
+    dispatch(
+      updateNavbarTextColor({
+        textColor: "text-white",
+        hoverTextColor: "text-white",
+      })
+    );
   }, []);
 
   const handleSubmit = async (event) => {
@@ -69,6 +69,66 @@ const Page = () => {
       errorAlert("Error", error.message);
     }
   };
+
+  const contactRef = useRef();
+
+  // useEffect(() => {
+  //   const observer = new IntersectionObserver(
+  //     ([entry]) => {
+  //       // Trigger updates to state based on the intersection ratio
+  //       // If less than 85% of the item is visible, we assume 15% is out of view
+  //       if (entry.intersectionRatio < 0.85) {
+  //         dispatch(updateNavbarLogo("/white-icon-bbh.png"));
+  //         dispatch(updateBgColor("bg-[#116A7B]"));
+  //         dispatch(updateNotificationIconColor("text-white"));
+  //         dispatch(
+  //           updateCurrentPageValue({
+  //             tag: "Contact",
+  //             bgColor: "bg-white",
+  //             textColor: "text-[#116A7B]",
+  //           })
+  //         );
+  //         dispatch(
+  //           updateNavbarTextColor({
+  //             textColor: "text-white",
+  //             hoverTextColor: "text-white",
+  //           })
+  //         );
+  //       } else {
+  //         dispatch(updateNavbarLogo("/icon-bbh.png"));
+  //         dispatch(updateNotificationIconColor("text-white"));
+  //         dispatch(updateBgColor("bg-transparent"));
+  //         dispatch(
+  //           updateCurrentPageValue({
+  //             tag: "Contact",
+  //             bgColor: "bg-[#116A7B]",
+  //             textColor: "text-white",
+  //           })
+  //         );
+  //         dispatch(
+  //           updateNavbarTextColor({
+  //             textColor: "text-gray-600",
+  //             hoverTextColor: "text-gray-900",
+  //           })
+  //         );
+  //       }
+  //     },
+  //     {
+  //       root: null, // using the viewport as the root
+  //       threshold: 0.85, // trigger when 85% of the element is in view
+  //     }
+  //   );
+
+  //   if (contactRef.current) {
+  //     observer.observe(contactRef.current);
+  //   }
+
+  //   return () => {
+  //     if (contactRef.current) {
+  //       observer.unobserve(contactRef.current);
+  //     }
+  //   };
+  // }, []);
   return (
     <div
       className="w-full h-full flex flex-row items-center justify-center bg-cover bg-center xxl:px-24 xl:px-16 lg:px-10 sm:px-5 py-24"
@@ -76,6 +136,7 @@ const Page = () => {
         backgroundImage: "url('/assets/landing-page/section-contactus.png')",
       }}
       onClick={() => dispatch(updateDropdrownStatus({ field: "close all" }))}
+      ref={contactRef}
     >
       <div className="xl:w-[35vw] lg:w-[45vw] md:w-[65vw] sm:w-[85vw] w-[95vw] bg-white py-14 px-7 rounded-3xl">
         <h1 className="sm:text-4xl text-2xl text-center text-[#116A7B] font-medium">
@@ -87,7 +148,10 @@ const Page = () => {
             representatives will get in touch with you.{" "}
           </i>
         </h2>
-        <form onSubmit={handleSubmit} className="pt-16 pb-10 sm:px-5 px-1 space-y-10">
+        <form
+          onSubmit={handleSubmit}
+          className="pt-16 pb-10 sm:px-5 px-1 space-y-10"
+        >
           <div className="relative">
             <input
               type="text"
