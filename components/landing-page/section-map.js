@@ -269,7 +269,7 @@ const SectionMap = () => {
 
   const handleDropdownActivity = (field, value, e) => {
     e.preventDefault();
-    console.log(field, value)
+    console.log(field, value);
     setDropdownsStatus((prevDetails) => {
       const newDetails = { ...prevDetails };
       newDetails[field] = value;
@@ -423,6 +423,8 @@ const SectionMap = () => {
           <MapContainer
             center={position || [51.505, -0.09]}
             zoom={15}
+            minZoom={5} // Minimum zoom level
+            maxZoom={18} // Maximum zoom level
             style={{ height: "60vh", width: "100%", zIndex: "0px" }}
           >
             {/* <SearchBar /> */}
@@ -535,7 +537,7 @@ const SectionMap = () => {
                   type="button"
                   onClick={(e) => {
                     e.stopPropagation();
-                    console.log(index)
+                    console.log(index);
                     if (index === 2) {
                       handleDropdownActivity(
                         "propertyTypeActive",
