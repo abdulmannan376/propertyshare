@@ -1,3 +1,4 @@
+import { errorAlert } from "@/utils/alert";
 import React, { useState } from "react";
 
 const Modal = ({ isOpen, onClose, onSave, coordinates }) => {
@@ -38,21 +39,26 @@ const Modal = ({ isOpen, onClose, onSave, coordinates }) => {
       priceRange,
       selectedPropertyType,
     });
+
+    if(name.length === 0 || email.length === 0){
+      errorAlert("Missing Fields", "")
+      return
+    }
     onClose(); // Close modal after saving
   };
 
   return isOpen ? (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[1000]">
-      <div className="bg-white border-2 border-[#116A7B] p-8 rounded-3xl shadow-lg max-w-[550px] w-full">
-        <h2 className="text-2xl text-center font-semibold uppercase">
+      <div className="bg-white border-2 border-[#116A7B] md:p-8 py-8 px-3 rounded-3xl shadow-lg md:max-w-[550px] max-w-[380px] w-full">
+        <h2 className="md:text-2xl text-xl text-center font-semibold uppercase">
           Notify me when available
         </h2>
-        <p className="text-xl text-center mt-3 mb-10">
+        <p className="md:text-xl text-base text-center mt-3 md:mb-10 mb-3">
           We&apos;ll notify you when a property is listed within 5km of this
           area.
         </p>
         <div className="relative">
-          <label htmlFor="Name" className="text-xl text-[#116A7B] mx-7">
+          <label htmlFor="Name" className="md:text-xl text-base text-[#116A7B] md:mx-7">
             Name
           </label>
           <input
@@ -60,14 +66,14 @@ const Modal = ({ isOpen, onClose, onSave, coordinates }) => {
             placeholder="Enter name..."
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="block w-[492px] text-xl border border-[#116A7B] mb-4 px-7 py-3 rounded-full"
+            className="block md:w-[492px] w-[350px] md:text-xl text-sm border border-[#116A7B] mb-4 px-7 py-3 rounded-full"
           />
-          <span className="absolute inset-y-11 right-0 px-5 text-lg text-red-600 font-semibold focus:outline-none cursor-pointer">
+          <span className="absolute md:inset-y-11 inset-y-9 right-0 md:px-5 px-10 text-lg text-red-600 font-semibold focus:outline-none cursor-pointer">
             *
           </span>
         </div>
         <div className="relative">
-          <label htmlFor="Email" className="text-xl text-[#116A7B] mx-7">
+          <label htmlFor="Email" className="md:text-xl text-base text-[#116A7B] md:mx-7">
             Email
           </label>
           <input
@@ -75,14 +81,14 @@ const Modal = ({ isOpen, onClose, onSave, coordinates }) => {
             placeholder="Enter email..."
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="block w-[492px] text-xl border border-[#116A7B] mb-4 px-7 py-3 rounded-full"
+            className="block md:w-[492px] w-[350px] md:text-xl text-sm border border-[#116A7B] mb-4 px-7 py-3 rounded-full"
           />
-          <span className="absolute inset-y-11 right-0 px-5 text-lg text-red-600 font-semibold focus:outline-none cursor-pointer">
+          <span className="absolute md:inset-y-11 inset-y-9 right-0 md:px-5 px-10 text-lg text-red-600 font-semibold focus:outline-none cursor-pointer">
             *
           </span>
         </div>
         <div className="relative">
-          <label htmlFor="Contact" className="text-xl text-[#116A7B] mx-7">
+          <label htmlFor="Contact" className="md:text-xl text-base text-[#116A7B] md:mx-7">
             Contact Number
           </label>
           <input
@@ -90,11 +96,11 @@ const Modal = ({ isOpen, onClose, onSave, coordinates }) => {
             placeholder="Enter Contact..."
             value={contact}
             onChange={(e) => setContact(e.target.value)}
-            className="block w-[492px] text-xl border border-[#116A7B] mb-4 px-7 py-3 rounded-full"
+            className="block md:w-[492px] w-[350px] md:text-xl text-sm border border-[#116A7B] mb-4 px-7 py-3 rounded-full"
           />
         </div>
         <div>
-          <h2 className="text-xl text-[#116A7B] mx-7">Property Type</h2>
+          <h2 className="md:text-xl text-base text-[#116A7B] md:mx-7">Property Type</h2>
           <select
             name="property types"
             value={selectedPropertyType}
@@ -105,7 +111,7 @@ const Modal = ({ isOpen, onClose, onSave, coordinates }) => {
                 setSelectedPropertyType(target.value);
               }
             }}
-            className="block w-[492px] text-xl border border-[#116A7B] mb-4 px-7 py-3 rounded-full outline-none"
+            className="block md:w-[492px] w-[350px] md:text-xl text-sm border border-[#116A7B] mb-4 px-7 py-3 rounded-full outline-none"
           >
             {/* <option value="Select">Select Property Type</option> */}
             {propertyTypes.map((type, index) => {
@@ -119,7 +125,7 @@ const Modal = ({ isOpen, onClose, onSave, coordinates }) => {
         </div>
         <div className="flex flex-row">
           <div>
-            <h2 className="text-xl text-[#116A7B] mx-7">Area (sqmt)</h2>
+            <h2 className="md:text-xl text-base text-[#116A7B] md:mx-7">Area (sqmt)</h2>
             <select
               name="area range"
               value={areaRange[0]}
@@ -138,7 +144,7 @@ const Modal = ({ isOpen, onClose, onSave, coordinates }) => {
                   });
                 }
               }}
-              className="block w-[242px] text-xl border border-[#116A7B] mb-4 px-7 py-3 rounded-s-full outline-none"
+              className="block md:w-[242px] w-[170px] md:text-xl text-sm border border-[#116A7B] mb-4 px-7 py-3 rounded-s-full outline-none"
             >
               {/* <option value="Select">Select Property Type</option> */}
               {areaMin.map((type, index) => {
@@ -151,7 +157,7 @@ const Modal = ({ isOpen, onClose, onSave, coordinates }) => {
             </select>
           </div>
           <div className="ml-2">
-            <h2 className="text-xl text-[#116A7B] mx-7">&nbsp;</h2>
+            <h2 className="md:text-xl text-base text-[#116A7B] md:mx-7">&nbsp;</h2>
             <select
               name="area range"
               value={areaRange[1]}
@@ -170,7 +176,7 @@ const Modal = ({ isOpen, onClose, onSave, coordinates }) => {
                   });
                 }
               }}
-              className="block w-[242px] text-xl border border-[#116A7B] mb-4 px-7 py-3 rounded-e-full outline-none"
+              className="block md:w-[242px] w-[170px] md:text-xl text-sm border border-[#116A7B] mb-4 px-7 py-3 rounded-e-full outline-none"
             >
               {/* <option value="Select">Select Property Type</option> */}
               {areaMax.map((type, index) => {
@@ -185,7 +191,7 @@ const Modal = ({ isOpen, onClose, onSave, coordinates }) => {
         </div>
         <div className="flex flex-row">
           <div className="">
-            <h2 className="text-xl text-[#116A7B] mx-7">Price ($)</h2>
+            <h2 className="md:text-xl text-base text-[#116A7B] md:mx-7">Price ($)</h2>
             <select
               name="price range"
               value={priceRange[0]}
@@ -204,7 +210,7 @@ const Modal = ({ isOpen, onClose, onSave, coordinates }) => {
                   });
                 }
               }}
-              className="block w-[242px] text-xl border border-[#116A7B] mb-4 px-7 py-3 rounded-s-full outline-none"
+              className="block md:w-[242px] w-[170px] md:text-xl text-sm border border-[#116A7B] mb-4 px-7 py-3 rounded-s-full outline-none"
             >
               {/* <option value="Select">Select Property Type</option> */}
               {priceMin.map((type, index) => {
@@ -217,7 +223,7 @@ const Modal = ({ isOpen, onClose, onSave, coordinates }) => {
             </select>
           </div>
           <div className="ml-2">
-            <h2 className="text-xl text-[#116A7B] mx-7">&nbsp;</h2>
+            <h2 className="md:text-xl text-base text-[#116A7B] md:mx-7">&nbsp;</h2>
             <select
               name="price range"
               value={priceRange[1]}
@@ -236,7 +242,7 @@ const Modal = ({ isOpen, onClose, onSave, coordinates }) => {
                   });
                 }
               }}
-              className="block w-[242px] text-xl border border-[#116A7B] mb-4 px-7 py-3 rounded-e-full outline-none"
+              className="block md:w-[242px] w-[170px] md:text-xl text-sm border border-[#116A7B] mb-4 px-7 py-3 rounded-e-full outline-none"
             >
               {/* <option value="Select">Select Property Type</option> */}
               {priceMax.map((type, index) => {
