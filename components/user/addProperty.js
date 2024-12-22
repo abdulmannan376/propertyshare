@@ -11,6 +11,9 @@ import { toast } from "react-toastify";
 import PropertyRejectionModal from "../modals/propertyRejectionModal";
 import { useRouter } from "next/navigation";
 import { errorAlert, successAlert } from "@/utils/alert";
+import {addPropertyformPhase1,idCardUploadSchema} from "../../lib/validations/authentications";
+import { isEmpty } from "lodash";
+
 const MapArea = dynamic(() => import("./mapArea"), { ssr: false });
 const compCities = require("countrycitystatejson");
 
@@ -113,6 +116,7 @@ const PropertyManagement = () => {
     e.preventDefault();
     if (status !== "new") {
       const property = myProperties[index];
+// console.log("property==>",property.addressOfProperty.state);
 
       setListingStatus(status);
       setTitle(property.title);
@@ -328,37 +332,100 @@ const PropertyManagement = () => {
 
   const handleLocation = (value) => {
     setCoordinates(value);
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      latitude: "", // Clear the error for this field
+    }));
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      longitude: "", // Clear the error for this field
+    }));
   };
 
   const changeFormPhase = (value) => {
     setFormPhase(value);
   };
-
+  const initialErrors = {
+    propertyTitle:"" ,
+    propertyOverview:"" ,
+    totalPrice:"" ,
+    areaSize:"" ,
+    duration:"" ,
+    propertyType:"" ,
+    houseNumber:"" ,
+    streetNumber:"" ,
+    zipCode:"" ,
+    country:"" ,
+    stateProvince:"" ,
+    latitude:"" ,
+    longitude:"" ,
+  };
   const [isLoading, setIsLoading] = useState(false);
+  const [errors, setErrors] = useState(initialErrors);
 
+  const initailErrorsPropertyPic = {
+    imageFile: "",
+  };
+  const [errorsPropertyPic, setErrorsPropertyPic] = useState(
+    initailErrorsPropertyPic
+  );
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
+ 
     try {
       const userDetails = JSON.parse(localStorage.getItem("userDetails"));
+      
+      const detailsToValidate = {
+        propertyTitle:title,
+        propertyOverview:overview,
+        totalPrice:totalPrize,
+        areaSize:areaSize ,
+        duration:startDate ,
+        propertyType:selectedPropertyType ,
+        houseNumber:houseNumber ,
+        streetNumber:streetNumber ,
+        zipCode:zipCode ,
+        country:selectedCountry?.name ,
+        stateProvince:selectedState ,
+        latitude:coordinates?.lat,
+        longitude:coordinates?.long
+      };
+      let fieldErrors;
+      // Validate using Yup
+      await addPropertyformPhase1
+        .validate(detailsToValidate, { abortEarly: false })
+        .catch((error) => {
+          fieldErrors = error.inner.reduce((acc, err) => {
+            return {
+              ...acc,
+              [err.path]: err.message,
+            };
+          }, {});
 
-      if (
-        title.length === 0 ||
-        !coordinates ||
-        overview.length === 0 ||
-        totalPrize === 0 ||
-        areaSize === 0 ||
-        !startDate ||
-        selectedPropertyType === "" ||
-        houseNumber === "" ||
-        streetNumber === "" ||
-        zipCode === "" ||
-        !selectedCountry ||
-        selectedState === ""
-      ) {
-        throw new Error(" missing fields ");
+          setErrors(fieldErrors);
+        });
+      if (!isEmpty(fieldErrors)) {
+        throw new Error("Missing Fields");
       }
+      
 
+      // if (
+      //   title.length === 0 ||
+      //   !coordinates ||
+      //   overview.length === 0 ||
+      //   totalPrize === 0 ||
+      //   areaSize === 0 ||
+      //   !startDate ||
+      //   selectedPropertyType === "" ||
+      //   houseNumber === "" ||
+      //   streetNumber === "" ||
+      //   zipCode === "" ||
+      //   !selectedCountry ||
+      //   selectedState === ""
+      // ) {
+      //   throw new Error(" missing fields ");
+      // }
+setIsLoading(true);
       const data = {
         title: title,
         coordinates: coordinates,
@@ -517,6 +584,24 @@ const PropertyManagement = () => {
           deleteImageList.map((entry, index) => {
             formData.append(`deleteImageList[${index}]`, entry);
           });
+          let fieldErrors;
+          for (const file of files)
+            await idCardUploadSchema
+              .validate({ imageFile: file }, { abortEarly: false })
+              .catch((error) => {
+                fieldErrors = error.inner.reduce((acc, err) => {
+                  return {
+                    ...acc,
+                    [err.path]: err.message,
+                  };
+                }, {});
+                setErrorsPropertyPic(fieldErrors);
+              });
+          if (!isEmpty(fieldErrors)) {
+            throw new Error(
+              "Unsupported file format. Only JPG, JPEG, PNG, and GIF are allowed."
+            );
+          }
 
           for (const file of files) {
             formData.append("imageFiles", file);
@@ -1020,12 +1105,21 @@ const PropertyManagement = () => {
                   name="title"
                   value={title}
                   required={true}
-                  onChange={({ target }) => setTitle(target.value)}
+                  onChange={({ target }) => {
+                    setTitle(target.value)
+                    setErrors((prevErrors) => ({
+                      ...prevErrors,
+                      propertyTitle: "", // Clear the error for this field
+                    }));
+                  }}
                   className="sm:w-[620px] xs:w-[420px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                 />
                 <span className="absolute inset-y-12 right-0 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer">
                   *
                 </span>
+                {errors.propertyTitle && (
+              <div className="text-red-500 text-xs mt-1">{errors.propertyTitle}</div>
+            )}
               </div>
               <div className="relative mb-6 xl:ml-6 flex flex-col">
                 <label htmlFor="title" className="text-[#676767]">
@@ -1037,13 +1131,21 @@ const PropertyManagement = () => {
                   name="title"
                   value={overview}
                   required={true}
-                  onChange={({ target }) => setOverview(target.value)}
+                  onChange={({ target }) => {setOverview(target.value)
+                    setErrors((prevErrors) => ({
+                      ...prevErrors,
+                      propertyOverview: "", // Clear the error for this field
+                    }));
+                  }}
                   style={{ height: "46px" }}
                   className="sm:w-[620px] xs:w-[420px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 resize-none rounded-full"
                 />
                 <span className="absolute inset-y-12 right-0 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer">
                   *
                 </span>
+                {errors.propertyOverview && (
+              <div className="text-red-500 text-xs mt-1">{errors.propertyOverview}</div>
+            )}
               </div>
               <div className="mb-6 xl:ml-6 flex flex-col">
                 <label htmlFor="shares-slider" className="text-gray-600">
@@ -1079,12 +1181,20 @@ const PropertyManagement = () => {
                   name="totalPrize"
                   value={totalPrize}
                   required={true}
-                  onChange={({ target }) => setTotalPrize(target.value)}
+                  onChange={({ target }) => {setTotalPrize(target.value)
+                    setErrors((prevErrors) => ({
+                      ...prevErrors,
+                      totalPrice: "", // Clear the error for this field
+                    }));
+                  }}
                   className="sm:w-[620px] xs:w-[420px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                 />
                 <span className="absolute inset-y-12 right-0 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer">
                   *
                 </span>
+                {errors.totalPrice && (
+              <div className="text-red-500 text-xs mt-1">{errors.totalPrice}</div>
+            )}
               </div>
               <div className="relative mb-6 xl:ml-6 flex flex-col">
                 <label htmlFor="areaSize" className="text-[#676767]">
@@ -1098,12 +1208,21 @@ const PropertyManagement = () => {
                   name="areaSize"
                   value={areaSize}
                   required={true}
-                  onChange={({ target }) => setAreaSize(target.value)}
+                  onChange={({ target }) => {
+                    setAreaSize(target.value)
+                    setErrors((prevErrors) => ({
+                      ...prevErrors,
+                      areaSize: "", // Clear the error for this field
+                    }));
+                  }}
                   className="sm:w-[620px] xs:w-[420px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                 />
                 <span className="absolute inset-y-12 right-0 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer">
                   *
                 </span>
+                {errors.areaSize && (
+              <div className="text-red-500 text-xs mt-1">{errors.areaSize}</div>
+            )}
               </div>
               <div className="relative mb-6 xl:ml-6 flex flex-col">
                 <label htmlFor="title" className="text-[#676767]">
@@ -1118,12 +1237,19 @@ const PropertyManagement = () => {
                   onChange={({ target }) => {
                     const date = new Date(target.value);
                     setStartDate(date.toISOString().split("T")[0]);
+                    setErrors((prevErrors) => ({
+                      ...prevErrors,
+                      duration: "", // Clear the error for this field
+                    }));
                   }}
                   className="sm:w-[620px] xs:w-[420px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                 />
                 <span className="absolute inset-y-12 right-0 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer">
                   *
                 </span>
+                {errors.duration && (
+              <div className="text-red-500 text-xs mt-1">{errors.duration}</div>
+            )}
               </div>
 
               <div className="relative mb-6 xl:ml-6 flex flex-col">
@@ -1139,6 +1265,10 @@ const PropertyManagement = () => {
                         setSelectedPropertyType("");
                       } else {
                         setSelectedPropertyType(target.value);
+                        setErrors((prevErrors) => ({
+                          ...prevErrors,
+                          propertyType: "", // Clear the error for this field
+                        }));
                       }
                     }}
                     className="inline-flex sm:mx-10 ml-1 border border-[#116A7B30] rounded-full px-3 focus:border-[#116A7B] outline-none"
@@ -1161,6 +1291,9 @@ const PropertyManagement = () => {
                 <span className="absolute inset-y-12 right-0 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer">
                   *
                 </span>
+                {errors.propertyType && (
+              <div className="text-red-500 text-xs mt-1">{errors.propertyType}</div>
+            )}
               </div>
               <div className="mb-6 ml-6 flex flex-col">
                 <input
@@ -1181,12 +1314,20 @@ const PropertyManagement = () => {
                   name="houseNumber"
                   value={houseNumber}
                   required={true}
-                  onChange={({ target }) => setHouseNumber(target.value)}
+                  onChange={({ target }) => {setHouseNumber(target.value)
+                    setErrors((prevErrors) => ({
+                      ...prevErrors,
+                      houseNumber: "", // Clear the error for this field
+                    }));
+                  }}
                   className="sm:w-[620px] xs:w-[420px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                 />
                 <span className="absolute inset-y-12 right-0 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer">
                   *
                 </span>
+                {errors.houseNumber && (
+              <div className="text-red-500 text-xs mt-1">{errors.houseNumber}</div>
+            )}
               </div>
               <div className="relative mb-6 xl:ml-6 flex flex-col">
                 <label htmlFor="streetNumber" className="text-[#676767]">
@@ -1197,12 +1338,20 @@ const PropertyManagement = () => {
                   name="streetNumber"
                   value={streetNumber}
                   required={true}
-                  onChange={({ target }) => setStreetNumber(target.value)}
+                  onChange={({ target }) => {setStreetNumber(target.value)
+                    setErrors((prevErrors) => ({
+                      ...prevErrors,
+                      streetNumber: "", // Clear the error for this field
+                    }));
+                  }}
                   className="sm:w-[620px] xs:w-[420px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                 />
                 <span className="absolute inset-y-12 right-0 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer">
                   *
                 </span>
+                {errors.streetNumber && (
+              <div className="text-red-500 text-xs mt-1">{errors.streetNumber}</div>
+            )}
               </div>
               <div className="relative mb-6 xl:ml-6 flex flex-col">
                 <label htmlFor="zipCode" className="text-[#676767]">
@@ -1213,12 +1362,20 @@ const PropertyManagement = () => {
                   name="zipCode"
                   value={zipCode}
                   required={true}
-                  onChange={({ target }) => setZipCode(target.value)}
+                  onChange={({ target }) => {setZipCode(target.value)
+                    setErrors((prevErrors) => ({
+                      ...prevErrors,
+                      zipCode: "", // Clear the error for this field
+                    }));
+                  }}
                   className="sm:w-[620px] xs:w-[420px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                 />
                 <span className="absolute inset-y-12 right-0 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer">
                   *
                 </span>
+                {errors.zipCode && (
+              <div className="text-red-500 text-xs mt-1">{errors.zipCode}</div>
+            )}
               </div>
               <div className="relative mb-6 xl:ml-6 flex flex-col">
                 <div>
@@ -1237,6 +1394,10 @@ const PropertyManagement = () => {
                         );
                         country.shortName = target.value;
                         setSelectedCountry(country);
+                        setErrors((prevErrors) => ({
+                          ...prevErrors,
+                          country: "", // Clear the error for this field
+                        }));
                       }
                     }}
                     className="w-52 inline-flex sm:mx-10 ml-1 border border-[#116A7B30] rounded-full px-3 focus:border-[#116A7B] outline-none"
@@ -1260,6 +1421,9 @@ const PropertyManagement = () => {
                 <span className="absolute inset-y-12 right-0 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer">
                   *
                 </span>
+                {errors.country && (
+              <div className="text-red-500 text-xs mt-1">{errors.country}</div>
+            )}
               </div>
               <div className="relative mb-6 xl:ml-6 flex flex-col">
                 <div>
@@ -1274,6 +1438,10 @@ const PropertyManagement = () => {
                         setSelectedState({});
                       } else {
                         setSelectedState(target.value);
+                        setErrors((prevErrors) => ({
+                          ...prevErrors,
+                          stateProvince: "", // Clear the error for this field
+                        }));
                       }
                     }}
                     className="inline-flex sm:mx-10 ml-1 border border-[#116A7B30] rounded-full px-3 focus:border-[#116A7B] outline-none"
@@ -1297,6 +1465,9 @@ const PropertyManagement = () => {
                 <span className="absolute inset-y-12 right-0 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer">
                   *
                 </span>
+                {errors.stateProvince && (
+              <div className="text-red-500 text-xs mt-1">{errors.stateProvince}</div>
+            )}
               </div>
               <div className="relative mb-6 xl:ml-6 flex flex-col">
                 <div>
@@ -1412,6 +1583,9 @@ const PropertyManagement = () => {
                 <span className="absolute inset-y-12 right-0 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer">
                   *
                 </span>
+                {errors.latitude && (
+              <div className="text-red-500 text-xs mt-1">{errors.latitude}</div>
+            )}
               </div>
 
               <div className="relative mb-6 xl:ml-6 flex flex-col">
@@ -1438,6 +1612,9 @@ const PropertyManagement = () => {
                 <span className="absolute inset-y-12 right-0 px-5 text-red-600 font-semibold focus:outline-none cursor-pointer">
                   *
                 </span>
+                {errors.longitude && (
+              <div className="text-red-500 text-xs mt-1">{errors.longitude}</div>
+            )}
               </div>
             </>
           )}
@@ -1918,9 +2095,20 @@ const PropertyManagement = () => {
                     multiple
                     accept="image/png"
                     required={true}
-                    onChange={({ target }) => setFiles(target.files)}
+                    onChange={({ target }) => {
+                      setFiles(target.files)
+                      setErrorsPropertyPic((prevErrors) => ({
+                        ...prevErrors,
+                        imageFile: "", // Clear the error for this field
+                      }));
+                    }}
                     className="sm:w-[620px] xs:w-[420px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
                   />
+                   {errorsPropertyPic.imageFile && (
+                      <div className="text-red-500 text-xs mt-1">
+                        {errorsPropertyPic.imageFile}
+                      </div>
+                    )}
                 </div>
                 {myProperties[propertyByIndex]?.imageCount > 0 ? (
                   <div
@@ -1999,7 +2187,7 @@ const PropertyManagement = () => {
                   </div>
                 )}
               </div>
-
+             
               {/* <div className="mb-6 ml-6 flex flex-col">
                 <input
                   type="button"

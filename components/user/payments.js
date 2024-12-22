@@ -352,7 +352,7 @@ const Payments = () => {
                               {payment.paymentID}
                             </td>
                             <td className="border border-gray-300 px-4 py-2">
-                              {payment.userDocID.username}
+                              {payment?.userDocID?.username}
                             </td>
                             {/* <td className="border border-gray-300 px-4 py-2">
                             {payment.userDocID.name}
@@ -453,7 +453,7 @@ const Payments = () => {
                               {payment.paymentID}
                             </td>
                             <td className="border border-gray-300 px-4 py-2">
-                              {payment.userDocID.username}
+                              {payment?.userDocID?.username}
                             </td>
                             {/* <td className="border border-gray-300 px-4 py-2">
                             {payment.userDocID.name}
@@ -571,7 +571,7 @@ const Payments = () => {
                               {payment.paymentID}
                             </td>
                             <td className="border border-gray-300 px-4 py-2">
-                              {payment.userDocID.username}
+                              {payment?.userDocID?.username}
                             </td>
                             {/* <td className="border border-gray-300 px-4 py-2">
                             {payment.userDocID.name}
