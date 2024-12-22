@@ -9,7 +9,7 @@ import {
 import { updateActiveRentShareNavBtn } from "@/app/redux/features/propertyPageSlice";
 import Image from "next/image";
 import { useParams, useSearchParams } from "next/navigation";
-import React, { Suspense, useEffect, useState } from "react";
+import React, { Suspense, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
 import { IoIosPricetag, IoIosBed } from "react-icons/io";
@@ -147,7 +147,7 @@ const Page = () => {
         throw new Error(response.message);
       }
     } catch (error) {
-      errorAlert("Error", error.message)
+      errorAlert("Error", error.message);
     }
   };
 
@@ -156,6 +156,19 @@ const Page = () => {
       fetchData();
     }
   }, [propertyID]);
+
+  const propertyDetailsRef = useRef(null);
+    const rentRef = useRef(null);
+    const sellRef = useRef(null);
+    const swapRef = useRef(null);
+  
+    const handleScrollIntoView = (ref) => {
+      ref.current?.scrollIntoView({
+        behavior: "smooth", // Adds a smooth scroll effect
+        block: "nearest", // Ensures the element is scrolled to the nearest visible area
+        inline: "center", // Keeps the element centered in the view horizontally
+      });
+    };
 
   return (
     <>
@@ -174,7 +187,7 @@ const Page = () => {
       <div className="w-full h-20 bg-white"></div>
       {propertyFetched && (
         <div
-          className="xl:mx-24 mx-16 "
+          className="xl:mx-24 md:mx-16 mx-5"
           onClick={() =>
             dispatch(updateDropdrownStatus({ field: "close all" }))
           }
@@ -183,41 +196,53 @@ const Page = () => {
             {property.imageCount > 0 ? (
               <div>
                 {/* Swiper component */}
-                <Slider
-                {...settings}
-                  // modules={[Pagination, Navigation]}
-                  // slidesPerView={1}
-                  // navigation={{
-                  //   nextEl: ".swiper-button-next", // Define next button class
-                  //   prevEl: ".swiper-button-prev", // Define prev button class
-                  // }}
-                  // pagination={{
-                  //   clickable: true,
-                  //   el: "#swiper-pagination",
-                  //   type: "bullets",
-                  //   bulletActiveClass: "swiper-pagination-bullet-active",
-                  //   bulletClass: "swiper-pagination-bullet",
-                  // }}
-                  style={{ width: "100%", height: "70%" }}
-                  className="mb-5"
-                >
-                  {Array.from({ length: property.imageCount }, (_, index) => (
-                    <div key={index}>
-                      <Image
-                        width={2000}
-                        height={2000}
-                        src={`${process.env.NEXT_PUBLIC_SERVER_HOST}/${
-                          property.imageDirURL
-                        }image-${index + 1}.png`}
-                        className="w-full h-[44rem] object-contain object-center"
-                        alt={`Image ${index + 1}`}
-                      />
-                    </div>
-                  ))}
-                </Slider>
-{/* 
-                {/* Custom navigation buttons 
-                <div className="swiper-button-prev custom-prev"></div>
+                {property.imageCount > 1 ? (
+                  <Slider
+                    {...settings}
+                    // modules={[Pagination, Navigation]}
+                    // slidesPerView={1}
+                    // navigation={{
+                    //   nextEl: ".swiper-button-next", // Define next button class
+                    //   prevEl: ".swiper-button-prev", // Define prev button class
+                    // }}
+                    // pagination={{
+                    //   clickable: true,
+                    //   el: "#swiper-pagination",
+                    //   type: "bullets",
+                    //   bulletActiveClass: "swiper-pagination-bullet-active",
+                    //   bulletClass: "swiper-pagination-bullet",
+                    // }}
+                    style={{ width: "90%", height: "70%" }}
+                    className="mb-5 mx-4"
+                  >
+                    {Array.from({ length: property.imageCount }, (_, index) => (
+                      <div key={index} className="outline-none">
+                        <Image
+                          width={2000}
+                          height={2000}
+                          src={`${process.env.NEXT_PUBLIC_SERVER_HOST}/${
+                            property.imageDirURL
+                          }image-${index + 1}.png`}
+                          className="w-full h-[44rem] object-contain object-center"
+                          alt={`Image ${index + 1}`}
+                        />
+                      </div>
+                    ))}
+                  </Slider>
+                ) : (
+                  <div className="h-[44rem]">
+                    <Image
+                      width={1000}
+                      height={1000}
+                      src={`${process.env.NEXT_PUBLIC_SERVER_HOST}/${property.imageDirURL}image-1.png`}
+                      className="w-full h-full object-scale-down object-center"
+                      alt={`${property.slug}-image-1`}
+                    />
+                  </div>
+                )}
+
+                {/* Custom navigation buttons */}
+                {/* <div className="swiper-button-prev custom-prev"></div>
                 <div className="swiper-button-next custom-next"></div>
                 {/* Custom pagination 
                 <div
@@ -237,63 +262,154 @@ const Page = () => {
               </div>
             )}
 
-            <div className="w-screen flex items-center justify-start md:space-x-20 space-x-14 my-3 text-white text-2xl font-semibold">
-              <button
-                onClick={() =>
-                  dispatch(updateActiveRentShareNavBtn("Property Details"))
-                }
-              >
-                <h1
-                  className={`flex ${
-                    activeNavBtn === "Property Details"
-                      ? "underline-text"
-                      : "hover-underline-animation"
-                  } `}
+            <div className="flex sm:flex-row flex-col sm:items-center sm:justify-between">
+              <div className="w-full max-w-screen overflow-x-auto flex items-center justify-start md:space-x-20 space-x-14 my-3 text-white text-2xl font-semibold">
+                <button
+                  onClick={() => {
+                    dispatch(updateActiveBuyShareNavBtn("Property Details"));
+                    handleScrollIntoView(propertyDetailsRef);
+                  }}
+                  ref={propertyDetailsRef}
                 >
-                  Property Details
-                </h1>
-              </button>
-              {/* <Link href={`${process.env.NEXT_PUBLIC_HOST}/chef`}> */}
-              <button
-                onClick={() => dispatch(updateActiveRentShareNavBtn("Rent"))}
-              >
-                <h2
-                  className={`flex ${
-                    activeNavBtn === "Rent"
-                      ? "underline-text"
-                      : "hover-underline-animation"
-                  } `}
+                  <h1
+                    className={`flex w-48 whitespace-nowrap ${
+                      activeNavBtn === "Property Details"
+                        ? "underline-text"
+                        : "hover-underline-animation"
+                    } `}
+                  >
+                    Property Details
+                  </h1>
+                </button>
+                {/* <Link href={`${process.env.NEXT_PUBLIC_HOST}/chef`}> */}
+                {JSON.parse(localStorage.getItem("userDetails"))?.role && (
+                  <button
+                    onClick={() => {
+                      dispatch(updateActiveBuyShareNavBtn("Rent"));
+                      handleScrollIntoView(rentRef);
+                    }}
+                    ref={rentRef}
+                  >
+                    <h2
+                      className={`flex w-14 whitespace-nowrap ${
+                        activeNavBtn === "Rent"
+                          ? "underline-text"
+                          : "hover-underline-animation"
+                      } `}
+                    >
+                      Rent
+                    </h2>
+                  </button>
+                )}
+                {JSON.parse(localStorage.getItem("userDetails"))?.role && (
+                  <button
+                    onClick={() => {
+                      dispatch(updateActiveBuyShareNavBtn("Sell"));
+                      handleScrollIntoView(sellRef);
+                    }}
+                    ref={sellRef}
+                  >
+                    <h2
+                      className={`flex w-14 whitespace-nowrap ${
+                        activeNavBtn === "Sell"
+                          ? "underline-text"
+                          : "hover-underline-animation"
+                      } `}
+                    >
+                      Sell
+                    </h2>
+                  </button>
+                )}
+                {JSON.parse(localStorage.getItem("userDetails"))?.role ===
+                  "admin" && (
+                  <button
+                    onClick={() => {
+                      dispatch(updateActiveBuyShareNavBtn("Swap"));
+                      handleScrollIntoView(swapRef);
+                    }}
+                    ref={swapRef}
+                  >
+                    <h2
+                      className={`flex w-14 whitespace-nowrap ${
+                        activeNavBtn === "Swap"
+                          ? "underline-text"
+                          : "hover-underline-animation"
+                      } `}
+                    >
+                      Swap
+                    </h2>
+                  </button>
+                )}
+                {JSON.parse(localStorage.getItem("userDetails"))?.role ===
+                  "shareholder" && (
+                  <button
+                    onClick={() => {
+                      dispatch(updateActiveBuyShareNavBtn("Swap"));
+                      handleScrollIntoView(swapRef);
+                    }}
+                    ref={swapRef}
+                  >
+                    <h2
+                      className={`flex w-14 whitespace-nowrap ${
+                        activeNavBtn === "Swap"
+                          ? "underline-text"
+                          : "hover-underline-animation"
+                      } `}
+                    >
+                      Swap
+                    </h2>
+                  </button>
+                )}
+                {/* </Link> */}
+              </div>
+              {/* <div className="flex items-center sm:mb-0 mb-2">
+                <button
+                  type="button"
+                  title="Add to Favourites"
+                  onClick={() => {
+                    if (favouriteList.includes(propertyID)) {
+                      handleFavouriteListRequest("remove");
+                    } else {
+                      handleFavouriteListRequest("add");
+                    }
+                  }}
+                  className="px-1 mx-2 text-xl text-red-600 font-semibold focus:outline-none cursor-pointer"
                 >
-                  Rent
-                </h2>
-              </button>
-              <button
-                onClick={() => dispatch(updateActiveRentShareNavBtn("Sell"))}
-              >
-                <h2
-                  className={`flex ${
-                    activeNavBtn === "Sell"
-                      ? "underline-text"
-                      : "hover-underline-animation"
-                  } `}
+                  {favouriteList.includes(propertyID) ? (
+                    <FaHeart />
+                  ) : (
+                    <FaRegHeart />
+                  )}
+                </button>
+                <button
+                  type="button"
+                  title="Add to Wishlist"
+                  onClick={() => {
+                    if (wishList.includes(propertyID)) {
+                      handleWishListRequest("remove");
+                    } else {
+                      handleWishListRequest("add");
+                    }
+                  }}
+                  className="px-1 mx-2 text-2xl  font-semibold focus:outline-none cursor-pointer"
                 >
-                  Sell
-                </h2>
-              </button>
-              <button
-                onClick={() => dispatch(updateActiveRentShareNavBtn("Swap"))}
-              >
-                <h2
-                  className={`flex ${
-                    activeNavBtn === "Swap"
-                      ? "underline-text"
-                      : "hover-underline-animation"
-                  } `}
+                  {wishList.includes(propertyID) ? (
+                    <MdPlaylistAddCheckCircle className="text-green-600" />
+                  ) : (
+                    <MdPlaylistAddCircle className="text-gray-600" />
+                  )}
+                </button>
+                <button
+                  type="button"
+                  title="View Calendar"
+                  onClick={() => {
+                    handleOpenCalendarModal();
+                  }}
+                  className="px-1 mx-2 text-xl font-semibold focus:outline-none cursor-pointer"
                 >
-                  Swap
-                </h2>
-              </button>
-              {/* </Link> */}
+                  <FaCalendarAlt className="text-[#116A7B]" />
+                </button>
+              </div> */}
             </div>
             {activeNavBtn === "Property Details" && (
               <>

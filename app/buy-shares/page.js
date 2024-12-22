@@ -489,9 +489,17 @@ const Page = () => {
         mostViewedProperties.length === 0 &&
         recentlyAddedProperties.length === 0 && (
           <div className="my-20 h-screen">
-            <h1 className="xl:text-[4rem] text-4xl text-center text-[#116A7B] font-semibold">
-              No properties yet.
-            </h1>
+            {isFeaturedPropertyLoading &&
+            isMostViewedLoading &&
+            isRecentlyAddedLoading ? (
+              <div className="bg-white w-full my-6 h-[40rem] max-h-[44rem] overflow-y-auto flex flex-row items-center justify-center">
+                <div className="border-t-4 border-b-4 border-[#116A7B] bg-transparent h-20 p-2 m-3 animate-spin duration-[2200] shadow-lg w-20 mx-auto rounded-full"></div>
+              </div>
+            ) : (
+              <h1 className="xl:text-[4rem] text-4xl text-center text-[#116A7B] font-semibold">
+                No properties yet.
+              </h1>
+            )}
           </div>
         )}
     </div>

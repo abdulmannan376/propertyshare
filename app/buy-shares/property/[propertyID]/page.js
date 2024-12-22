@@ -292,41 +292,53 @@ const Page = () => {
           }
         >
           <div className="my-10">
-            {property.imageCount > 1 && (
+            {property.imageCount > 0 ? (
               <div>
                 {/* Swiper component */}
-                <Slider
-                  {...settings}
-                  // modules={[Pagination, Navigation]}
-                  // slidesPerView={1}
-                  // navigation={{
-                  //   nextEl: ".swiper-button-next", // Define next button class
-                  //   prevEl: ".swiper-button-prev", // Define prev button class
-                  // }}
-                  // pagination={{
-                  //   clickable: true,
-                  //   el: "#swiper-pagination",
-                  //   type: "bullets",
-                  //   bulletActiveClass: "swiper-pagination-bullet-active",
-                  //   bulletClass: "swiper-pagination-bullet",
-                  // }}
-                  style={{ width: "100%", height: "70%" }}
-                  className="mb-5"
-                >
-                  {Array.from({ length: property.imageCount }, (_, index) => (
-                    <div key={index} className="outline-none">
-                      <Image
-                        width={2000}
-                        height={2000}
-                        src={`${process.env.NEXT_PUBLIC_SERVER_HOST}/${
-                          property.imageDirURL
-                        }image-${index + 1}.png`}
-                        className="w-full h-[44rem] object-contain object-center"
-                        alt={`Image ${index + 1}`}
-                      />
-                    </div>
-                  ))}
-                </Slider>
+                {property.imageCount > 1 ? (
+                  <Slider
+                    {...settings}
+                    // modules={[Pagination, Navigation]}
+                    // slidesPerView={1}
+                    // navigation={{
+                    //   nextEl: ".swiper-button-next", // Define next button class
+                    //   prevEl: ".swiper-button-prev", // Define prev button class
+                    // }}
+                    // pagination={{
+                    //   clickable: true,
+                    //   el: "#swiper-pagination",
+                    //   type: "bullets",
+                    //   bulletActiveClass: "swiper-pagination-bullet-active",
+                    //   bulletClass: "swiper-pagination-bullet",
+                    // }}
+                    style={{ width: "90%", height: "70%" }}
+                    className="mb-5 mx-4"
+                  >
+                    {Array.from({ length: property.imageCount }, (_, index) => (
+                      <div key={index} className="outline-none">
+                        <Image
+                          width={2000}
+                          height={2000}
+                          src={`${process.env.NEXT_PUBLIC_SERVER_HOST}/${
+                            property.imageDirURL
+                          }image-${index + 1}.png`}
+                          className="w-full h-[44rem] object-contain object-center"
+                          alt={`Image ${index + 1}`}
+                        />
+                      </div>
+                    ))}
+                  </Slider>
+                ) : (
+                  <div className="h-[44rem]">
+                    <Image
+                      width={1000}
+                      height={1000}
+                      src={`${process.env.NEXT_PUBLIC_SERVER_HOST}/${property.imageDirURL}image-1.png`}
+                      className="w-full h-full object-scale-down object-center"
+                      alt={`${property.slug}-noimage`}
+                    />
+                  </div>
+                )}
 
                 {/* Custom navigation buttons */}
                 {/* <div className="swiper-button-prev custom-prev"></div>
@@ -336,19 +348,6 @@ const Page = () => {
                   id="swiper-pagination"
                   className="flex flex-row justify-center "
                 ></div> */}
-              </div>
-            )}
-            {property.imageCount > 0 ? (
-              <div className="h-[44rem]">
-                <Image
-                  width={1000}
-                  height={1000}
-                  src={`${process.env.NEXT_PUBLIC_SERVER_HOST}/${
-                    property.imageDirURL
-                  }image-1.png`}
-                  className="w-full h-full object-scale-down object-center"
-                  alt={`${property.slug}-noimage`}
-                />
               </div>
             ) : (
               <div className="h-[44rem]">
