@@ -3,6 +3,8 @@ import Modal from "react-modal";
 import DropIn from "braintree-web-drop-in";
 import { errorAlert, successAlert } from "@/utils/alert";
 import { useSelector } from "react-redux";
+import { withdrawalManagementSchema } from "../../lib/validations/authentications";
+import { isEmpty } from "lodash";
 
 Modal.setAppElement("#app-body");
 
@@ -19,13 +21,33 @@ const WithdrawalRequestModal = ({
   const activeWithdrawalsTab = useSelector(
     (state) => state.userDashboardSliceReducer.activeWithdrawalsTab
   );
-
+  const initialErrors = {
+    amount: "",
+  };
+  const [errors, setErrors] = useState(initialErrors);
   // Handle payment submission
   const handleWithdrawalRequest = async () => {
     try {
       setIsLoading(true);
       const username = JSON.parse(localStorage.getItem("userDetails")).username;
       //   const purpose = `Buy Share of Property: ${propertyID}`;
+      setErrors(initialErrors);
+      let fieldErrors = {}; // Initialize as empty object
+      await withdrawalManagementSchema
+        .validate({ amount: Number(amount) }, { abortEarly: false })
+        .catch((error) => {
+          fieldErrors = error.inner.reduce((acc, err) => {
+            return {
+              ...acc,
+              [err.path]: err.message,
+            };
+          }, {});
+          setErrors(fieldErrors); // Set the errors in state
+        });
+
+      if (!isEmpty(fieldErrors)) {
+        throw new Error("Withdrawal amount must be greater than 0"); // Improved readability
+      }
 
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_SERVER_HOST}/user/gen-withdrawal/?username=${username}&amount=${amount}`,
@@ -56,9 +78,16 @@ const WithdrawalRequestModal = ({
         throw new Error(response.message);
       }
     } catch (error) {
+      console.log("error", error);
+
       setIsLoading(false);
-      onClose();
+
       errorAlert("Error", error.message);
+      if (isEmpty(errors)) {
+        console.log("i am in the error check");
+        
+        onClose();
+      }
     }
   };
   return (
@@ -105,9 +134,18 @@ const WithdrawalRequestModal = ({
             required={true}
             value={amount}
             placeholder="Enter amount..."
-            onChange={({ target }) => setAmount(target.value)}
+            onChange={({ target }) => {
+              setAmount(target.value);
+              setErrors((prevErrors) => ({
+                ...prevErrors,
+                amount: "", // Clear the error for this field
+              }));
+            }}
             className="w-full text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
           />
+          {errors.amount && (
+            <div className="text-red-500 text-xs mt-1">{errors.amount}</div>
+          )}
         </div>
         <div className="mt-4 flex flex-row justify-center">
           <button

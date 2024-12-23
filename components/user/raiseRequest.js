@@ -22,6 +22,8 @@ import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import { errorAlert, successAlert } from "@/utils/alert";
 import { MdPending } from "react-icons/md";
 import { IoCloseCircle } from "react-icons/io5";
+import { isEmpty } from "lodash";
+import { raiseRequestSchema } from "../../lib/validations/authentications";
 
 const NextArrow = ({ className, style, onClick }) => {
   return (
@@ -78,6 +80,15 @@ const RaiseRequest = () => {
 
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [sharesList, setSharesList] = useState([]);
+  const initialErrors = {
+    selectedProperty: "",
+    selectedRequestType: "",
+    title: "",
+    details: "",
+    estimatedPrice: "",
+    urlsList: "",
+  };
+  const [errors, setErrors] = useState(initialErrors);
 
   const fetchRaiseRequests = async (tag) => {
     try {
@@ -173,23 +184,50 @@ const RaiseRequest = () => {
 
   const handleRequestSubmit = async () => {
     try {
-      if (selectedProperty.length === 0) {
-        throw new Error("Select a property");
-      } else if (selectedRequestType.length === 0) {
-        throw new Error("Select a request type");
-      } else if (
-        title.length === 0 ||
-        details.length === 0 ||
-        parseInt(estimatedPrice) === 0
-      ) {
-        throw new Error("Missing fields");
-      } else if (urlsList.length > 0) {
-        if (!validateURLs(urlsList)) {
-          throw new Error("Urls added incorrectly");
-        }
-      }
+      // if (selectedProperty.length === 0) {
+      //   throw new Error("Select a property");
+      // } else if (selectedRequestType.length === 0) {
+      //   throw new Error("Select a request type");
+      // } else if (
+      //   title.length === 0 ||
+      //   details.length === 0 ||
+      //   parseInt(estimatedPrice) === 0
+      // ) {
+      //   throw new Error("Missing fields");
+      // } else if (urlsList.length > 0) {
+      //   if (!validateURLs(urlsList)) {
+      //     throw new Error("Urls added incorrectly");
+      //   }
+      // }
 
       const username = JSON.parse(localStorage.getItem("userDetails")).username;
+      const formValues = {
+        selectedProperty,
+        selectedRequestType,
+        title,
+        details,
+        estimatedPrice,
+        urlsList,
+      };
+      // Reset errors before validation
+      setErrors(initialErrors);
+      let fieldErrors ;
+      await raiseRequestSchema
+        .validate(formValues, { abortEarly: false })
+        .catch((error) => {
+          fieldErrors = error.inner.reduce((acc, err) => {
+            return {
+              ...acc,
+              [err.path]: err.message,
+            };
+          }, {});
+
+          setErrors(fieldErrors);
+        });
+      if (!isEmpty(fieldErrors)) {
+        throw new Error("Missing Fields");
+      }
+
       const urlsArray = urlsList.split(",");
 
       const formData = new FormData();
@@ -558,6 +596,10 @@ const RaiseRequest = () => {
                   setSelectedProperty("");
                 } else {
                   setSelectedProperty(target.value);
+                  setErrors((prevErrors) => ({
+                    ...prevErrors,
+                    selectedProperty: "", // Clear the error for this field
+                  }));
                 }
               }}
               className="inline-flex bg-[#D9D9D9] text-xl font-semibold border border-[#116A7B30] rounded px-3 py-1 focus:border-[#116A7B] outline-none"
@@ -573,6 +615,11 @@ const RaiseRequest = () => {
                 </option>
               ))}
             </select>
+            {errors.selectedProperty && (
+              <div className="text-red-500 text-xs mt-1">
+                {errors.selectedProperty}
+              </div>
+            )}
           </div>
           <div className="my-5">
             <select
@@ -583,6 +630,10 @@ const RaiseRequest = () => {
                   setSelectedRequestType("");
                 } else {
                   setSelectedRequestType(target.value);
+                  setErrors((prevErrors) => ({
+                    ...prevErrors,
+                    selectedRequestType: "", // Clear the error for this field
+                  }));
                 }
               }}
               className="inline-flex bg-[#D9D9D9] text-xl font-semibold border border-[#116A7B30] rounded px-3 py-1 focus:border-[#116A7B] outline-none"
@@ -591,6 +642,11 @@ const RaiseRequest = () => {
               <option value="Modification">Modification</option>
               <option value="Maintenance">Maintenance</option>
             </select>
+            {errors.selectedRequestType && (
+              <div className="text-red-500 text-xs mt-1">
+                {errors.selectedRequestType}
+              </div>
+            )}
           </div>
           <div className="flex flex-row flex-wrap">
             <div className="mb-6 mr-6 flex flex-col">
@@ -603,9 +659,19 @@ const RaiseRequest = () => {
                 value={title}
                 required={true}
                 placeholder="Required"
-                onChange={({ target }) => setTitle(target.value)}
+                onChange={({ target }) => {setTitle(target.value)
+                  setErrors((prevErrors) => ({
+                    ...prevErrors,
+                    title: "", // Clear the error for this field
+                  }));
+                }}
                 className="sm:w-[620px] xs:w-[420px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
               />
+                {errors.title && (
+              <div className="text-red-500 text-xs mt-1">
+                {errors.title}
+              </div>
+            )}
             </div>
             <div className="mb-6 mr-6 flex flex-col">
               <label htmlFor="requestDetails" className="text-[#676767]">
@@ -617,9 +683,19 @@ const RaiseRequest = () => {
                 value={details}
                 required={true}
                 placeholder="Required"
-                onChange={({ target }) => setDetails(target.value)}
+                onChange={({ target }) =>{ setDetails(target.value)
+                  setErrors((prevErrors) => ({
+                    ...prevErrors,
+                    details: "", // Clear the error for this field
+                  }));
+                }}
                 className="sm:w-[620px] xs:w-[420px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
               />
+                {errors.details && (
+              <div className="text-red-500 text-xs mt-1">
+                {errors.details}
+              </div>
+            )}
             </div>
             <div className="mb-6 mr-6 flex flex-col">
               <label htmlFor="requestEstimatedPrice" className="text-[#676767]">
@@ -632,9 +708,19 @@ const RaiseRequest = () => {
                 value={estimatedPrice}
                 required={true}
                 placeholder="Required"
-                onChange={({ target }) => setEstimatedPrice(target.value)}
+                onChange={({ target }) => {setEstimatedPrice(target.value)
+                  setErrors((prevErrors) => ({
+                    ...prevErrors,
+                    estimatedPrice: "", // Clear the error for this field
+                  }));
+                }}
                 className="sm:w-[620px] xs:w-[420px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded-full"
               />
+                {errors.estimatedPrice && (
+              <div className="text-red-500 text-xs mt-1">
+                {errors.estimatedPrice}
+              </div>
+            )}
             </div>
             <div className="mb-6 mr-6 flex flex-col">
               <label htmlFor="propertyImages" className="text-[#676767]">
@@ -659,10 +745,20 @@ const RaiseRequest = () => {
                 name="requestUrlsList"
                 value={urlsList}
                 required={true}
-                onChange={({ target }) => setUrlsList(target.value)}
+                onChange={({ target }) => {setUrlsList(target.value)
+                  setErrors((prevErrors) => ({
+                    ...prevErrors,
+                    urlsList: "", // Clear the error for this field
+                  }));
+                }}
                 style={{ resize: "none" }}
                 className="sm:w-[620px] xs:w-[420px] w-[320px] text-xl text-[#676767] font-normal border border-[#116A7B30] focus:border-[#116A7B] outline-none px-5 py-2 mt-3 rounded"
               />
+                {errors.urlsList && (
+              <div className="text-red-500 text-xs mt-1">
+                {errors.urlsList}
+              </div>
+            )}
             </div>
           </div>
           <div className="mt-5">
